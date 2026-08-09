@@ -61,7 +61,8 @@ docker compose up -d          # start all docker containers
 For local-only tweaks to the container setup, create a
 `docker-compose.override.yml` (also gitignored). 
 Docker Compose merges it automatically on `docker compose up`. 
-For deployment,supply a proper `.env` and run `docker compose -f docker-compose.yml up -d` to skip any override.
+Production Compose stacks and their configuration are documented in
+[`deploy/README.md`](deploy/README.md).
 
 ### Server key
 
@@ -85,8 +86,9 @@ that do not.
 breaking change bumps the minor version instead of jumping to `1.0.0`.
 
 Every push to `master` opens or updates a release pull request. Merging it tags
-the release and attaches the server archives. The version lives in
-`gradle.properties` and applies to every module, do not edit it by hand.
+the release, attaches server archives and the tester patcher, and publishes
+server images to GHCR. The version lives in `gradle.properties` and applies to
+every module, do not edit it by hand.
 
 ## Wiki
 

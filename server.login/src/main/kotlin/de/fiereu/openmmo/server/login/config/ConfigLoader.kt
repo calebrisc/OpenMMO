@@ -24,6 +24,14 @@ object ConfigLoader {
         rootKeyFile = config.stringOrNull("server.rootKeyFile"),
         sessionSecret = secret.toByteArray(Charsets.UTF_8),
         rememberMeMaxAge = rememberMeMaxAge,
+        gameServer =
+            GameServerEndpointConfig(
+                ipv4Address = config.getString("gameServer.ipv4Address"),
+                ipv6Address = config.getString("gameServer.ipv6Address"),
+                port = config.getInt("gameServer.port"),
+                localAddress = config.getString("gameServer.localAddress"),
+                localHostname = config.getString("gameServer.localHostname"),
+            ),
         db =
             DbConfig(
                 host = config.getString("db.host"),

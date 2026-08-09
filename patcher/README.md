@@ -31,6 +31,40 @@ Running is pretty straightforward.
 This writes a patched copy of the client to `patcher/build/PokeMMO-openmmo.exe` and starts it.
 The original executable is never modified.
 
+### Connecting to a remote OpenMMO server
+
+Releases include `openmmo-patcher.zip` for testers without the source tree.
+It requires Java 25 or newer. Extract it, download the server's game public
+key as `game.public.pem`, then double-click `bin/openmmo-patcher.bat`.
+
+The launcher remembers the selected server, client and public key. Select the
+public demo or enter a custom login address, then choose **Play OpenMMO**.
+
+The same launcher remains available from a terminal:
+
+```powershell
+.\bin\openmmo-patcher.bat `
+  --login-host login.openmmo.dev `
+  --login-port 2106 `
+  --game-public-key .\game.public.pem `
+  --client "C:\Program Files\PokeMMO\PokeMMO.exe" `
+  --working-dir "C:\Program Files\PokeMMO"
+```
+
+The remote server must publish its numeric game address through the login
+server. The patcher accepts these environment variables as alternatives:
+
+| Option | Environment variable |
+| --- | --- |
+| `--login-host` | `OPENMMO_LOGIN_HOST` |
+| `--login-port` | `OPENMMO_LOGIN_PORT` |
+| `--game-public-key` | `OPENMMO_GAME_PUBLIC_KEY_FILE` |
+| `--client` | `OPENMMO_CLIENT` |
+| `--working-dir` | `OPENMMO_WORKING_DIR` |
+| `--output` | `OPENMMO_PATCHED_CLIENT` |
+
+Arguments after `--` are passed to the patched client.
+
 ## How It Works
 PokeMMO ships as a GraalVM native image, so there is no bytecode left to instrument at class load time.
 Earlier versions of this module used a Java agent for that, which no longer works.

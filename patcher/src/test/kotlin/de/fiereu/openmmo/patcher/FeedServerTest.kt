@@ -29,7 +29,7 @@ class FeedServerTest :
         val keyStore = FeedTls.keyStore()
         val signingKey =
             KeyFactory.getInstance("RSA")
-                .generatePrivate(PKCS8EncodedKeySpec(pem("/feed.private.pem")))
+                .generatePrivate(PKCS8EncodedKeySpec(pem("/feed.private.key")))
         val server = FeedServer(signingKey, keyStore)
         server.publish(32710)
         server.start()
@@ -52,6 +52,27 @@ class FeedServerTest :
           server.stop()
         }
       }
+
+      test("serves a local feed pointing at a remote login server") {
+        val keyStore = FeedTls.keyStore()
+        val signingKey =
+            KeyFactory.getInstance("RSA")
+                .generatePrivate(PKCS8EncodedKeySpec(pem("/feed.private.key")))
+        val server = FeedServer(signingKey, keyStore)
+        server.publish(32710, "login.openmmo.dev")
+        server.start()
+
+        try {
+          val client = HttpClient.newBuilder().sslContext(trusting(server.certificate())).build()
+          val base = "https://$LOOPBACK:${server.port}/live/current/feeds/main_feed"
+          val feed = client.send(get("$base.txt"), HttpResponse.BodyHandlers.ofString())
+
+          feed.body() shouldContain "<ip>login.openmmo.dev</ip>"
+          feed.body() shouldContain "https://127.0.0.1:${server.port}/updater/"
+        } finally {
+          server.stop()
+        }
+      }
     })
 
 private fun get(url: String): HttpRequest = HttpRequest.newBuilder(URI(url)).GET().build()
@@ -68,7 +89,7 @@ private fun trusting(certificate: java.security.cert.X509Certificate): SSLContex
 
 private fun verified(body: ByteArray, signature: ByteArray): Boolean {
   val publicKey =
-      KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(pem("/feed.public.pem")))
+      KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(pem("/feed.public.key")))
   return Signature.getInstance("SHA256withRSA").run {
     initVerify(publicKey)
     update(body)

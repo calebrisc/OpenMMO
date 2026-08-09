@@ -42,35 +42,52 @@ private const val TRUSTSTORE_NAME = "openmmo-truststore.p12"
 
 object Launcher {
 
+  @Volatile private var logger: (String) -> Unit = ::println
+
   fun log(message: () -> String) {
-    println("[OpenMMO Patcher] ${message()}")
+    logger("[OpenMMO Patcher] ${message()}")
   }
 
   @JvmStatic
   fun main(args: Array<String>) {
+    if (args.contentEquals(arrayOf("--gui")) ||
+        (args.isEmpty() &&
+            System.getProperty(EXECUTABLE_PROPERTY) == null &&
+            System.getenv("OPENMMO_CLIENT") == null)) {
+      LauncherWindow.show()
+      return
+    }
+    exitProcess(run(parseOptions(args)))
+  }
+
+  internal fun run(options: LauncherOptions, outputLog: (String) -> Unit = ::println): Int {
+    logger = outputLog
     val executable =
-        Path.of(
-            System.getProperty(EXECUTABLE_PROPERTY)
-                ?: error("Missing -D$EXECUTABLE_PROPERTY=<path to PokeMMO.exe>"))
+        options.executable
+            ?: System.getProperty(EXECUTABLE_PROPERTY)?.let(Path::of)
+            ?: error("Pass --client <path to PokeMMO.exe>")
     require(Files.isRegularFile(executable)) { "Not a file: $executable" }
 
     val workingDir =
-        System.getProperty(WORKING_DIR_PROPERTY)?.let(Path::of)
+        options.workingDir
+            ?: System.getProperty(WORKING_DIR_PROPERTY)?.let(Path::of)
             ?: executable.parent
             ?: error("Missing -D$WORKING_DIR_PROPERTY=<path to the PokeMMO install directory>")
 
     val output =
-        System.getProperty(OUTPUT_PROPERTY)?.let(Path::of)
+        options.output
+            ?: System.getProperty(OUTPUT_PROPERTY)?.let(Path::of)
             ?: Path.of(System.getProperty("java.io.tmpdir"), "PokeMMO-openmmo.exe")
 
     val keyStore = FeedTls.keyStore()
-    val feed = FeedServer(loadPrivateKey("/feed.private.pem"), keyStore)
+    val feed = FeedServer(loadPrivateKey("/feed.private.key"), keyStore)
     val revision = readRevision(workingDir)
-    feed.publish(revision)
+    feed.publish(revision, options.loginHost, options.loginPort)
     feed.start()
     log { "Serving the main feed on https://$LOOPBACK:${feed.port} for revision $revision" }
+    log { "Login fallback points to ${loginServerLiteral(options.loginHost)}" }
 
-    val patcher = ClientPatcher(patches(feed.port))
+    val patcher = ClientPatcher(patches(feed.port, options.loginHost, options.gamePublicKey))
 
     log { "Reading $executable" }
     val bytes = Files.readAllBytes(executable)
@@ -95,36 +112,44 @@ object Launcher {
         FeedTls.writeTrustStore(
             feed.certificate(), workingDir, output.resolveSibling(TRUSTSTORE_NAME))
 
-    log { "Launching $output in $workingDir" }
-    val process =
+    return try {
+      ClientConfigOverride.install(workingDir, options.loginHost, options.loginPort).use {
+        log { "Launching $output in $workingDir" }
         ProcessBuilder(
                 listOf(
                     output.toString(),
                     "-Djavax.net.ssl.trustStore=$trustStore",
                     "-Djavax.net.ssl.trustStorePassword=${FeedTls.password.concatToString()}",
                     "-Djavax.net.ssl.trustStoreType=PKCS12",
-                ) + args)
+                ) + options.clientArgs)
             .directory(workingDir.toFile())
             .inheritIO()
             .start()
-    val status = process.waitFor()
-    feed.stop()
-    exitProcess(status)
+            .waitFor()
+      }
+    } finally {
+      feed.stop()
+      logger = ::println
+    }
   }
 
-  private fun patches(feedPort: Int): List<ClientPatcher.Patch> =
+  private fun patches(
+      feedPort: Int,
+      loginHost: String,
+      gamePublicKey: Path?,
+  ): List<ClientPatcher.Patch> =
       listOf(
           ClientPatcher.Patch(
-              "GamePubKeyPatch", POKEMMO_PUBKEY_GAME, loadPublicKey("/game.public.pem")),
+              "GamePubKeyPatch",
+              POKEMMO_PUBKEY_GAME,
+              loadPublicKey("/game.public.key", gamePublicKey)),
           ClientPatcher.Patch(
-              "ChatPubKeyPatch", POKEMMO_PUBKEY_CHAT, loadPublicKey("/chat.public.pem")),
+              "ChatPubKeyPatch", POKEMMO_PUBKEY_CHAT, loadPublicKey("/chat.public.key")),
           ClientPatcher.Patch(
-              "LoginServerPatch",
-              POKEMMO_LOGINSERVER,
-              Loopback.literal(POKEMMO_LOGINSERVER.length)),
+              "LoginServerPatch", POKEMMO_LOGINSERVER, loginServerLiteral(loginHost)),
       ) +
           POKEMMO_PUBKEYS_FEED.mapIndexed { index, key ->
-            ClientPatcher.Patch("FeedPubKeyPatch$index", key, loadPublicKey("/feed.public.pem"))
+            ClientPatcher.Patch("FeedPubKeyPatch$index", key, loadPublicKey("/feed.public.key"))
           } +
           POKEMMO_FEED_HOSTS.map { host ->
             val origin = "https://$host"
@@ -135,17 +160,80 @@ object Launcher {
       runCatching { Files.readString(workingDir.resolve("revision.txt")).trim().toLong() }
           .getOrDefault(0)
 
-  private fun loadPublicKey(path: String): String = Base64.Default.encode(readPem(path))
+  private fun loginServerLiteral(loginHost: String): String =
+      Ipv4Mapped.literal(loginHost, POKEMMO_LOGINSERVER.length)
+          ?: Loopback.literal(POKEMMO_LOGINSERVER.length)
+
+  private fun loadPublicKey(path: String, external: Path? = null): String =
+      Base64.Default.encode(external?.let(::readPem) ?: readResourcePem(path))
 
   private fun loadPrivateKey(path: String): PrivateKey =
-      KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(readPem(path)))
+      KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(readResourcePem(path)))
 
-  private fun readPem(path: String): ByteArray {
+  private fun readResourcePem(path: String): ByteArray {
     val stream =
         Launcher::class.java.getResourceAsStream(path)
             ?: throw IllegalArgumentException("Key not found at path: $path")
-    return stream.use {
-      PemReader(StringReader(it.readBytes().decodeToString())).readPemObject().content
-    }
+    return stream.use { parsePem(it.readBytes().decodeToString()) }
   }
+
+  private fun readPem(path: Path): ByteArray {
+    require(Files.isRegularFile(path)) { "Public key not found: $path" }
+    return parsePem(Files.readString(path))
+  }
+
+  private fun parsePem(value: String): ByteArray =
+      PemReader(StringReader(value)).use { it.readPemObject().content }
+}
+
+internal data class LauncherOptions(
+    val loginHost: String,
+    val loginPort: Int,
+    val gamePublicKey: Path?,
+    val executable: Path?,
+    val workingDir: Path?,
+    val output: Path?,
+    val clientArgs: List<String>,
+)
+
+internal fun parseOptions(args: Array<String>): LauncherOptions {
+  var loginHost = System.getenv("OPENMMO_LOGIN_HOST") ?: LOOPBACK
+  var loginPort = System.getenv("OPENMMO_LOGIN_PORT")?.toInt() ?: 2106
+  var gamePublicKey = System.getenv("OPENMMO_GAME_PUBLIC_KEY_FILE")?.let(Path::of)
+  var executable = System.getenv("OPENMMO_CLIENT")?.let(Path::of)
+  var workingDir = System.getenv("OPENMMO_WORKING_DIR")?.let(Path::of)
+  var output = System.getenv("OPENMMO_PATCHED_CLIENT")?.let(Path::of)
+  val clientArgs = mutableListOf<String>()
+  var index = 0
+
+  fun value(name: String): String {
+    require(index + 1 < args.size) { "$name requires a value" }
+    index += 1
+    return args[index]
+  }
+
+  while (index < args.size) {
+    when (args[index]) {
+      "--login-host" -> loginHost = value("--login-host")
+      "--login-port" -> loginPort = value("--login-port").toInt()
+      "--game-public-key" -> gamePublicKey = Path.of(value("--game-public-key"))
+      "--client" -> executable = Path.of(value("--client"))
+      "--working-dir" -> workingDir = Path.of(value("--working-dir"))
+      "--output" -> output = Path.of(value("--output"))
+      "--" -> {
+        clientArgs += args.drop(index + 1)
+        break
+      }
+      else -> clientArgs += args[index]
+    }
+    index += 1
+  }
+
+  require(loginHost.matches(Regex("[A-Za-z0-9.:-]+"))) { "Invalid login host" }
+  require(loginPort in 1..65535) { "Invalid login port" }
+  require(loginHost == LOOPBACK || gamePublicKey != null) {
+    "--game-public-key is required for a remote server"
+  }
+  return LauncherOptions(
+      loginHost, loginPort, gamePublicKey, executable, workingDir, output, clientArgs)
 }

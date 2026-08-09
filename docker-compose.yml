@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${LOGIN_DB_USER:-openmmo_login_user}
       POSTGRES_PASSWORD: ${LOGIN_DB_PASSWORD:?LOGIN_DB_PASSWORD is required (see .env.example)}
     ports:
-      - ${LOGIN_DB_PORT:-20011}:5432
+      - 127.0.0.1:${LOGIN_DB_PORT:-20011}:5432
     volumes:
       - login_db_data:/var/lib/postgresql
   game-db:
@@ -20,7 +20,7 @@ services:
       POSTGRES_USER: ${GAME_DB_USER:-openmmo_game_user}
       POSTGRES_PASSWORD: ${GAME_DB_PASSWORD:?GAME_DB_PASSWORD is required (see .env.example)}
     ports:
-      - ${GAME_DB_PORT:-20021}:5432
+      - 127.0.0.1:${GAME_DB_PORT:-20021}:5432
     volumes:
       - game_db_data:/var/lib/postgresql
 

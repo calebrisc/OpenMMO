@@ -15,8 +15,6 @@ import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.SSLContext
 
 private const val TEMPLATE = "/main_feed_template.xml"
-private const val LOGIN_PORT = 2106
-
 // A patched url has room for a four digit port after 127.0.0.1 and no more.
 private const val MIN_PORT = 2048
 private const val MAX_PORT = 8999
@@ -50,12 +48,15 @@ class FeedServer(private val signingKey: PrivateKey, keyStore: KeyStore) {
 
   fun certificate(): X509Certificate = certificate
 
-  /** Builds and signs a feed that sends the client to the local login server at [revision]. */
-  fun publish(revision: Long) {
+  /** Builds a signed feed for [loginHost] at [revision]. */
+  fun publish(revision: Long, loginHost: String = LOOPBACK, loginPort: Int = 2106) {
+    require(loginHost.matches(Regex("[A-Za-z0-9.:-]+"))) { "Invalid login host" }
+    require(loginPort in 1..65535) { "Invalid login port" }
     val xml =
         resource(TEMPLATE)
-            .replace("{{IP}}", LOOPBACK)
-            .replace("{{PORT}}", LOGIN_PORT.toString())
+            .replace("{{LOGIN_HOST}}", loginHost)
+            .replace("{{FEED_HOST}}", LOOPBACK)
+            .replace("{{PORT}}", loginPort.toString())
             .replace("{{FEED_PORT}}", port.toString())
             .replace("{{REVISION}}", revision.toString())
     body = xml.toByteArray(Charsets.UTF_8)
@@ -82,6 +83,7 @@ class FeedServer(private val signingKey: PrivateKey, keyStore: KeyStore) {
       if (data == null) {
         it.sendResponseHeaders(404, -1)
       } else {
+        Launcher.log { "Served ${it.requestURI.path.substringAfterLast('/')}" }
         it.sendResponseHeaders(200, data.size.toLong())
         it.responseBody.write(data)
       }
