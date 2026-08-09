@@ -17,6 +17,9 @@ import javax.inject.Singleton
 private const val TACKLE_ID = 33
 private const val FALLBACK_PP = 35
 
+// Wild shiny odds: 1 in SHINY_ODDS. Configurable via env (PokeServer custom; upstream has none).
+private val SHINY_ODDS = System.getenv("SHINY_ODDS")?.toIntOrNull()?.coerceAtLeast(1) ?: 30000
+
 /** Rolls a wild monster: random nature seed, random IVs, computed stats, full hp. */
 @Singleton
 class WildMonFactory
@@ -60,7 +63,7 @@ constructor(
             eVs = EVs(),
             iVs = ivs,
             moves = moveset,
-            isShiny = false,
+            isShiny = rng.pick(SHINY_ODDS) == 0,
             hasHiddenAbility = false,
             isAlpha = false,
             isSecret = false,
