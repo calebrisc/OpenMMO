@@ -248,6 +248,36 @@ class BattleServiceTest :
         }
       }
 
+      test("a catch with a full party sends the monster to the pc") {
+        runTest {
+          val fx = Fixture(this)
+          val (session, charId) = fx.playerWithParty()
+          repeat(5) { i ->
+            fx.store.addPokemon(
+                charId, bulbasaur(charId, 50, 999).copy(containerSlot = (i + 1).toShort()))
+          }
+
+          session.startBattle(fx.service)
+          session.act(fx.service, BattleAction.ITEM)
+          session.finishBattleTransition(fx.service)
+
+          val stored = fx.store.getCharacter(charId).shouldNotBeNull()
+          stored.pokemon.size shouldBe 6
+          stored.pcStorage.single().container shouldBe PokemonContainer.PC
+          stored.pcStorage.single().containerSlot shouldBe 0.toShort()
+
+          // The next overflow catch takes the following box slot instead of colliding on zero.
+          session.startBattle(fx.service)
+          session.act(fx.service, BattleAction.ITEM)
+          session.finishBattleTransition(fx.service)
+
+          fx.store.getCharacter(charId)!!.pcStorage.map { it.containerSlot } shouldBe
+              listOf(0.toShort(), 1.toShort())
+          advanceUntilIdle()
+          fx.repo.saved[charId].shouldNotBeNull().pcStorage.size shouldBe 2
+        }
+      }
+
       test("a trainer sends out its next monster instead of losing when one faints") {
         runTest {
           val fx = Fixture(backgroundScope)

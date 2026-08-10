@@ -6,6 +6,7 @@ import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.Skin
 import de.fiereu.openmmo.common.enums.CharacterGender
 import de.fiereu.openmmo.common.enums.Direction
+import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
 import de.fiereu.openmmo.common.enums.SkinSlot
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -216,22 +217,32 @@ constructor(
     }
   }
 
-  /** False when the monster could not be written, in which case the party is left as it was. */
-  suspend fun addPokemon(characterId: Long, pokemon: Pokemon): Boolean =
-      mutateDurably(
-          characterId,
-          // Copy instead of mutating in place, so flusher snapshots never see a half-updated list.
-          apply = { it.copy(pokemon = (it.pokemon + pokemon).toMutableList()) },
-          rollback = {
+  /** False when the monster could not be written, in which case the lists are left as they were. */
+  suspend fun addPokemon(characterId: Long, pokemon: Pokemon): Boolean {
+    val toPc = pokemon.container == PokemonContainer.PC
+    return mutateDurably(
+        characterId,
+        // Copy instead of mutating in place, so flusher snapshots never see a half-updated list.
+        apply = {
+          if (toPc) it.copy(pcStorage = (it.pcStorage + pokemon).toMutableList())
+          else it.copy(pokemon = (it.pokemon + pokemon).toMutableList())
+        },
+        rollback = {
+          if (toPc) {
+            it.copy(pcStorage = it.pcStorage.filter { m -> m.id != pokemon.id }.toMutableList())
+          } else {
             it.copy(pokemon = it.pokemon.filter { m -> m.id != pokemon.id }.toMutableList())
-          },
-      )
+          }
+        },
+    )
+  }
 
-  /** Replace one party monster by id, for example after a battle changed hp, xp, or level. */
+  /** Replace one monster by id wherever it lives, for example after a battle changed hp or xp. */
   fun updatePokemon(characterId: Long, updated: Pokemon) {
     mutate(characterId) { stored ->
-      stored.copy(
-          pokemon = stored.pokemon.map { if (it.id == updated.id) updated else it }.toMutableList())
+      fun MutableList<Pokemon>.replaced() =
+          map { if (it.id == updated.id) updated else it }.toMutableList()
+      stored.copy(pokemon = stored.pokemon.replaced(), pcStorage = stored.pcStorage.replaced())
     }
   }
 
