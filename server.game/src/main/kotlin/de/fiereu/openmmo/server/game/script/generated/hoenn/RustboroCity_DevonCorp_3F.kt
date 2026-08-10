@@ -37,6 +37,7 @@ internal object RustboroCity_DevonCorp_3F_EventScript_RareRocksDisplay : Script 
 internal object RustboroCity_DevonCorp_3F_EventScript_MeetPresident : Script {
   override suspend fun run(ctx: ScriptContext) {
     if (ctx.getVar(HoennVars.VAR_DEVON_CORP_3F_STATE) != 0) return
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECOVERED_DEVON_GOODS)) return
     ctx.sign(RustboroCity_DevonCorp_3F.ThisIs3rdFloorWaitHere)
     ctx.sign(RustboroCity_DevonCorp_3F.WordWithPresidentComeWithMe)
     ctx.sign(RustboroCity_DevonCorp_3F.PleaseGoAhead)

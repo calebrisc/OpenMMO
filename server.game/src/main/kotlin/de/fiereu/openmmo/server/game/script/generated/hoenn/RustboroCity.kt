@@ -5,6 +5,7 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+import de.fiereu.openmmo.story.generated.hoenn.HoennVars
 
 internal object RustboroCity_OnTransition : Script {
   override suspend fun run(ctx: ScriptContext) {
@@ -172,8 +173,55 @@ internal object RustboroCity_EventScript_CuttersHouseSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(RustboroCity.CuttersHouse)
 }
 
+// The stolen-goods scene is five coordinate triggers outside the gym, registered here since the
+// bootstrap never stubbed coord scripts. It reveals the tunnel grunt the rescue scene needs.
+private suspend fun stolenGoodsScene(ctx: ScriptContext) {
+  ctx.sign(RustboroCity.OutOfTheWay)
+  ctx.sign(RustboroCity.WaitDontTakeMyGoods)
+  ctx.setFlag(HoennFlags.FLAG_DEVON_GOODS_STOLEN)
+  ctx.setVar(HoennVars.VAR_RUSTBORO_CITY_STATE, 2)
+  ctx.setVar(HoennVars.VAR_RUSTURF_TUNNEL_STATE, 2)
+  ctx.setVar(HoennVars.VAR_ROUTE116_STATE, 1)
+  ctx.clearFlag(HoennFlags.FLAG_HIDE_ROUTE_116_MR_BRINEY)
+  ctx.clearFlag(HoennFlags.FLAG_HIDE_RUSTURF_TUNNEL_PEEKO)
+  ctx.clearFlag(HoennFlags.FLAG_HIDE_RUSTURF_TUNNEL_AQUA_GRUNT)
+  ctx.setFlag(HoennFlags.FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY)
+  ctx.setFlag(HoennFlags.FLAG_HIDE_BRINEYS_HOUSE_PEEKO)
+  ctx.clearFlag(HoennFlags.FLAG_HIDE_RUSTBORO_CITY_DEVON_EMPLOYEE_1)
+}
+
+internal object RustboroCity_EventScript_StolenGoodsTrigger0 : Script {
+  override suspend fun run(ctx: ScriptContext) = stolenGoodsScene(ctx)
+}
+
+internal object RustboroCity_EventScript_StolenGoodsTrigger1 : Script {
+  override suspend fun run(ctx: ScriptContext) = stolenGoodsScene(ctx)
+}
+
+internal object RustboroCity_EventScript_StolenGoodsTrigger2 : Script {
+  override suspend fun run(ctx: ScriptContext) = stolenGoodsScene(ctx)
+}
+
+internal object RustboroCity_EventScript_StolenGoodsTrigger3 : Script {
+  override suspend fun run(ctx: ScriptContext) = stolenGoodsScene(ctx)
+}
+
+internal object RustboroCity_EventScript_StolenGoodsTrigger4 : Script {
+  override suspend fun run(ctx: ScriptContext) = stolenGoodsScene(ctx)
+}
+
 internal val RustboroCityScripts: Map<String, Script> =
     mapOf(
+        "RustboroCity_EventScript_StolenGoodsTrigger4" to
+            RustboroCity_EventScript_StolenGoodsTrigger4,
+        "RustboroCity_EventScript_StolenGoodsTrigger3" to
+            RustboroCity_EventScript_StolenGoodsTrigger3,
+        "RustboroCity_EventScript_StolenGoodsTrigger2" to
+            RustboroCity_EventScript_StolenGoodsTrigger2,
+        "RustboroCity_EventScript_StolenGoodsTrigger1" to
+            RustboroCity_EventScript_StolenGoodsTrigger1,
+        "RustboroCity_EventScript_StolenGoodsTrigger0" to
+            RustboroCity_EventScript_StolenGoodsTrigger0,
         "RustboroCity_OnTransition" to RustboroCity_OnTransition,
         "RustboroCity_EventScript_Woman" to RustboroCity_EventScript_Woman,
         "RustboroCity_EventScript_FatMan" to RustboroCity_EventScript_FatMan,

@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.hoenn
 import de.fiereu.openmmo.dialog.generated.hoenn.SootopolisCity
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
 internal object SootopolisCity_EventScript_CaveOfOriginExpert : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SootopolisCity.CaveOfOriginSleepsToo)
@@ -61,7 +62,19 @@ internal object SootopolisCity_EventScript_Archie : Script {
 }
 
 internal object SootopolisCity_EventScript_Wallace : Script {
-  override suspend fun run(ctx: ScriptContext) = ctx.say(SootopolisCity.LeadSuperiorTrainerToCave)
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_HM_WATERFALL)) {
+      return ctx.say(SootopolisCity.ExplainWaterfallGoToGym)
+    }
+    if (ctx.isFlagSet(HoennFlags.FLAG_SOOTOPOLIS_ARCHIE_MAXIE_LEAVE)) {
+      ctx.say(SootopolisCity.ThankYouForHelpAcceptThis)
+      // HM07 is not in the Emerald-sourced item table, so possession is the story flag.
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_HM_WATERFALL)
+      ctx.say(SootopolisCity.ExplainWaterfallGoToGym)
+      return
+    }
+    ctx.say(SootopolisCity.LeadSuperiorTrainerToCave)
+  }
 }
 
 internal object SootopolisCity_EventScript_GymSign : Script {

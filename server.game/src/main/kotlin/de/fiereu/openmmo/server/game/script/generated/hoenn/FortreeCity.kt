@@ -1,8 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.FortreeCity
+import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val KECLEON_DEX = 352
 
 internal object FortreeCity_EventScript_Man : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FortreeCity.SawGiganticPokemonInSky)
@@ -39,20 +43,16 @@ internal object FortreeCity_EventScript_GameboyKid : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FortreeCity.PokemonThatEvolveWhenTraded)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * checkitem ITEM_DEVON_SCOPE
- * goto_if_eq VAR_RESULT, TRUE, FortreeCity_EventScript_AskUseDevonScope
- * msgbox FortreeCity_Text_SomethingUnseeable, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object FortreeCity_EventScript_Kecleon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_EventScript_Kecleon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      return ctx.sign(FortreeCity.SomethingUnseeable)
+    }
+    val result = ctx.wildBattle(KECLEON_DEX, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_FORTREE_CITY_KECLEON)
+    ctx.despawnInteracted()
+  }
 }
 
 internal object FortreeCity_EventScript_CitySign : Script {

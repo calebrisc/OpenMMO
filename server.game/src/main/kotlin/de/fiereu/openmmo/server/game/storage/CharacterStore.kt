@@ -132,6 +132,10 @@ constructor(
 
   fun getCharacter(id: Long): StoredCharacter? = characters[id]
 
+  /** The cached (connected) character with this name, for admin commands that target players. */
+  fun findCachedByName(name: String): StoredCharacter? =
+      characters.values.firstOrNull { it.info.name.equals(name, ignoreCase = true) }
+
   /** Like [getCharacter] but falls back to the database when the cache has no entry. */
   suspend fun getOrLoadCharacter(id: Long): StoredCharacter? {
     pendingUnload.remove(id)
