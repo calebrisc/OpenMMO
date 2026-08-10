@@ -5,32 +5,16 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PROTEIN
- * end
- * ```
- */
 internal object SafariZone_North_EventScript_ItemProtein : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_North_EventScript_ItemProtein")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PROTEIN)
 }
 
 internal object SafariZone_North_EventScript_ItemTM47 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM47)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_QUICK_CLAW
- * end
- * ```
- */
 internal object SafariZone_North_EventScript_ItemQuickClaw : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_North_EventScript_ItemQuickClaw")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.QUICK_CLAW)
 }
 
 internal object SafariZone_North_EventScript_TrainerTips1 : Script {

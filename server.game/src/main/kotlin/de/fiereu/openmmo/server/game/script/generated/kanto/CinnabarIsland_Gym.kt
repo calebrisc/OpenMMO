@@ -317,20 +317,8 @@ internal object CinnabarIsland_Gym_EventScript_Quiz6Right : Script {
       TODO("port CinnabarIsland_Gym_EventScript_Quiz6Right")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_BLAINE, 4
- * famechecker FAMECHECKER_MRFUJI, 4
- * msgbox CinnabarIsland_Gym_Text_PhotoOfBlaineAndFuji
- * releaseall
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_BlaineFujiPhoto : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CinnabarIsland_Gym_EventScript_BlaineFujiPhoto")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CinnabarIsland_Gym.PhotoOfBlaineAndFuji)
 }
 
 internal val CinnabarIsland_GymScripts: Map<String, Script> =

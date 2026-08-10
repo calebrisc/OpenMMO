@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SSAnne_Kitchen
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -47,16 +48,8 @@ internal object SSAnne_Kitchen_EventScript_Chef7 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SSAnne_Kitchen.OnlyGetToPeelOnions)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREAT_BALL
- * end
- * ```
- */
 internal object SSAnne_Kitchen_EventScript_ItemGreatBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SSAnne_Kitchen_EventScript_ItemGreatBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREAT_BALL)
 }
 
 internal val SSAnne_KitchenScripts: Map<String, Script> =

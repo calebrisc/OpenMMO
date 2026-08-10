@@ -26,16 +26,8 @@ internal object VictoryRoad_1F_EventScript_Naomi : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_RARE_CANDY
- * end
- * ```
- */
 internal object VictoryRoad_1F_EventScript_ItemRareCandy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_1F_EventScript_ItemRareCandy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.RARE_CANDY)
 }
 
 internal object VictoryRoad_1F_EventScript_ItemTM02 : Script {

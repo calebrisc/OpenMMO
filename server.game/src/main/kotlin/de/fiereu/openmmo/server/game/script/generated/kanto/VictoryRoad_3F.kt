@@ -46,16 +46,8 @@ internal object VictoryRoad_3F_EventScript_Caroline : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REVIVE
- * end
- * ```
- */
 internal object VictoryRoad_3F_EventScript_ItemMaxRevive : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_3F_EventScript_ItemMaxRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REVIVE)
 }
 
 internal object VictoryRoad_3F_EventScript_ItemTM50 : Script {

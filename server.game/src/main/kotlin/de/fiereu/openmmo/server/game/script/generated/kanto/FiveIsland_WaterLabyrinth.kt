@@ -1,7 +1,10 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_WaterLabyrinth
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_PKMN_BREEDER_ALIZE = 520
 
 /**
  * Not ported yet. Decomp body:
@@ -25,19 +28,15 @@ internal object FiveIsland_WaterLabyrinth_EventScript_EggGentleman : Script {
       TODO("port FiveIsland_WaterLabyrinth_EventScript_EggGentleman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_BREEDER_ALIZE, FiveIsland_WaterLabyrinth_Text_AlizeIntro, FiveIsland_WaterLabyrinth_Text_AlizeDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_WaterLabyrinth_EventScript_AlizeRematch
- * msgbox FiveIsland_WaterLabyrinth_Text_AlizePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_WaterLabyrinth_EventScript_Alize : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_WaterLabyrinth_EventScript_Alize")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_BREEDER_ALIZE,
+        FiveIsland_WaterLabyrinth.AlizeIntro,
+        FiveIsland_WaterLabyrinth.AlizeDefeat))
+        return
+    ctx.say(FiveIsland_WaterLabyrinth.AlizePostBattle)
+  }
 }
 
 internal val FiveIsland_WaterLabyrinthScripts: Map<String, Script> =

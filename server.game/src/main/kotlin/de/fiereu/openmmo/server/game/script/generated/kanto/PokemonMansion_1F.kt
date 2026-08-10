@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonMansion_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -17,40 +18,16 @@ internal object PokemonMansion_1F_EventScript_Ted : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CARBOS
- * end
- * ```
- */
 internal object PokemonMansion_1F_EventScript_ItemCarbos : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_1F_EventScript_ItemCarbos")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CARBOS)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ESCAPE_ROPE
- * end
- * ```
- */
 internal object PokemonMansion_1F_EventScript_ItemEscapeRope : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_1F_EventScript_ItemEscapeRope")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ESCAPE_ROPE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PROTEIN
- * end
- * ```
- */
 internal object PokemonMansion_1F_EventScript_ItemProtein : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_1F_EventScript_ItemProtein")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PROTEIN)
 }
 
 internal object PokemonMansion_1F_EventScript_Johnson : Script {

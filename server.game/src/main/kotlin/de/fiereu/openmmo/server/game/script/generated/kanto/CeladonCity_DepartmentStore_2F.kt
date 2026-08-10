@@ -1,6 +1,8 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_DepartmentStore_2F
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -28,39 +30,16 @@ internal object CeladonCity_DepartmentStore_2F_EventScript_ClerkItems : Script {
       TODO("port CeladonCity_DepartmentStore_2F_EventScript_ClerkItems")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto_if_questlog EventScript_ReleaseEnd
- * lock
- * faceplayer
- * message Text_MayIHelpYou
- * waitmessage
- * pokemart CeladonCity_DepartmentStore_2F_TMs
- * msgbox Text_PleaseComeAgain
- * release
- * end
- * ```
- */
 internal object CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(Misc.Text_MayIHelpYou)
+    ctx.pokemart(Items.TM05, Items.TM15, Items.TM28, Items.TM31, Items.TM43, Items.TM45)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_LANCE, 3
- * msgbox CeladonCity_DepartmentStore_2F_Text_LanceComesToBuyCapes
- * release
- * end
- * ```
- */
 internal object CeladonCity_DepartmentStore_2F_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_DepartmentStore_2F_EventScript_Woman")
+      ctx.say(CeladonCity_DepartmentStore_2F.LanceComesToBuyCapes)
 }
 
 internal object CeladonCity_DepartmentStore_2F_EventScript_FloorSign : Script {

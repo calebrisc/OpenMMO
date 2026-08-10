@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.TrainerTower_Lobby
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -12,23 +13,20 @@ internal object TrainerTower_Lobby_EventScript_Nurse : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto_if_questlog EventScript_ReleaseEnd
- * lock
- * faceplayer
- * message Text_MayIHelpYou
- * waitmessage
- * pokemart TrainerTower_Lobby_Mart_Items
- * msgbox Text_PleaseComeAgain
- * release
- * end
- * ```
- */
 internal object TrainerTower_Lobby_EventScript_MartClerk : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port TrainerTower_Lobby_EventScript_MartClerk")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(Misc.Text_MayIHelpYou)
+    ctx.pokemart(
+        Items.ULTRA_BALL,
+        Items.GREAT_BALL,
+        Items.FULL_RESTORE,
+        Items.MAX_POTION,
+        Items.HYPER_POTION,
+        Items.REVIVE,
+        Items.FULL_HEAL,
+        Items.ESCAPE_ROPE,
+        Items.MAX_REPEL)
+  }
 }
 
 /**

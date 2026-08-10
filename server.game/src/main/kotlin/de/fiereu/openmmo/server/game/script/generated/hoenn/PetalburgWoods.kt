@@ -67,28 +67,8 @@ private suspend fun devonResearcherEvent(ctx: ScriptContext) {
   ctx.setVar(HoennVars.VAR_PETALBURG_WOODS_STATE, 1)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_unset FLAG_BADGE01_GET, EventScript_CheckTreeCantCut
- * checkpartymove MOVE_CUT
- * goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
- * setfieldeffectargument 0, VAR_RESULT
- * bufferpartymonnick STR_VAR_1, VAR_RESULT
- * buffermovename STR_VAR_2, MOVE_CUT
- * msgbox Text_WantToCut, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_CancelCut
- * msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
- * closemessage
- * dofieldeffect FLDEFF_USE_CUT_ON_TREE
- * waitstate
- * goto EventScript_CutTreeDown
- * end
- * ```
- */
 internal object EventScript_CutTree : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port EventScript_CutTree")
+  override suspend fun run(ctx: ScriptContext) = ctx.cutTree()
 }
 
 /**

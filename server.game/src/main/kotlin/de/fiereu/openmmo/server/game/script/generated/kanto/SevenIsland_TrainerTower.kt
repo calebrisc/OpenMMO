@@ -4,34 +4,29 @@ import de.fiereu.openmmo.dialog.generated.kanto.SevenIsland_TrainerTower
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_DARIO, SevenIsland_TrainerTower_Text_DarioIntro, SevenIsland_TrainerTower_Text_DarioDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_TrainerTower_EventScript_DarioRematch
- * msgbox SevenIsland_TrainerTower_Text_DarioPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_PSYCHIC_DARIO = 586
+private const val TRAINER_PSYCHIC_RODETTE = 587
+
 internal object SevenIsland_TrainerTower_EventScript_Dario : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_TrainerTower_EventScript_Dario")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_DARIO,
+        SevenIsland_TrainerTower.DarioIntro,
+        SevenIsland_TrainerTower.DarioDefeat))
+        return
+    ctx.say(SevenIsland_TrainerTower.DarioPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_RODETTE, SevenIsland_TrainerTower_Text_RodetteIntro, SevenIsland_TrainerTower_Text_RodetteDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_TrainerTower_EventScript_RodetteRematch
- * msgbox SevenIsland_TrainerTower_Text_RodettePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_TrainerTower_EventScript_Rodette : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_TrainerTower_EventScript_Rodette")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_RODETTE,
+        SevenIsland_TrainerTower.RodetteIntro,
+        SevenIsland_TrainerTower.RodetteDefeat))
+        return
+    ctx.say(SevenIsland_TrainerTower.RodettePostBattle)
+  }
 }
 
 internal object SevenIsland_TrainerTower_EventScript_TrainerTowerSign : Script {

@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CinnabarIsland_PokemonCenter_1F
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -27,21 +28,8 @@ internal object CinnabarIsland_PokemonCenter_1F_EventScript_Youngster : Script {
       ctx.say(CinnabarIsland_PokemonCenter_1F.EvolutionCanWaitForNewMoves)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MRFUJI, 5
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureMrFuji
- * release
- * end
- * ```
- */
 internal object CinnabarIsland_PokemonCenter_1F_EventScript_PokemonJournalMrFuji : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CinnabarIsland_PokemonCenter_1F_EventScript_PokemonJournalMrFuji")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureMrFuji)
 }
 
 /**

@@ -27,20 +27,9 @@ internal object LavenderTown_PokemonCenter_1F_EventScript_Youngster : Script {
       ctx.say(LavenderTown_PokemonCenter_1F.PeoplePayForCuboneSkulls)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MRFUJI, 3
- * msgbox LavenderTown_PokemonCenter_1F_Text_HearMrFujiNotFromAroundHere
- * release
- * end
- * ```
- */
 internal object LavenderTown_PokemonCenter_1F_EventScript_BaldingMan : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_PokemonCenter_1F_EventScript_BaldingMan")
+      ctx.say(LavenderTown_PokemonCenter_1F.HearMrFujiNotFromAroundHere)
 }
 
 internal val LavenderTown_PokemonCenter_1FScripts: Map<String, Script> =

@@ -16,44 +16,20 @@ internal object RocketHideout_B2F_EventScript_Grunt : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_SPEED
- * end
- * ```
- */
 internal object RocketHideout_B2F_EventScript_ItemXSpeed : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B2F_EventScript_ItemXSpeed")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_SPEED)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MOON_STONE
- * end
- * ```
- */
 internal object RocketHideout_B2F_EventScript_ItemMoonStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B2F_EventScript_ItemMoonStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MOON_STONE)
 }
 
 internal object RocketHideout_B2F_EventScript_ItemTM12 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM12)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_SUPER_POTION
- * end
- * ```
- */
 internal object RocketHideout_B2F_EventScript_ItemSuperPotion : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B2F_EventScript_ItemSuperPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SUPER_POTION)
 }
 
 internal val RocketHideout_B2FScripts: Map<String, Script> =

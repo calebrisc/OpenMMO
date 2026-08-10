@@ -1,7 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_MemorialPillar
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_BIRD_KEEPER_CHAZ = 571
+private const val TRAINER_BIRD_KEEPER_HAROLD = 572
+private const val TRAINER_BIRD_KEEPER_MILO = 570
 
 /**
  * Not ported yet. Decomp body:
@@ -27,61 +33,41 @@ internal object FiveIsland_MemorialPillar_EventScript_MemorialMan : Script {
       TODO("port FiveIsland_MemorialPillar_EventScript_MemorialMan")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_MILO, FiveIsland_MemorialPillar_Text_MiloIntro, FiveIsland_MemorialPillar_Text_MiloDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_MemorialPillar_EventScript_MiloRematch
- * msgbox FiveIsland_MemorialPillar_Text_MiloPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_MemorialPillar_EventScript_Milo : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_MemorialPillar_EventScript_Milo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_MILO,
+        FiveIsland_MemorialPillar.MiloIntro,
+        FiveIsland_MemorialPillar.MiloDefeat))
+        return
+    ctx.say(FiveIsland_MemorialPillar.MiloPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_CHAZ, FiveIsland_MemorialPillar_Text_ChazIntro, FiveIsland_MemorialPillar_Text_ChazDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_MemorialPillar_EventScript_ChazRematch
- * msgbox FiveIsland_MemorialPillar_Text_ChazPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_MemorialPillar_EventScript_Chaz : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_MemorialPillar_EventScript_Chaz")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_CHAZ,
+        FiveIsland_MemorialPillar.ChazIntro,
+        FiveIsland_MemorialPillar.ChazDefeat))
+        return
+    ctx.say(FiveIsland_MemorialPillar.ChazPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_HAROLD, FiveIsland_MemorialPillar_Text_HaroldIntro, FiveIsland_MemorialPillar_Text_HaroldDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_MemorialPillar_EventScript_HaroldRematch
- * msgbox FiveIsland_MemorialPillar_Text_HaroldPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_MemorialPillar_EventScript_Harold : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_MemorialPillar_EventScript_Harold")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_HAROLD,
+        FiveIsland_MemorialPillar.HaroldIntro,
+        FiveIsland_MemorialPillar.HaroldDefeat))
+        return
+    ctx.say(FiveIsland_MemorialPillar.HaroldPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_METAL_COAT
- * end
- * ```
- */
 internal object FiveIsland_MemorialPillar_EventScript_ItemMetalCoat : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_MemorialPillar_EventScript_ItemMetalCoat")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.METAL_COAT)
 }
 
 /**

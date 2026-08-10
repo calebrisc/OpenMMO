@@ -84,16 +84,8 @@ internal object RockTunnel_1F_EventScript_ItemPearl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PEARL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ESCAPE_ROPE
- * end
- * ```
- */
 internal object RockTunnel_1F_EventScript_ItemEscapeRope : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RockTunnel_1F_EventScript_ItemEscapeRope")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ESCAPE_ROPE)
 }
 
 internal object RockTunnel_1F_EventScript_RouteSign : Script {

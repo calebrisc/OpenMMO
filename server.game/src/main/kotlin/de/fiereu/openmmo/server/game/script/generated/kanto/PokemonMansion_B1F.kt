@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonMansion_B1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -8,16 +9,8 @@ private const val TRAINER_BURGLAR_LEWIS = 219
 
 private const val TRAINER_SCIENTIST_IVAN = 347
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM22
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_ItemTM22 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_B1F_EventScript_ItemTM22")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM22)
 }
 
 internal object PokemonMansion_B1F_EventScript_Lewis : Script {
@@ -38,40 +31,16 @@ internal object PokemonMansion_B1F_EventScript_Ivan : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM14
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_ItemTM14 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_B1F_EventScript_ItemTM14")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM14)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_B1F_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_SECRET_KEY
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_ItemSecretKey : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_B1F_EventScript_ItemSecretKey")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SECRET_KEY)
 }
 
 internal object PokemonMansion_B1F_EventScript_DiarySep1st : Script {

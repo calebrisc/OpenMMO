@@ -114,16 +114,8 @@ internal object RockTunnel_B1F_EventScript_ItemRevive : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ETHER
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_ItemMaxEther : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RockTunnel_B1F_EventScript_ItemMaxEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ETHER)
 }
 
 internal val RockTunnel_B1FScripts: Map<String, Script> =

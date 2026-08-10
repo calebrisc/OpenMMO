@@ -4,22 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_CopycatsHouse_2F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_DODUO, CRY_MODE_NORMAL
- * msgbox SaffronCity_CopycatsHouse_2F_Text_Doduo
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SaffronCity_CopycatsHouse_2F_EventScript_Doduo : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SaffronCity_CopycatsHouse_2F_EventScript_Doduo")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SaffronCity_CopycatsHouse_2F.Doduo)
 }
 
 internal object SaffronCity_CopycatsHouse_2F_EventScript_Doll : Script {

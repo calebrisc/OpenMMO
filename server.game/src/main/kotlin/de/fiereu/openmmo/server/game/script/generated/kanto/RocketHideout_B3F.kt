@@ -30,16 +30,8 @@ internal object RocketHideout_B3F_EventScript_Grunt1 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_RARE_CANDY
- * end
- * ```
- */
 internal object RocketHideout_B3F_EventScript_ItemRareCandy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B3F_EventScript_ItemRareCandy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.RARE_CANDY)
 }
 
 internal object RocketHideout_B3F_EventScript_ItemTM21 : Script {

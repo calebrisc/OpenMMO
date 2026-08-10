@@ -46,28 +46,12 @@ internal object ViridianForest_EventScript_Sammy : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POKE_BALL
- * end
- * ```
- */
 internal object ViridianForest_EventScript_ItemPokeBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port ViridianForest_EventScript_ItemPokeBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POKE_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ANTIDOTE
- * end
- * ```
- */
 internal object ViridianForest_EventScript_ItemAntidote : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port ViridianForest_EventScript_ItemAntidote")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ANTIDOTE)
 }
 
 internal object ViridianForest_EventScript_ItemPotion : Script {

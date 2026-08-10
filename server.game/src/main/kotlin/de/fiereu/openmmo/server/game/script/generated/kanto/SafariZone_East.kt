@@ -5,44 +5,20 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_POTION
- * end
- * ```
- */
 internal object SafariZone_East_EventScript_ItemMaxPotion : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_East_EventScript_ItemMaxPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object SafariZone_East_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_East_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
 internal object SafariZone_East_EventScript_ItemTM11 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM11)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_LEAF_STONE
- * end
- * ```
- */
 internal object SafariZone_East_EventScript_ItemLeafStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_East_EventScript_ItemLeafStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.LEAF_STONE)
 }
 
 internal object SafariZone_East_EventScript_AreaSign : Script {

@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.dialog.generated.kanto.VermilionCity_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
@@ -38,20 +39,8 @@ internal object VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman : Scrip
       TODO("port VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_LTSURGE, 5
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureLtSurge
- * releaseall
- * end
- * ```
- */
 internal object VermilionCity_PokemonCenter_1F_EventScript_PokemonJournalLtSurge : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonCenter_1F_EventScript_PokemonJournalLtSurge")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureLtSurge)
 }
 
 internal val VermilionCity_PokemonCenter_1FScripts: Map<String, Script> =

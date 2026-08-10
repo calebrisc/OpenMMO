@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -78,22 +79,8 @@ internal object ViridianCity_School_EventScript_Blackboard : Script {
       TODO("port ViridianCity_School_EventScript_Blackboard")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_OAK, 3
- * famechecker FAMECHECKER_DAISY, 3
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureProfOak
- * release
- * end
- * ```
- */
 internal object ViridianCity_School_EventScript_PokemonJournal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port ViridianCity_School_EventScript_PokemonJournal")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureProfOak)
 }
 
 internal val ViridianCity_SchoolScripts: Map<String, Script> =

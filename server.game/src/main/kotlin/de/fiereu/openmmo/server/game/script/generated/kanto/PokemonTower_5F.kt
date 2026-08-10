@@ -54,16 +54,8 @@ internal object PokemonTower_5F_EventScript_ItemNugget : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NUGGET)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CLEANSE_TAG
- * end
- * ```
- */
 internal object PokemonTower_5F_EventScript_ItemCleanseTag : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonTower_5F_EventScript_ItemCleanseTag")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CLEANSE_TAG)
 }
 
 internal val PokemonTower_5FScripts: Map<String, Script> =
