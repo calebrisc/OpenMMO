@@ -19,6 +19,7 @@ import de.fiereu.openmmo.server.game.services.ShopService
 import de.fiereu.openmmo.server.game.services.StoryClientState
 import de.fiereu.openmmo.server.game.services.StoryPlayerService
 import de.fiereu.openmmo.server.game.services.StoryService
+import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.PlayerState
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 
@@ -158,13 +159,59 @@ internal constructor(
 
   /** Fight the decomp trainer with this id, using the region the player is standing in. */
   suspend fun trainerBattle(trainerId: Int): BattleResult {
-    val region =
-        checkNotNull(Region.byWireValue(state.regionId.toByte())) {
-          "Scene ran in unknown region ${state.regionId}"
-        }
     return checkNotNull(battles) { "Battle service is unavailable" }
-        .startTrainerBattle(session, region, trainerId)
+        .startTrainerBattle(session, currentRegion(), trainerId)
   }
+
+  /**
+   * The decomp trainerbattle_single: a one time fight against a map trainer. Once the trainer is
+   * beaten the fight is skipped, so the script falls through to its post battle line the way the
+   * engine falls through on a set trainer flag. Returns false when the player did not win, which
+   * ends the script before its post battle text.
+   */
+  suspend fun trainerBattleSingle(
+      trainerId: Int,
+      intro: DialogLine? = null,
+      defeat: DialogLine? = null,
+  ): Boolean {
+    val flag = defeatedTrainerFlag(trainerId)
+    if (isFlagSet(flag)) return true
+    intro?.let { say(it) }
+    if (trainerBattle(trainerId) != BattleResult.VICTORY) return false
+    setFlag(flag)
+    defeat?.let { say(it) }
+    return true
+  }
+
+  /** True once [trainerId] of the player's current region has been beaten. */
+  fun isTrainerDefeated(trainerId: Int): Boolean = isFlagSet(defeatedTrainerFlag(trainerId))
+
+  /**
+   * The decomp finditem: bag the item, announce it, and set the ball's hide flag so it stays gone.
+   * When the bag has no room the ball stays, like the engine's "too bad" path.
+   */
+  suspend fun findItem(item: ItemDef, quantity: Int = 1) {
+    val npc = movement.interactedNpc(state, entityId)
+    if (npc != null && npc.hideFlag.isNotEmpty() && isFlagSet(npc.hideFlag)) return
+    if (!giveItem(item, quantity)) {
+      send(notice("Your bag is too full to take the ${item.name}."))
+      return
+    }
+    val what = if (quantity == 1) "one ${item.name}" else "${item.name} x$quantity"
+    send(notice("$playerName found $what!"))
+    if (npc != null) {
+      if (npc.hideFlag.isNotEmpty()) setFlag(npc.hideFlag)
+      movement.removeNpc(session, state, npc.entityIdx)
+    }
+  }
+
+  private fun currentRegion(): Region =
+      checkNotNull(Region.byWireValue(state.regionId.toByte())) {
+        "Scene ran in unknown region ${state.regionId}"
+      }
+
+  private fun defeatedTrainerFlag(trainerId: Int): String =
+      "${currentRegion().name.lowercase()}/TRAINER_DEFEATED_$trainerId"
 
   /**
    * Walk the map npc with decomp local id [localId] (its entityIdx) through [steps] and wait for
