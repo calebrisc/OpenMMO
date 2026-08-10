@@ -3,8 +3,14 @@ package de.fiereu.openmmo.server.game.script.generated.hoenn
 import de.fiereu.openmmo.dialog.generated.hoenn.Kecleon
 import de.fiereu.openmmo.dialog.generated.hoenn.Route120
 import de.fiereu.openmmo.items.generated.Items
+import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.services.notice
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val KECLEON = 352
+internal const val GOT_DEVON_SCOPE = "hoenn/GOT_DEVON_SCOPE"
 
 private const val TRAINER_ANGELICA = 436
 private const val TRAINER_CALLIE = 763
@@ -104,33 +110,8 @@ internal object Route120_EventScript_ItemFullHeal : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_HEAL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * dotimebasedevents
- * goto_if_set FLAG_DAILY_ROUTE_120_RECEIVED_BERRY, Route120_EventScript_ReceivedBerry
- * msgbox Route120_Text_BerriesExpressionOfLoveIsntIt, MSGBOX_YESNO
- * call_if_eq VAR_RESULT, YES, Route120_EventScript_BerryLove
- * call_if_eq VAR_RESULT, NO, Route120_EventScript_BerryNotLove
- * specialvar VAR_RESULT, GetPlayerTrainerIdOnesDigit
- * switch VAR_RESULT
- * case 0, Route120_EventScript_GiveFigyBerry
- * case 5, Route120_EventScript_GiveFigyBerry
- * case 1, Route120_EventScript_GiveWikiBerry
- * case 6, Route120_EventScript_GiveWikiBerry
- * case 2, Route120_EventScript_GiveMagoBerry
- * case 7, Route120_EventScript_GiveMagoBerry
- * case 3, Route120_EventScript_GiveAguavBerry
- * case 8, Route120_EventScript_GiveAguavBerry
- * case 4, Route120_EventScript_GiveIapapaBerry
- * case 9, Route120_EventScript_GiveIapapaBerry
- * end
- * ```
- */
 internal object Route120_EventScript_BerryBeauty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_BerryBeauty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route120.BerryIsRareRaiseItWithCare)
 }
 
 internal object Route120_EventScript_Jennifer : Script {
@@ -176,20 +157,22 @@ internal object Route120_EventScript_BridgeKecleon : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Kecleon.SomethingUnseeable)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_NOT_READY_FOR_BATTLE_ROUTE_120, Route120_EventScript_StevenAskReadyForBattle
- * msgbox Route120_Text_StevenGreeting, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, Route120_EventScript_StevenNotReady
- * goto Route120_EventScript_StevenBattleKecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Steven : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Steven")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(GOT_DEVON_SCOPE)) return ctx.say(Route120.StevenGoodbye)
+    if (!ctx.askYesNo(Route120.StevenGreeting)) return ctx.say(Route120.StevenIllWaitHere)
+    ctx.say(Route120.StevenShowMeYourPower)
+    ctx.sign(Route120.StevenUsedDevonScope)
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.say(Route120.StevenGiveDevonScope)
+    // The scope is a story flag; the other Kecleon blockers check it.
+    ctx.setFlag(GOT_DEVON_SCOPE)
+    ctx.say(Route120.StevenGoodbye)
+    ctx.despawnInteracted()
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_STEVEN)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE)
+  }
 }
 
 internal object Route120_EventScript_Keigo : Script {
@@ -206,74 +189,69 @@ internal object Route120_EventScript_Riley : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8009, 1
- * goto EventScript_Kecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Kecleon1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Kecleon1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      ctx.send(notice("Something unseeable is in the way. The DEVON SCOPE might reveal it."))
+      return
+    }
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_1)
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8009, 2
- * goto EventScript_Kecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Kecleon2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Kecleon2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      ctx.send(notice("Something unseeable is in the way. The DEVON SCOPE might reveal it."))
+      return
+    }
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_2)
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8009, 3
- * goto EventScript_Kecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Kecleon3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Kecleon3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      ctx.send(notice("Something unseeable is in the way. The DEVON SCOPE might reveal it."))
+      return
+    }
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_3)
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8009, 5
- * goto EventScript_Kecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Kecleon5 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Kecleon5")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      ctx.send(notice("Something unseeable is in the way. The DEVON SCOPE might reveal it."))
+      return
+    }
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_5)
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8009, 4
- * goto EventScript_Kecleon
- * end
- * ```
- */
 internal object Route120_EventScript_Kecleon4 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route120_EventScript_Kecleon4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(GOT_DEVON_SCOPE)) {
+      ctx.send(notice("Something unseeable is in the way. The DEVON SCOPE might reveal it."))
+      return
+    }
+    val result = ctx.wildBattle(KECLEON, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_120_KECLEON_4)
+    ctx.despawnInteracted()
+  }
 }
 
 internal object Route120_EventScript_Callie : Script {
