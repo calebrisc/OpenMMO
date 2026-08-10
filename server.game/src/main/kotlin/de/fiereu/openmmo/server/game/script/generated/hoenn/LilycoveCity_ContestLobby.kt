@@ -126,32 +126,12 @@ internal object LilycoveCity_ContestLobby_EventScript_Blender3Girl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(BerryBlender.WhatKindOfPokeblockWillIGet)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * msgbox BerryBlender_Text_WickedlyFast, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker2 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker2")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(BerryBlender.WickedlyFast)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * msgbox BerryBlender_Text_WhatAnExpert, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker3 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker3")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(BerryBlender.WhatAnExpert)
 }
 
 /**
@@ -199,18 +179,8 @@ internal object LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker6 : Scr
       TODO("port LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker6")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * msgbox BerryBlender_Text_WhoaAwesome, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker1 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LilycoveCity_ContestLobby_EventScript_BlendMasterOnlooker1")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(BerryBlender.WhoaAwesome)
 }
 
 /**

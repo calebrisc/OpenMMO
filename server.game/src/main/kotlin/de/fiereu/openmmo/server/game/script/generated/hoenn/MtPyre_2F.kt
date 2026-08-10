@@ -1,30 +1,23 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MARK, MtPyre_2F_Text_MarkIntro, MtPyre_2F_Text_MarkDefeat
- * msgbox MtPyre_2F_Text_MarkPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_LEAH = 35
+private const val TRAINER_MARK = 145
+private const val TRAINER_ZANDER = 31
+
 internal object MtPyre_2F_EventScript_Mark : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Mark")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MARK, MtPyre_2F.MarkIntro, MtPyre_2F.MarkDefeat)) return
+    ctx.say(MtPyre_2F.MarkPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ULTRA_BALL
- * end
- * ```
- */
 internal object MtPyre_2F_EventScript_ItemUltraBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_ItemUltraBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ULTRA_BALL)
 }
 
 internal object MtPyre_2F_EventScript_Woman : Script {
@@ -59,28 +52,19 @@ internal object MtPyre_2F_EventScript_Luke : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Luke")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ZANDER, MtPyre_2F_Text_ZanderIntro, MtPyre_2F_Text_ZanderDefeat
- * msgbox MtPyre_2F_Text_ZanderPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_2F_EventScript_Zander : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Zander")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ZANDER, MtPyre_2F.ZanderIntro, MtPyre_2F.ZanderDefeat))
+        return
+    ctx.say(MtPyre_2F.ZanderPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LEAH, MtPyre_2F_Text_LeahIntro, MtPyre_2F_Text_LeahDefeat
- * msgbox MtPyre_2F_Text_LeahPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_2F_EventScript_Leah : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Leah")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LEAH, MtPyre_2F.LeahIntro, MtPyre_2F.LeahDefeat)) return
+    ctx.say(MtPyre_2F.LeahPostBattle)
+  }
 }
 
 internal val MtPyre_2FScripts: Map<String, Script> =

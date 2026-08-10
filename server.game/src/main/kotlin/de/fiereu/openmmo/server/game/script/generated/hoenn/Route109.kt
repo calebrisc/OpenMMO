@@ -1,8 +1,20 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route109
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_ALICE = 448
+private const val TRAINER_AUSTINA = 58
+private const val TRAINER_CARTER = 345
+private const val TRAINER_CHANDLER = 698
+private const val TRAINER_DAVID = 158
+private const val TRAINER_EDMOND = 491
+private const val TRAINER_ELIJAH = 742
+private const val TRAINER_GWEN = 59
+private const val TRAINER_HAILEY = 697
+private const val TRAINER_HUEY = 490
 
 /**
  * Not ported yet. Decomp body:
@@ -18,52 +30,33 @@ internal object Route109_EventScript_MrBriney : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_MrBriney")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DAVID, Route109_Text_DavidIntro, Route109_Text_DavidDefeated
- * msgbox Route109_Text_DavidPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_David : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_David")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DAVID, Route109.DavidIntro, Route109.DavidDefeated)) return
+    ctx.say(Route109.DavidPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALICE, Route109_Text_AliceIntro, Route109_Text_AliceDefeated
- * msgbox Route109_Text_AlicePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Alice : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Alice")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ALICE, Route109.AliceIntro, Route109.AliceDefeated)) return
+    ctx.say(Route109.AlicePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HUEY, Route109_Text_HueyIntro, Route109_Text_HueyDefeated
- * msgbox Route109_Text_HueyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Huey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Huey")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HUEY, Route109.HueyIntro, Route109.HueyDefeated)) return
+    ctx.say(Route109.HueyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_EDMOND, Route109_Text_EdmondIntro, Route109_Text_EdmondDefeated
- * msgbox Route109_Text_EdmondPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Edmond : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Edmond")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_EDMOND, Route109.EdmondIntro, Route109.EdmondDefeated))
+        return
+    ctx.say(Route109.EdmondPostBattle)
+  }
 }
 
 /**
@@ -100,51 +93,31 @@ internal object Route109_EventScript_SeashoreHouseGirl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route109.ChillAtMyPapasSpot)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_UP
- * end
- * ```
- */
 internal object Route109_EventScript_ItemPPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_ItemPPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GWEN, Route109_Text_GwenIntro, Route109_Text_GwenDefeated
- * msgbox Route109_Text_GwenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Gwen : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Gwen")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_GWEN, Route109.GwenIntro, Route109.GwenDefeated)) return
+    ctx.say(Route109.GwenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_AUSTINA, Route109_Text_AustinaIntro, Route109_Text_AustinaDefeated
- * msgbox Route109_Text_AustinaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Austina : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Austina")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_AUSTINA, Route109.AustinaIntro, Route109.AustinaDefeated))
+        return
+    ctx.say(Route109.AustinaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CARTER, Route109_Text_CarterIntro, Route109_Text_CarterDefeated
- * msgbox Route109_Text_CarterPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Carter : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Carter")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CARTER, Route109.CarterIntro, Route109.CarterDefeated))
+        return
+    ctx.say(Route109.CarterPostBattle)
+  }
 }
 
 /**
@@ -218,68 +191,37 @@ internal object Route109_EventScript_OldMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route109.ZigzagoonPicksUpLitter)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox Route109_Text_ZigzagoonCry, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object Route109_EventScript_Zigzagoon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Zigzagoon")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route109.ZigzagoonCry)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HAILEY, Route109_Text_HaileyIntro, Route109_Text_HaileyDefeated
- * msgbox Route109_Text_HaileyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Hailey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Hailey")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HAILEY, Route109.HaileyIntro, Route109.HaileyDefeated))
+        return
+    ctx.say(Route109.HaileyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANDLER, Route109_Text_ChandlerIntro, Route109_Text_ChandlerDefeated
- * msgbox Route109_Text_ChandlerPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Chandler : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Chandler")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANDLER, Route109.ChandlerIntro, Route109.ChandlerDefeated))
+        return
+    ctx.say(Route109.ChandlerPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POTION
- * end
- * ```
- */
 internal object Route109_EventScript_ItemPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_ItemPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ELIJAH, Route109_Text_ElijahIntro, Route109_Text_ElijahDefeated
- * msgbox Route109_Text_ElijahPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Elijah : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Elijah")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ELIJAH, Route109.ElijahIntro, Route109.ElijahDefeated))
+        return
+    ctx.say(Route109.ElijahPostBattle)
+  }
 }
 
 internal object Route109_EventScript_SeashoreHouseSign : Script {

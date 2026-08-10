@@ -1,22 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Misc
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * setvar VAR_0x800B, LOCALID_SOOTOPOLIS_NURSE
- * call Common_EventScript_PkmnCenterNurse
- * waitmessage
- * waitbuttonpress
- * release
- * end
- * ```
- */
 internal object SootopolisCity_PokemonCenter_1F_EventScript_Nurse : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_PokemonCenter_1F_EventScript_Nurse")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.healParty()
+    ctx.say(Misc.gText_ThankYouForWaiting)
+  }
 }
 
 /**

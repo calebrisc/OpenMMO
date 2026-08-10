@@ -1,45 +1,47 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route110_TrickHousePuzzle7
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JOSHUA, Route110_TrickHousePuzzle7_Text_JoshuaIntro, Route110_TrickHousePuzzle7_Text_JoshuaDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_JoshuaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_ALEXIS = 248
+private const val TRAINER_ALVARO = 849
+private const val TRAINER_EVERETT = 850
+private const val TRAINER_JOSHUA = 237
+private const val TRAINER_MARIELA = 848
+private const val TRAINER_PATRICIA = 105
+
 internal object Route110_TrickHousePuzzle7_EventScript_Joshua : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Joshua")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JOSHUA,
+        Route110_TrickHousePuzzle7.JoshuaIntro,
+        Route110_TrickHousePuzzle7.JoshuaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.JoshuaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALEXIS, Route110_TrickHousePuzzle7_Text_AlexisIntro, Route110_TrickHousePuzzle7_Text_AlexisDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_AlexisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle7_EventScript_Alexis : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Alexis")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ALEXIS,
+        Route110_TrickHousePuzzle7.AlexisIntro,
+        Route110_TrickHousePuzzle7.AlexisDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.AlexisPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PATRICIA, Route110_TrickHousePuzzle7_Text_PatriciaIntro, Route110_TrickHousePuzzle7_Text_PatriciaDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_PatriciaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle7_EventScript_Patricia : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Patricia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PATRICIA,
+        Route110_TrickHousePuzzle7.PatriciaIntro,
+        Route110_TrickHousePuzzle7.PatriciaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.PatriciaPostBattle)
+  }
 }
 
 /**
@@ -54,43 +56,37 @@ internal object Route110_TrickHousePuzzle7_EventScript_ItemTropicMail : Script {
       TODO("port Route110_TrickHousePuzzle7_EventScript_ItemTropicMail")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALVARO, Route110_TrickHousePuzzle7_Text_AlvaroIntro, Route110_TrickHousePuzzle7_Text_AlvaroDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_AlvaroPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle7_EventScript_Alvaro : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Alvaro")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ALVARO,
+        Route110_TrickHousePuzzle7.AlvaroIntro,
+        Route110_TrickHousePuzzle7.AlvaroDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.AlvaroPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MARIELA, Route110_TrickHousePuzzle7_Text_MarielaIntro, Route110_TrickHousePuzzle7_Text_MarielaDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_MarielaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle7_EventScript_Mariela : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Mariela")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_MARIELA,
+        Route110_TrickHousePuzzle7.MarielaIntro,
+        Route110_TrickHousePuzzle7.MarielaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.MarielaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_EVERETT, Route110_TrickHousePuzzle7_Text_EverettIntro, Route110_TrickHousePuzzle7_Text_EverettDefeat
- * msgbox Route110_TrickHousePuzzle7_Text_EverettPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle7_EventScript_Everett : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle7_EventScript_Everett")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_EVERETT,
+        Route110_TrickHousePuzzle7.EverettIntro,
+        Route110_TrickHousePuzzle7.EverettDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle7.EverettPostBattle)
+  }
 }
 
 /**

@@ -40,21 +40,8 @@ internal object SSTidalCorridor_EventScript_Briney : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SSTidalCorridor.BrineyWelcomeAboard)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_WINGULL, CRY_MODE_NORMAL
- * msgbox SSTidalCorridor_Text_Peeko, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SSTidalCorridor_EventScript_Peeko : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalCorridor_EventScript_Peeko")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SSTidalCorridor.Peeko)
 }
 
 /**

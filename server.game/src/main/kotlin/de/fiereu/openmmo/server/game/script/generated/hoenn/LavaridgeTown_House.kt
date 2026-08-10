@@ -9,22 +9,8 @@ internal object LavaridgeTown_House_EventScript_OldMan : Script {
       ctx.say(LavaridgeTown_House.WifeWarmingEggInHotSprings)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox LavaridgeTown_House_Text_Zigzagoon, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object LavaridgeTown_House_EventScript_Zigzagoon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavaridgeTown_House_EventScript_Zigzagoon")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(LavaridgeTown_House.Zigzagoon)
 }
 
 /**

@@ -4,30 +4,29 @@ import de.fiereu.openmmo.dialog.generated.hoenn.Route119_WeatherInstitute_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_WEATHER_INST_1, Route119_WeatherInstitute_1F_Text_Grunt1Intro, Route119_WeatherInstitute_1F_Text_Grunt1Defeat
- * msgbox Route119_WeatherInstitute_1F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GRUNT_WEATHER_INST_1 = 17
+private const val TRAINER_GRUNT_WEATHER_INST_4 = 26
+
 internal object Route119_WeatherInstitute_1F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route119_WeatherInstitute_1F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_WEATHER_INST_1,
+        Route119_WeatherInstitute_1F.Grunt1Intro,
+        Route119_WeatherInstitute_1F.Grunt1Defeat))
+        return
+    ctx.say(Route119_WeatherInstitute_1F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_WEATHER_INST_4, Route119_WeatherInstitute_1F_Text_Grunt4Intro, Route119_WeatherInstitute_1F_Text_Grunt4Defeat
- * msgbox Route119_WeatherInstitute_1F_Text_Grunt4PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route119_WeatherInstitute_1F_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route119_WeatherInstitute_1F_EventScript_Grunt4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_WEATHER_INST_4,
+        Route119_WeatherInstitute_1F.Grunt4Intro,
+        Route119_WeatherInstitute_1F.Grunt4Defeat))
+        return
+    ctx.say(Route119_WeatherInstitute_1F.Grunt4PostBattle)
+  }
 }
 
 internal object Route119_WeatherInstitute_1F_EventScript_InstituteWorker2 : Script {

@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.MauvilleCity
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -100,15 +101,8 @@ internal object MauvilleCity_EventScript_Wattson : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_EventScript_Wattson")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_SPEED
- * end
- * ```
- */
 internal object MauvilleCity_EventScript_ItemXSpeed : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_EventScript_ItemXSpeed")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_SPEED)
 }
 
 /**

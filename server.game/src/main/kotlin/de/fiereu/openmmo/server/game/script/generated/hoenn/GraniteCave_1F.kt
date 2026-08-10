@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -21,16 +22,8 @@ internal object GraniteCave_1F_EventScript_Hiker : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port GraniteCave_1F_EventScript_Hiker")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ESCAPE_ROPE
- * end
- * ```
- */
 internal object GraniteCave_1F_EventScript_ItemEscapeRope : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port GraniteCave_1F_EventScript_ItemEscapeRope")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ESCAPE_ROPE)
 }
 
 internal val GraniteCave_1FScripts: Map<String, Script> =

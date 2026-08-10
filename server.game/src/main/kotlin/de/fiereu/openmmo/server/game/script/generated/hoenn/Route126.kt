@@ -1,77 +1,57 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route126
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BARRY, Route126_Text_BarryIntro, Route126_Text_BarryDefeat
- * msgbox Route126_Text_BarryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BARRY = 163
+private const val TRAINER_BRENDA = 454
+private const val TRAINER_DEAN = 164
+private const val TRAINER_ISOBEL = 383
+private const val TRAINER_LEONARDO = 576
+private const val TRAINER_NIKKI = 453
+private const val TRAINER_SIENNA = 459
+
 internal object Route126_EventScript_Barry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Barry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BARRY, Route126.BarryIntro, Route126.BarryDefeat)) return
+    ctx.say(Route126.BarryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DEAN, Route126_Text_DeanIntro, Route126_Text_DeanDefeat
- * msgbox Route126_Text_DeanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Dean : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Dean")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DEAN, Route126.DeanIntro, Route126.DeanDefeat)) return
+    ctx.say(Route126.DeanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NIKKI, Route126_Text_NikkiIntro, Route126_Text_NikkiDefeat
- * msgbox Route126_Text_NikkiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Nikki : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Nikki")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_NIKKI, Route126.NikkiIntro, Route126.NikkiDefeat)) return
+    ctx.say(Route126.NikkiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRENDA, Route126_Text_BrendaIntro, Route126_Text_BrendaDefeat
- * msgbox Route126_Text_BrendaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Brenda : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Brenda")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BRENDA, Route126.BrendaIntro, Route126.BrendaDefeat))
+        return
+    ctx.say(Route126.BrendaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREEN_SHARD
- * end
- * ```
- */
 internal object Route126_EventScript_ItemGreenShard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_ItemGreenShard")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREEN_SHARD)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SIENNA, Route126_Text_SiennaIntro, Route126_Text_SiennaDefeat
- * msgbox Route126_Text_SiennaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Sienna : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Sienna")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SIENNA, Route126.SiennaIntro, Route126.SiennaDefeat))
+        return
+    ctx.say(Route126.SiennaPostBattle)
+  }
 }
 
 /**
@@ -89,28 +69,20 @@ internal object Route126_EventScript_Pablo : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Pablo")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ISOBEL, Route126_Text_IsobelIntro, Route126_Text_IsobelDefeat
- * msgbox Route126_Text_IsobelPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Isobel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Isobel")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ISOBEL, Route126.IsobelIntro, Route126.IsobelDefeat))
+        return
+    ctx.say(Route126.IsobelPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LEONARDO, Route126_Text_LeonardoIntro, Route126_Text_LeonardoDefeat
- * msgbox Route126_Text_LeonardoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route126_EventScript_Leonardo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route126_EventScript_Leonardo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LEONARDO, Route126.LeonardoIntro, Route126.LeonardoDefeat))
+        return
+    ctx.say(Route126.LeonardoPostBattle)
+  }
 }
 
 internal val Route126Scripts: Map<String, Script> =

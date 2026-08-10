@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.AquaHideout_B1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_GRUNT_AQUA_HIDEOUT_5 = 27
+private const val TRAINER_GRUNT_AQUA_HIDEOUT_7 = 192
 
 /**
  * Not ported yet. Decomp body:
@@ -27,40 +32,21 @@ internal object AquaHideout_B1F_EventScript_Grunt3 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_Grunt3")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ELIXIR
- * end
- * ```
- */
 internal object AquaHideout_B1F_EventScript_ItemMaxElixir : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AquaHideout_B1F_EventScript_ItemMaxElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_AQUA_HIDEOUT_5, AquaHideout_B1F_Text_Grunt5Intro, AquaHideout_B1F_Text_Grunt5Defeat
- * msgbox AquaHideout_B1F_Text_Grunt5PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AquaHideout_B1F_EventScript_Grunt5 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_Grunt5")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_AQUA_HIDEOUT_5, AquaHideout_B1F.Grunt5Intro, AquaHideout_B1F.Grunt5Defeat))
+        return
+    ctx.say(AquaHideout_B1F.Grunt5PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MASTER_BALL
- * end
- * ```
- */
 internal object AquaHideout_B1F_EventScript_ItemMasterBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AquaHideout_B1F_EventScript_ItemMasterBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MASTER_BALL)
 }
 
 /**
@@ -89,15 +75,8 @@ internal object AquaHideout_B1F_EventScript_Electrode1 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_Electrode1")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_NUGGET
- * end
- * ```
- */
 internal object AquaHideout_B1F_EventScript_ItemNugget : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_ItemNugget")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NUGGET)
 }
 
 /**
@@ -126,16 +105,13 @@ internal object AquaHideout_B1F_EventScript_Electrode2 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_Electrode2")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_AQUA_HIDEOUT_7, AquaHideout_B1F_Text_Grunt7Intro, AquaHideout_B1F_Text_Grunt7Defeat
- * msgbox AquaHideout_B1F_Text_Grunt7PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AquaHideout_B1F_EventScript_Grunt7 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B1F_EventScript_Grunt7")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_AQUA_HIDEOUT_7, AquaHideout_B1F.Grunt7Intro, AquaHideout_B1F.Grunt7Defeat))
+        return
+    ctx.say(AquaHideout_B1F.Grunt7PostBattle)
+  }
 }
 
 internal val AquaHideout_B1FScripts: Map<String, Script> =

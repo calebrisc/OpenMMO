@@ -1,31 +1,27 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route106
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DOUGLAS, Route106_Text_DouglasIntro, Route106_Text_DouglasDefeated
- * msgbox Route106_Text_DouglasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_DOUGLAS = 153
+private const val TRAINER_KYLA = 443
+private const val TRAINER_NED = 340
+
 internal object Route106_EventScript_Douglas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route106_EventScript_Douglas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DOUGLAS, Route106.DouglasIntro, Route106.DouglasDefeated))
+        return
+    ctx.say(Route106.DouglasPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KYLA, Route106_Text_KylaIntro, Route106_Text_KylaDefeated
- * msgbox Route106_Text_KylaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route106_EventScript_Kyla : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route106_EventScript_Kyla")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KYLA, Route106.KylaIntro, Route106.KylaDefeated)) return
+    ctx.say(Route106.KylaPostBattle)
+  }
 }
 
 /**
@@ -43,27 +39,15 @@ internal object Route106_EventScript_Elliot : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route106_EventScript_Elliot")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NED, Route106_Text_NedIntro, Route106_Text_NedDefeated
- * msgbox Route106_Text_NedPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route106_EventScript_Ned : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route106_EventScript_Ned")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_NED, Route106.NedIntro, Route106.NedDefeated)) return
+    ctx.say(Route106.NedPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PROTEIN
- * end
- * ```
- */
 internal object Route106_EventScript_ItemProtein : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route106_EventScript_ItemProtein")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PROTEIN)
 }
 
 internal object Route106_EventScript_TrainerTipsSign : Script {

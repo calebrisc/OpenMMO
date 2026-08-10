@@ -1,29 +1,21 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_4F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TASHA, MtPyre_4F_Text_TashaIntro, MtPyre_4F_Text_TashaDefeat
- * msgbox MtPyre_4F_Text_TashaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_TASHA = 109
+
 internal object MtPyre_4F_EventScript_Tasha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_4F_EventScript_Tasha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TASHA, MtPyre_4F.TashaIntro, MtPyre_4F.TashaDefeat)) return
+    ctx.say(MtPyre_4F.TashaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_SEA_INCENSE
- * end
- * ```
- */
 internal object MtPyre_4F_EventScript_ItemSeaIncense : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_4F_EventScript_ItemSeaIncense")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SEA_INCENSE)
 }
 
 internal val MtPyre_4FScripts: Map<String, Script> =

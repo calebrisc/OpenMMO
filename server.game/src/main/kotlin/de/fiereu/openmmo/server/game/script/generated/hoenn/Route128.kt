@@ -1,7 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route128
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_ALEXA = 670
+private const val TRAINER_CARLEE = 464
+private const val TRAINER_HARRISON = 578
+private const val TRAINER_RUBEN = 671
+private const val TRAINER_WAYNE = 673
 
 /**
  * Not ported yet. Decomp body:
@@ -33,64 +40,41 @@ internal object Route128_EventScript_Katelyn : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Katelyn")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WAYNE, Route128_Text_WayneIntro, Route128_Text_WayneDefeat
- * msgbox Route128_Text_WaynePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route128_EventScript_Wayne : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Wayne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_WAYNE, Route128.WayneIntro, Route128.WayneDefeat)) return
+    ctx.say(Route128.WaynePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUBEN, Route128_Text_RubenIntro, Route128_Text_RubenDefeat
- * msgbox Route128_Text_RubenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route128_EventScript_Ruben : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Ruben")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RUBEN, Route128.RubenIntro, Route128.RubenDefeat)) return
+    ctx.say(Route128.RubenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALEXA, Route128_Text_AlexaIntro, Route128_Text_AlexaDefeat
- * msgbox Route128_Text_AlexaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route128_EventScript_Alexa : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Alexa")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ALEXA, Route128.AlexaIntro, Route128.AlexaDefeat)) return
+    ctx.say(Route128.AlexaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CARLEE, Route128_Text_CarleeIntro, Route128_Text_CarleeDefeat
- * msgbox Route128_Text_CarleePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route128_EventScript_Carlee : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Carlee")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CARLEE, Route128.CarleeIntro, Route128.CarleeDefeat))
+        return
+    ctx.say(Route128.CarleePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HARRISON, Route128_Text_HarrisonIntro, Route128_Text_HarrisonDefeat
- * msgbox Route128_Text_HarrisonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route128_EventScript_Harrison : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route128_EventScript_Harrison")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HARRISON, Route128.HarrisonIntro, Route128.HarrisonDefeat))
+        return
+    ctx.say(Route128.HarrisonPostBattle)
+  }
 }
 
 internal val Route128Scripts: Map<String, Script> =

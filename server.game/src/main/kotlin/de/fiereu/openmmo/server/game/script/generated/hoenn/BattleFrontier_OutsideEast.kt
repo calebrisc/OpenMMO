@@ -63,22 +63,9 @@ internal object BattleFrontier_OutsideEast_EventScript_Man2 : Script {
       ctx.say(BattleFrontier_OutsideEast.GoRackUpSomeWinsForDaddy)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox BattleFrontier_OutsideEast_Text_ZigzagoonLooksVacant, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object BattleFrontier_OutsideEast_EventScript_Zigzagoon : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port BattleFrontier_OutsideEast_EventScript_Zigzagoon")
+      ctx.say(BattleFrontier_OutsideEast.ZigzagoonLooksVacant)
 }
 
 /**

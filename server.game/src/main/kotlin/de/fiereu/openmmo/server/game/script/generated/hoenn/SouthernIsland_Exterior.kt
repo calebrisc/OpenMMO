@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.SouthernIsland_Exterior
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -29,16 +30,8 @@ internal object SouthernIsland_Exterior_EventScript_Sailor : Script {
       TODO("port SouthernIsland_Exterior_EventScript_Sailor")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * msgbox SouthernIsland_Exterior_Text_Sign, MSGBOX_SIGN
- * end
- * ```
- */
 internal object SouthernIsland_Exterior_EventScript_Sign : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SouthernIsland_Exterior_EventScript_Sign")
+  override suspend fun run(ctx: ScriptContext) = ctx.sign(SouthernIsland_Exterior.Sign)
 }
 
 internal val SouthernIsland_ExteriorScripts: Map<String, Script> =

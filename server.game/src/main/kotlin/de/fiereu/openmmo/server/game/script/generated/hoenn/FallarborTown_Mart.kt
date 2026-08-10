@@ -29,21 +29,8 @@ internal object FallarborTown_Mart_EventScript_PokefanM : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FallarborTown_Mart.SellNuggetIFound)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
- * msgbox FallarborTown_Mart_Text_Skitty, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object FallarborTown_Mart_EventScript_Skitty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FallarborTown_Mart_EventScript_Skitty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FallarborTown_Mart.Skitty)
 }
 
 /**

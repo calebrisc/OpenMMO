@@ -1,42 +1,39 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route123
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WENDY, Route123_Text_WendyIntro, Route123_Text_WendyDefeat
- * msgbox Route123_Text_WendyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_ALBERTO = 12
+private const val TRAINER_BRAXTON = 75
+private const val TRAINER_DAVIS = 539
+private const val TRAINER_ED = 13
+private const val TRAINER_FREDRICK = 29
+private const val TRAINER_JAZMYN = 503
+private const val TRAINER_JONAS = 504
+private const val TRAINER_KAYLEY = 505
+private const val TRAINER_KINDRA = 106
+private const val TRAINER_VIOLET = 39
+private const val TRAINER_WENDY = 92
+
 internal object Route123_EventScript_Wendy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Wendy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_WENDY, Route123.WendyIntro, Route123.WendyDefeat)) return
+    ctx.say(Route123.WendyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRAXTON, Route123_Text_BraxtonIntro, Route123_Text_BraxtonDefeat
- * msgbox Route123_Text_BraxtonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Braxton : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Braxton")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BRAXTON, Route123.BraxtonIntro, Route123.BraxtonDefeat))
+        return
+    ctx.say(Route123.BraxtonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CALCIUM
- * end
- * ```
- */
 internal object Route123_EventScript_ItemCalcium : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_ItemCalcium")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CALCIUM)
 }
 
 /**
@@ -61,16 +58,12 @@ internal object Route123_EventScript_GigaDrainGirl : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_GigaDrainGirl")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_VIOLET, Route123_Text_VioletIntro, Route123_Text_VioletDefeat
- * msgbox Route123_Text_VioletPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Violet : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Violet")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_VIOLET, Route123.VioletIntro, Route123.VioletDefeat))
+        return
+    ctx.say(Route123.VioletPostBattle)
+  }
 }
 
 /**
@@ -127,74 +120,42 @@ internal object Route123_EventScript_Jacki : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Jacki")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KINDRA, Route123_Text_KindraIntro, Route123_Text_KindraDefeat
- * msgbox Route123_Text_KindraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Kindra : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Kindra")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KINDRA, Route123.KindraIntro, Route123.KindraDefeat))
+        return
+    ctx.say(Route123.KindraPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ULTRA_BALL
- * end
- * ```
- */
 internal object Route123_EventScript_ItemUltraBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_ItemUltraBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ULTRA_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ELIXIR
- * end
- * ```
- */
 internal object Route123_EventScript_ItemElixir : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_ItemElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JONAS, Route123_Text_JonasIntro, Route123_Text_JonasDefeat
- * msgbox Route123_Text_JonasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Jonas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Jonas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_JONAS, Route123.JonasIntro, Route123.JonasDefeat)) return
+    ctx.say(Route123.JonasPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KAYLEY, Route123_Text_KayleyIntro, Route123_Text_KayleyDefeat
- * msgbox Route123_Text_KayleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Kayley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Kayley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KAYLEY, Route123.KayleyIntro, Route123.KayleyDefeat))
+        return
+    ctx.say(Route123.KayleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ED, Route123_Text_EdIntro, Route123_Text_EdDefeat
- * msgbox Route123_Text_EdPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Ed : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Ed")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ED, Route123.EdIntro, Route123.EdDefeat)) return
+    ctx.say(Route123.EdPostBattle)
+  }
 }
 
 /**
@@ -212,74 +173,44 @@ internal object Route123_EventScript_Fernando : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Fernando")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALBERTO, Route123_Text_AlbertoIntro, Route123_Text_AlbertoDefeat
- * msgbox Route123_Text_AlbertoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Alberto : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Alberto")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ALBERTO, Route123.AlbertoIntro, Route123.AlbertoDefeat))
+        return
+    ctx.say(Route123.AlbertoPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FREDRICK, Route123_Text_FrederickIntro, Route123_Text_FrederickDefeat
- * msgbox Route123_Text_FrederickPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Frederick : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Frederick")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FREDRICK, Route123.FrederickIntro, Route123.FrederickDefeat))
+        return
+    ctx.say(Route123.FrederickPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_UP
- * end
- * ```
- */
 internal object Route123_EventScript_ItemPPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_ItemPPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JAZMYN, Route123_Text_JazmynIntro, Route123_Text_JazmynDefeat
- * msgbox Route123_Text_JazmynPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Jazmyn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Jazmyn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_JAZMYN, Route123.JazmynIntro, Route123.JazmynDefeat))
+        return
+    ctx.say(Route123.JazmynPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DAVIS, Route123_Text_DavisIntro, Route123_Text_DavisDefeat
- * msgbox Route123_Text_DavisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Davis : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Davis")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DAVIS, Route123.DavisIntro, Route123.DavisDefeat)) return
+    ctx.say(Route123.DavisPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVAL_HERB
- * end
- * ```
- */
 internal object Route123_EventScript_ItemRevivalHerb : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_ItemRevivalHerb")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVAL_HERB)
 }
 
 internal object Route123_EventScript_RouteSignMtPyre : Script {

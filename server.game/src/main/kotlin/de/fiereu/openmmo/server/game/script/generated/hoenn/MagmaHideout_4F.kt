@@ -1,54 +1,55 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MagmaHideout_4F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_11, MagmaHideout_4F_Text_Grunt11Intro, MagmaHideout_4F_Text_Grunt11Defeat
- * msgbox MagmaHideout_4F_Text_Grunt11PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_11 = 726
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_12 = 727
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_13 = 728
+private const val TRAINER_TABITHA_MAGMA_HIDEOUT = 732
+
 internal object MagmaHideout_4F_EventScript_Grunt11 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_4F_EventScript_Grunt11")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_11,
+        MagmaHideout_4F.Grunt11Intro,
+        MagmaHideout_4F.Grunt11Defeat))
+        return
+    ctx.say(MagmaHideout_4F.Grunt11PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_12, MagmaHideout_4F_Text_Grunt12Intro, MagmaHideout_4F_Text_Grunt12Defeat
- * msgbox MagmaHideout_4F_Text_Grunt12PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_4F_EventScript_Grunt12 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_4F_EventScript_Grunt12")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_12,
+        MagmaHideout_4F.Grunt12Intro,
+        MagmaHideout_4F.Grunt12Defeat))
+        return
+    ctx.say(MagmaHideout_4F.Grunt12PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_13, MagmaHideout_4F_Text_Grunt13Intro, MagmaHideout_4F_Text_Grunt13Defeat
- * msgbox MagmaHideout_4F_Text_Grunt13PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_4F_EventScript_Grunt13 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_4F_EventScript_Grunt13")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_13,
+        MagmaHideout_4F.Grunt13Intro,
+        MagmaHideout_4F.Grunt13Defeat))
+        return
+    ctx.say(MagmaHideout_4F.Grunt13PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TABITHA_MAGMA_HIDEOUT, MagmaHideout_4F_Text_TabithaIntro, MagmaHideout_4F_Text_TabithaDefeat
- * msgbox MagmaHideout_4F_Text_TabithaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_4F_EventScript_Tabitha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_4F_EventScript_Tabitha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TABITHA_MAGMA_HIDEOUT, MagmaHideout_4F.TabithaIntro, MagmaHideout_4F.TabithaDefeat))
+        return
+    ctx.say(MagmaHideout_4F.TabithaPostBattle)
+  }
 }
 
 /**
@@ -129,16 +130,8 @@ internal object MagmaHideout_4F_EventScript_Maxie : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_4F_EventScript_Maxie")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REVIVE
- * end
- * ```
- */
 internal object MagmaHideout_4F_EventScript_ItemMaxRevive : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MagmaHideout_4F_EventScript_ItemMaxRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REVIVE)
 }
 
 internal val MagmaHideout_4FScripts: Map<String, Script> =

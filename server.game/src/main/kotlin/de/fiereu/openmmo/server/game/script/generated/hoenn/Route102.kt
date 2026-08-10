@@ -1,8 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route102
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_ALLEN = 333
+private const val TRAINER_RICK = 615
+private const val TRAINER_TIANA = 603
 
 internal object Route102_EventScript_LittleBoy : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route102.ImNotVeryTall)
@@ -26,43 +31,26 @@ internal object Route102_EventScript_Calvin : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route102_EventScript_Calvin")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RICK, Route102_Text_RickIntro, Route102_Text_RickDefeated
- * msgbox Route102_Text_RickPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route102_EventScript_Rick : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route102_EventScript_Rick")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RICK, Route102.RickIntro, Route102.RickDefeated)) return
+    ctx.say(Route102.RickPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TIANA, Route102_Text_TianaIntro, Route102_Text_TianaDefeated
- * msgbox Route102_Text_TianaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route102_EventScript_Tiana : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route102_EventScript_Tiana")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TIANA, Route102.TianaIntro, Route102.TianaDefeated)) return
+    ctx.say(Route102.TianaPostBattle)
+  }
 }
 
 internal object Route102_EventScript_Boy : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route102.CatchWholeBunchOfPokemon)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POTION
- * end
- * ```
- */
 internal object Route102_EventScript_ItemPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route102_EventScript_ItemPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POTION)
 }
 
 /**
@@ -84,16 +72,11 @@ internal object BerryTreeScript : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port BerryTreeScript")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ALLEN, Route102_Text_AllenIntro, Route102_Text_AllenDefeated
- * msgbox Route102_Text_AllenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route102_EventScript_Allen : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route102_EventScript_Allen")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ALLEN, Route102.AllenIntro, Route102.AllenDefeated)) return
+    ctx.say(Route102.AllenPostBattle)
+  }
 }
 
 internal object Route102_EventScript_RouteSignPetalburg : Script {

@@ -1,18 +1,11 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_BIG_PEARL
- * end
- * ```
- */
 internal object ShoalCave_LowTideEntranceRoom_EventScript_ItemBigPearl : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port ShoalCave_LowTideEntranceRoom_EventScript_ItemBigPearl")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.BIG_PEARL)
 }
 
 /**

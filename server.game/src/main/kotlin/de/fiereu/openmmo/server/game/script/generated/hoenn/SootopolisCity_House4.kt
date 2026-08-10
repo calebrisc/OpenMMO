@@ -14,22 +14,8 @@ internal object SootopolisCity_House4_EventScript_Woman : Script {
       ctx.say(SootopolisCity_House4.StrollUnderwaterWithPokemon)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_AZUMARILL, CRY_MODE_NORMAL
- * msgbox SootopolisCity_House4_Text_Azumarill, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SootopolisCity_House4_EventScript_Azumarill : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_House4_EventScript_Azumarill")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SootopolisCity_House4.Azumarill)
 }
 
 internal val SootopolisCity_House4Scripts: Map<String, Script> =

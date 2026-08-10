@@ -1,55 +1,46 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route114
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LENNY, Route114_Text_LennyIntro, Route114_Text_LennyDefeat
- * msgbox Route114_Text_LennyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_ANGELINA = 712
+private const val TRAINER_CHARLOTTE = 714
+private const val TRAINER_CLAUDE = 338
+private const val TRAINER_KAI = 713
+private const val TRAINER_LENNY = 628
+private const val TRAINER_LUCAS_1 = 629
+private const val TRAINER_NANCY = 472
+private const val TRAINER_NOLAN = 342
+private const val TRAINER_SHANE = 214
+
 internal object Route114_EventScript_Lenny : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Lenny")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LENNY, Route114.LennyIntro, Route114.LennyDefeat)) return
+    ctx.say(Route114.LennyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LUCAS_1, Route114_Text_LucasIntro, Route114_Text_LucasDefeat
- * msgbox Route114_Text_LucasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Lucas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Lucas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LUCAS_1, Route114.LucasIntro, Route114.LucasDefeat)) return
+    ctx.say(Route114.LucasPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHANE, Route114_Text_ShaneIntro, Route114_Text_ShaneDefeat
- * msgbox Route114_Text_ShanePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Shane : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Shane")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SHANE, Route114.ShaneIntro, Route114.ShaneDefeat)) return
+    ctx.say(Route114.ShanePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NANCY, Route114_Text_NancyIntro, Route114_Text_NancyDefeat
- * msgbox Route114_Text_NancyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Nancy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Nancy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_NANCY, Route114.NancyIntro, Route114.NancyDefeat)) return
+    ctx.say(Route114.NancyPostBattle)
+  }
 }
 
 /**
@@ -67,26 +58,12 @@ internal object Route114_EventScript_Steve : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Steve")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_RARE_CANDY
- * end
- * ```
- */
 internal object Route114_EventScript_ItemRareCandy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_ItemRareCandy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.RARE_CANDY)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PROTEIN
- * end
- * ```
- */
 internal object Route114_EventScript_ItemProtein : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_ItemProtein")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PROTEIN)
 }
 
 /**
@@ -108,21 +85,8 @@ internal object Route114_EventScript_RoarGentleman : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_RoarGentleman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_POOCHYENA, CRY_MODE_ENCOUNTER
- * msgbox Route114_Text_Poochyena, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object Route114_EventScript_Poochyena : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Poochyena")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route114.Poochyena)
 }
 
 /**
@@ -148,28 +112,19 @@ internal object Route114_EventScript_Man : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Man")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NOLAN, Route114_Text_NolanIntro, Route114_Text_NolanDefeat
- * msgbox Route114_Text_NolanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Nolan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Nolan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_NOLAN, Route114.NolanIntro, Route114.NolanDefeat)) return
+    ctx.say(Route114.NolanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CLAUDE, Route114_Text_ClaudeIntro, Route114_Text_ClaudeDefeat
- * msgbox Route114_Text_ClaudePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Claude : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Claude")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CLAUDE, Route114.ClaudeIntro, Route114.ClaudeDefeat))
+        return
+    ctx.say(Route114.ClaudePostBattle)
+  }
 }
 
 /**
@@ -211,28 +166,21 @@ internal object Route114_EventScript_Tyra : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Tyra")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHARLOTTE, Route114_Text_CharlotteIntro, Route114_Text_CharlotteDefeat
- * msgbox Route114_Text_CharlottePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Charlotte : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Charlotte")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHARLOTTE, Route114.CharlotteIntro, Route114.CharlotteDefeat))
+        return
+    ctx.say(Route114.CharlottePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ANGELINA, Route114_Text_AngelinaIntro, Route114_Text_AngelinaDefeat
- * msgbox Route114_Text_AngelinaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Angelina : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Angelina")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ANGELINA, Route114.AngelinaIntro, Route114.AngelinaDefeat))
+        return
+    ctx.say(Route114.AngelinaPostBattle)
+  }
 }
 
 /**
@@ -246,16 +194,11 @@ internal object Route114_EventScript_ItemEnergyPowder : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_ItemEnergyPowder")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KAI, Route114_Text_KaiIntro, Route114_Text_KaiDefeat
- * msgbox Route114_Text_KaiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Kai : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Kai")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KAI, Route114.KaiIntro, Route114.KaiDefeat)) return
+    ctx.say(Route114.KaiPostBattle)
+  }
 }
 
 internal object Route114_EventScript_MeteorFallsSign : Script {

@@ -1,54 +1,44 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route131
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RICHARD, Route131_Text_RichardIntro, Route131_Text_RichardDefeat
- * msgbox Route131_Text_RichardPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_HERMAN = 167
+private const val TRAINER_KARA = 457
+private const val TRAINER_KEVIN = 171
+private const val TRAINER_RICHARD = 166
+private const val TRAINER_SUSIE = 456
+private const val TRAINER_TALIA = 385
+
 internal object Route131_EventScript_Richard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Richard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RICHARD, Route131.RichardIntro, Route131.RichardDefeat))
+        return
+    ctx.say(Route131.RichardPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HERMAN, Route131_Text_HermanIntro, Route131_Text_HermanDefeat
- * msgbox Route131_Text_HermanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Herman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Herman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HERMAN, Route131.HermanIntro, Route131.HermanDefeat))
+        return
+    ctx.say(Route131.HermanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SUSIE, Route131_Text_SusieIntro, Route131_Text_SusieDefeat
- * msgbox Route131_Text_SusiePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Susie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Susie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SUSIE, Route131.SusieIntro, Route131.SusieDefeat)) return
+    ctx.say(Route131.SusiePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KARA, Route131_Text_KaraIntro, Route131_Text_KaraDefeat
- * msgbox Route131_Text_KaraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Kara : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Kara")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KARA, Route131.KaraIntro, Route131.KaraDefeat)) return
+    ctx.say(Route131.KaraPostBattle)
+  }
 }
 
 /**
@@ -75,28 +65,18 @@ internal object Route131_EventScript_Ian : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Ian")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KEVIN, Route131_Text_KevinIntro, Route131_Text_KevinDefeat
- * msgbox Route131_Text_KevinPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Kevin : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Kevin")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KEVIN, Route131.KevinIntro, Route131.KevinDefeat)) return
+    ctx.say(Route131.KevinPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TALIA, Route131_Text_TaliaIntro, Route131_Text_TaliaDefeat
- * msgbox Route131_Text_TaliaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Talia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Talia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TALIA, Route131.TaliaIntro, Route131.TaliaDefeat)) return
+    ctx.say(Route131.TaliaPostBattle)
+  }
 }
 
 internal val Route131Scripts: Map<String, Script> =

@@ -1,19 +1,21 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route118
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PERRY, Route118_Text_PerryIntro, Route118_Text_PerryDefeat
- * msgbox Route118_Text_PerryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BARNY = 343
+private const val TRAINER_CHESTER = 408
+private const val TRAINER_DEANDRE = 715
+private const val TRAINER_PERRY = 398
+private const val TRAINER_WADE = 344
+
 internal object Route118_EventScript_Perry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Perry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_PERRY, Route118.PerryIntro, Route118.PerryDefeat)) return
+    ctx.say(Route118.PerryPostBattle)
+  }
 }
 
 /**
@@ -103,40 +105,26 @@ internal object Route118_EventScript_Rose : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Rose")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WADE, Route118_Text_WadeIntro, Route118_Text_WadeDefeat
- * msgbox Route118_Text_WadePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route118_EventScript_Wade : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Wade")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_WADE, Route118.WadeIntro, Route118.WadeDefeat)) return
+    ctx.say(Route118.WadePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHESTER, Route118_Text_ChesterIntro, Route118_Text_ChesterDefeat
- * msgbox Route118_Text_ChesterPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route118_EventScript_Chester : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Chester")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CHESTER, Route118.ChesterIntro, Route118.ChesterDefeat))
+        return
+    ctx.say(Route118.ChesterPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BARNY, Route118_Text_BarnyIntro, Route118_Text_BarnyDefeat
- * msgbox Route118_Text_BarnyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route118_EventScript_Barny : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Barny")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BARNY, Route118.BarnyIntro, Route118.BarnyDefeat)) return
+    ctx.say(Route118.BarnyPostBattle)
+  }
 }
 
 /**
@@ -154,27 +142,16 @@ internal object Route118_EventScript_Dalton : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Dalton")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_HYPER_POTION
- * end
- * ```
- */
 internal object Route118_EventScript_ItemHyperPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_ItemHyperPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.HYPER_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DEANDRE, Route118_Text_DeandreIntro, Route118_Text_DeandreDefeat
- * msgbox Route118_Text_DeandrePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route118_EventScript_Deandre : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route118_EventScript_Deandre")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DEANDRE, Route118.DeandreIntro, Route118.DeandreDefeat))
+        return
+    ctx.say(Route118.DeandrePostBattle)
+  }
 }
 
 internal object Route118_EventScript_RouteSignMauville : Script {

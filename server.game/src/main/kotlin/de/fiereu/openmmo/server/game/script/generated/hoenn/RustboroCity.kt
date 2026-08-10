@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.RustboroCity
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -121,15 +122,8 @@ internal object RustboroCity_EventScript_DevonEmployee2 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(RustboroCity.YoureNewAroundHere)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_DEFEND
- * end
- * ```
- */
 internal object RustboroCity_EventScript_ItemXDefend : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RustboroCity_EventScript_ItemXDefend")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_DEFEND)
 }
 
 internal object RustboroCity_EventScript_Man2 : Script {

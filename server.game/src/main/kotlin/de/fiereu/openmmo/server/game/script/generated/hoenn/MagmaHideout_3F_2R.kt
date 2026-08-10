@@ -1,30 +1,25 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MagmaHideout_3F_2R
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_10, MagmaHideout_3F_2R_Text_Grunt10Intro, MagmaHideout_3F_2R_Text_Grunt10Defeat
- * msgbox MagmaHideout_3F_2R_Text_Grunt10PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_10 = 725
+
 internal object MagmaHideout_3F_2R_EventScript_Grunt10 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_3F_2R_EventScript_Grunt10")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_10,
+        MagmaHideout_3F_2R.Grunt10Intro,
+        MagmaHideout_3F_2R.Grunt10Defeat))
+        return
+    ctx.say(MagmaHideout_3F_2R.Grunt10PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_MAX
- * end
- * ```
- */
 internal object MagmaHideout_3F_2R_EventScript_ItemPPMax : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MagmaHideout_3F_2R_EventScript_ItemPPMax")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_MAX)
 }
 
 internal val MagmaHideout_3F_2RScripts: Map<String, Script> =

@@ -1,89 +1,64 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route105
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LUIS, Route105_Text_LuisIntro, Route105_Text_LuisDefeated
- * msgbox Route105_Text_LuisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BEVERLY = 441
+private const val TRAINER_DOMINIK = 152
+private const val TRAINER_FOSTER = 46
+private const val TRAINER_IMANI = 442
+private const val TRAINER_JOSUE = 738
+private const val TRAINER_LUIS = 151
+
 internal object Route105_EventScript_Luis : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Luis")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LUIS, Route105.LuisIntro, Route105.LuisDefeated)) return
+    ctx.say(Route105.LuisPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DOMINIK, Route105_Text_DominikIntro, Route105_Text_DominikDefeated
- * msgbox Route105_Text_DominikPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route105_EventScript_Dominik : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Dominik")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DOMINIK, Route105.DominikIntro, Route105.DominikDefeated))
+        return
+    ctx.say(Route105.DominikPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BEVERLY, Route105_Text_BeverlyIntro, Route105_Text_BeverlyDefeated
- * msgbox Route105_Text_PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route105_EventScript_Beverly : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Beverly")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BEVERLY, Route105.BeverlyIntro, Route105.BeverlyDefeated))
+        return
+    ctx.say(Route105.PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_IMANI, Route105_Text_ImaniIntro, Route105_Text_ImaniDefeated
- * msgbox Route105_Text_ImaniPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route105_EventScript_Imani : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Imani")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_IMANI, Route105.ImaniIntro, Route105.ImaniDefeated)) return
+    ctx.say(Route105.ImaniPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_IRON
- * end
- * ```
- */
 internal object Route105_EventScript_ItemIron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_ItemIron")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.IRON)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FOSTER, Route105_Text_FosterIntro, Route105_Text_FosterDefeated
- * msgbox Route105_Text_FosterPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route105_EventScript_Foster : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Foster")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_FOSTER, Route105.FosterIntro, Route105.FosterDefeated))
+        return
+    ctx.say(Route105.FosterPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JOSUE, Route105_Text_JosueIntro, Route105_Text_JosueDefeated
- * msgbox Route105_Text_JosuePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route105_EventScript_Josue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route105_EventScript_Josue")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_JOSUE, Route105.JosueIntro, Route105.JosueDefeated)) return
+    ctx.say(Route105.JosuePostBattle)
+  }
 }
 
 /**

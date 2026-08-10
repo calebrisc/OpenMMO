@@ -12,6 +12,8 @@ import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 import de.fiereu.openmmo.story.generated.hoenn.HoennVars
 
+private const val TRAINER_LYLE = 616
+
 private const val LOCALID_AQUA_GRUNT = 2
 private const val LOCALID_DEVON_RESEARCHER = 3
 private const val POOCHYENA = 261
@@ -71,54 +73,29 @@ internal object EventScript_CutTree : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.cutTree()
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREAT_BALL
- * end
- * ```
- */
 internal object PetalburgWoods_EventScript_ItemGreatBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PetalburgWoods_EventScript_ItemGreatBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREAT_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_ATTACK
- * end
- * ```
- */
 internal object PetalburgWoods_EventScript_ItemXAttack : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PetalburgWoods_EventScript_ItemXAttack")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_ATTACK)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ETHER
- * end
- * ```
- */
 internal object PetalburgWoods_EventScript_ItemEther : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PetalburgWoods_EventScript_ItemEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ETHER)
 }
 
 internal object PetalburgWoods_EventScript_Boy1 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PetalburgWoods.StayOutOfTallGrass)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LYLE, PetalburgWoods_Text_GoBugPokemonTeam, PetalburgWoods_Text_ICouldntWin
- * msgbox PetalburgWoods_Text_ImOutOfPokeBalls, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PetalburgWoods_EventScript_Lyle : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PetalburgWoods_EventScript_Lyle")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LYLE, PetalburgWoods.GoBugPokemonTeam, PetalburgWoods.ICouldntWin))
+        return
+    ctx.say(PetalburgWoods.ImOutOfPokeBalls)
+  }
 }
 
 /**

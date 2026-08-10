@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.AbandonedShip_Rooms2_B1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -9,16 +10,8 @@ internal object AbandonedShip_Rooms2_B1F_EventScript_Camper : Script {
       ctx.say(AbandonedShip_Rooms2_B1F.PerfectPlaceToGoExploring)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_DIVE_BALL
- * end
- * ```
- */
 internal object AbandonedShip_Rooms2_B1F_EventScript_ItemDiveBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_Rooms2_B1F_EventScript_ItemDiveBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.DIVE_BALL)
 }
 
 internal val AbandonedShip_Rooms2_B1FScripts: Map<String, Script> =

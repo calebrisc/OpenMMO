@@ -4,6 +4,13 @@ import de.fiereu.openmmo.dialog.generated.hoenn.MtChimney
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_GRUNT_MT_CHIMNEY_1 = 146
+private const val TRAINER_GRUNT_MT_CHIMNEY_2 = 579
+private const val TRAINER_MELISSA = 124
+private const val TRAINER_SHEILA = 125
+private const val TRAINER_SHIRLEY = 126
+private const val TRAINER_TABITHA_MT_CHIMNEY = 597
+
 /**
  * Not ported yet. Decomp body:
  * ```
@@ -72,16 +79,13 @@ internal object MtChimney_EventScript_Maxie : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Maxie")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TABITHA_MT_CHIMNEY, MtChimney_Text_TabithaIntro, MtChimney_Text_TabithaDefeat
- * msgbox MtChimney_Text_TabithaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Tabitha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Tabitha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TABITHA_MT_CHIMNEY, MtChimney.TabithaIntro, MtChimney.TabithaDefeat))
+        return
+    ctx.say(MtChimney.TabithaPostBattle)
+  }
 }
 
 internal object MtChimney_EventScript_BusyMagmaGrunt5 : Script {
@@ -152,16 +156,13 @@ internal object MtChimney_EventScript_BusyMagmaGrunt1 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(MtChimney.TeamAquaAlwaysMessingWithPlans)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_CHIMNEY_2, MtChimney_Text_Grunt2Intro, MtChimney_Text_Grunt2Defeat
- * msgbox MtChimney_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_CHIMNEY_2, MtChimney.Grunt2Intro, MtChimney.Grunt2Defeat))
+        return
+    ctx.say(MtChimney.Grunt2PostBattle)
+  }
 }
 
 /**
@@ -179,52 +180,37 @@ internal object MtChimney_EventScript_Shelby : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Shelby")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MELISSA, MtChimney_Text_MelissaIntro, MtChimney_Text_MelissaDefeat
- * msgbox MtChimney_Text_MelissaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Melissa : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Melissa")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MELISSA, MtChimney.MelissaIntro, MtChimney.MelissaDefeat))
+        return
+    ctx.say(MtChimney.MelissaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHEILA, MtChimney_Text_SheilaIntro, MtChimney_Text_SheilaDefeat
- * msgbox MtChimney_Text_SheilaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Sheila : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Sheila")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SHEILA, MtChimney.SheilaIntro, MtChimney.SheilaDefeat))
+        return
+    ctx.say(MtChimney.SheilaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHIRLEY, MtChimney_Text_ShirleyIntro, MtChimney_Text_ShirleyDefeat
- * msgbox MtChimney_Text_ShirleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Shirley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Shirley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SHIRLEY, MtChimney.ShirleyIntro, MtChimney.ShirleyDefeat))
+        return
+    ctx.say(MtChimney.ShirleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_CHIMNEY_1, MtChimney_Text_Grunt1Intro, MtChimney_Text_Grunt1Defeat
- * msgbox MtChimney_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtChimney_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_CHIMNEY_1, MtChimney.Grunt1Intro, MtChimney.Grunt1Defeat))
+        return
+    ctx.say(MtChimney.Grunt1PostBattle)
+  }
 }
 
 /**

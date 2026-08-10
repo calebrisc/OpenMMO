@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.SafariZone_Southeast
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -16,16 +17,8 @@ internal object SafariZone_Southeast_EventScript_LittleGirl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SafariZone_Southeast.LittleGirl)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_BIG_PEARL
- * end
- * ```
- */
 internal object SafariZone_Southeast_EventScript_ItemBigPearl : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_Southeast_EventScript_ItemBigPearl")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.BIG_PEARL)
 }
 
 internal object SafariZone_Southeast_EventScript_ExpansionZoneAttendant : Script {

@@ -13,22 +13,8 @@ internal object DewfordTown_House1_EventScript_Man : Script {
       ctx.say(DewfordTown_House1.LotToBeSaidForLivingOnIsland)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox DewfordTown_House1_Text_Zigzagoon, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object DewfordTown_House1_EventScript_Zigzagoon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port DewfordTown_House1_EventScript_Zigzagoon")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(DewfordTown_House1.Zigzagoon)
 }
 
 internal val DewfordTown_House1Scripts: Map<String, Script> =

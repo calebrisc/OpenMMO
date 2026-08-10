@@ -31,21 +31,8 @@ internal object FortreeCity_House4_EventScript_Boy : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_House4_EventScript_Boy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_WINGULL, CRY_MODE_NORMAL
- * msgbox FortreeCity_House4_Text_Wingull, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object FortreeCity_House4_EventScript_Wingull : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_House4_EventScript_Wingull")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FortreeCity_House4.Wingull)
 }
 
 internal val FortreeCity_House4Scripts: Map<String, Script> =

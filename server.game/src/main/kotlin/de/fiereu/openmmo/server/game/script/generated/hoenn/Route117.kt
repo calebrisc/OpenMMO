@@ -1,8 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route117
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_AISHA = 757
+private const val TRAINER_BRANDI = 756
+private const val TRAINER_DEREK = 227
+private const val TRAINER_MELINA = 755
 
 internal object Route117_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route117.ArentTheseFlowersPretty)
@@ -76,26 +82,12 @@ internal object Route117_EventScript_Isaac : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Isaac")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREAT_BALL
- * end
- * ```
- */
 internal object Route117_EventScript_ItemGreatBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_ItemGreatBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREAT_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object Route117_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
 /**
@@ -113,16 +105,11 @@ internal object Route117_EventScript_Maria : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Maria")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DEREK, Route117_Text_DerekIntro, Route117_Text_DerekDefeat
- * msgbox Route117_Text_DerekPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route117_EventScript_Derek : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Derek")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DEREK, Route117.DerekIntro, Route117.DerekDefeat)) return
+    ctx.say(Route117.DerekPostBattle)
+  }
 }
 
 /**
@@ -159,40 +146,27 @@ internal object Route117_EventScript_Girl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route117.DayCarePokemonHadNewMove)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRANDI, Route117_Text_BrandiIntro, Route117_Text_BrandiDefeat
- * msgbox Route117_Text_BrandiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route117_EventScript_Brandi : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Brandi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BRANDI, Route117.BrandiIntro, Route117.BrandiDefeat))
+        return
+    ctx.say(Route117.BrandiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_AISHA, Route117_Text_AishaIntro, Route117_Text_AishaDefeat
- * msgbox Route117_Text_AishaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route117_EventScript_Aisha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Aisha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_AISHA, Route117.AishaIntro, Route117.AishaDefeat)) return
+    ctx.say(Route117.AishaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MELINA, Route117_Text_MelinaIntro, Route117_Text_MelinaDefeat
- * msgbox Route117_Text_MelinaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route117_EventScript_Melina : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route117_EventScript_Melina")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MELINA, Route117.MelinaIntro, Route117.MelinaDefeat))
+        return
+    ctx.say(Route117.MelinaPostBattle)
+  }
 }
 
 internal object Route117_EventScript_RouteSignVerdanturf : Script {

@@ -72,22 +72,8 @@ internal object LilycoveCity_DepartmentStore_1F_EventScript_PokefanM : Script {
       ctx.say(LilycoveCity_DepartmentStore_1F.BuyingSomethingForAzumarill)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_AZUMARILL, CRY_MODE_NORMAL
- * msgbox LilycoveCity_DepartmentStore_1F_Text_Azumarill, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object LilycoveCity_DepartmentStore_1F_EventScript_Azumarill : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LilycoveCity_DepartmentStore_1F_EventScript_Azumarill")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(LilycoveCity_DepartmentStore_1F.Azumarill)
 }
 
 internal object LilycoveCity_DepartmentStore_1F_EventScript_FloorNamesSign : Script {

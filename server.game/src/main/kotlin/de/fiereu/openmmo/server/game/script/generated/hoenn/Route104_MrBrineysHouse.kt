@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route104_MrBrineysHouse
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -20,22 +21,8 @@ internal object Route104_MrBrineysHouse_EventScript_Briney : Script {
       TODO("port Route104_MrBrineysHouse_EventScript_Briney")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_WINGULL, CRY_MODE_NORMAL
- * msgbox Route104_MrBrineysHouse_Text_Peeko, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object Route104_MrBrineysHouse_EventScript_Peeko : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route104_MrBrineysHouse_EventScript_Peeko")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route104_MrBrineysHouse.Peeko)
 }
 
 internal val Route104_MrBrineysHouseScripts: Map<String, Script> =

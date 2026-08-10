@@ -1,7 +1,11 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.RusturfTunnel
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_MIKE_2 = 635
 
 /**
  * Not ported yet. Decomp body:
@@ -23,26 +27,12 @@ internal object RusturfTunnel_EventScript_WandasBoyfriend : Script {
       TODO("port RusturfTunnel_EventScript_WandasBoyfriend")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POKE_BALL
- * end
- * ```
- */
 internal object RusturfTunnel_EventScript_ItemPokeBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RusturfTunnel_EventScript_ItemPokeBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POKE_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ETHER
- * end
- * ```
- */
 internal object RusturfTunnel_EventScript_ItemMaxEther : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RusturfTunnel_EventScript_ItemMaxEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ETHER)
 }
 
 /**
@@ -96,33 +86,16 @@ internal object RusturfTunnel_EventScript_Grunt : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port RusturfTunnel_EventScript_Grunt")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_WINGULL, CRY_MODE_NORMAL
- * msgbox RusturfTunnel_Text_Peeko, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object RusturfTunnel_EventScript_Peeko : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RusturfTunnel_EventScript_Peeko")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(RusturfTunnel.Peeko)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MIKE_2, RusturfTunnel_Text_MikeIntro, RusturfTunnel_Text_MikeDefeat
- * msgbox RusturfTunnel_Text_MikePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RusturfTunnel_EventScript_Mike : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RusturfTunnel_EventScript_Mike")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MIKE_2, RusturfTunnel.MikeIntro, RusturfTunnel.MikeDefeat))
+        return
+    ctx.say(RusturfTunnel.MikePostBattle)
+  }
 }
 
 /**

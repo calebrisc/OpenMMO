@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.AquaHideout_B2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_GRUNT_AQUA_HIDEOUT_6 = 28
+private const val TRAINER_GRUNT_AQUA_HIDEOUT_8 = 193
 
 /**
  * Not ported yet. Decomp body:
@@ -28,40 +33,26 @@ internal object AquaHideout_B2F_EventScript_Grunt4 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B2F_EventScript_Grunt4")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_NEST_BALL
- * end
- * ```
- */
 internal object AquaHideout_B2F_EventScript_ItemNestBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AquaHideout_B2F_EventScript_ItemNestBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NEST_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_AQUA_HIDEOUT_6, AquaHideout_B2F_Text_Grunt6Intro, AquaHideout_B2F_Text_Grunt6Defeat
- * msgbox AquaHideout_B2F_Text_Grunt6PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AquaHideout_B2F_EventScript_Grunt6 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B2F_EventScript_Grunt6")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_AQUA_HIDEOUT_6, AquaHideout_B2F.Grunt6Intro, AquaHideout_B2F.Grunt6Defeat))
+        return
+    ctx.say(AquaHideout_B2F.Grunt6PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_AQUA_HIDEOUT_8, AquaHideout_B2F_Text_Grunt8Intro, AquaHideout_B2F_Text_Grunt8Defeat
- * msgbox AquaHideout_B2F_Text_Grunt8PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AquaHideout_B2F_EventScript_Grunt8 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port AquaHideout_B2F_EventScript_Grunt8")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_AQUA_HIDEOUT_8, AquaHideout_B2F.Grunt8Intro, AquaHideout_B2F.Grunt8Defeat))
+        return
+    ctx.say(AquaHideout_B2F.Grunt8PostBattle)
+  }
 }
 
 internal val AquaHideout_B2FScripts: Map<String, Script> =

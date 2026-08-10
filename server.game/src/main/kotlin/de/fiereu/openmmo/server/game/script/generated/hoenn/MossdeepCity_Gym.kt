@@ -1,7 +1,21 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MossdeepCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_BLAKE = 235
+private const val TRAINER_CLIFFORD = 584
+private const val TRAINER_HANNAH = 244
+private const val TRAINER_KATHLEEN = 583
+private const val TRAINER_MACEY = 591
+private const val TRAINER_MAURA = 246
+private const val TRAINER_NATE = 582
+private const val TRAINER_NICHOLAS = 585
+private const val TRAINER_PRESTON = 233
+private const val TRAINER_SAMANTHA = 245
+private const val TRAINER_SYLVIA = 575
+private const val TRAINER_VIRGIL = 234
 
 /**
  * Not ported yet. Decomp body:
@@ -20,76 +34,58 @@ internal object MossdeepCity_Gym_EventScript_TateAndLiza : Script {
       TODO("port MossdeepCity_Gym_EventScript_TateAndLiza")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PRESTON, MossdeepCity_Gym_Text_PrestonIntro, MossdeepCity_Gym_Text_PrestonDefeat
- * msgbox MossdeepCity_Gym_Text_PrestonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Preston : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Preston")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PRESTON, MossdeepCity_Gym.PrestonIntro, MossdeepCity_Gym.PrestonDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.PrestonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLAKE, MossdeepCity_Gym_Text_BlakeIntro, MossdeepCity_Gym_Text_BlakeDefeat
- * msgbox MossdeepCity_Gym_Text_BlakePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Blake : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Blake")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLAKE, MossdeepCity_Gym.BlakeIntro, MossdeepCity_Gym.BlakeDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.BlakePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MAURA, MossdeepCity_Gym_Text_MauraIntro, MossdeepCity_Gym_Text_MauraDefeat
- * msgbox MossdeepCity_Gym_Text_MauraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Maura : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Maura")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_MAURA, MossdeepCity_Gym.MauraIntro, MossdeepCity_Gym.MauraDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.MauraPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SAMANTHA, MossdeepCity_Gym_Text_SamanthaIntro, MossdeepCity_Gym_Text_SamanthaDefeat
- * msgbox MossdeepCity_Gym_Text_SamanthaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Samantha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Samantha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SAMANTHA, MossdeepCity_Gym.SamanthaIntro, MossdeepCity_Gym.SamanthaDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.SamanthaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_VIRGIL, MossdeepCity_Gym_Text_VirgilIntro, MossdeepCity_Gym_Text_VirgilDefeat
- * msgbox MossdeepCity_Gym_Text_VirgilPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Virgil : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Virgil")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_VIRGIL, MossdeepCity_Gym.VirgilIntro, MossdeepCity_Gym.VirgilDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.VirgilPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HANNAH, MossdeepCity_Gym_Text_HannahIntro, MossdeepCity_Gym_Text_HannahDefeat
- * msgbox MossdeepCity_Gym_Text_HannahPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Hannah : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Hannah")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HANNAH, MossdeepCity_Gym.HannahIntro, MossdeepCity_Gym.HannahDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.HannahPostBattle)
+  }
 }
 
 /**
@@ -107,76 +103,58 @@ internal object MossdeepCity_Gym_EventScript_GymGuide : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_GymGuide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NATE, MossdeepCity_Gym_Text_NateIntro, MossdeepCity_Gym_Text_NateDefeat
- * msgbox MossdeepCity_Gym_Text_NatePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Nate : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Nate")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_NATE, MossdeepCity_Gym.NateIntro, MossdeepCity_Gym.NateDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.NatePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SYLVIA, MossdeepCity_Gym_Text_SylviaIntro, MossdeepCity_Gym_Text_SylviaDefeat
- * msgbox MossdeepCity_Gym_Text_SylviaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Sylvia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Sylvia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SYLVIA, MossdeepCity_Gym.SylviaIntro, MossdeepCity_Gym.SylviaDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.SylviaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CLIFFORD, MossdeepCity_Gym_Text_CliffordIntro, MossdeepCity_Gym_Text_CliffordDefeat
- * msgbox MossdeepCity_Gym_Text_CliffordPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Clifford : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Clifford")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CLIFFORD, MossdeepCity_Gym.CliffordIntro, MossdeepCity_Gym.CliffordDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.CliffordPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MACEY, MossdeepCity_Gym_Text_MaceyIntro, MossdeepCity_Gym_Text_MaceyDefeat
- * msgbox MossdeepCity_Gym_Text_MaceyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Macey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Macey")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_MACEY, MossdeepCity_Gym.MaceyIntro, MossdeepCity_Gym.MaceyDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.MaceyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KATHLEEN, MossdeepCity_Gym_Text_KathleenIntro, MossdeepCity_Gym_Text_KathleenDefeat
- * msgbox MossdeepCity_Gym_Text_KathleenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Kathleen : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Kathleen")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_KATHLEEN, MossdeepCity_Gym.KathleenIntro, MossdeepCity_Gym.KathleenDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.KathleenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NICHOLAS, MossdeepCity_Gym_Text_NicholasIntro, MossdeepCity_Gym_Text_NicholasDefeat
- * msgbox MossdeepCity_Gym_Text_NicholasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_Nicholas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_Gym_EventScript_Nicholas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_NICHOLAS, MossdeepCity_Gym.NicholasIntro, MossdeepCity_Gym.NicholasDefeat))
+        return
+    ctx.say(MossdeepCity_Gym.NicholasPostBattle)
+  }
 }
 
 /**

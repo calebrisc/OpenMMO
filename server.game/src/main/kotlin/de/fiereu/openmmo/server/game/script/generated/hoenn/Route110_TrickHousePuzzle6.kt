@@ -1,45 +1,44 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route110_TrickHousePuzzle6
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SOPHIA, Route110_TrickHousePuzzle6_Text_SophiaIntro, Route110_TrickHousePuzzle6_Text_SophiaDefeat
- * msgbox Route110_TrickHousePuzzle6_Text_SophiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BENNY = 407
+private const val TRAINER_SEBASTIAN = 554
+private const val TRAINER_SOPHIA = 561
+
 internal object Route110_TrickHousePuzzle6_EventScript_Sophia : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle6_EventScript_Sophia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SOPHIA,
+        Route110_TrickHousePuzzle6.SophiaIntro,
+        Route110_TrickHousePuzzle6.SophiaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle6.SophiaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BENNY, Route110_TrickHousePuzzle6_Text_BennyIntro, Route110_TrickHousePuzzle6_Text_BennyDefeat
- * msgbox Route110_TrickHousePuzzle6_Text_BennyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle6_EventScript_Benny : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle6_EventScript_Benny")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BENNY,
+        Route110_TrickHousePuzzle6.BennyIntro,
+        Route110_TrickHousePuzzle6.BennyDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle6.BennyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SEBASTIAN, Route110_TrickHousePuzzle6_Text_SebastianIntro, Route110_TrickHousePuzzle6_Text_SebastianDefeat
- * msgbox Route110_TrickHousePuzzle6_Text_SebastianPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle6_EventScript_Sebastian : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle6_EventScript_Sebastian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SEBASTIAN,
+        Route110_TrickHousePuzzle6.SebastianIntro,
+        Route110_TrickHousePuzzle6.SebastianDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle6.SebastianPostBattle)
+  }
 }
 
 /**
