@@ -157,6 +157,11 @@ internal constructor(
       checkNotNull(battles) { "Battle service is unavailable" }
           .startScriptedBattle(session, dexId, level, moveIds.toList())
 
+  /** The decomp dowildbattle: a scripted encounter the player may catch or flee, awaited. */
+  suspend fun wildBattle(dexId: Int, level: Int): BattleResult =
+      checkNotNull(battles) { "Battle service is unavailable" }
+          .startScriptedBattle(session, dexId, level, catchable = true, escapable = true)
+
   /** Fight the decomp trainer with this id, using the region the player is standing in. */
   suspend fun trainerBattle(trainerId: Int): BattleResult {
     return checkNotNull(battles) { "Battle service is unavailable" }
@@ -227,6 +232,13 @@ internal constructor(
     val npc = movement.interactedNpc(state, entityId) ?: return
     movement.removeNpc(session, state, npc.entityIdx)
     send(notice("The tree was cut down!"))
+  }
+
+  /** Remove the npc the player is talking to, for this session only. */
+  fun despawnInteracted() {
+    movement.interactedNpc(state, entityId)?.let {
+      movement.removeNpc(session, state, it.entityIdx)
+    }
   }
 
   private fun currentRegion(): Region =

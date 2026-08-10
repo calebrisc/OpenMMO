@@ -171,14 +171,16 @@ constructor(
       dexId: Int,
       level: Int,
       moveIds: List<Int> = emptyList(),
+      catchable: Boolean = false,
+      escapable: Boolean = false,
   ): BattleResult {
     val battle =
         createWildBattle(
             session,
             dexId,
             level,
-            catchable = false,
-            escapable = false,
+            catchable = catchable,
+            escapable = escapable,
             moveIds = moveIds,
         ) ?: return BattleResult.FAILED
     return battle.completion.await()
