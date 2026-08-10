@@ -1,8 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.MtChimney
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val TRAINER_MAXIE_MT_CHIMNEY = 602
+private const val SHELBY_ID = 313
+private const val SAWYER_ID = 1
 
 private const val TRAINER_GRUNT_MT_CHIMNEY_1 = 146
 private const val TRAINER_GRUNT_MT_CHIMNEY_2 = 579
@@ -11,72 +17,26 @@ private const val TRAINER_SHEILA = 125
 private const val TRAINER_SHIRLEY = 126
 private const val TRAINER_TABITHA_MT_CHIMNEY = 597
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * call_if_unset FLAG_EVIL_LEADER_PLEASE_STOP, MtChimney_EventScript_ArchieGoStopTeamMagma
- * call_if_set FLAG_EVIL_LEADER_PLEASE_STOP, MtChimney_EventScript_ArchieBusyFighting
- * closemessage
- * applymovement LOCALID_MT_CHIMNEY_ARCHIE, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * setflag FLAG_EVIL_LEADER_PLEASE_STOP
- * release
- * end
- * ```
- */
 internal object MtChimney_EventScript_Archie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Archie")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(MtChimney.ArchieIHaveMyHandsFull)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * playbgm MUS_ENCOUNTER_MAGMA, FALSE
- * msgbox MtChimney_Text_MeteoriteWillActivateVolcano, MSGBOX_DEFAULT
- * applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_FacePlayer
- * waitmovement 0
- * playse SE_PIN
- * applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_ExclamationMark
- * waitmovement 0
- * applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_Delay48
- * waitmovement 0
- * msgbox MtChimney_Text_MaxieIntro, MSGBOX_DEFAULT
- * trainerbattle_no_intro TRAINER_MAXIE_MT_CHIMNEY, MtChimney_Text_MaxieDefeat
- * msgbox MtChimney_Text_MaxieYouHaventSeenLastOfMagma, MSGBOX_DEFAULT
- * closemessage
- * delay 30
- * fadescreen FADE_TO_BLACK
- * removeobject LOCALID_MT_CHIMNEY_MAXIE
- * removeobject LOCALID_MT_CHIMNEY_MAGMA_GRUNT_1
- * removeobject LOCALID_MT_CHIMNEY_TABITHA
- * removeobject LOCALID_MT_CHIMNEY_MAGMA_GRUNT_2
- * setflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
- * fadescreen FADE_FROM_BLACK
- * setobjectxyperm LOCALID_MT_CHIMNEY_ARCHIE, 10, 12
- * addobject LOCALID_MT_CHIMNEY_ARCHIE
- * call_if_eq VAR_FACING, DIR_EAST, MtChimney_EventScript_ArchieApproachPlayerEast
- * call_if_eq VAR_FACING, DIR_NORTH, MtChimney_EventScript_ArchieApproachPlayerNorth
- * applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
- * waitmovement 0
- * msgbox MtChimney_Text_ArchieThankYou, MSGBOX_DEFAULT
- * closemessage
- * call_if_eq VAR_FACING, DIR_EAST, MtChimney_EventScript_ArchieExitEast
- * call_if_eq VAR_FACING, DIR_NORTH, MtChimney_EventScript_ArchieExitNorth
- * removeobject LOCALID_MT_CHIMNEY_ARCHIE
- * setflag FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA
- * setflag FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY
- * clearflag FLAG_HIDE_FALLARBOR_HOUSE_PROF_COZMO
- * setflag FLAG_HIDE_METEOR_FALLS_1F_1R_COZMO
- * clearflag FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY
- * releaseall
- * end
- * ```
- */
 internal object MtChimney_EventScript_Maxie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Maxie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(HoennFlags.FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY)) return
+    ctx.sign(MtChimney.MeteoriteWillActivateVolcano)
+    ctx.say(MtChimney.MaxieIntro)
+    if (!ctx.trainerBattleSingle(TRAINER_MAXIE_MT_CHIMNEY, null, MtChimney.MaxieDefeat)) return
+    ctx.say(MtChimney.MaxieYouHaventSeenLastOfMagma)
+    ctx.despawnInteracted()
+    ctx.setFlag(HoennFlags.FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA)
+    ctx.sign(MtChimney.ArchieThankYou)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA)
+    ctx.setFlag(HoennFlags.FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY)
+    ctx.clearFlag(HoennFlags.FLAG_HIDE_FALLARBOR_HOUSE_PROF_COZMO)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_METEOR_FALLS_1F_1R_COZMO)
+    ctx.clearFlag(HoennFlags.FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY)
+  }
 }
 
 internal object MtChimney_EventScript_Tabitha : Script {
@@ -108,28 +68,11 @@ internal object MtChimney_EventScript_BusyAquaGrunt3 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(MtChimney.MagmasNameSimilar)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * showmoneybox 0, 0
- * msgbox MtChimney_Text_LavaCookiesJust200, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, MtChimney_EventScript_DeclineLavaCookie
- * checkmoney 200
- * goto_if_eq VAR_RESULT, FALSE, MtChimney_EventScript_NotEnoughMoney
- * msgbox MtChimney_Text_ThankYouDear, MSGBOX_DEFAULT
- * checkitemspace ITEM_LAVA_COOKIE
- * call_if_eq VAR_RESULT, TRUE, MtChimney_EventScript_RemoveMoney
- * giveitem ITEM_LAVA_COOKIE
- * goto_if_eq VAR_RESULT, FALSE, MtChimney_EventScript_BagIsFull
- * hidemoneybox
- * release
- * end
- * ```
- */
 internal object MtChimney_EventScript_LavaCookieLady : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_LavaCookieLady")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(MtChimney.LavaCookiesJust200)
+    ctx.pokemart(Items.LAVA_COOKIE)
+  }
 }
 
 internal object MtChimney_EventScript_BusyMagmaGrunt6 : Script {
@@ -165,19 +108,11 @@ internal object MtChimney_EventScript_Grunt2 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHELBY_1, MtChimney_Text_ShelbyIntro, MtChimney_Text_ShelbyDefeat, MtChimney_EventScript_DefeatedShelby
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, MtChimney_EventScript_RematchShelby
- * msgbox MtChimney_Text_ShelbyPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object MtChimney_EventScript_Shelby : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Shelby")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(SHELBY_ID, MtChimney.ShelbyIntro, MtChimney.ShelbyDefeat)) return
+    ctx.say(MtChimney.ShelbyPostBattle)
+  }
 }
 
 internal object MtChimney_EventScript_Melissa : Script {
@@ -213,38 +148,26 @@ internal object MtChimney_EventScript_Grunt1 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SAWYER_1, MtChimney_Text_SawyerIntro, MtChimney_Text_SawyerDefeat, MtChimney_EventScript_SawyerDefeated
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, MtChimney_EventScript_SawyerRematch
- * msgbox MtChimney_Text_SawyerPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object MtChimney_EventScript_Sawyer : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_Sawyer")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(SAWYER_ID, MtChimney.SawyerIntro, MtChimney.SawyerDefeat)) return
+    ctx.say(MtChimney.SawyerPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtChimney_EventScript_MachineOn
- * goto_if_set FLAG_RECEIVED_METEORITE, MtChimney_EventScript_MachineOff
- * msgbox MtChimney_Text_RemoveTheMeteorite, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, MtChimney_EventScript_LeaveMeteoriteAlone
- * msgbox MtChimney_Text_PlayerRemovedMeteorite, MSGBOX_DEFAULT
- * giveitem ITEM_METEORITE
- * setflag FLAG_RECEIVED_METEORITE
- * releaseall
- * end
- * ```
- */
 internal object MtChimney_EventScript_MeteoriteMachine : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtChimney_EventScript_MeteoriteMachine")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(HoennFlags.FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY)) {
+      return ctx.sign(MtChimney.MeteoriteFittedOnMachine)
+    }
+    if (ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_METEORITE)) {
+      return ctx.sign(MtChimney.MachineMakesNoResponse)
+    }
+    if (!ctx.askYesNo(MtChimney.RemoveTheMeteorite)) return ctx.sign(MtChimney.PlayerLeftMeteorite)
+    // The meteorite is story state; Cozmo's script checks the flag.
+    ctx.setFlag(HoennFlags.FLAG_RECEIVED_METEORITE)
+    ctx.sign(MtChimney.PlayerRemovedMeteorite)
+  }
 }
 
 internal object MtChimney_EventScript_RouteSign : Script {
