@@ -204,7 +204,9 @@ constructor(
       y: Int,
       direction: Direction,
   ) {
-    ctx.send(gbaMovePacket(charId, map, x, y, direction))
+    // A reset must keep the original snap mode (2): a walk-mode packet makes the client try to
+    // animate to its own tile and it wedges until relog.
+    ctx.send(gbaMovePacket(charId, map, x, y, direction).copy(movementMode = 2))
   }
 
   private fun gbaMovePacket(
