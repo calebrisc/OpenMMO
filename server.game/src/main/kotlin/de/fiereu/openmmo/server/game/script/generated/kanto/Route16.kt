@@ -1,8 +1,11 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.Route16
+import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_BIKER_HIDEO = 201
 private const val TRAINER_BIKER_LAO = 199
@@ -87,36 +90,19 @@ internal object Route16_EventScript_Jed : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route16_EventScript_Jed")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_unset FLAG_GOT_POKE_FLUTE, Route16_EventScript_SnorlaxNoPokeFlute
- * goto_if_questlog EventScript_ReleaseEnd
- * special QuestLog_CutRecording
- * msgbox Text_WantToUsePokeFlute, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, Route16_EventScript_DontUsePokeFlute
- * call EventScript_AwakenSnorlax
- * setwildbattle SPECIES_SNORLAX, 30
- * waitse
- * playmoncry SPECIES_SNORLAX, CRY_MODE_ENCOUNTER
- * delay 40
- * waitmoncry
- * setflag FLAG_HIDE_ROUTE_16_SNORLAX
- * setflag FLAG_SYS_SPECIAL_WILD_BATTLE
- * dowildbattle
- * clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
- * specialvar VAR_RESULT, GetBattleOutcome
- * goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route16_EventScript_FoughtSnorlax
- * goto_if_eq VAR_RESULT, B_OUTCOME_RAN, Route16_EventScript_FoughtSnorlax
- * goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, Route16_EventScript_FoughtSnorlax
- * release
- * end
- * ```
- */
+private const val SNORLAX_DEX = 143
+
 internal object Route16_EventScript_Snorlax : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route16_EventScript_Snorlax")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_POKE_FLUTE)) {
+      return ctx.say(Route16.MonSprawledOutInSlumber)
+    }
+    if (!ctx.askYesNo(Misc.Text_WantToUsePokeFlute)) return
+    if (ctx.wildBattle(SNORLAX_DEX, 30) == BattleResult.DEFEAT) return
+    ctx.setFlag(KantoFlags.FLAG_HIDE_ROUTE_16_SNORLAX)
+    ctx.despawnInteracted()
+    ctx.sign(Misc.Text_SnorlaxReturnedToMountains)
+  }
 }
 
 internal object Route16_EventScript_RouteSign : Script {

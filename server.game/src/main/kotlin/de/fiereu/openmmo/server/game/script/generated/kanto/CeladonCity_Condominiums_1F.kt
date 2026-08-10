@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_Condominiums_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 internal object CeladonCity_Condominiums_1F_EventScript_Meowth : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Condominiums_1F.Meowth)
@@ -16,26 +17,15 @@ internal object CeladonCity_Condominiums_1F_EventScript_Nidoran : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Condominiums_1F.Nidoran)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TALKED_TO_TEA_LADY_AFTER_HOF, CeladonCity_Condominiums_1F_EventScript_TeaWomanAfterTea
- * goto_if_set FLAG_SYS_GAME_CLEAR, CeladonCity_Condominiums_1F_EventScript_TeaWomanMentionDaisy
- * goto_if_set FLAG_GOT_TEA, CeladonCity_Condominiums_1F_EventScript_TeaWomanAfterTea
- * msgbox CeladonCity_Condominiums_1F_Text_TryThisDrinkInstead
- * setflag FLAG_GOT_TEA
- * giveitem ITEM_TEA
- * goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
- * msgbox CeladonCity_Condominiums_1F_Text_NothingBeatsThirstLikeTea
- * release
- * end
- * ```
- */
 internal object CeladonCity_Condominiums_1F_EventScript_TeaWoman : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_Condominiums_1F_EventScript_TeaWoman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_TEA)) {
+      return ctx.say(CeladonCity_Condominiums_1F.MyDearMonsKeepMeCompany)
+    }
+    ctx.say(CeladonCity_Condominiums_1F.TryThisDrinkInstead)
+    ctx.setFlag(KantoFlags.FLAG_GOT_TEA)
+    ctx.say(CeladonCity_Condominiums_1F.NothingBeatsThirstLikeTea)
+  }
 }
 
 internal object CeladonCity_Condominiums_1F_EventScript_SuiteSign : Script {
