@@ -408,8 +408,7 @@ constructor(
     val stored = characterStore.getCharacter(battle.charId) ?: return
     // A full party overflows to the PC: CharacterEntry rejects a 7th party monster, so persisting
     // one would make every future login throw while building the character list.
-    val destination =
-        if (stored.pokemon.size < 6) PokemonContainer.PARTY else PokemonContainer.PC
+    val destination = if (stored.pokemon.size < 6) PokemonContainer.PARTY else PokemonContainer.PC
     val pool = if (destination == PokemonContainer.PC) stored.pcStorage else stored.pokemon
     val nextSlot = ((pool.maxOfOrNull { it.containerSlot } ?: -1) + 1).toShort()
     val caught =

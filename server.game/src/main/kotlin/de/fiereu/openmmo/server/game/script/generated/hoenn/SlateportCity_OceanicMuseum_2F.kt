@@ -1,99 +1,45 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.SlateportCity_OceanicMuseum_2F
+import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+import de.fiereu.openmmo.story.generated.hoenn.HoennVars
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox SlateportCity_OceanicMuseum_2F_Text_ThankYouForTheParts, MSGBOX_DEFAULT
- * closemessage
- * playbgm MUS_ENCOUNTER_AQUA, TRUE
- * addobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1, SlateportCity_OceanicMuseum_2F_Movement_FirstGruntEnter
- * waitmovement 0
- * addobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, SlateportCity_OceanicMuseum_2F_Movement_SecondGruntEnter
- * waitmovement 0
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1, SlateportCity_OceanicMuseum_2F_Movement_FirstGruntApproach
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, SlateportCity_OceanicMuseum_2F_Movement_SecondGruntApproach
- * waitmovement 0
- * call_if_eq VAR_FACING, DIR_SOUTH, SlateportCity_OceanicMuseum_2F_EventScript_PlayerFaceGrunts
- * call_if_eq VAR_FACING, DIR_EAST, SlateportCity_OceanicMuseum_2F_EventScript_PlayerFaceGrunts
- * msgbox SlateportCity_OceanicMuseum_2F_Text_WellTakeThoseParts, MSGBOX_DEFAULT
- * call_if_ne VAR_FACING, DIR_EAST, SlateportCity_OceanicMuseum_2F_EventScript_SternFaceGrunts
- * msgbox SlateportCity_OceanicMuseum_2F_Text_SternWhoAreYou, MSGBOX_DEFAULT
- * msgbox SlateportCity_OceanicMuseum_2F_Text_WereTeamAqua, MSGBOX_DEFAULT
- * closemessage
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, SlateportCity_OceanicMuseum_2F_Movement_GruntApproachToBattle
- * waitmovement 0
- * call_if_eq VAR_FACING, DIR_SOUTH, SlateportCity_OceanicMuseum_2F_EventScript_PlayerApproachGruntSouth
- * call_if_eq VAR_FACING, DIR_WEST, SlateportCity_OceanicMuseum_2F_EventScript_PlayerApproachGruntWest
- * trainerbattle_no_intro TRAINER_GRUNT_MUSEUM_1, SlateportCity_OceanicMuseum_2F_Text_Grunt1Defeat
- * msgbox SlateportCity_OceanicMuseum_2F_Text_BossGoingToBeFurious, MSGBOX_DEFAULT
- * closemessage
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, SlateportCity_OceanicMuseum_2F_Movement_GruntDefeated
- * waitmovement 0
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1, SlateportCity_OceanicMuseum_2F_Movement_GruntApproachToBattle
- * waitmovement 0
- * msgbox SlateportCity_OceanicMuseum_2F_Text_LetMeTakeCareOfThis, MSGBOX_DEFAULT
- * trainerbattle_no_intro TRAINER_GRUNT_MUSEUM_2, SlateportCity_OceanicMuseum_2F_Text_Grunt2Defeat
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1, SlateportCity_OceanicMuseum_2F_Movement_GruntDefeated
- * waitmovement 0
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1, Common_Movement_WalkInPlaceFasterDown
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, Common_Movement_WalkInPlaceFasterUp
- * waitmovement 0
- * msgbox SlateportCity_OceanicMuseum_2F_Text_MeddlingKid, MSGBOX_DEFAULT
- * closemessage
- * delay 35
- * addobject LOCALID_OCEANIC_MUSEUM_2F_ARCHIE
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_ARCHIE, SlateportCity_OceanicMuseum_2F_Movement_ArchieEnter
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2, SlateportCity_OceanicMuseum_2F_Movement_GruntMoveForArchie
- * waitmovement 0
- * msgbox SlateportCity_OceanicMuseum_2F_Text_CameToSeeWhatsTakingSoLong, MSGBOX_DEFAULT
- * closemessage
- * applymovement LOCALID_OCEANIC_MUSEUM_2F_ARCHIE, SlateportCity_OceanicMuseum_2F_Movement_ArchieApproachPlayer
- * waitmovement 0
- * msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieWarning, MSGBOX_DEFAULT
- * closemessage
- * savebgm MUS_DUMMY
- * fadedefaultbgm
- * fadescreen FADE_TO_BLACK
- * removeobject LOCALID_OCEANIC_MUSEUM_2F_ARCHIE
- * removeobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_1
- * removeobject LOCALID_OCEANIC_MUSEUM_2F_GRUNT_2
- * fadescreen FADE_FROM_BLACK
- * delay 30
- * setflag FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_AQUA_GRUNTS
- * applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
- * waitmovement 0
- * msgbox SlateportCity_OceanicMuseum_2F_Text_SternThankYouForSavingUs, MSGBOX_DEFAULT
- * setvar VAR_0x8004, ITEM_DEVON_GOODS
- * call Common_EventScript_PlayerHandedOverTheItem
- * msgbox SlateportCity_OceanicMuseum_2F_Text_SternIveGotToGo, MSGBOX_DEFAULT
- * closemessage
- * fadescreen FADE_TO_BLACK
- * playfanfare MUS_HEAL
- * waitfanfare
- * special HealPlayerParty
- * removeobject LOCALID_OCEANIC_MUSEUM_2F_CAPT_STERN
- * setflag FLAG_HIDE_ROUTE_110_TEAM_AQUA
- * call_if_eq VAR_REGISTER_BIRCH_STATE, 0, SlateportCity_OceanicMuseum_2F_EventScript_ReadyRegisterBirch
- * setflag FLAG_DELIVERED_DEVON_GOODS
- * clearflag FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE
- * setflag FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE
- * setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1
- * fadescreen FADE_FROM_BLACK
- * release
- * end
- * ```
- */
+private const val TRAINER_GRUNT_MUSEUM_1 = 20
+private const val TRAINER_GRUNT_MUSEUM_2 = 21
+
 internal object SlateportCity_OceanicMuseum_2F_EventScript_CaptStern : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SlateportCity_OceanicMuseum_2F_EventScript_CaptStern")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(HoennFlags.FLAG_DELIVERED_DEVON_GOODS)) return
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECOVERED_DEVON_GOODS)) {
+      return ctx.say(SlateportCity_OceanicMuseum_2F.RemindsMeOfAbandonedShip)
+    }
+    ctx.say(SlateportCity_OceanicMuseum_2F.ThankYouForTheParts)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.WellTakeThoseParts)
+    ctx.say(SlateportCity_OceanicMuseum_2F.SternWhoAreYou)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.WereTeamAqua)
+    if (ctx.trainerBattle(TRAINER_GRUNT_MUSEUM_1) != BattleResult.VICTORY) return
+    ctx.sign(SlateportCity_OceanicMuseum_2F.Grunt1Defeat)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.BossGoingToBeFurious)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.LetMeTakeCareOfThis)
+    if (ctx.trainerBattle(TRAINER_GRUNT_MUSEUM_2) != BattleResult.VICTORY) return
+    ctx.sign(SlateportCity_OceanicMuseum_2F.Grunt2Defeat)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.MeddlingKid)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.CameToSeeWhatsTakingSoLong)
+    ctx.sign(SlateportCity_OceanicMuseum_2F.ArchieWarning)
+    ctx.say(SlateportCity_OceanicMuseum_2F.SternThankYouForSavingUs)
+    ctx.say(SlateportCity_OceanicMuseum_2F.SternIveGotToGo)
+    ctx.healParty()
+    ctx.despawnInteracted()
+    ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_110_TEAM_AQUA)
+    ctx.setFlag(HoennFlags.FLAG_DELIVERED_DEVON_GOODS)
+    ctx.clearFlag(HoennFlags.FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_AQUA_GRUNTS)
+    ctx.setVar(HoennVars.VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1)
+  }
 }
 
 internal object SlateportCity_OceanicMuseum_2F_EventScript_MuseumPatron1 : Script {
@@ -106,22 +52,9 @@ internal object SlateportCity_OceanicMuseum_2F_EventScript_MuseumPatron2 : Scrip
       ctx.say(SlateportCity_OceanicMuseum_2F.DontRunInMuseum)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox SlateportCity_OceanicMuseum_2F_Text_WantToRideSubmarine, MSGBOX_DEFAULT
- * closemessage
- * applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object SlateportCity_OceanicMuseum_2F_EventScript_MuseumPatron3 : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port SlateportCity_OceanicMuseum_2F_EventScript_MuseumPatron3")
+      ctx.say(SlateportCity_OceanicMuseum_2F.RemindsMeOfAbandonedShip)
 }
 
 internal object SlateportCity_OceanicMuseum_2F_EventScript_WaterQualitySample1 : Script {
