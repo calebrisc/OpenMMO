@@ -83,7 +83,7 @@ internal class ServerSessionHandshakeHandler(
           appHandler,
       )
       (event.session as MutableSessionContext).transitionTo(SessionPhase.ESTABLISHED)
-      log.info { "Handshake complete for ${event.session.remoteAddress}" }
+      log.debug { "Handshake complete for ${event.session.remoteAddress}" }
     }
   }
 }

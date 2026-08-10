@@ -8,6 +8,6 @@ data class PipelineOptions(
     val writeTimeout: Duration = 25.minutes,
     val maxFrameLength: Int = 0xFFFF,
     val compressionThreshold: Int = 256,
-    val maxHelloSkew: Duration = 5.minutes,
+    val maxHelloSkew: Duration = 1.minutes,
     val frameLogging: Boolean = false,
 )
