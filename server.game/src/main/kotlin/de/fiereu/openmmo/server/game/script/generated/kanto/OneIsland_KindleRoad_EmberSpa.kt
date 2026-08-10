@@ -14,20 +14,9 @@ internal object OneIsland_KindleRoad_EmberSpa_EventScript_BaldingMan1 : Script {
       ctx.say(OneIsland_KindleRoad_EmberSpa.EnjoyBowlOfChowder)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BRUNO, 3
- * msgbox OneIsland_KindleRoad_EmberSpa_Text_BrunoVisitsSpaOnOccasion
- * release
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EmberSpa_EventScript_BlackBelt : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port OneIsland_KindleRoad_EmberSpa_EventScript_BlackBelt")
+      ctx.say(OneIsland_KindleRoad_EmberSpa.BrunoVisitsSpaOnOccasion)
 }
 
 internal object OneIsland_KindleRoad_EmberSpa_EventScript_OldWoman : Script {

@@ -25,40 +25,13 @@ internal object LavenderTown_VolunteerPokemonHouse_EventScript_MrFuji : Script {
       TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_MrFuji")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_NIDORINO, CRY_MODE_NORMAL
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_Nidorino
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_Nidorino : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_Nidorino")
+      ctx.say(LavenderTown_VolunteerPokemonHouse.Nidorino)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_PSYDUCK, CRY_MODE_NORMAL
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_Psyduck
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_Psyduck : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_Psyduck")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(LavenderTown_VolunteerPokemonHouse.Psyduck)
 }
 
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_LittleBoy : Script {
@@ -82,35 +55,14 @@ internal object LavenderTown_VolunteerPokemonHouse_EventScript_Youngster : Scrip
       TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_Youngster")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MRFUJI, 0
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_MrFujiLooksAfterOrphanedMons
- * release
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_LittleGirl : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_LittleGirl")
+      ctx.say(LavenderTown_VolunteerPokemonHouse.MrFujiLooksAfterOrphanedMons)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_MRFUJI, 2
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_GrandPrizeDrawingClipped
- * releaseall
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_PokemonFanMagazine : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_PokemonFanMagazine")
+      ctx.say(LavenderTown_VolunteerPokemonHouse.GrandPrizeDrawingClipped)
 }
 
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_Bookshelf : Script {

@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -175,21 +176,8 @@ internal object SaffronCity_PokemonTrainerFanClub_EventScript_BlackBelt : Script
       TODO("port SaffronCity_PokemonTrainerFanClub_EventScript_BlackBelt")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BRUNO, 2
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureBruno
- * release
- * end
- * ```
- */
 internal object SaffronCity_PokemonTrainerFanClub_EventScript_PokemonJournalBruno : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SaffronCity_PokemonTrainerFanClub_EventScript_PokemonJournalBruno")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureBruno)
 }
 
 internal val SaffronCity_PokemonTrainerFanClubScripts: Map<String, Script> =

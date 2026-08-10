@@ -1,6 +1,8 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.FuchsiaCity_WardensHouse
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -23,33 +25,12 @@ internal object FuchsiaCity_WardensHouse_EventScript_Warden : Script {
       TODO("port FuchsiaCity_WardensHouse_EventScript_Warden")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_RARE_CANDY
- * end
- * ```
- */
 internal object FuchsiaCity_WardensHouse_EventScript_ItemRareCandy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FuchsiaCity_WardensHouse_EventScript_ItemRareCandy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.RARE_CANDY)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_KOGA, 4
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureKoga
- * release
- * end
- * ```
- */
 internal object FuchsiaCity_WardensHouse_EventScript_PokemonJournalKoga : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FuchsiaCity_WardensHouse_EventScript_PokemonJournalKoga")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureKoga)
 }
 
 internal object FuchsiaCity_WardensHouse_EventScript_DisplaySign2 : Script {

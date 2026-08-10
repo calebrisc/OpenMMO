@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.dialog.generated.kanto.SevenIsland_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
@@ -27,21 +28,8 @@ internal object SevenIsland_PokemonCenter_1F_EventScript_Beauty : Script {
       ctx.say(SevenIsland_PokemonCenter_1F.CheckOutTrainerTower)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_AGATHA, 3
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureAgatha
- * release
- * end
- * ```
- */
 internal object SevenIsland_PokemonCenter_1F_EventScript_PokemonJournal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_PokemonCenter_1F_EventScript_PokemonJournal")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureAgatha)
 }
 
 internal val SevenIsland_PokemonCenter_1FScripts: Map<String, Script> =

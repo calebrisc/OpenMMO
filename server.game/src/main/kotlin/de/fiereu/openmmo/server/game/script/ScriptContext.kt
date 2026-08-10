@@ -205,6 +205,30 @@ internal constructor(
     }
   }
 
+  /** True when a party monster knows [moveId], the decomp checkpartymove. */
+  fun partyHasMove(moveId: Int): Boolean =
+      characterId?.let { id ->
+        characters?.getCharacter(id)?.pokemon?.any { mon ->
+          mon.moves.any { it.id.toInt() == moveId }
+        }
+      } ?: false
+
+  /**
+   * The decomp EventScript_CutTree: with the region's cut badge and a party monster that knows Cut,
+   * the tree falls for this session. Like the GBA, it grows back on the next map entry.
+   */
+  suspend fun cutTree() {
+    val badge =
+        if (currentRegion() == Region.KANTO) "kanto/FLAG_BADGE02_GET" else "hoenn/FLAG_BADGE01_GET"
+    if (!isFlagSet(badge) || !partyHasMove(MOVE_CUT)) {
+      send(notice("A monster that knows CUT could fell this tree."))
+      return
+    }
+    val npc = movement.interactedNpc(state, entityId) ?: return
+    movement.removeNpc(session, state, npc.entityIdx)
+    send(notice("The tree was cut down!"))
+  }
+
   private fun currentRegion(): Region =
       checkNotNull(Region.byWireValue(state.regionId.toByte())) {
         "Scene ran in unknown region ${state.regionId}"
@@ -294,6 +318,7 @@ internal constructor(
     const val SIGN = 3
     const val NPC = 4
     const val FEMALE: Byte = 1
+    const val MOVE_CUT = 15
     const val STORY_PLAYER_UNAVAILABLE = "Story player service is unavailable"
   }
 }

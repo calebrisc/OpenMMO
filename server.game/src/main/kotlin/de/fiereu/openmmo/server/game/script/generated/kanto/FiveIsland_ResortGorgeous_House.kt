@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_ResortGorgeous_House
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -29,20 +30,8 @@ internal object FiveIsland_ResortGorgeous_House_EventScript_Butler : Script {
       ctx.say(FiveIsland_ResortGorgeous_House.LadySelphySmileHasBrillianceOfSun)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_BLAINE, 5
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureBlaine
- * releaseall
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_House_EventScript_PokemonJournal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_House_EventScript_PokemonJournal")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureBlaine)
 }
 
 internal val FiveIsland_ResortGorgeous_HouseScripts: Map<String, Script> =

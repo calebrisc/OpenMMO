@@ -8,28 +8,12 @@ internal object CeruleanCave_1F_EventScript_ItemNugget : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NUGGET)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object CeruleanCave_1F_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCave_1F_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ELIXIR
- * end
- * ```
- */
 internal object CeruleanCave_1F_EventScript_ItemMaxElixir : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCave_1F_EventScript_ItemMaxElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ELIXIR)
 }
 
 internal val CeruleanCave_1FScripts: Map<String, Script> =

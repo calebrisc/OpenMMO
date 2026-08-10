@@ -56,32 +56,16 @@ internal object VictoryRoad_2F_EventScript_Gregory : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GUARD_SPEC
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_ItemGuardSpec : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_2F_EventScript_ItemGuardSpec")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GUARD_SPEC)
 }
 
 internal object VictoryRoad_2F_EventScript_ItemTM07 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM07)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_HEAL
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_ItemFullHeal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_2F_EventScript_ItemFullHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_HEAL)
 }
 
 internal object VictoryRoad_2F_EventScript_ItemTM37 : Script {

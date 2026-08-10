@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_PokemonCenter_1F
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -22,21 +23,8 @@ internal object FiveIsland_PokemonCenter_1F_EventScript_Chef : Script {
       ctx.say(FiveIsland_PokemonCenter_1F.OnMyWayToPrepareMeal)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_LORELEI, 3
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureLorelei
- * release
- * end
- * ```
- */
 internal object FiveIsland_PokemonCenter_1F_EventScript_PokemonJournal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_PokemonCenter_1F_EventScript_PokemonJournal")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureLorelei)
 }
 
 internal val FiveIsland_PokemonCenter_1FScripts: Map<String, Script> =

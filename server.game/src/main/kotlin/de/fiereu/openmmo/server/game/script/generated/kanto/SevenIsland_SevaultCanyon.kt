@@ -1,97 +1,81 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SevenIsland_SevaultCanyon
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CRUSH_GIRL_CYNDY, SevenIsland_SevaultCanyon_Text_CyndyIntro, SevenIsland_SevaultCanyon_Text_CyndyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_CyndyRematch
- * msgbox SevenIsland_SevaultCanyon_Text_CyndyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_COOLTRAINER_LEROY = 599
+private const val TRAINER_COOLTRAINER_MICHELLE = 600
+private const val TRAINER_CRUSH_GIRL_CYNDY = 591
+private const val TRAINER_PKMN_RANGER_JACKSON = 596
+private const val TRAINER_PKMN_RANGER_KATELYN = 598
+private const val TRAINER_TAMER_EVAN = 593
+
 internal object SevenIsland_SevaultCanyon_EventScript_Cyndy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Cyndy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRUSH_GIRL_CYNDY,
+        SevenIsland_SevaultCanyon.CyndyIntro,
+        SevenIsland_SevaultCanyon.CyndyDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.CyndyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_EVAN, SevenIsland_SevaultCanyon_Text_EvanIntro, SevenIsland_SevaultCanyon_Text_EvanDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_EvanRematch
- * msgbox SevenIsland_SevaultCanyon_Text_EvanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Evan : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Evan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_EVAN,
+        SevenIsland_SevaultCanyon.EvanIntro,
+        SevenIsland_SevaultCanyon.EvanDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.EvanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_RANGER_JACKSON, SevenIsland_SevaultCanyon_Text_JacksonIntro, SevenIsland_SevaultCanyon_Text_JacksonDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_JacksonRematch
- * msgbox SevenIsland_SevaultCanyon_Text_JacksonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Jackson : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Jackson")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_RANGER_JACKSON,
+        SevenIsland_SevaultCanyon.JacksonIntro,
+        SevenIsland_SevaultCanyon.JacksonDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.JacksonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_RANGER_KATELYN, SevenIsland_SevaultCanyon_Text_KatelynIntro, SevenIsland_SevaultCanyon_Text_KatelynDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_KatelynRematch
- * msgbox SevenIsland_SevaultCanyon_Text_KatelynPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Katelyn : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Katelyn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_RANGER_KATELYN,
+        SevenIsland_SevaultCanyon.KatelynIntro,
+        SevenIsland_SevaultCanyon.KatelynDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.KatelynPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COOLTRAINER_LEROY, SevenIsland_SevaultCanyon_Text_LeroyIntro, SevenIsland_SevaultCanyon_Text_LeroyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_LeroyRematch
- * msgbox SevenIsland_SevaultCanyon_Text_LeroyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Leroy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Leroy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOLTRAINER_LEROY,
+        SevenIsland_SevaultCanyon.LeroyIntro,
+        SevenIsland_SevaultCanyon.LeroyDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.LeroyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COOLTRAINER_MICHELLE, SevenIsland_SevaultCanyon_Text_MichelleIntro, SevenIsland_SevaultCanyon_Text_MichelleDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_MichelleRematch
- * msgbox SevenIsland_SevaultCanyon_Text_MichellePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Michelle : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Michelle")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOLTRAINER_MICHELLE,
+        SevenIsland_SevaultCanyon.MichelleIntro,
+        SevenIsland_SevaultCanyon.MichelleDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.MichellePostBattle)
+  }
 }
 
 /**
@@ -136,44 +120,17 @@ internal object SevenIsland_SevaultCanyon_EventScript_ItemKingsRock : Script {
       TODO("port SevenIsland_SevaultCanyon_EventScript_ItemKingsRock")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ELIXIR
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_ItemMaxElixir : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_ItemMaxElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_NUGGET
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_ItemNugget : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_ItemNugget")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NUGGET)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BRUNO, 5
- * msgbox SevenIsland_SevaultCanyon_Text_BrunoTrainedWithBrawly
- * release
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_BlackBelt : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_BlackBelt")
+      ctx.say(SevenIsland_SevaultCanyon.BrunoTrainedWithBrawly)
 }
 
 internal object SevenIsland_SevaultCanyon_EventScript_RouteSign : Script {

@@ -107,28 +107,12 @@ internal object RocketHideout_B4F_EventScript_ItemTM49 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM49)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ETHER
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_ItemMaxEther : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B4F_EventScript_ItemMaxEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ETHER)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CALCIUM
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_ItemCalcium : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B4F_EventScript_ItemCalcium")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CALCIUM)
 }
 
 internal val RocketHideout_B4FScripts: Map<String, Script> =

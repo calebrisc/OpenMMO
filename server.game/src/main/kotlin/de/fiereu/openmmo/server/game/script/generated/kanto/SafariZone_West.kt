@@ -21,28 +21,12 @@ internal object SafariZone_West_EventScript_ItemTM32 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM32)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_POTION
- * end
- * ```
- */
 internal object SafariZone_West_EventScript_ItemMaxPotion : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_West_EventScript_ItemMaxPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REVIVE
- * end
- * ```
- */
 internal object SafariZone_West_EventScript_ItemMaxRevive : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SafariZone_West_EventScript_ItemMaxRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REVIVE)
 }
 
 internal object SafariZone_West_EventScript_LostTeethNotice : Script {

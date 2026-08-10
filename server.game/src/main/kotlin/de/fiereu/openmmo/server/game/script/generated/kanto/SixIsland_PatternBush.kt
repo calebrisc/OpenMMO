@@ -4,71 +4,73 @@ import de.fiereu.openmmo.dialog.generated.kanto.SixIsland_PatternBush
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_BUG_CATCHER_GARRET = 611
+private const val TRAINER_BUG_CATCHER_JONAH = 612
+private const val TRAINER_BUG_CATCHER_VANCE = 613
+private const val TRAINER_CAMPER_RILEY = 618
+private const val TRAINER_LASS_DALIA = 616
+private const val TRAINER_LASS_JOANA = 617
+private const val TRAINER_PICNICKER_MARCY = 619
+private const val TRAINER_PKMN_BREEDER_ALLISON = 610
+private const val TRAINER_PKMN_BREEDER_BETHANY = 609
+private const val TRAINER_RUIN_MANIAC_LAYTON = 620
+private const val TRAINER_YOUNGSTER_CORDELL = 615
+
 private const val TRAINER_YOUNGSTER_NASH = 614
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_BREEDER_BETHANY, SixIsland_PatternBush_Text_BethanyIntro, SixIsland_PatternBush_Text_BethanyDefeat
- * msgbox SixIsland_PatternBush_Text_BethanyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Bethany : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Bethany")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_BREEDER_BETHANY,
+        SixIsland_PatternBush.BethanyIntro,
+        SixIsland_PatternBush.BethanyDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.BethanyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_BREEDER_ALLISON, SixIsland_PatternBush_Text_AllisonIntro, SixIsland_PatternBush_Text_AllisonDefeat
- * msgbox SixIsland_PatternBush_Text_AllisonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Allison : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Allison")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_BREEDER_ALLISON,
+        SixIsland_PatternBush.AllisonIntro,
+        SixIsland_PatternBush.AllisonDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.AllisonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BUG_CATCHER_GARRET, SixIsland_PatternBush_Text_GarretIntro, SixIsland_PatternBush_Text_GarretDefeat
- * msgbox SixIsland_PatternBush_Text_GarretPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Garret : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Garret")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BUG_CATCHER_GARRET,
+        SixIsland_PatternBush.GarretIntro,
+        SixIsland_PatternBush.GarretDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.GarretPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BUG_CATCHER_JONAH, SixIsland_PatternBush_Text_JonahIntro, SixIsland_PatternBush_Text_JonahDefeat
- * msgbox SixIsland_PatternBush_Text_JonahPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Jonah : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Jonah")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BUG_CATCHER_JONAH,
+        SixIsland_PatternBush.JonahIntro,
+        SixIsland_PatternBush.JonahDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.JonahPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BUG_CATCHER_VANCE, SixIsland_PatternBush_Text_VanceIntro, SixIsland_PatternBush_Text_VanceDefeat
- * msgbox SixIsland_PatternBush_Text_VancePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Vance : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Vance")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BUG_CATCHER_VANCE,
+        SixIsland_PatternBush.VanceIntro,
+        SixIsland_PatternBush.VanceDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.VancePostBattle)
+  }
 }
 
 internal object SixIsland_PatternBush_EventScript_Nash : Script {
@@ -80,82 +82,64 @@ internal object SixIsland_PatternBush_EventScript_Nash : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_CORDELL, SixIsland_PatternBush_Text_CordellIntro, SixIsland_PatternBush_Text_CordellDefeat
- * msgbox SixIsland_PatternBush_Text_CordellPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Cordell : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Cordell")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNGSTER_CORDELL,
+        SixIsland_PatternBush.CordellIntro,
+        SixIsland_PatternBush.CordellDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.CordellPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LASS_DALIA, SixIsland_PatternBush_Text_DaliaIntro, SixIsland_PatternBush_Text_DaliaDefeat
- * msgbox SixIsland_PatternBush_Text_DaliaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Dalia : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Dalia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LASS_DALIA, SixIsland_PatternBush.DaliaIntro, SixIsland_PatternBush.DaliaDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.DaliaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LASS_JOANA, SixIsland_PatternBush_Text_JoanaIntro, SixIsland_PatternBush_Text_JoanaDefeat
- * msgbox SixIsland_PatternBush_Text_JoanaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Joana : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Joana")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LASS_JOANA, SixIsland_PatternBush.JoanaIntro, SixIsland_PatternBush.JoanaDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.JoanaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAMPER_RILEY, SixIsland_PatternBush_Text_RileyIntro, SixIsland_PatternBush_Text_RileyDefeat
- * msgbox SixIsland_PatternBush_Text_RileyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Riley : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Riley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CAMPER_RILEY, SixIsland_PatternBush.RileyIntro, SixIsland_PatternBush.RileyDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.RileyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_MARCY, SixIsland_PatternBush_Text_MarcyIntro, SixIsland_PatternBush_Text_MarcyDefeat
- * msgbox SixIsland_PatternBush_Text_MarcyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Marcy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Marcy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PICNICKER_MARCY,
+        SixIsland_PatternBush.MarcyIntro,
+        SixIsland_PatternBush.MarcyDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.MarcyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUIN_MANIAC_LAYTON, SixIsland_PatternBush_Text_LaytonIntro, SixIsland_PatternBush_Text_LaytonDefeat
- * msgbox SixIsland_PatternBush_Text_LaytonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Layton : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_PatternBush_EventScript_Layton")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_RUIN_MANIAC_LAYTON,
+        SixIsland_PatternBush.LaytonIntro,
+        SixIsland_PatternBush.LaytonDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.LaytonPostBattle)
+  }
 }
 
 internal val SixIsland_PatternBushScripts: Map<String, Script> =

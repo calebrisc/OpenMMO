@@ -4,58 +4,16 @@ import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_Condominiums_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_MEOWTH, CRY_MODE_NORMAL
- * msgbox CeladonCity_Condominiums_1F_Text_Meowth
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object CeladonCity_Condominiums_1F_EventScript_Meowth : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_Condominiums_1F_EventScript_Meowth")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Condominiums_1F.Meowth)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_CLEFAIRY, CRY_MODE_NORMAL
- * msgbox CeladonCity_Condominiums_1F_Text_Clefairy
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object CeladonCity_Condominiums_1F_EventScript_Clefairy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_Condominiums_1F_EventScript_Clefairy")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Condominiums_1F.Clefairy)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_NIDORAN_F, CRY_MODE_NORMAL
- * msgbox CeladonCity_Condominiums_1F_Text_Nidoran
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object CeladonCity_Condominiums_1F_EventScript_Nidoran : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_Condominiums_1F_EventScript_Nidoran")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Condominiums_1F.Nidoran)
 }
 
 /**

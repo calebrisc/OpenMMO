@@ -40,28 +40,12 @@ internal object PokemonTower_4F_EventScript_ItemElixir : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_AWAKENING
- * end
- * ```
- */
 internal object PokemonTower_4F_EventScript_ItemAwakening : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonTower_4F_EventScript_ItemAwakening")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.AWAKENING)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREAT_BALL
- * end
- * ```
- */
 internal object PokemonTower_4F_EventScript_ItemGreatBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonTower_4F_EventScript_ItemGreatBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREAT_BALL)
 }
 
 internal val PokemonTower_4FScripts: Map<String, Script> =

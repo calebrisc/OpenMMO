@@ -16,16 +16,8 @@ internal object PokemonMansion_2F_EventScript_Arnie : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CALCIUM
- * end
- * ```
- */
 internal object PokemonMansion_2F_EventScript_ItemCalcium : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonMansion_2F_EventScript_ItemCalcium")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CALCIUM)
 }
 
 internal object PokemonMansion_2F_EventScript_ItemZinc : Script {

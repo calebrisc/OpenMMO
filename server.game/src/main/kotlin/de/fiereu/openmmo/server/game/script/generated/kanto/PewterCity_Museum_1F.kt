@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PewterCity_Museum_1F
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -119,20 +120,8 @@ internal object PewterCity_Museum_1F_EventScript_KabutopsFossil : Script {
       TODO("port PewterCity_Museum_1F_EventScript_KabutopsFossil")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_BROCK, 5
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureBrock
- * releaseall
- * end
- * ```
- */
 internal object PewterCity_Museum_1F_EventScript_PokemonJournalBrock : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_Museum_1F_EventScript_PokemonJournalBrock")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureBrock)
 }
 
 internal val PewterCity_Museum_1FScripts: Map<String, Script> =

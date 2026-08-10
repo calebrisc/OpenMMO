@@ -1,19 +1,20 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_LostCave_Room1
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUIN_MANIAC_LAWSON, FiveIsland_LostCave_Room1_Text_LawsonIntro, FiveIsland_LostCave_Room1_Text_LawsonDefeat
- * msgbox FiveIsland_LostCave_Room1_Text_LawsonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_RUIN_MANIAC_LAWSON = 607
+
 internal object FiveIsland_LostCave_Room1_EventScript_Lawson : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_LostCave_Room1_EventScript_Lawson")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_RUIN_MANIAC_LAWSON,
+        FiveIsland_LostCave_Room1.LawsonIntro,
+        FiveIsland_LostCave_Room1.LawsonDefeat))
+        return
+    ctx.say(FiveIsland_LostCave_Room1.LawsonPostBattle)
+  }
 }
 
 internal val FiveIsland_LostCave_Room1Scripts: Map<String, Script> =

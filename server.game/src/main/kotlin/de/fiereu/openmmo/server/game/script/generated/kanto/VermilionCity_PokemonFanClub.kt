@@ -38,40 +38,12 @@ internal object VermilionCity_PokemonFanClub_EventScript_WorkerF : Script {
       TODO("port VermilionCity_PokemonFanClub_EventScript_WorkerF")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_PIKACHU, CRY_MODE_NORMAL
- * msgbox VermilionCity_PokemonFanClub_Text_Pikachu
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object VermilionCity_PokemonFanClub_EventScript_Pikachu : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonFanClub_EventScript_Pikachu")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity_PokemonFanClub.Pikachu)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_SEEL, CRY_MODE_NORMAL
- * msgbox VermilionCity_PokemonFanClub_Text_Seel
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object VermilionCity_PokemonFanClub_EventScript_Seel : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonFanClub_EventScript_Seel")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity_PokemonFanClub.Seel)
 }
 
 /**

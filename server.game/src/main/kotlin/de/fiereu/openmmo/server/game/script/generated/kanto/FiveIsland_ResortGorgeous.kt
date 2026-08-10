@@ -4,109 +4,89 @@ import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_ResortGorgeous
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAINTER_DAISY, FiveIsland_ResortGorgeous_Text_DaisyIntro, FiveIsland_ResortGorgeous_Text_DaisyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_DaisyRematch
- * msgbox FiveIsland_ResortGorgeous_Text_DaisyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_LADY_GILLIAN = 564
+private const val TRAINER_LADY_JACKI = 525
+private const val TRAINER_PAINTER_CELINA = 562
+private const val TRAINER_PAINTER_DAISY = 526
+private const val TRAINER_PAINTER_RAYNA = 563
+private const val TRAINER_SWIMMER_MALE_TOBY = 566
+private const val TRAINER_YOUNGSTER_DESTIN = 565
+
 internal object FiveIsland_ResortGorgeous_EventScript_Daisy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Daisy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PAINTER_DAISY,
+        FiveIsland_ResortGorgeous.DaisyIntro,
+        FiveIsland_ResortGorgeous.DaisyDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.DaisyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAINTER_CELINA, FiveIsland_ResortGorgeous_Text_CelinaIntro, FiveIsland_ResortGorgeous_Text_CelinaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_CelinaRematch
- * msgbox FiveIsland_ResortGorgeous_Text_CelinaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Celina : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Celina")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PAINTER_CELINA,
+        FiveIsland_ResortGorgeous.CelinaIntro,
+        FiveIsland_ResortGorgeous.CelinaDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.CelinaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAINTER_RAYNA, FiveIsland_ResortGorgeous_Text_RaynaIntro, FiveIsland_ResortGorgeous_Text_RaynaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_RaynaRematch
- * msgbox FiveIsland_ResortGorgeous_Text_RaynaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Rayna : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Rayna")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PAINTER_RAYNA,
+        FiveIsland_ResortGorgeous.RaynaIntro,
+        FiveIsland_ResortGorgeous.RaynaDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.RaynaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LADY_JACKI, FiveIsland_ResortGorgeous_Text_JackiIntro, FiveIsland_ResortGorgeous_Text_JackiDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_JackiRematch
- * msgbox FiveIsland_ResortGorgeous_Text_JackiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Jacki : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Jacki")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LADY_JACKI,
+        FiveIsland_ResortGorgeous.JackiIntro,
+        FiveIsland_ResortGorgeous.JackiDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.JackiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LADY_GILLIAN, FiveIsland_ResortGorgeous_Text_GillianIntro, FiveIsland_ResortGorgeous_Text_GillianDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_GillianRematch
- * msgbox FiveIsland_ResortGorgeous_Text_GillianPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Gillian : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Gillian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LADY_GILLIAN,
+        FiveIsland_ResortGorgeous.GillianIntro,
+        FiveIsland_ResortGorgeous.GillianDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.GillianPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_DESTIN, FiveIsland_ResortGorgeous_Text_DestinIntro, FiveIsland_ResortGorgeous_Text_DestinDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_DestinRematch
- * msgbox FiveIsland_ResortGorgeous_Text_DestinPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Destin : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Destin")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNGSTER_DESTIN,
+        FiveIsland_ResortGorgeous.DestinIntro,
+        FiveIsland_ResortGorgeous.DestinDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.DestinPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_TOBY, FiveIsland_ResortGorgeous_Text_TobyIntro, FiveIsland_ResortGorgeous_Text_TobyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FiveIsland_ResortGorgeous_EventScript_TobyRematch
- * msgbox FiveIsland_ResortGorgeous_Text_TobyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_ResortGorgeous_EventScript_Toby : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_ResortGorgeous_EventScript_Toby")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_TOBY,
+        FiveIsland_ResortGorgeous.TobyIntro,
+        FiveIsland_ResortGorgeous.TobyDefeat))
+        return
+    ctx.say(FiveIsland_ResortGorgeous.TobyPostBattle)
+  }
 }
 
 internal object FiveIsland_ResortGorgeous_EventScript_SelphysHouseSign : Script {

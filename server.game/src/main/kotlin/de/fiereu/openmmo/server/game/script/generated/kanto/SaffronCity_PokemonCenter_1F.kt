@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
@@ -38,21 +39,8 @@ internal object SaffronCity_PokemonCenter_1F_EventScript_Youngster : Script {
       TODO("port SaffronCity_PokemonCenter_1F_EventScript_Youngster")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_SABRINA, 4
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureSabrina
- * release
- * end
- * ```
- */
 internal object SaffronCity_PokemonCenter_1F_EventScript_PokemonJournalSabrina : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SaffronCity_PokemonCenter_1F_EventScript_PokemonJournalSabrina")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureSabrina)
 }
 
 internal val SaffronCity_PokemonCenter_1FScripts: Map<String, Script> =

@@ -8,28 +8,12 @@ internal object CeruleanCave_2F_EventScript_ItemPPUp : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ULTRA_BALL
- * end
- * ```
- */
 internal object CeruleanCave_2F_EventScript_ItemUltraBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCave_2F_EventScript_ItemUltraBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ULTRA_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object CeruleanCave_2F_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCave_2F_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
 internal val CeruleanCave_2FScripts: Map<String, Script> =

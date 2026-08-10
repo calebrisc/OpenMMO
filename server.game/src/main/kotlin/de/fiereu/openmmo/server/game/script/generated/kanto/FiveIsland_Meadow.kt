@@ -42,16 +42,8 @@ internal object FiveIsland_Meadow_EventScript_Rocket2 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_POTION
- * end
- * ```
- */
 internal object FiveIsland_Meadow_EventScript_ItemMaxPotion : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_Meadow_EventScript_ItemMaxPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
 }
 
 internal object FiveIsland_Meadow_EventScript_ItemPPUp : Script {

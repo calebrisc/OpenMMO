@@ -9,22 +9,8 @@ internal object VermilionCity_House3_EventScript_Boy : Script {
       ctx.say(VermilionCity_House3.PidgeyFlyLetterToSaffron)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_PIDGEY, CRY_MODE_NORMAL
- * msgbox VermilionCity_House3_Text_Pidgey
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object VermilionCity_House3_EventScript_Pidgey : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_House3_EventScript_Pidgey")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity_House3.Pidgey)
 }
 
 internal object VermilionCity_House3_EventScript_Lass : Script {

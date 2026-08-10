@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeruleanCity_PokemonCenter_1F
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -22,20 +23,9 @@ internal object CeruleanCity_PokemonCenter_1F_EventScript_Rocker : Script {
       ctx.say(CeruleanCity_PokemonCenter_1F.BillDoesWhateverForRareMons)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BILL, 1
- * msgbox CeruleanCity_PokemonCenter_1F_Text_BillCollectsRareMons
- * release
- * end
- * ```
- */
 internal object CeruleanCity_PokemonCenter_1F_EventScript_Youngster : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCity_PokemonCenter_1F_EventScript_Youngster")
+      ctx.say(CeruleanCity_PokemonCenter_1F.BillCollectsRareMons)
 }
 
 internal object CeruleanCity_PokemonCenter_1F_EventScript_Lass : Script {
@@ -43,21 +33,8 @@ internal object CeruleanCity_PokemonCenter_1F_EventScript_Lass : Script {
       ctx.say(CeruleanCity_PokemonCenter_1F.TryTradingUpstairs)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MISTY, 5
- * textcolor NPC_TEXT_COLOR_NEUTRAL
- * msgbox PokemonJournal_Text_SpecialFeatureMisty
- * release
- * end
- * ```
- */
 internal object CeruleanCity_PokemonCenter_1F_EventScript_PokemonJournalMisty : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCity_PokemonCenter_1F_EventScript_PokemonJournalMisty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonJournal.SpecialFeatureMisty)
 }
 
 internal val CeruleanCity_PokemonCenter_1FScripts: Map<String, Script> =

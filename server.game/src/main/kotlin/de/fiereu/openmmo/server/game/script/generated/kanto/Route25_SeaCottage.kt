@@ -1,24 +1,34 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Route25_SeaCottage
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set RETURN_AFTER_SS_TICKET, Route25_SeaCottage_EventScript_BillGoLookAtPC
- * goto_if_set FLAG_GOT_SS_TICKET, Route25_SeaCottage_EventScript_BillGoToSSAnne
- * goto_if_set FLAG_HELPED_BILL_IN_SEA_COTTAGE, Route25_SeaCottage_EventScript_BillGiveSSTicket
- * checkplayergender
- * goto_if_eq VAR_RESULT, MALE, Route25_SeaCottage_EventScript_BillAskForHelpMale
- * goto_if_eq VAR_RESULT, FEMALE, Route25_SeaCottage_EventScript_BillAskForHelpFemale
- * end
- * ```
- */
 internal object Route25_SeaCottage_EventScript_Bill : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_SeaCottage_EventScript_Bill")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_SS_TICKET)) {
+      return ctx.say(Route25_SeaCottage.SSAnnePartyYouGoInstead)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_HELPED_BILL_IN_SEA_COTTAGE)) {
+      // The machine scene is not portable yet, so helping him is one conversation.
+      ctx.say(
+          if (ctx.isFemale) Route25_SeaCottage.ImBillHelpMeOutLady
+          else Route25_SeaCottage.ImBillHelpMeOutPal)
+      ctx.say(Route25_SeaCottage.RunCellSeparationOnPC)
+      ctx.setFlag(KantoFlags.FLAG_HELPED_BILL_IN_SEA_COTTAGE)
+    }
+    ctx.say(
+        if (ctx.isFemale) Route25_SeaCottage.ThanksLadyTakeThis
+        else Route25_SeaCottage.ThanksBudTakeThis)
+    if (!ctx.giveItem(Items.S_S_TICKET)) {
+      return ctx.say(Route25_SeaCottage.YouveGotTooMuchStuff)
+    }
+    ctx.setFlag(KantoFlags.FLAG_GOT_SS_TICKET)
+    ctx.sign(Route25_SeaCottage.ReceivedSSTicketFromBill)
+    ctx.say(Route25_SeaCottage.SSAnnePartyYouGoInstead)
+  }
 }
 
 /**

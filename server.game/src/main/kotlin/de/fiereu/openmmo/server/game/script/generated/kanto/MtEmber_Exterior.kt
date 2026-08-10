@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.MtEmber_Exterior
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -93,40 +94,16 @@ internal object MtEmber_Exterior_EventScript_Beth : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ULTRA_BALL
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_ItemUltraBall : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MtEmber_Exterior_EventScript_ItemUltraBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ULTRA_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FIRE_STONE
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_ItemFireStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MtEmber_Exterior_EventScript_ItemFireStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FIRE_STONE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_DIRE_HIT
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_ItemDireHit : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MtEmber_Exterior_EventScript_ItemDireHit")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.DIRE_HIT)
 }
 
 internal val MtEmber_ExteriorScripts: Map<String, Script> =

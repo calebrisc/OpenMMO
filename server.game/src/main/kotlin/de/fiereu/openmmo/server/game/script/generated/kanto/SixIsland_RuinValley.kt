@@ -1,8 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SixIsland_RuinValley
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_POKEMANIAC_HECTOR = 585
+private const val TRAINER_RUIN_MANIAC_FOSTER = 582
+private const val TRAINER_RUIN_MANIAC_STANLY = 524
 
 private const val TRAINER_RUIN_MANIAC_LARRY = 583
 
@@ -27,34 +32,26 @@ internal object SixIsland_RuinValley_EventScript_Scientist : Script {
       TODO("port SixIsland_RuinValley_EventScript_Scientist")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUIN_MANIAC_STANLY, SixIsland_RuinValley_Text_StanlyIntro, SixIsland_RuinValley_Text_StanlyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_RuinValley_EventScript_StanlyRematch
- * msgbox SixIsland_RuinValley_Text_StanlyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Stanly : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_Stanly")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_RUIN_MANIAC_STANLY,
+        SixIsland_RuinValley.StanlyIntro,
+        SixIsland_RuinValley.StanlyDefeat))
+        return
+    ctx.say(SixIsland_RuinValley.StanlyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUIN_MANIAC_FOSTER, SixIsland_RuinValley_Text_FosterIntro, SixIsland_RuinValley_Text_FosterDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_RuinValley_EventScript_FosterRematch
- * msgbox SixIsland_RuinValley_Text_FosterPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Foster : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_Foster")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_RUIN_MANIAC_FOSTER,
+        SixIsland_RuinValley.FosterIntro,
+        SixIsland_RuinValley.FosterDefeat))
+        return
+    ctx.say(SixIsland_RuinValley.FosterPostBattle)
+  }
 }
 
 internal object SixIsland_RuinValley_EventScript_Larry : Script {
@@ -77,55 +74,27 @@ internal object SixIsland_RuinValley_EventScript_Daryl : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_POKEMANIAC_HECTOR, SixIsland_RuinValley_Text_HectorIntro, SixIsland_RuinValley_Text_HectorDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_RuinValley_EventScript_HectorRematch
- * msgbox SixIsland_RuinValley_Text_HectorPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Hector : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_Hector")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_POKEMANIAC_HECTOR,
+        SixIsland_RuinValley.HectorIntro,
+        SixIsland_RuinValley.HectorDefeat))
+        return
+    ctx.say(SixIsland_RuinValley.HectorPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_HP_UP
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_ItemHPUp : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_ItemHPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.HP_UP)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_SUN_STONE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_ItemSunStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_ItemSunStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SUN_STONE)
 }
 
 /**
