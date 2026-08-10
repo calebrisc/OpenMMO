@@ -7,6 +7,7 @@ import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
 private const val TRAINER_MATT = 30
+private const val TRAINER_GRUNT_AQUA_HIDEOUT_4 = 5
 
 private const val TRAINER_GRUNT_AQUA_HIDEOUT_6 = 28
 private const val TRAINER_GRUNT_AQUA_HIDEOUT_8 = 193
@@ -29,7 +30,12 @@ internal object AquaHideout_B2F_EventScript_Matt : Script {
 }
 
 internal object AquaHideout_B2F_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) = ctx.say(AquaHideout_B2F.MattPostBattle)
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_AQUA_HIDEOUT_4, AquaHideout_B2F.Grunt4Intro, AquaHideout_B2F.Grunt4Defeat))
+        return
+    ctx.say(AquaHideout_B2F.Grunt4PostBattle)
+  }
 }
 
 internal object AquaHideout_B2F_EventScript_ItemNestBall : Script {

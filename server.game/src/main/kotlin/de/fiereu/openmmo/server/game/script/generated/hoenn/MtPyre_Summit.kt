@@ -4,6 +4,9 @@ import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_Summit
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+import de.fiereu.openmmo.story.generated.hoenn.HoennVars
+
+internal const val GOT_MAGMA_EMBLEM = "hoenn/GOT_MAGMA_EMBLEM"
 
 private const val TRAINER_GRUNT_MT_PYRE_1 = 23
 private const val TRAINER_GRUNT_MT_PYRE_2 = 24
@@ -66,8 +69,26 @@ internal object MtPyre_Summit_EventScript_Grunt4 : Script {
   }
 }
 
+// The orb-theft scene is the summit's on-frame script, registered here like the champion's.
+// The Magma Emblem is a story flag because late key items are absent from the item table.
+internal object MtPyre_Summit_EventScript_TeamAquaExits : Script {
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(HoennVars.VAR_MT_PYRE_STATE) != 0) return
+    if (!ctx.isFlagSet(HoennFlags.FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE)) return
+    ctx.sign(MtPyre_Summit.ArchieWeGotTheOrbLetsGo)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_MT_PYRE_SUMMIT_ARCHIE)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_MT_PYRE_SUMMIT_TEAM_AQUA)
+    ctx.setVar(HoennVars.VAR_MT_PYRE_STATE, 1)
+    ctx.sign(MtPyre_Summit.BothOrbsTakenMagmaLeftThis)
+    ctx.setFlag(GOT_MAGMA_EMBLEM)
+    ctx.setFlag(HoennFlags.FLAG_RECEIVED_RED_OR_BLUE_ORB)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD)
+  }
+}
+
 internal val MtPyre_SummitScripts: Map<String, Script> =
     mapOf(
+        "MtPyre_Summit_EventScript_TeamAquaExits" to MtPyre_Summit_EventScript_TeamAquaExits,
         "MtPyre_Summit_EventScript_OldMan" to MtPyre_Summit_EventScript_OldMan,
         "MtPyre_Summit_EventScript_OldLady" to MtPyre_Summit_EventScript_OldLady,
         "MtPyre_Summit_EventScript_Grunt1" to MtPyre_Summit_EventScript_Grunt1,

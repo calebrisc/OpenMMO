@@ -1,24 +1,26 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.FallarborTown_CozmosHouse
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_RECEIVED_TM_RETURN, FallarborTown_CozmosHouse_EventScript_GaveMeteorite
- * checkitem ITEM_METEORITE
- * goto_if_eq VAR_RESULT, TRUE, FallarborTown_CozmosHouse_EventScript_PlayerHasMeteorite
- * msgbox FallarborTown_CozmosHouse_Text_MeteoriteWillNeverBeMineNow, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object FallarborTown_CozmosHouse_EventScript_ProfCozmo : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FallarborTown_CozmosHouse_EventScript_ProfCozmo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_RETURN)) {
+      return ctx.say(FallarborTown_CozmosHouse.ReallyGoingToHelpMyResearch)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_METEORITE)) {
+      return ctx.say(FallarborTown_CozmosHouse.MeteoriteWillNeverBeMineNow)
+    }
+    ctx.say(FallarborTown_CozmosHouse.IsThatMeteoriteMayIHaveIt)
+    ctx.say(FallarborTown_CozmosHouse.PleaseUseThisTM)
+    if (!ctx.giveItem(Items.TM27)) return
+    ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_RETURN)
+    ctx.clearFlag(HoennFlags.FLAG_RECEIVED_METEORITE)
+    ctx.say(FallarborTown_CozmosHouse.ReallyGoingToHelpMyResearch)
+  }
 }
 
 /**

@@ -37,22 +37,24 @@ internal object Route119_WeatherInstitute_2F_EventScript_Grunt3 : Script {
 
 internal object Route119_WeatherInstitute_2F_EventScript_Shelly : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_SHELLY_WEATHER_INSTITUTE)
     if (!ctx.trainerBattleSingle(
         TRAINER_SHELLY_WEATHER_INSTITUTE,
         Route119_WeatherInstitute_2F.ShellyIntro,
         Route119_WeatherInstitute_2F.ShellyDefeat))
         return
-    ctx.say(Route119_WeatherInstitute_2F.ShellyPostBattle)
-    if (firstWin) {
-      ctx.sign(Route119_WeatherInstitute_2F.TeamMagmaJustPassedBy)
-      ctx.sign(Route119_WeatherInstitute_2F.WeHaveToHurryToMtPyre)
+    // The durable flags land before any dialog, so a disconnect mid-scene cannot lose them.
+    if (ctx.getVar(HoennVars.VAR_WEATHER_INSTITUTE_STATE) == 0) {
       ctx.setVar(HoennVars.VAR_WEATHER_INSTITUTE_STATE, 1)
       ctx.clearFlag(HoennFlags.FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS)
       ctx.setFlag(HoennFlags.FLAG_HIDE_ROUTE_119_TEAM_AQUA)
       ctx.setFlag(HoennFlags.FLAG_HIDE_WEATHER_INSTITUTE_2F_AQUA_GRUNT_M)
+      ctx.say(Route119_WeatherInstitute_2F.ShellyPostBattle)
+      ctx.sign(Route119_WeatherInstitute_2F.TeamMagmaJustPassedBy)
+      ctx.sign(Route119_WeatherInstitute_2F.WeHaveToHurryToMtPyre)
       ctx.despawnInteracted()
+      return
     }
+    ctx.say(Route119_WeatherInstitute_2F.ShellyPostBattle)
   }
 }
 

@@ -36,6 +36,8 @@ internal object RusturfTunnel_EventScript_Grunt : Script {
     if (!ctx.trainerBattleSingle(TRAINER_GRUNT_RUSTURF_TUNNEL, null, RusturfTunnel.GruntDefeat))
         return
     ctx.say(RusturfTunnel.GruntTakePackage)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_RUSTURF_TUNNEL_AQUA_GRUNT)
+    ctx.setFlag(HoennFlags.FLAG_HIDE_RUSTURF_TUNNEL_PEEKO)
     ctx.despawnInteracted()
     // The Briney and Peeko reunion walk is collapsed into its two lines.
     ctx.sign(RusturfTunnel.PeekoGladToSeeYouSafe)

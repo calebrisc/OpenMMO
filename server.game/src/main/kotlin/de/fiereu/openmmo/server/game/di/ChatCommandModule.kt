@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.multibindings.IntoSet
 import de.fiereu.openmmo.server.game.services.command.CatchCommand
 import de.fiereu.openmmo.server.game.services.command.ChatCommand
+import de.fiereu.openmmo.server.game.services.command.GiveCommand
 import de.fiereu.openmmo.server.game.services.command.HelpCommand
 import de.fiereu.openmmo.server.game.services.command.PosCommand
 import de.fiereu.openmmo.server.game.services.command.StoryCommand
@@ -23,6 +24,8 @@ interface ChatCommandModule {
   @Binds @IntoSet fun testBattleCommand(command: TestBattleCommand): ChatCommand
 
   @Binds @IntoSet fun catchCommand(command: CatchCommand): ChatCommand
+
+  @Binds @IntoSet fun giveCommand(command: GiveCommand): ChatCommand
 
   @Binds @IntoSet fun storyCommand(command: StoryCommand): ChatCommand
 }

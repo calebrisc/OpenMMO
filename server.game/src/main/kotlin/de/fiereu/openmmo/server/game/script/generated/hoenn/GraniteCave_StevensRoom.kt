@@ -16,9 +16,9 @@ internal object GraniteCave_StevensRoom_EventScript_Steven : Script {
       return ctx.say(GraniteCave_StevensRoom.ImStevenLetterForMe)
     }
     ctx.say(GraniteCave_StevensRoom.ImStevenLetterForMe)
-    ctx.setFlag(HoennFlags.FLAG_DELIVERED_STEVEN_LETTER)
     ctx.say(GraniteCave_StevensRoom.ThankYouTakeThis)
     if (!ctx.giveItem(Items.TM47)) return
+    ctx.setFlag(HoennFlags.FLAG_DELIVERED_STEVEN_LETTER)
     ctx.say(GraniteCave_StevensRoom.CouldBecomeChampionLetsRegister)
     ctx.sign(GraniteCave_StevensRoom.RegisteredSteven)
     ctx.setFlag(HoennFlags.FLAG_REGISTERED_STEVEN_POKENAV)
