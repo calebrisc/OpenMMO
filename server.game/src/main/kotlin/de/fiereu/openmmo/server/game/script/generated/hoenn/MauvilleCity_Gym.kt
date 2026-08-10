@@ -3,6 +3,9 @@ package de.fiereu.openmmo.server.game.script.generated.hoenn
 import de.fiereu.openmmo.dialog.generated.hoenn.MauvilleCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val TRAINER_WATTSON_1 = 267
 
 private const val TRAINER_ANGELO = 802
 private const val TRAINER_BEN = 323
@@ -10,21 +13,18 @@ private const val TRAINER_KIRK = 191
 private const val TRAINER_SHAWN = 194
 private const val TRAINER_VIVIAN = 649
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WATTSON_1, MauvilleCity_Gym_Text_WattsonIntro, MauvilleCity_Gym_Text_WattsonDefeat, MauvilleCity_Gym_EventScript_WattsonDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, MauvilleCity_Gym_EventScript_WattsonRematch
- * goto_if_unset FLAG_RECEIVED_TM_SHOCK_WAVE, MauvilleCity_Gym_EventScript_GiveShockWave2
- * goto_if_eq VAR_NEW_MAUVILLE_STATE, 2, MauvilleCity_Gym_EventScript_CompletedNewMauville
- * msgbox MauvilleCity_Gym_Text_WattsonPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Wattson : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Wattson")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_WATTSON_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_WATTSON_1, MauvilleCity_Gym.WattsonIntro, MauvilleCity_Gym.WattsonDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_MAUVILLE_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE03_GET)
+    }
+    ctx.say(MauvilleCity_Gym.WattsonPostBattle)
+  }
 }
 
 internal object MauvilleCity_Gym_EventScript_Shawn : Script {

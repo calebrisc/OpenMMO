@@ -3,6 +3,9 @@ package de.fiereu.openmmo.server.game.script.generated.hoenn
 import de.fiereu.openmmo.dialog.generated.hoenn.FortreeCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val TRAINER_WINONA_1 = 270
 
 private const val TRAINER_ASHLEY = 655
 private const val TRAINER_DARIUS = 803
@@ -11,20 +14,18 @@ private const val TRAINER_FLINT = 654
 private const val TRAINER_HUMBERTO = 402
 private const val TRAINER_JARED = 401
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WINONA_1, FortreeCity_Gym_Text_WinonaIntro, FortreeCity_Gym_Text_WinonaDefeat, FortreeCity_Gym_EventScript_WinonaDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, FortreeCity_Gym_EventScript_WinonaRematch
- * goto_if_unset FLAG_RECEIVED_TM_AERIAL_ACE, FortreeCity_Gym_EventScript_GiveAerialAce2
- * msgbox FortreeCity_Gym_Text_WinonaPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Winona : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Winona")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_WINONA_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_WINONA_1, FortreeCity_Gym.WinonaIntro, FortreeCity_Gym.WinonaDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_FORTREE_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE06_GET)
+    }
+    ctx.say(FortreeCity_Gym.WinonaPostBattle)
+  }
 }
 
 internal object FortreeCity_Gym_EventScript_Jared : Script {
