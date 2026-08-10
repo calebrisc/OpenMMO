@@ -1,23 +1,27 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.LavaridgeTown_Gym_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FLANNERY_1, LavaridgeTown_Gym_1F_Text_FlanneryIntro, LavaridgeTown_Gym_1F_Text_FlanneryDefeat, LavaridgeTown_Gym_1F_EventScript_FlanneryDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_Gym_1F_EventScript_FlanneryRematch
- * goto_if_unset FLAG_RECEIVED_TM_OVERHEAT, LavaridgeTown_Gym_1F_EventScript_GiveOverheat2
- * msgbox LavaridgeTown_Gym_1F_Text_FlanneryPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
+private const val TRAINER_FLANNERY_1 = 268
+
 internal object LavaridgeTown_Gym_1F_EventScript_Flannery : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavaridgeTown_Gym_1F_EventScript_Flannery")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_FLANNERY_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FLANNERY_1,
+        LavaridgeTown_Gym_1F.FlanneryIntro,
+        LavaridgeTown_Gym_1F.FlanneryDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_LAVARIDGE_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE04_GET)
+      ctx.setFlag(HoennFlags.FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY)
+    }
+    ctx.say(LavaridgeTown_Gym_1F.FlanneryPostBattle)
+  }
 }
 
 /**

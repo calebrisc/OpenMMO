@@ -3,6 +3,9 @@ package de.fiereu.openmmo.server.game.script.generated.hoenn
 import de.fiereu.openmmo.dialog.generated.hoenn.MossdeepCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
+
+private const val TRAINER_TATE_AND_LIZA_1 = 271
 
 private const val TRAINER_BLAKE = 235
 private const val TRAINER_CLIFFORD = 584
@@ -17,21 +20,21 @@ private const val TRAINER_SAMANTHA = 245
 private const val TRAINER_SYLVIA = 575
 private const val TRAINER_VIRGIL = 234
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TATE_AND_LIZA_1, MossdeepCity_Gym_Text_TateAndLizaIntro, MossdeepCity_Gym_Text_TateAndLizaDefeat, MossdeepCity_Gym_Text_TateAndLizaNeedTwoMons, MossdeepCity_Gym_EventScript_TateAndLizaDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, MossdeepCity_Gym_EventScript_TateAndLizaRematch
- * goto_if_unset FLAG_RECEIVED_TM_CALM_MIND, MossdeepCity_Gym_EventScript_GiveCalmMind2
- * msgbox MossdeepCity_Gym_Text_TateAndLizaPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
 internal object MossdeepCity_Gym_EventScript_TateAndLiza : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MossdeepCity_Gym_EventScript_TateAndLiza")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_TATE_AND_LIZA_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TATE_AND_LIZA_1,
+        MossdeepCity_Gym.TateAndLizaIntro,
+        MossdeepCity_Gym.TateAndLizaDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_MOSSDEEP_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE07_GET)
+      ctx.setFlag(HoennFlags.FLAG_HIDE_AQUA_HIDEOUT_GRUNTS)
+    }
+    ctx.say(MossdeepCity_Gym.TateAndLizaPostBattle)
+  }
 }
 
 internal object MossdeepCity_Gym_EventScript_Preston : Script {

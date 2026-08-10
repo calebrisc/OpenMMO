@@ -1,22 +1,24 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.DewfordTown_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRAWLY_1, DewfordTown_Gym_Text_BrawlyIntro, DewfordTown_Gym_Text_BrawlyDefeat, DewfordTown_Gym_EventScript_BrawlyDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, DewfordTown_Gym_EventScript_BrawlyRematch
- * goto_if_unset FLAG_RECEIVED_TM_BULK_UP, DewfordTown_Gym_EventScript_GiveBulkUp2
- * msgbox DewfordTown_Gym_Text_BrawlyPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
+private const val TRAINER_BRAWLY_1 = 266
+
 internal object DewfordTown_Gym_EventScript_Brawly : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port DewfordTown_Gym_EventScript_Brawly")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_BRAWLY_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BRAWLY_1, DewfordTown_Gym.BrawlyIntro, DewfordTown_Gym.BrawlyDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_DEWFORD_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE02_GET)
+    }
+    ctx.say(DewfordTown_Gym.BrawlyPostBattle)
+  }
 }
 
 /**

@@ -1,23 +1,25 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.SootopolisCity_Gym_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUAN_1, SootopolisCity_Gym_1F_Text_JuanIntro, SootopolisCity_Gym_1F_Text_JuanDefeat, SootopolisCity_Gym_1F_EventScript_JuanDefeated, NO_MUSIC
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SootopolisCity_Gym_1F_EventScript_JuanRematch
- * goto_if_unset FLAG_RECEIVED_TM_WATER_PULSE, SootopolisCity_Gym_1F_EventScript_GiveWaterPulse2
- * goto_if_unset FLAG_BADGE06_GET, SootopolisCity_Gym_1F_EventScript_GoGetFortreeBadge
- * msgbox SootopolisCity_Gym_1F_Text_JuanPostBattle, MSGBOX_DEFAULT
- * release
- * end
- * ```
- */
+private const val TRAINER_JUAN_1 = 272
+
 internal object SootopolisCity_Gym_1F_EventScript_Juan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SootopolisCity_Gym_1F_EventScript_Juan")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_JUAN_1)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUAN_1, SootopolisCity_Gym_1F.JuanIntro, SootopolisCity_Gym_1F.JuanDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(HoennFlags.FLAG_DEFEATED_SOOTOPOLIS_GYM)
+      ctx.setFlag(HoennFlags.FLAG_BADGE08_GET)
+      ctx.setFlag(HoennFlags.FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS)
+    }
+    ctx.say(SootopolisCity_Gym_1F.JuanPostBattle)
+  }
 }
 
 /**
