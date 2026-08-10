@@ -12,6 +12,8 @@ private const val TRAINER_TEAM_ROCKET_GRUNT_16 = 366
 private const val TRAINER_TEAM_ROCKET_GRUNT_17 = 367
 private const val TRAINER_TEAM_ROCKET_GRUNT_18 = 368
 private const val TRAINER_BOSS_GIOVANNI = 348
+private const val LOCALID_SILPH_SCOPE = 2
+private const val LOCALID_LIFT_KEY = 4
 
 // The scope is a FireRed-only bag item the Emerald-sourced table lacks, so possession is a flag.
 internal const val GOT_SILPH_SCOPE = "kanto/GOT_SILPH_SCOPE"
@@ -36,13 +38,17 @@ internal object RocketHideout_B4F_EventScript_Giovanni : Script {
     ctx.despawnInteracted()
     ctx.setFlag(KantoFlags.FLAG_HIDE_HIDEOUT_GIOVANNI)
     ctx.clearFlag(KantoFlags.FLAG_HIDE_SILPH_SCOPE)
+    ctx.showNpc(LOCALID_SILPH_SCOPE)
     ctx.setFlag(KantoFlags.FLAG_HIDE_CELADON_ROCKETS)
   }
 }
 
 internal object RocketHideout_B4F_EventScript_SilphScope : Script {
   override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(GOT_SILPH_SCOPE)) return
     ctx.setFlag(GOT_SILPH_SCOPE)
+    // Re-hiding the ball keeps it gone on the next map entry.
+    ctx.setFlag(KantoFlags.FLAG_HIDE_SILPH_SCOPE)
     ctx.despawnInteracted()
     ctx.send(notice("Found the SILPH SCOPE!"))
   }
@@ -57,13 +63,15 @@ internal object RocketHideout_B4F_EventScript_Grunt1 : Script {
         return
     ctx.say(RocketHideout_B4F.Grunt1PostBattle)
     ctx.clearFlag(KantoFlags.FLAG_HIDE_LIFT_KEY)
+    ctx.showNpc(LOCALID_LIFT_KEY)
   }
 }
 
 internal object RocketHideout_B4F_EventScript_LiftKey : Script {
   override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT)) return
     ctx.setFlag(KantoFlags.FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT)
-
+    ctx.setFlag(KantoFlags.FLAG_HIDE_LIFT_KEY)
     ctx.despawnInteracted()
     ctx.send(notice("Found the LIFT KEY!"))
   }

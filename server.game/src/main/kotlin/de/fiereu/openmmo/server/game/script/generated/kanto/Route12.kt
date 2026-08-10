@@ -56,7 +56,8 @@ internal object Route12_EventScript_Snorlax : Script {
       return ctx.say(Route12.MonSprawledOutInSlumber)
     }
     if (!ctx.askYesNo(Misc.Text_WantToUsePokeFlute)) return
-    if (ctx.wildBattle(SNORLAX_DEX, 30) == BattleResult.DEFEAT) return
+    val result = ctx.wildBattle(SNORLAX_DEX, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
     ctx.setFlag(KantoFlags.FLAG_HIDE_ROUTE_12_SNORLAX)
     ctx.setFlag(KantoFlags.FLAG_WOKE_UP_ROUTE_12_SNORLAX)
     ctx.despawnInteracted()

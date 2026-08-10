@@ -15,7 +15,12 @@ private const val CAN2 = "kanto/VAR_VERMILION_GYM_CAN2"
 private const val LOCKS = "kanto/VAR_VERMILION_GYM_LOCKS"
 
 private suspend fun trashCan(ctx: ScriptContext, can: Int) {
-  if (ctx.getVar(LOCKS) == 2) return ctx.sign(VermilionCity_Gym.NopeOnlyTrashHere)
+  if (ctx.getVar(LOCKS) == 2) {
+    // The door metatile never opens, so a solved puzzle keeps walking the player through.
+    ctx.sign(VermilionCity_Gym.NopeOnlyTrashHere)
+    ctx.repositionSelf(5, 4, Direction.UP)
+    return
+  }
   if (ctx.getVar(CAN1) == 0) ctx.setVar(CAN1, (1..15).random())
   when {
     ctx.getVar(LOCKS) == 0 && can == ctx.getVar(CAN1) -> {

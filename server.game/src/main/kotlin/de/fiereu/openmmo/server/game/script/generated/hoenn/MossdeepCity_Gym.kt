@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.MossdeepCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -32,6 +33,10 @@ internal object MossdeepCity_Gym_EventScript_TateAndLiza : Script {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_MOSSDEEP_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE07_GET)
       ctx.setFlag(HoennFlags.FLAG_HIDE_AQUA_HIDEOUT_GRUNTS)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_CALM_MIND)) {
+      if (!ctx.giveItem(Items.TM04)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_CALM_MIND)
     }
     ctx.say(MossdeepCity_Gym.TateAndLizaPostBattle)
   }

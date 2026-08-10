@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.SootopolisCity_Gym_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -17,6 +18,10 @@ internal object SootopolisCity_Gym_1F_EventScript_Juan : Script {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_SOOTOPOLIS_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE08_GET)
       ctx.setFlag(HoennFlags.FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_WATER_PULSE)) {
+      if (!ctx.giveItem(Items.TM03)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_WATER_PULSE)
     }
     ctx.say(SootopolisCity_Gym_1F.JuanPostBattle)
   }

@@ -196,18 +196,18 @@ internal constructor(
    * When the bag has no room the ball stays, like the engine's "too bad" path.
    */
   suspend fun findItem(item: ItemDef, quantity: Int = 1) {
-    val npc = movement.interactedNpc(state, entityId)
-    if (npc != null && npc.hideFlag.isNotEmpty() && isFlagSet(npc.hideFlag)) return
+    // Without the ball there is no hide flag to persist the pickup, so granting anyway would
+    // let the script hand the item out again on every interaction.
+    val npc = movement.interactedNpc(state, entityId) ?: return
+    if (npc.hideFlag.isNotEmpty() && isFlagSet(npc.hideFlag)) return
     if (!giveItem(item, quantity)) {
       send(notice("Your bag is too full to take the ${item.name}."))
       return
     }
     val what = if (quantity == 1) "one ${item.name}" else "${item.name} x$quantity"
     send(notice("$playerName found $what!"))
-    if (npc != null) {
-      if (npc.hideFlag.isNotEmpty()) setFlag(npc.hideFlag)
-      movement.removeNpc(session, state, npc.entityIdx)
-    }
+    if (npc.hideFlag.isNotEmpty()) setFlag(npc.hideFlag)
+    movement.removeNpc(session, state, npc.entityIdx)
   }
 
   /** True when a party monster knows [moveId], the decomp checkpartymove. */

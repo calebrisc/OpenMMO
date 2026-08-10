@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.FortreeCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -23,6 +24,10 @@ internal object FortreeCity_Gym_EventScript_Winona : Script {
     if (firstWin) {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_FORTREE_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE06_GET)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_AERIAL_ACE)) {
+      if (!ctx.giveItem(Items.TM40)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_AERIAL_ACE)
     }
     ctx.say(FortreeCity_Gym.WinonaPostBattle)
   }

@@ -32,6 +32,7 @@ internal object ViridianCity_OnTransition : Script {
 
 private val BADGES_BEFORE_VIRIDIAN =
     listOf(
+        KantoFlags.FLAG_BADGE01_GET,
         KantoFlags.FLAG_BADGE02_GET,
         KantoFlags.FLAG_BADGE03_GET,
         KantoFlags.FLAG_BADGE04_GET,

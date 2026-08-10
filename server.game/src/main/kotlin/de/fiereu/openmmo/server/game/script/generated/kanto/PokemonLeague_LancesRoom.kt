@@ -2,7 +2,6 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonLeague_ChampionsRoom
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonLeague_LancesRoom
-import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.server.game.services.notice
@@ -39,7 +38,7 @@ internal object PokemonLeague_ChampionsRoom_EventScript_EnterRoom : Script {
         }
     if (ctx.isTrainerDefeated(champion)) return
     ctx.sayNpc(LOCALID_CHAMPION, PokemonLeague_ChampionsRoom.Intro)
-    if (ctx.trainerBattle(champion) != BattleResult.VICTORY) return
+    if (!ctx.trainerBattleSingle(champion)) return
     ctx.sayNpc(LOCALID_CHAMPION, PokemonLeague_ChampionsRoom.Defeat)
     ctx.sayNpc(LOCALID_CHAMPION, PokemonLeague_ChampionsRoom.Victory)
     ctx.setFlag(KantoFlags.FLAG_SYS_GAME_CLEAR)
