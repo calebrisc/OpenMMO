@@ -186,7 +186,7 @@ constructor(
     // The client already walked itself there, so only the observers need telling.
     presenceService.broadcastToObservers(
         ctx,
-        gbaMovePacket(charId, currentMap, toX, toY, msg.direction),
+        gbaMovePacket(charId, currentMap, toX, toY, msg.direction, msg.running),
     )
 
     // Story coordinate events take precedence over random encounters on the same step.
@@ -213,6 +213,7 @@ constructor(
       x: Int,
       y: Int,
       direction: Direction,
+      running: Boolean = false,
   ): GbaEntityMovePacket =
       GbaEntityMovePacket(
           entityId = charId,
@@ -220,7 +221,7 @@ constructor(
           mapId = map.mapId.toInt() and 0xff,
           x = x,
           y = y,
-          movementMode = 2,
+          movementMode = if (running) MovementTuning.run else MovementTuning.walk,
           direction = direction,
       )
 
