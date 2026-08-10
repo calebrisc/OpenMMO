@@ -404,14 +404,21 @@ constructor(
       return
     }
     val stored = characterStore.getCharacter(battle.charId) ?: return
-    val nextSlot = ((stored.pokemon.maxOfOrNull { it.containerSlot } ?: -1) + 1).toShort()
+    // A full party overflows to the PC: CharacterEntry rejects a 7th party monster, so persisting
+    // one would make every future login throw while building the character list.
+    val partyCount = stored.pokemon.count { it.container == PokemonContainer.PARTY }
+    val destination = if (partyCount < 6) PokemonContainer.PARTY else PokemonContainer.PC
+    val nextSlot =
+        ((stored.pokemon.filter { it.container == destination }.maxOfOrNull { it.containerSlot }
+                ?: -1) + 1)
+            .toShort()
     val caught =
         battle
             .opponentMon()
             .source
             .copy(
                 ownerId = battle.charId,
-                container = PokemonContainer.PARTY,
+                container = destination,
                 containerSlot = nextSlot,
                 ot = stored.info.name,
                 hp = battle.opponentMon().currentHp.toShort(),
@@ -434,6 +441,9 @@ constructor(
     )
     if (!characterStore.addPokemon(battle.charId, caught)) {
       log.error { "Could not persist the monster char=${battle.charId} just caught" }
+    }
+    if (destination == PokemonContainer.PC) {
+      emitter.sendNotice(battle, "Your party is full, so it was sent to your PC.")
     }
     endBattle(battle, BattleResult.CAUGHT)
   }
