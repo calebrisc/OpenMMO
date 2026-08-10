@@ -1,8 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route104
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_BILLY = 319
+private const val TRAINER_DARIAN = 696
+private const val TRAINER_IVAN = 337
 
 internal object Route104_EventScript_BugCatcher : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(Route104.WhatsItLikeAtBottomOfSea)
@@ -42,16 +47,11 @@ internal object Route104_EventScript_Girl2 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route104.ImNotATrainer)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_IVAN, Route104_Text_IvanIntro, Route104_Text_IvanDefeat
- * msgbox Route104_Text_IvanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route104_EventScript_Ivan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_Ivan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_IVAN, Route104.IvanIntro, Route104.IvanDefeat)) return
+    ctx.say(Route104.IvanPostBattle)
+  }
 }
 
 /**
@@ -73,15 +73,8 @@ internal object Route104_EventScript_ExpertF : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_ExpertF")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_UP
- * end
- * ```
- */
 internal object Route104_EventScript_ItemPPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_ItemPPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
 /**
@@ -166,49 +159,23 @@ internal object Route104_EventScript_Cindy : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_Cindy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POKE_BALL
- * end
- * ```
- */
 internal object Route104_EventScript_ItemPokeBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_ItemPokeBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POKE_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BILLY, Route104_Text_BillyIntro, Route104_Text_BillyDefeat
- * msgbox Route104_Text_BillyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route104_EventScript_Billy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_Billy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BILLY, Route104.BillyIntro, Route104.BillyDefeat)) return
+    ctx.say(Route104.BillyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_ACCURACY
- * end
- * ```
- */
 internal object Route104_EventScript_ItemXAccuracy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_ItemXAccuracy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_ACCURACY)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_POTION
- * end
- * ```
- */
 internal object Route104_EventScript_ItemPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_ItemPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.POTION)
 }
 
 /**
@@ -229,16 +196,12 @@ internal object Route104_EventScript_Boy2 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_Boy2")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DARIAN, Route104_Text_DarianIntro, Route104_Text_DarianDefeat
- * msgbox Route104_Text_DarianPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route104_EventScript_Darian : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route104_EventScript_Darian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DARIAN, Route104.DarianIntro, Route104.DarianDefeat))
+        return
+    ctx.say(Route104.DarianPostBattle)
+  }
 }
 
 /**

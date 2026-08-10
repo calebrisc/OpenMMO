@@ -1,7 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MauvilleCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_ANGELO = 802
+private const val TRAINER_BEN = 323
+private const val TRAINER_KIRK = 191
+private const val TRAINER_SHAWN = 194
+private const val TRAINER_VIVIAN = 649
 
 /**
  * Not ported yet. Decomp body:
@@ -20,52 +27,40 @@ internal object MauvilleCity_Gym_EventScript_Wattson : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Wattson")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHAWN, MauvilleCity_Gym_Text_ShawnIntro, MauvilleCity_Gym_Text_ShawnDefeat
- * msgbox MauvilleCity_Gym_Text_ShawnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Shawn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Shawn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SHAWN, MauvilleCity_Gym.ShawnIntro, MauvilleCity_Gym.ShawnDefeat))
+        return
+    ctx.say(MauvilleCity_Gym.ShawnPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_VIVIAN, MauvilleCity_Gym_Text_VivianIntro, MauvilleCity_Gym_Text_VivianDefeat
- * msgbox MauvilleCity_Gym_Text_VivianPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Vivian : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Vivian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_VIVIAN, MauvilleCity_Gym.VivianIntro, MauvilleCity_Gym.VivianDefeat))
+        return
+    ctx.say(MauvilleCity_Gym.VivianPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BEN, MauvilleCity_Gym_Text_BenIntro, MauvilleCity_Gym_Text_BenDefeat
- * msgbox MauvilleCity_Gym_Text_BenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Ben : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Ben")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BEN, MauvilleCity_Gym.BenIntro, MauvilleCity_Gym.BenDefeat))
+        return
+    ctx.say(MauvilleCity_Gym.BenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KIRK, MauvilleCity_Gym_Text_KirkIntro, MauvilleCity_Gym_Text_KirkDefeat
- * msgbox MauvilleCity_Gym_Text_KirkPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Kirk : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Kirk")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_KIRK, MauvilleCity_Gym.KirkIntro, MauvilleCity_Gym.KirkDefeat))
+        return
+    ctx.say(MauvilleCity_Gym.KirkPostBattle)
+  }
 }
 
 /**
@@ -83,16 +78,13 @@ internal object MauvilleCity_Gym_EventScript_GymGuide : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_GymGuide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ANGELO, MauvilleCity_Gym_Text_AngeloIntro, MauvilleCity_Gym_Text_AngeloDefeat
- * msgbox MauvilleCity_Gym_Text_AngeloPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MauvilleCity_Gym_EventScript_Angelo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MauvilleCity_Gym_EventScript_Angelo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ANGELO, MauvilleCity_Gym.AngeloIntro, MauvilleCity_Gym.AngeloDefeat))
+        return
+    ctx.say(MauvilleCity_Gym.AngeloPostBattle)
+  }
 }
 
 /**

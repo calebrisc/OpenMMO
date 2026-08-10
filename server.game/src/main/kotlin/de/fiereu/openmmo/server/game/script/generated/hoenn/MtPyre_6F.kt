@@ -1,7 +1,10 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_6F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_CEDRIC = 475
 
 /**
  * Not ported yet. Decomp body:
@@ -29,16 +32,12 @@ internal object MtPyre_6F_EventScript_ItemTMShadowBall : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_6F_EventScript_ItemTMShadowBall")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CEDRIC, MtPyre_6F_Text_CedricIntro, MtPyre_6F_Text_CedricDefeat
- * msgbox MtPyre_6F_Text_CedricPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_6F_EventScript_Cedric : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_6F_EventScript_Cedric")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CEDRIC, MtPyre_6F.CedricIntro, MtPyre_6F.CedricDefeat))
+        return
+    ctx.say(MtPyre_6F.CedricPostBattle)
+  }
 }
 
 internal val MtPyre_6FScripts: Map<String, Script> =

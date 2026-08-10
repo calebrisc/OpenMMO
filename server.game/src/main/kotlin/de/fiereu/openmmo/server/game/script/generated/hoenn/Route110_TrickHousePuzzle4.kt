@@ -1,45 +1,40 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route110_TrickHousePuzzle4
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CORA, Route110_TrickHousePuzzle4_Text_CoraIntro, Route110_TrickHousePuzzle4_Text_CoraDefeat
- * msgbox Route110_TrickHousePuzzle4_Text_CoraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CORA = 428
+private const val TRAINER_PAULA = 429
+private const val TRAINER_YUJI = 188
+
 internal object Route110_TrickHousePuzzle4_EventScript_Cora : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle4_EventScript_Cora")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CORA, Route110_TrickHousePuzzle4.CoraIntro, Route110_TrickHousePuzzle4.CoraDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle4.CoraPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAULA, Route110_TrickHousePuzzle4_Text_PaulaIntro, Route110_TrickHousePuzzle4_Text_PaulaDefeat
- * msgbox Route110_TrickHousePuzzle4_Text_PaulaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle4_EventScript_Paula : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle4_EventScript_Paula")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PAULA,
+        Route110_TrickHousePuzzle4.PaulaIntro,
+        Route110_TrickHousePuzzle4.PaulaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle4.PaulaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YUJI, Route110_TrickHousePuzzle4_Text_YujiIntro, Route110_TrickHousePuzzle4_Text_YujiDefeat
- * msgbox Route110_TrickHousePuzzle4_Text_YujiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle4_EventScript_Yuji : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle4_EventScript_Yuji")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YUJI, Route110_TrickHousePuzzle4.YujiIntro, Route110_TrickHousePuzzle4.YujiDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle4.YujiPostBattle)
+  }
 }
 
 /**

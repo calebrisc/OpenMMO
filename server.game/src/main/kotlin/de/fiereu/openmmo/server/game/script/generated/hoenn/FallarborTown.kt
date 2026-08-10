@@ -27,21 +27,8 @@ internal object FallarborTown_EventScript_Gentleman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FallarborTown.HaveYouChallengedFlannery)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_AZURILL, CRY_MODE_NORMAL
- * msgbox FallarborTown_Text_Azurill, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object FallarborTown_EventScript_Azurill : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FallarborTown_EventScript_Azurill")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FallarborTown.Azurill)
 }
 
 internal object FallarborTown_EventScript_BattleTentSign : Script {

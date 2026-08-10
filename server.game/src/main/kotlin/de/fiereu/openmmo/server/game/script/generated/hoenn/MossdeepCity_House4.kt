@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MossdeepCity_House4
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -36,21 +37,8 @@ internal object MossdeepCity_House4_EventScript_NinjaBoy : Script {
       TODO("port MossdeepCity_House4_EventScript_NinjaBoy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
- * msgbox MossdeepCity_House4_Text_Skitty, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object MossdeepCity_House4_EventScript_Skitty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MossdeepCity_House4_EventScript_Skitty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(MossdeepCity_House4.Skitty)
 }
 
 internal val MossdeepCity_House4Scripts: Map<String, Script> =

@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.PetalburgCity
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.MovementStep.FACE_DOWN
 import de.fiereu.openmmo.server.game.script.MovementStep.FACE_UP
 import de.fiereu.openmmo.server.game.script.MovementStep.WALK_DOWN
@@ -48,27 +49,12 @@ internal object PetalburgCity_EventScript_Gentleman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PetalburgCity.FullPartyExplanation)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REVIVE
- * end
- * ```
- */
 internal object PetalburgCity_EventScript_ItemMaxRevive : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PetalburgCity_EventScript_ItemMaxRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ETHER
- * end
- * ```
- */
 internal object PetalburgCity_EventScript_ItemEther : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PetalburgCity_EventScript_ItemEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ETHER)
 }
 
 internal object PetalburgCity_EventScript_GymBoy : Script {

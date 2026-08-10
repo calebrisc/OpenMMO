@@ -1,42 +1,34 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route130
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RODNEY, Route130_Text_RodneyIntro, Route130_Text_RodneyDefeat
- * msgbox Route130_Text_RodneyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_KATIE = 455
+private const val TRAINER_RODNEY = 165
+private const val TRAINER_SANTIAGO = 168
+
 internal object Route130_EventScript_Rodney : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route130_EventScript_Rodney")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RODNEY, Route130.RodneyIntro, Route130.RodneyDefeat))
+        return
+    ctx.say(Route130.RodneyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KATIE, Route130_Text_KatieIntro, Route130_Text_KatieDefeat
- * msgbox Route130_Text_KatiePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route130_EventScript_Katie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route130_EventScript_Katie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KATIE, Route130.KatieIntro, Route130.KatieDefeat)) return
+    ctx.say(Route130.KatiePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SANTIAGO, Route130_Text_SantiagoIntro, Route130_Text_SantiagoDefeat
- * msgbox Route130_Text_SantiagoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route130_EventScript_Santiago : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route130_EventScript_Santiago")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SANTIAGO, Route130.SantiagoIntro, Route130.SantiagoDefeat))
+        return
+    ctx.say(Route130.SantiagoPostBattle)
+  }
 }
 
 internal val Route130Scripts: Map<String, Script> =

@@ -1,45 +1,40 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route110_TrickHousePuzzle2
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TED, Route110_TrickHousePuzzle2_Text_TedIntro, Route110_TrickHousePuzzle2_Text_TedDefeat
- * msgbox Route110_TrickHousePuzzle2_Text_TedPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GEORGIA = 281
+private const val TRAINER_PAUL = 275
+private const val TRAINER_TED = 274
+
 internal object Route110_TrickHousePuzzle2_EventScript_Ted : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle2_EventScript_Ted")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TED, Route110_TrickHousePuzzle2.TedIntro, Route110_TrickHousePuzzle2.TedDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle2.TedPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAUL, Route110_TrickHousePuzzle2_Text_PaulIntro, Route110_TrickHousePuzzle2_Text_PaulDefeat
- * msgbox Route110_TrickHousePuzzle2_Text_PaulPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle2_EventScript_Paul : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle2_EventScript_Paul")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PAUL, Route110_TrickHousePuzzle2.PaulIntro, Route110_TrickHousePuzzle2.PaulDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle2.PaulPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GEORGIA, Route110_TrickHousePuzzle2_Text_GeorgiaIntro, Route110_TrickHousePuzzle2_Text_GeorgiaDefeat
- * msgbox Route110_TrickHousePuzzle2_Text_GeorgiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route110_TrickHousePuzzle2_EventScript_Georgia : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route110_TrickHousePuzzle2_EventScript_Georgia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GEORGIA,
+        Route110_TrickHousePuzzle2.GeorgiaIntro,
+        Route110_TrickHousePuzzle2.GeorgiaDefeat))
+        return
+    ctx.say(Route110_TrickHousePuzzle2.GeorgiaPostBattle)
+  }
 }
 
 /**

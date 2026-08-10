@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.LilycoveCity
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -105,15 +106,8 @@ internal object LilycoveCity_EventScript_WailmerTrainerGrunt : Script {
       TODO("port LilycoveCity_EventScript_WailmerTrainerGrunt")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REPEL
- * end
- * ```
- */
 internal object LilycoveCity_EventScript_ItemMaxRepel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port LilycoveCity_EventScript_ItemMaxRepel")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REPEL)
 }
 
 internal object LilycoveCity_EventScript_AquaGrunt4 : Script {

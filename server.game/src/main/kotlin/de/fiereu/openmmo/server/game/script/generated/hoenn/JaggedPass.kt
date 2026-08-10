@@ -1,18 +1,19 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.JaggedPass
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ERIC, JaggedPass_Text_EricIntro, JaggedPass_Text_EricDefeat
- * msgbox JaggedPass_Text_EricPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_AUTUMN = 217
+private const val TRAINER_ERIC = 632
+private const val TRAINER_JULIO = 566
+
 internal object JaggedPass_EventScript_Eric : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port JaggedPass_EventScript_Eric")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ERIC, JaggedPass.EricIntro, JaggedPass.EricDefeat)) return
+    ctx.say(JaggedPass.EricPostBattle)
+  }
 }
 
 /**
@@ -30,15 +31,8 @@ internal object JaggedPass_EventScript_Ethan : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port JaggedPass_EventScript_Ethan")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_BURN_HEAL
- * end
- * ```
- */
 internal object JaggedPass_EventScript_ItemBurnHeal : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port JaggedPass_EventScript_ItemBurnHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.BURN_HEAL)
 }
 
 /**
@@ -84,28 +78,20 @@ internal object JaggedPass_EventScript_MagmaHideoutGuard : Script {
       TODO("port JaggedPass_EventScript_MagmaHideoutGuard")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_AUTUMN, JaggedPass_Text_AutumnIntro, JaggedPass_Text_AutumnDefeat
- * msgbox JaggedPass_Text_AutumnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object JaggedPass_EventScript_Autumn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port JaggedPass_EventScript_Autumn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_AUTUMN, JaggedPass.AutumnIntro, JaggedPass.AutumnDefeat))
+        return
+    ctx.say(JaggedPass.AutumnPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JULIO, JaggedPass_Text_JulioIntro, JaggedPass_Text_JulioDefeat
- * msgbox JaggedPass_Text_JulioPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object JaggedPass_EventScript_Julio : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port JaggedPass_EventScript_Julio")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_JULIO, JaggedPass.JulioIntro, JaggedPass.JulioDefeat))
+        return
+    ctx.say(JaggedPass.JulioPostBattle)
+  }
 }
 
 internal val JaggedPassScripts: Map<String, Script> =

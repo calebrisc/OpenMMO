@@ -1,41 +1,30 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_3F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_WILLIAM, MtPyre_3F_Text_WilliamIntro, MtPyre_3F_Text_WilliamDefeat
- * msgbox MtPyre_3F_Text_WilliamPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_KAYLA = 247
+private const val TRAINER_WILLIAM = 236
+
 internal object MtPyre_3F_EventScript_William : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_3F_EventScript_William")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_WILLIAM, MtPyre_3F.WilliamIntro, MtPyre_3F.WilliamDefeat))
+        return
+    ctx.say(MtPyre_3F.WilliamPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_KAYLA, MtPyre_3F_Text_KaylaIntro, MtPyre_3F_Text_KaylaDefeat
- * msgbox MtPyre_3F_Text_KaylaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_3F_EventScript_Kayla : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_3F_EventScript_Kayla")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KAYLA, MtPyre_3F.KaylaIntro, MtPyre_3F.KaylaDefeat)) return
+    ctx.say(MtPyre_3F.KaylaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_SUPER_REPEL
- * end
- * ```
- */
 internal object MtPyre_3F_EventScript_ItemSuperRepel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_3F_EventScript_ItemSuperRepel")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SUPER_REPEL)
 }
 
 /**

@@ -4,21 +4,21 @@ import de.fiereu.openmmo.dialog.generated.hoenn.AbandonedShip_Corridors_B1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_DUNCAN = 496
+
 internal object AbandonedShip_Corridors_B1F_EventScript_TuberM : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(AbandonedShip_Corridors_B1F.YayItsAShip)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DUNCAN, AbandonedShip_Corridors_B1F_Text_DuncanIntro, AbandonedShip_Corridors_B1F_Text_DuncanDefeat
- * msgbox AbandonedShip_Corridors_B1F_Text_DuncanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AbandonedShip_Corridors_B1F_EventScript_Duncan : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_Corridors_B1F_EventScript_Duncan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_DUNCAN,
+        AbandonedShip_Corridors_B1F.DuncanIntro,
+        AbandonedShip_Corridors_B1F.DuncanDefeat))
+        return
+    ctx.say(AbandonedShip_Corridors_B1F.DuncanPostBattle)
+  }
 }
 
 /**

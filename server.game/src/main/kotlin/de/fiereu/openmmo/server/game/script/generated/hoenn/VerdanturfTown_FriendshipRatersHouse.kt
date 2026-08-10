@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.VerdanturfTown_FriendshipRatersHouse
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -27,22 +28,9 @@ internal object VerdanturfTown_FriendshipRatersHouse_EventScript_FriendshipRater
       TODO("port VerdanturfTown_FriendshipRatersHouse_EventScript_FriendshipRater")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_PIKACHU, CRY_MODE_NORMAL
- * msgbox VerdanturfTown_FriendshipRatersHouse_Text_Pikachu, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object VerdanturfTown_FriendshipRatersHouse_EventScript_Pikachu : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port VerdanturfTown_FriendshipRatersHouse_EventScript_Pikachu")
+      ctx.say(VerdanturfTown_FriendshipRatersHouse.Pikachu)
 }
 
 internal val VerdanturfTown_FriendshipRatersHouseScripts: Map<String, Script> =

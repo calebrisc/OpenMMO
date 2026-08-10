@@ -1,136 +1,108 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.SootopolisCity_Gym_B1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ANDREA, SootopolisCity_Gym_B1F_Text_AndreaIntro, SootopolisCity_Gym_B1F_Text_AndreaDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_AndreaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_ANDREA = 613
+private const val TRAINER_ANNIKA = 502
+private const val TRAINER_BETHANY = 301
+private const val TRAINER_BRIANNA = 118
+private const val TRAINER_BRIDGET = 129
+private const val TRAINER_CONNIE = 128
+private const val TRAINER_CRISSY = 614
+private const val TRAINER_DAPHNE = 115
+private const val TRAINER_OLIVIA = 130
+private const val TRAINER_TIFFANY = 131
+
 internal object SootopolisCity_Gym_B1F_EventScript_Andrea : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Andrea")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ANDREA, SootopolisCity_Gym_B1F.AndreaIntro, SootopolisCity_Gym_B1F.AndreaDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.AndreaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CONNIE, SootopolisCity_Gym_B1F_Text_ConnieIntro, SootopolisCity_Gym_B1F_Text_ConnieDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_ConniePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Connie : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Connie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CONNIE, SootopolisCity_Gym_B1F.ConnieIntro, SootopolisCity_Gym_B1F.ConnieDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.ConniePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRIANNA, SootopolisCity_Gym_B1F_Text_BriannaIntro, SootopolisCity_Gym_B1F_Text_BriannaDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_BriannaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Brianna : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Brianna")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BRIANNA, SootopolisCity_Gym_B1F.BriannaIntro, SootopolisCity_Gym_B1F.BriannaDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.BriannaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRIDGET, SootopolisCity_Gym_B1F_Text_BridgetIntro, SootopolisCity_Gym_B1F_Text_BridgetDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_BridgetPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Bridget : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Bridget")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BRIDGET, SootopolisCity_Gym_B1F.BridgetIntro, SootopolisCity_Gym_B1F.BridgetDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.BridgetPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TIFFANY, SootopolisCity_Gym_B1F_Text_TiffanyIntro, SootopolisCity_Gym_B1F_Text_TiffanyDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_TiffanyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Tiffany : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Tiffany")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TIFFANY, SootopolisCity_Gym_B1F.TiffanyIntro, SootopolisCity_Gym_B1F.TiffanyDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.TiffanyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BETHANY, SootopolisCity_Gym_B1F_Text_BethanyIntro, SootopolisCity_Gym_B1F_Text_BethanyDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_BethanyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Bethany : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Bethany")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BETHANY, SootopolisCity_Gym_B1F.BethanyIntro, SootopolisCity_Gym_B1F.BethanyDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.BethanyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CRISSY, SootopolisCity_Gym_B1F_Text_CrissyIntro, SootopolisCity_Gym_B1F_Text_CrissyDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_CrissyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Crissy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Crissy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRISSY, SootopolisCity_Gym_B1F.CrissyIntro, SootopolisCity_Gym_B1F.CrissyDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.CrissyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_OLIVIA, SootopolisCity_Gym_B1F_Text_OliviaIntro, SootopolisCity_Gym_B1F_Text_OliviaDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_OliviaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Olivia : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Olivia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_OLIVIA, SootopolisCity_Gym_B1F.OliviaIntro, SootopolisCity_Gym_B1F.OliviaDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.OliviaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DAPHNE, SootopolisCity_Gym_B1F_Text_DaphneIntro, SootopolisCity_Gym_B1F_Text_DaphneDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_DaphnePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Daphne : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Daphne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_DAPHNE, SootopolisCity_Gym_B1F.DaphneIntro, SootopolisCity_Gym_B1F.DaphneDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.DaphnePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ANNIKA, SootopolisCity_Gym_B1F_Text_AnnikaIntro, SootopolisCity_Gym_B1F_Text_AnnikaDefeat
- * msgbox SootopolisCity_Gym_B1F_Text_AnnikaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SootopolisCity_Gym_B1F_EventScript_Annika : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SootopolisCity_Gym_B1F_EventScript_Annika")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ANNIKA, SootopolisCity_Gym_B1F.AnnikaIntro, SootopolisCity_Gym_B1F.AnnikaDefeat))
+        return
+    ctx.say(SootopolisCity_Gym_B1F.AnnikaPostBattle)
+  }
 }
 
 internal val SootopolisCity_Gym_B1FScripts: Map<String, Script> =

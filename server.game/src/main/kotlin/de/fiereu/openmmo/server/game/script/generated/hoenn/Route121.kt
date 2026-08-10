@@ -1,8 +1,16 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route121
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_CALE = 764
+private const val TRAINER_MARCEL = 11
+private const val TRAINER_MYLES = 765
+private const val TRAINER_PAT = 766
+private const val TRAINER_TAMMY = 107
+private const val TRAINER_VANESSA = 300
 
 internal object Route121_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route121.AheadLoomsMtPyre)
@@ -32,16 +40,12 @@ internal object Route121_EventScript_Joy : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Joy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_VANESSA, Route121_Text_VanessaIntro, Route121_Text_VanessaDefeat
- * msgbox Route121_Text_VanessaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Vanessa : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Vanessa")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_VANESSA, Route121.VanessaIntro, Route121.VanessaDefeat))
+        return
+    ctx.say(Route121.VanessaPostBattle)
+  }
 }
 
 /**
@@ -59,16 +63,11 @@ internal object Route121_EventScript_Walter : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Walter")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMMY, Route121_Text_TammyIntro, Route121_Text_TammyDefeat
- * msgbox Route121_Text_TammyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Tammy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Tammy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TAMMY, Route121.TammyIntro, Route121.TammyDefeat)) return
+    ctx.say(Route121.TammyPostBattle)
+  }
 }
 
 /**
@@ -86,63 +85,37 @@ internal object Route121_EventScript_Jessica : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Jessica")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CARBOS
- * end
- * ```
- */
 internal object Route121_EventScript_ItemCarbos : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_ItemCarbos")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CARBOS)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CALE, Route121_Text_CaleIntro, Route121_Text_CaleDefeat
- * msgbox Route121_Text_CalePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Cale : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Cale")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CALE, Route121.CaleIntro, Route121.CaleDefeat)) return
+    ctx.say(Route121.CalePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MYLES, Route121_Text_MylesIntro, Route121_Text_MylesDefeat
- * msgbox Route121_Text_MylesPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Myles : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Myles")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MYLES, Route121.MylesIntro, Route121.MylesDefeat)) return
+    ctx.say(Route121.MylesPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PAT, Route121_Text_PatIntro, Route121_Text_PatDefeat
- * msgbox Route121_Text_PatPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Pat : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Pat")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_PAT, Route121.PatIntro, Route121.PatDefeat)) return
+    ctx.say(Route121.PatPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MARCEL, Route121_Text_MarcelIntro, Route121_Text_MarcelDefeat
- * msgbox Route121_Text_MarcelPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Marcel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Marcel")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MARCEL, Route121.MarcelIntro, Route121.MarcelDefeat))
+        return
+    ctx.say(Route121.MarcelPostBattle)
+  }
 }
 
 /**
@@ -160,26 +133,12 @@ internal object Route121_EventScript_Cristin : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Cristin")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object Route121_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ZINC
- * end
- * ```
- */
 internal object Route121_EventScript_ItemZinc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_ItemZinc")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ZINC)
 }
 
 internal object Route121_EventScript_MtPyrePierSign : Script {

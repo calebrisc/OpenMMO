@@ -1,8 +1,15 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route112
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_BRICE = 626
+private const val TRAINER_BRYANT = 746
+private const val TRAINER_CAROL = 471
+private const val TRAINER_LARRY = 213
+private const val TRAINER_SHAYLA = 747
 
 /**
  * Not ported yet. Decomp body:
@@ -48,40 +55,25 @@ internal object Route112_EventScript_MagmaGrunts : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_MagmaGrunts")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRICE, Route112_Text_BriceIntro, Route112_Text_BriceDefeat
- * msgbox Route112_Text_BricePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route112_EventScript_Brice : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_Brice")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BRICE, Route112.BriceIntro, Route112.BriceDefeat)) return
+    ctx.say(Route112.BricePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LARRY, Route112_Text_LarryIntro, Route112_Text_LarryDefeat
- * msgbox Route112_Text_LarryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route112_EventScript_Larry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_Larry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LARRY, Route112.LarryIntro, Route112.LarryDefeat)) return
+    ctx.say(Route112.LarryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAROL, Route112_Text_CarolIntro, Route112_Text_CarolDefeat
- * msgbox Route112_Text_CarolPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route112_EventScript_Carol : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_Carol")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CAROL, Route112.CarolIntro, Route112.CarolDefeat)) return
+    ctx.say(Route112.CarolPostBattle)
+  }
 }
 
 /**
@@ -103,39 +95,24 @@ internal object Route112_EventScript_Hiker : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route112.NotEasyToGetBackToLavaridge)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_NUGGET
- * end
- * ```
- */
 internal object Route112_EventScript_ItemNugget : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_ItemNugget")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NUGGET)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BRYANT, Route112_Text_BryantIntro, Route112_Text_BryantDefeat
- * msgbox Route112_Text_BryantPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route112_EventScript_Bryant : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_Bryant")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BRYANT, Route112.BryantIntro, Route112.BryantDefeat))
+        return
+    ctx.say(Route112.BryantPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SHAYLA, Route112_Text_ShaylaIntro, Route112_Text_ShaylaDefeat
- * msgbox Route112_Text_ShaylaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route112_EventScript_Shayla : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route112_EventScript_Shayla")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SHAYLA, Route112.ShaylaIntro, Route112.ShaylaDefeat))
+        return
+    ctx.say(Route112.ShaylaPostBattle)
+  }
 }
 
 internal object Route112_EventScript_MtChimneySign : Script {

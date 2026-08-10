@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.Route103
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.MovementStep.FACE_DOWN
 import de.fiereu.openmmo.server.game.script.MovementStep.WALK_DOWN
@@ -8,6 +9,13 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 import de.fiereu.openmmo.story.generated.hoenn.HoennVars
+
+private const val TRAINER_ANDREW = 336
+private const val TRAINER_DAISY = 36
+private const val TRAINER_ISABELLE = 736
+private const val TRAINER_MARCOS = 702
+private const val TRAINER_PETE = 735
+private const val TRAINER_RHETT = 703
 
 private const val LOCALID_RIVAL = 1
 
@@ -58,16 +66,11 @@ internal object Route103_EventScript_Rival : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DAISY, Route103_Text_DaisyIntro, Route103_Text_DaisyDefeated
- * msgbox Route103_Text_DaisyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Daisy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Daisy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DAISY, Route103.DaisyIntro, Route103.DaisyDefeated)) return
+    ctx.say(Route103.DaisyPostBattle)
+  }
 }
 
 /**
@@ -98,16 +101,12 @@ internal object Route103_EventScript_Amy : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Amy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ANDREW, Route103_Text_AndrewIntro, Route103_Text_AndrewDefeated
- * msgbox Route103_Text_AndrewPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Andrew : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Andrew")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ANDREW, Route103.AndrewIntro, Route103.AndrewDefeated))
+        return
+    ctx.say(Route103.AndrewPostBattle)
+  }
 }
 
 internal object Route103_EventScript_Boy : Script {
@@ -129,74 +128,43 @@ internal object Route103_EventScript_Miguel : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Miguel")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GUARD_SPEC
- * end
- * ```
- */
 internal object Route103_EventScript_ItemGuardSpec : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_ItemGuardSpec")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GUARD_SPEC)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RHETT, Route103_Text_RhettIntro, Route103_Text_RhettDefeated
- * msgbox Route103_Text_RhettPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Rhett : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Rhett")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RHETT, Route103.RhettIntro, Route103.RhettDefeated)) return
+    ctx.say(Route103.RhettPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MARCOS, Route103_Text_MarcosIntro, Route103_Text_MarcosDefeated
- * msgbox Route103_Text_MarcosPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Marcos : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Marcos")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MARCOS, Route103.MarcosIntro, Route103.MarcosDefeated))
+        return
+    ctx.say(Route103.MarcosPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ISABELLE, Route103_Text_IsabelleIntro, Route103_Text_IsabelleDefeated
- * msgbox Route103_Text_IsabellePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Isabelle : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Isabelle")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ISABELLE, Route103.IsabelleIntro, Route103.IsabelleDefeated))
+        return
+    ctx.say(Route103.IsabellePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PETE, Route103_Text_PeteIntro, Route103_Text_PeteDefeated
- * msgbox Route103_Text_PetePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route103_EventScript_Pete : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_Pete")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_PETE, Route103.PeteIntro, Route103.PeteDefeated)) return
+    ctx.say(Route103.PetePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_UP
- * end
- * ```
- */
 internal object Route103_EventScript_ItemPPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route103_EventScript_ItemPPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
 internal object Route103_EventScript_RouteSign : Script {

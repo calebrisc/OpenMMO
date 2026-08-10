@@ -1,90 +1,73 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.VictoryRoad_B2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_VITO, VictoryRoad_B2F_Text_VitoIntro, VictoryRoad_B2F_Text_VitoDefeat
- * msgbox VictoryRoad_B2F_Text_VitoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CAROLINE = 99
+private const val TRAINER_DIANNE = 417
+private const val TRAINER_FELIX = 38
+private const val TRAINER_JULIE = 100
+private const val TRAINER_OWEN = 83
+private const val TRAINER_VITO = 82
+
 internal object VictoryRoad_B2F_EventScript_Vito : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Vito")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_VITO, VictoryRoad_B2F.VitoIntro, VictoryRoad_B2F.VitoDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.VitoPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_OWEN, VictoryRoad_B2F_Text_OwenIntro, VictoryRoad_B2F_Text_OwenDefeat
- * msgbox VictoryRoad_B2F_Text_OwenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_Owen : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Owen")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_OWEN, VictoryRoad_B2F.OwenIntro, VictoryRoad_B2F.OwenDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.OwenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAROLINE, VictoryRoad_B2F_Text_CarolineIntro, VictoryRoad_B2F_Text_CarolineDefeat
- * msgbox VictoryRoad_B2F_Text_CarolinePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_Caroline : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Caroline")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CAROLINE, VictoryRoad_B2F.CarolineIntro, VictoryRoad_B2F.CarolineDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.CarolinePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JULIE, VictoryRoad_B2F_Text_JulieIntro, VictoryRoad_B2F_Text_JulieDefeat
- * msgbox VictoryRoad_B2F_Text_JuliePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_Julie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Julie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JULIE, VictoryRoad_B2F.JulieIntro, VictoryRoad_B2F.JulieDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.JuliePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_HEAL
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_ItemFullHeal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_B2F_EventScript_ItemFullHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_HEAL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DIANNE, VictoryRoad_B2F_Text_DianneIntro, VictoryRoad_B2F_Text_DianneDefeat
- * msgbox VictoryRoad_B2F_Text_DiannePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_Dianne : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Dianne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_DIANNE, VictoryRoad_B2F.DianneIntro, VictoryRoad_B2F.DianneDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.DiannePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FELIX, VictoryRoad_B2F_Text_FelixIntro, VictoryRoad_B2F_Text_FelixDefeat
- * msgbox VictoryRoad_B2F_Text_FelixPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_B2F_EventScript_Felix : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_B2F_EventScript_Felix")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FELIX, VictoryRoad_B2F.FelixIntro, VictoryRoad_B2F.FelixDefeat))
+        return
+    ctx.say(VictoryRoad_B2F.FelixPostBattle)
+  }
 }
 
 internal val VictoryRoad_B2FScripts: Map<String, Script> =

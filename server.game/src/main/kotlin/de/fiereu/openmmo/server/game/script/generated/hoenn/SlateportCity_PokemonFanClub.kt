@@ -74,58 +74,16 @@ internal object SlateportCity_PokemonFanClub_EventScript_Chairman : Script {
       TODO("port SlateportCity_PokemonFanClub_EventScript_Chairman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox SlateportCity_PokemonFanClub_Text_Zigzagoon, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SlateportCity_PokemonFanClub_EventScript_Zigzagoon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SlateportCity_PokemonFanClub_EventScript_Zigzagoon")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SlateportCity_PokemonFanClub.Zigzagoon)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_SKITTY, CRY_MODE_NORMAL
- * msgbox SlateportCity_PokemonFanClub_Text_Skitty, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SlateportCity_PokemonFanClub_EventScript_Skitty : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SlateportCity_PokemonFanClub_EventScript_Skitty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SlateportCity_PokemonFanClub.Skitty)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_AZUMARILL, CRY_MODE_NORMAL
- * msgbox SlateportCity_PokemonFanClub_Text_Azumarill, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SlateportCity_PokemonFanClub_EventScript_Azumarill : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SlateportCity_PokemonFanClub_EventScript_Azumarill")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SlateportCity_PokemonFanClub.Azumarill)
 }
 
 /**

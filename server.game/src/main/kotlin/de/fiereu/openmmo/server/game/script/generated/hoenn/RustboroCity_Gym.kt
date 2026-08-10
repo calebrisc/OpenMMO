@@ -8,6 +8,10 @@ import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 import de.fiereu.openmmo.story.generated.hoenn.HoennVars
 
+private const val TRAINER_JOSH = 320
+private const val TRAINER_MARC = 571
+private const val TRAINER_TOMMY = 321
+
 private const val GEODUDE = 74
 private const val NOSEPASS = 299
 
@@ -58,28 +62,22 @@ private suspend fun giveRockTomb(ctx: ScriptContext) {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JOSH, RustboroCity_Gym_Text_JoshIntro, RustboroCity_Gym_Text_JoshDefeat
- * msgbox RustboroCity_Gym_Text_JoshPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RustboroCity_Gym_EventScript_Josh : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RustboroCity_Gym_EventScript_Josh")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JOSH, RustboroCity_Gym.JoshIntro, RustboroCity_Gym.JoshDefeat))
+        return
+    ctx.say(RustboroCity_Gym.JoshPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TOMMY, RustboroCity_Gym_Text_TommyIntro, RustboroCity_Gym_Text_TommyDefeat
- * msgbox RustboroCity_Gym_Text_TommyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RustboroCity_Gym_EventScript_Tommy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RustboroCity_Gym_EventScript_Tommy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TOMMY, RustboroCity_Gym.TommyIntro, RustboroCity_Gym.TommyDefeat))
+        return
+    ctx.say(RustboroCity_Gym.TommyPostBattle)
+  }
 }
 
 /**
@@ -103,16 +101,13 @@ internal object RustboroCity_Gym_EventScript_GymGuide : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MARC, RustboroCity_Gym_Text_MarcIntro, RustboroCity_Gym_Text_MarcDefeat
- * msgbox RustboroCity_Gym_Text_MarcPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RustboroCity_Gym_EventScript_Marc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RustboroCity_Gym_EventScript_Marc")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_MARC, RustboroCity_Gym.MarcIntro, RustboroCity_Gym.MarcDefeat))
+        return
+    ctx.say(RustboroCity_Gym.MarcPostBattle)
+  }
 }
 
 /**

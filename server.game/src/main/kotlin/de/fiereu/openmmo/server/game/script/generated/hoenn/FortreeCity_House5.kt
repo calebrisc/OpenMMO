@@ -8,22 +8,8 @@ internal object FortreeCity_House5_EventScript_PokefanF : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FortreeCity_House5.TreeHousesAreGreat)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_ZIGZAGOON, CRY_MODE_NORMAL
- * msgbox FortreeCity_House5_Text_Zigzagoon, MSGBOX_DEFAULT
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object FortreeCity_House5_EventScript_Zigzagoon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FortreeCity_House5_EventScript_Zigzagoon")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FortreeCity_House5.Zigzagoon)
 }
 
 internal object FortreeCity_House5_EventScript_Man : Script {

@@ -1,7 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MtPyre_Summit
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_GRUNT_MT_PYRE_1 = 23
+private const val TRAINER_GRUNT_MT_PYRE_2 = 24
+private const val TRAINER_GRUNT_MT_PYRE_3 = 25
+private const val TRAINER_GRUNT_MT_PYRE_4 = 569
 
 /**
  * Not ported yet. Decomp body:
@@ -37,52 +43,40 @@ internal object MtPyre_Summit_EventScript_OldLady : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_Summit_EventScript_OldLady")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_PYRE_1, MtPyre_Summit_Text_Grunt1Intro, MtPyre_Summit_Text_Grunt1Defeat
- * msgbox MtPyre_Summit_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_Summit_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_Summit_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_PYRE_1, MtPyre_Summit.Grunt1Intro, MtPyre_Summit.Grunt1Defeat))
+        return
+    ctx.say(MtPyre_Summit.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_PYRE_2, MtPyre_Summit_Text_Grunt2Intro, MtPyre_Summit_Text_Grunt2Defeat
- * msgbox MtPyre_Summit_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_Summit_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_Summit_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_PYRE_2, MtPyre_Summit.Grunt2Intro, MtPyre_Summit.Grunt2Defeat))
+        return
+    ctx.say(MtPyre_Summit.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_PYRE_3, MtPyre_Summit_Text_Grunt3Intro, MtPyre_Summit_Text_Grunt3Defeat
- * msgbox MtPyre_Summit_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_Summit_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_Summit_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_PYRE_3, MtPyre_Summit.Grunt3Intro, MtPyre_Summit.Grunt3Defeat))
+        return
+    ctx.say(MtPyre_Summit.Grunt3PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MT_PYRE_4, MtPyre_Summit_Text_Grunt4Intro, MtPyre_Summit_Text_Grunt4Defeat
- * msgbox MtPyre_Summit_Text_Grunt4PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_Summit_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_Summit_EventScript_Grunt4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MT_PYRE_4, MtPyre_Summit.Grunt4Intro, MtPyre_Summit.Grunt4Defeat))
+        return
+    ctx.say(MtPyre_Summit.Grunt4PostBattle)
+  }
 }
 
 internal val MtPyre_SummitScripts: Map<String, Script> =

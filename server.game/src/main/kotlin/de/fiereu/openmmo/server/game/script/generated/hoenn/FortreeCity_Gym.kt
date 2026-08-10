@@ -1,7 +1,15 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.FortreeCity_Gym
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_ASHLEY = 655
+private const val TRAINER_DARIUS = 803
+private const val TRAINER_EDWARDO = 404
+private const val TRAINER_FLINT = 654
+private const val TRAINER_HUMBERTO = 402
+private const val TRAINER_JARED = 401
 
 /**
  * Not ported yet. Decomp body:
@@ -19,52 +27,40 @@ internal object FortreeCity_Gym_EventScript_Winona : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Winona")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JARED, FortreeCity_Gym_Text_JaredIntro, FortreeCity_Gym_Text_JaredDefeat
- * msgbox FortreeCity_Gym_Text_JaredPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Jared : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Jared")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JARED, FortreeCity_Gym.JaredIntro, FortreeCity_Gym.JaredDefeat))
+        return
+    ctx.say(FortreeCity_Gym.JaredPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FLINT, FortreeCity_Gym_Text_FlintIntro, FortreeCity_Gym_Text_FlintDefeat
- * msgbox FortreeCity_Gym_Text_FlintPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Flint : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Flint")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FLINT, FortreeCity_Gym.FlintIntro, FortreeCity_Gym.FlintDefeat))
+        return
+    ctx.say(FortreeCity_Gym.FlintPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ASHLEY, FortreeCity_Gym_Text_AshleyIntro, FortreeCity_Gym_Text_AshleyDefeat
- * msgbox FortreeCity_Gym_Text_AshleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Ashley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Ashley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ASHLEY, FortreeCity_Gym.AshleyIntro, FortreeCity_Gym.AshleyDefeat))
+        return
+    ctx.say(FortreeCity_Gym.AshleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_EDWARDO, FortreeCity_Gym_Text_EdwardoIntro, FortreeCity_Gym_Text_EdwardoDefeat
- * msgbox FortreeCity_Gym_Text_EdwardoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Edwardo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Edwardo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_EDWARDO, FortreeCity_Gym.EdwardoIntro, FortreeCity_Gym.EdwardoDefeat))
+        return
+    ctx.say(FortreeCity_Gym.EdwardoPostBattle)
+  }
 }
 
 /**
@@ -82,28 +78,22 @@ internal object FortreeCity_Gym_EventScript_GymGuide : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_GymGuide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HUMBERTO, FortreeCity_Gym_Text_HumbertoIntro, FortreeCity_Gym_Text_HumbertoDefeat
- * msgbox FortreeCity_Gym_Text_HumbertoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Humberto : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Humberto")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HUMBERTO, FortreeCity_Gym.HumbertoIntro, FortreeCity_Gym.HumbertoDefeat))
+        return
+    ctx.say(FortreeCity_Gym.HumbertoPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_DARIUS, FortreeCity_Gym_Text_DariusIntro, FortreeCity_Gym_Text_DariusDefeat
- * msgbox FortreeCity_Gym_Text_DariusPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FortreeCity_Gym_EventScript_Darius : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FortreeCity_Gym_EventScript_Darius")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_DARIUS, FortreeCity_Gym.DariusIntro, FortreeCity_Gym.DariusDefeat))
+        return
+    ctx.say(FortreeCity_Gym.DariusPostBattle)
+  }
 }
 
 /**

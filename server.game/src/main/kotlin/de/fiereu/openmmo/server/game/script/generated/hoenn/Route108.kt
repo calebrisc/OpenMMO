@@ -1,66 +1,53 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.Route108
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JEROME, Route108_Text_JeromeIntro, Route108_Text_JeromeDefeated
- * msgbox Route108_Text_JeromePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CAROLINA = 741
+private const val TRAINER_JEROME = 156
+private const val TRAINER_MATTHEW = 157
+private const val TRAINER_MISSY = 447
+private const val TRAINER_TARA = 446
+
 internal object Route108_EventScript_Jerome : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Jerome")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_JEROME, Route108.JeromeIntro, Route108.JeromeDefeated))
+        return
+    ctx.say(Route108.JeromePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TARA, Route108_Text_TaraIntro, Route108_Text_TaraDefeated
- * msgbox Route108_Text_TaraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route108_EventScript_Tara : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Tara")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TARA, Route108.TaraIntro, Route108.TaraDefeated)) return
+    ctx.say(Route108.TaraPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MATTHEW, Route108_Text_MatthewIntro, Route108_Text_MatthewDefeated
- * msgbox Route108_Text_MatthewPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route108_EventScript_Matthew : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Matthew")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MATTHEW, Route108.MatthewIntro, Route108.MatthewDefeated))
+        return
+    ctx.say(Route108.MatthewPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MISSY, Route108_Text_MissyIntro, Route108_Text_MissyDefeated
- * msgbox Route108_Text_MissyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route108_EventScript_Missy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Missy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MISSY, Route108.MissyIntro, Route108.MissyDefeated)) return
+    ctx.say(Route108.MissyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAROLINA, Route108_Text_CarolinaIntro, Route108_Text_CarolinaDefeated
- * msgbox Route108_Text_CarolinaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route108_EventScript_Carolina : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Carolina")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CAROLINA, Route108.CarolinaIntro, Route108.CarolinaDefeated))
+        return
+    ctx.say(Route108.CarolinaPostBattle)
+  }
 }
 
 /**
@@ -78,15 +65,8 @@ internal object Route108_EventScript_Cory : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_Cory")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_STAR_PIECE
- * end
- * ```
- */
 internal object Route108_EventScript_ItemStarPiece : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route108_EventScript_ItemStarPiece")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.STAR_PIECE)
 }
 
 internal val Route108Scripts: Map<String, Script> =

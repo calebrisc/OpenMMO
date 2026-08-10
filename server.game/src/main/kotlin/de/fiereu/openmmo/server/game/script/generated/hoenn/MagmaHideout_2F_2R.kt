@@ -1,78 +1,65 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.MagmaHideout_2F_2R
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_8, MagmaHideout_2F_2R_Text_Grunt8Intro, MagmaHideout_2F_2R_Text_Grunt8Defeat
- * msgbox MagmaHideout_2F_2R_Text_Grunt8PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_15 = 730
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_6 = 721
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_7 = 722
+private const val TRAINER_GRUNT_MAGMA_HIDEOUT_8 = 723
+
 internal object MagmaHideout_2F_2R_EventScript_Grunt8 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_2F_2R_EventScript_Grunt8")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_8,
+        MagmaHideout_2F_2R.Grunt8Intro,
+        MagmaHideout_2F_2R.Grunt8Defeat))
+        return
+    ctx.say(MagmaHideout_2F_2R.Grunt8PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_7, MagmaHideout_2F_2R_Text_Grunt7Intro, MagmaHideout_2F_2R_Text_Grunt7Defeat
- * msgbox MagmaHideout_2F_2R_Text_Grunt7PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_2F_2R_EventScript_Grunt7 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_2F_2R_EventScript_Grunt7")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_7,
+        MagmaHideout_2F_2R.Grunt7Intro,
+        MagmaHideout_2F_2R.Grunt7Defeat))
+        return
+    ctx.say(MagmaHideout_2F_2R.Grunt7PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_ELIXIR
- * end
- * ```
- */
 internal object MagmaHideout_2F_2R_EventScript_ItemMaxElixir : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MagmaHideout_2F_2R_EventScript_ItemMaxElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_6, MagmaHideout_2F_2R_Text_Grunt6Intro, MagmaHideout_2F_2R_Text_Grunt6Defeat
- * msgbox MagmaHideout_2F_2R_Text_Grunt6PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_2F_2R_EventScript_Grunt6 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_2F_2R_EventScript_Grunt6")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_6,
+        MagmaHideout_2F_2R.Grunt6Intro,
+        MagmaHideout_2F_2R.Grunt6Defeat))
+        return
+    ctx.say(MagmaHideout_2F_2R.Grunt6PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_MAGMA_HIDEOUT_15, MagmaHideout_2F_2R_Text_Grunt15Intro, MagmaHideout_2F_2R_Text_Grunt15Defeat
- * msgbox MagmaHideout_2F_2R_Text_Grunt15PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MagmaHideout_2F_2R_EventScript_Grunt15 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MagmaHideout_2F_2R_EventScript_Grunt15")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_MAGMA_HIDEOUT_15,
+        MagmaHideout_2F_2R.Grunt15Intro,
+        MagmaHideout_2F_2R.Grunt15Defeat))
+        return
+    ctx.say(MagmaHideout_2F_2R.Grunt15PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_RESTORE
- * end
- * ```
- */
 internal object MagmaHideout_2F_2R_EventScript_ItemFullRestore : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MagmaHideout_2F_2R_EventScript_ItemFullRestore")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_RESTORE)
 }
 
 internal val MagmaHideout_2F_2RScripts: Map<String, Script> =

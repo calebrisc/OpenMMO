@@ -4,6 +4,10 @@ import de.fiereu.openmmo.dialog.generated.hoenn.MossdeepCity_SpaceCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_GRUNT_SPACE_CENTER_1 = 22
+private const val TRAINER_GRUNT_SPACE_CENTER_3 = 586
+private const val TRAINER_GRUNT_SPACE_CENTER_4 = 587
+
 /**
  * Not ported yet. Decomp body:
  * ```
@@ -98,43 +102,37 @@ internal object MossdeepCity_SpaceCenter_1F_EventScript_Woman : Script {
       TODO("port MossdeepCity_SpaceCenter_1F_EventScript_Woman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_SPACE_CENTER_3, MossdeepCity_SpaceCenter_1F_Text_Grunt3Intro, MossdeepCity_SpaceCenter_1F_Text_Grunt3Defeat
- * msgbox MossdeepCity_SpaceCenter_1F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_SpaceCenter_1F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MossdeepCity_SpaceCenter_1F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_SPACE_CENTER_3,
+        MossdeepCity_SpaceCenter_1F.Grunt3Intro,
+        MossdeepCity_SpaceCenter_1F.Grunt3Defeat))
+        return
+    ctx.say(MossdeepCity_SpaceCenter_1F.Grunt3PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_SPACE_CENTER_1, MossdeepCity_SpaceCenter_1F_Text_Grunt1Intro, MossdeepCity_SpaceCenter_1F_Text_Grunt1Defeat
- * msgbox MossdeepCity_SpaceCenter_1F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_SpaceCenter_1F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MossdeepCity_SpaceCenter_1F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_SPACE_CENTER_1,
+        MossdeepCity_SpaceCenter_1F.Grunt1Intro,
+        MossdeepCity_SpaceCenter_1F.Grunt1Defeat))
+        return
+    ctx.say(MossdeepCity_SpaceCenter_1F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GRUNT_SPACE_CENTER_4, MossdeepCity_SpaceCenter_1F_Text_Grunt4Intro, MossdeepCity_SpaceCenter_1F_Text_Grunt4Defeat
- * msgbox MossdeepCity_SpaceCenter_1F_Text_Grunt4PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MossdeepCity_SpaceCenter_1F_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MossdeepCity_SpaceCenter_1F_EventScript_Grunt4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GRUNT_SPACE_CENTER_4,
+        MossdeepCity_SpaceCenter_1F.Grunt4Intro,
+        MossdeepCity_SpaceCenter_1F.Grunt4Defeat))
+        return
+    ctx.say(MossdeepCity_SpaceCenter_1F.Grunt4PostBattle)
+  }
 }
 
 /**

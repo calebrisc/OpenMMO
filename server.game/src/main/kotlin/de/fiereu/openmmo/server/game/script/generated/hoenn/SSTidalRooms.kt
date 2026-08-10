@@ -1,42 +1,39 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.SSTidalRooms
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COLTON, SSTidalRooms_Text_ColtonIntro, SSTidalRooms_Text_ColtonDefeat
- * msgbox SSTidalRooms_Text_ColtonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_COLTON = 294
+private const val TRAINER_GARRET = 138
+private const val TRAINER_MICAH = 255
+private const val TRAINER_NAOMI = 119
+private const val TRAINER_THOMAS = 256
+
 internal object SSTidalRooms_EventScript_Colton : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Colton")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COLTON, SSTidalRooms.ColtonIntro, SSTidalRooms.ColtonDefeat))
+        return
+    ctx.say(SSTidalRooms.ColtonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_MICAH, SSTidalRooms_Text_MicahIntro, SSTidalRooms_Text_MicahDefeat
- * msgbox SSTidalRooms_Text_MicahPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Micah : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Micah")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MICAH, SSTidalRooms.MicahIntro, SSTidalRooms.MicahDefeat))
+        return
+    ctx.say(SSTidalRooms.MicahPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_THOMAS, SSTidalRooms_Text_ThomasIntro, SSTidalRooms_Text_ThomasDefeat
- * msgbox SSTidalRooms_Text_ThomasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Thomas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Thomas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_THOMAS, SSTidalRooms.ThomasIntro, SSTidalRooms.ThomasDefeat))
+        return
+    ctx.say(SSTidalRooms.ThomasPostBattle)
+  }
 }
 
 /**
@@ -63,28 +60,21 @@ internal object SSTidalRooms_EventScript_Lea : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Lea")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GARRET, SSTidalRooms_Text_GarretIntro, SSTidalRooms_Text_GarretDefeat
- * msgbox SSTidalRooms_Text_GarretPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Garret : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Garret")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GARRET, SSTidalRooms.GarretIntro, SSTidalRooms.GarretDefeat))
+        return
+    ctx.say(SSTidalRooms.GarretPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_NAOMI, SSTidalRooms_Text_NaomiIntro, SSTidalRooms_Text_NaomiDefeat
- * msgbox SSTidalRooms_Text_NaomiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Naomi : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Naomi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_NAOMI, SSTidalRooms.NaomiIntro, SSTidalRooms.NaomiDefeat))
+        return
+    ctx.say(SSTidalRooms.NaomiPostBattle)
+  }
 }
 
 /**

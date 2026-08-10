@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
+import de.fiereu.openmmo.dialog.generated.hoenn.AbandonedShip_Rooms2_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_GARRISON = 547
+private const val TRAINER_JANI = 418
 
 /**
  * Not ported yet. Decomp body:
@@ -35,42 +40,28 @@ internal object AbandonedShip_Rooms2_1F_EventScript_Kira : Script {
       TODO("port AbandonedShip_Rooms2_1F_EventScript_Kira")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object AbandonedShip_Rooms2_1F_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_Rooms2_1F_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GARRISON, AbandonedShip_Rooms2_1F_Text_GarrisonIntro, AbandonedShip_Rooms2_1F_Text_GarrisonDefeat
- * msgbox AbandonedShip_Rooms2_1F_Text_GarrisonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AbandonedShip_Rooms2_1F_EventScript_Garrison : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_Rooms2_1F_EventScript_Garrison")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GARRISON,
+        AbandonedShip_Rooms2_1F.GarrisonIntro,
+        AbandonedShip_Rooms2_1F.GarrisonDefeat))
+        return
+    ctx.say(AbandonedShip_Rooms2_1F.GarrisonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JANI, AbandonedShip_Rooms2_1F_Text_JaniIntro, AbandonedShip_Rooms2_1F_Text_JaniDefeat
- * msgbox AbandonedShip_Rooms2_1F_Text_JaniPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object AbandonedShip_Rooms2_1F_EventScript_Jani : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_Rooms2_1F_EventScript_Jani")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JANI, AbandonedShip_Rooms2_1F.JaniIntro, AbandonedShip_Rooms2_1F.JaniDefeat))
+        return
+    ctx.say(AbandonedShip_Rooms2_1F.JaniPostBattle)
+  }
 }
 
 internal val AbandonedShip_Rooms2_1FScripts: Map<String, Script> =
