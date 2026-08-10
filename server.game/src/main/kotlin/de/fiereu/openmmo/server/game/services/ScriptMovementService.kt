@@ -5,6 +5,7 @@ import de.fiereu.openmmo.common.DynamicWarp
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.maps.MapDef
 import de.fiereu.openmmo.maps.MapManager
+import de.fiereu.openmmo.maps.NpcDef
 import de.fiereu.openmmo.net.game.packets.DialogDataPacket
 import de.fiereu.openmmo.net.game.packets.NpcUpdatePacket
 import de.fiereu.openmmo.server.game.script.MovementStep
@@ -195,6 +196,19 @@ constructor(
         info.positionMapId.toInt(),
         localId,
     )
+  }
+
+  /** The map npc the player interacted with, resolved back from the script's entity id. */
+  fun interactedNpc(state: PlayerState, entityId: Long): NpcDef? {
+    val charId = state.characterId ?: return null
+    val info = characterStore.getCharacter(charId)?.info ?: return null
+    val regionId = info.positionRegionId.toInt()
+    val bankId = info.positionBankId.toInt()
+    val mapId = info.positionMapId.toInt()
+    val map = mapManager.getMap(regionId, bankId, mapId) ?: return null
+    return map.npcs.firstOrNull {
+      npcService.entityIdFor(regionId, bankId, mapId, it.entityIdx) == entityId
+    }
   }
 
   /** Resolves local NPC ids to entity ids. */
