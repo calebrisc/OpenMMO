@@ -1,159 +1,98 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route25
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_FRANKLIN, Route25_Text_FranklinIntro, Route25_Text_FranklinDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_FranklinRematch
- * msgbox Route25_Text_FranklinPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CAMPER_FLINT = 471
+private const val TRAINER_HIKER_FRANKLIN = 182
+private const val TRAINER_HIKER_NOB = 183
+private const val TRAINER_HIKER_WAYNE = 184
+private const val TRAINER_LASS_HALEY = 125
+private const val TRAINER_PICNICKER_KELSEY = 153
+private const val TRAINER_YOUNGSTER_CHAD = 95
+private const val TRAINER_YOUNGSTER_DAN = 94
+private const val TRAINER_YOUNGSTER_JOEY = 93
+
 internal object Route25_EventScript_Franklin : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Franklin")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_FRANKLIN, Route25.FranklinIntro, Route25.FranklinDefeat))
+        return
+    ctx.say(Route25.FranklinPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_JOEY, Route25_Text_JoeyIntro, Route25_Text_JoeyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_JoeyRematch
- * msgbox Route25_Text_JoeyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Joey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Joey")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_JOEY, Route25.JoeyIntro, Route25.JoeyDefeat))
+        return
+    ctx.say(Route25.JoeyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_WAYNE, Route25_Text_WayneIntro, Route25_Text_WayneDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_WayneRematch
- * msgbox Route25_Text_WaynePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Wayne : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Wayne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HIKER_WAYNE, Route25.WayneIntro, Route25.WayneDefeat))
+        return
+    ctx.say(Route25.WaynePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_DAN, Route25_Text_DanIntro, Route25_Text_DanDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_DanRematch
- * msgbox Route25_Text_DanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Dan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Dan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_DAN, Route25.DanIntro, Route25.DanDefeat)) return
+    ctx.say(Route25.DanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_KELSEY, Route25_Text_KelseyIntro, Route25_Text_KelseyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_KelseyRematch
- * msgbox Route25_Text_KelseyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Kelsey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Kelsey")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PICNICKER_KELSEY, Route25.KelseyIntro, Route25.KelseyDefeat))
+        return
+    ctx.say(Route25.KelseyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_NOB, Route25_Text_NobIntro, Route25_Text_NobDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_NobRematch
- * msgbox Route25_Text_NobPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Nob : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Nob")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_HIKER_NOB, Route25.NobIntro, Route25.NobDefeat)) return
+    ctx.say(Route25.NobPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAMPER_FLINT, Route25_Text_FlintIntro, Route25_Text_FlintDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_FlintRematch
- * msgbox Route25_Text_FlintPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Flint : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Flint")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CAMPER_FLINT, Route25.FlintIntro, Route25.FlintDefeat))
+        return
+    ctx.say(Route25.FlintPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_CHAD, Route25_Text_ChadIntro, Route25_Text_ChadDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_ChadRematch
- * msgbox Route25_Text_ChadPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Chad : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Chad")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_CHAD, Route25.ChadIntro, Route25.ChadDefeat))
+        return
+    ctx.say(Route25.ChadPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LASS_HALEY, Route25_Text_HaleyIntro, Route25_Text_HaleyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route25_EventScript_HaleyRematch
- * msgbox Route25_Text_HaleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route25_EventScript_Haley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Haley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LASS_HALEY, Route25.HaleyIntro, Route25.HaleyDefeat))
+        return
+    ctx.say(Route25.HaleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM43
- * end
- * ```
- */
 internal object Route25_EventScript_ItemTM43 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_ItemTM43")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM43)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MISTY, 4
- * msgbox Route25_Text_MistyHighHopesAboutThisPlace
- * release
- * end
- * ```
- */
 internal object Route25_EventScript_Beauty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route25_EventScript_Beauty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route25.MistyHighHopesAboutThisPlace)
 }
 
 internal object Route25_EventScript_Man : Script {

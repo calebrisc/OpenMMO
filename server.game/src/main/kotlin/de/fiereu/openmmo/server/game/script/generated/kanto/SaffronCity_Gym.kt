@@ -1,106 +1,108 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_CAMERON, SaffronCity_Gym_Text_CameronIntro, SaffronCity_Gym_Text_CameronDefeat
- * msgbox SaffronCity_Gym_Text_CameronPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_LEADER_SABRINA = 420
+
+private const val TRAINER_CHANNELER_AMANDA = 462
+private const val TRAINER_CHANNELER_STACY = 463
+private const val TRAINER_CHANNELER_TASHA = 464
+private const val TRAINER_PSYCHIC_CAMERON = 282
+private const val TRAINER_PSYCHIC_JOHAN = 280
+private const val TRAINER_PSYCHIC_PRESTON = 283
+private const val TRAINER_PSYCHIC_TYRON = 281
+
 internal object SaffronCity_Gym_EventScript_Cameron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Cameron")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_CAMERON, SaffronCity_Gym.CameronIntro, SaffronCity_Gym.CameronDefeat))
+        return
+    ctx.say(SaffronCity_Gym.CameronPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_JOHAN, SaffronCity_Gym_Text_JohanIntro, SaffronCity_Gym_Text_JohanDefeat
- * msgbox SaffronCity_Gym_Text_JohanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Johan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Johan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_JOHAN, SaffronCity_Gym.JohanIntro, SaffronCity_Gym.JohanDefeat))
+        return
+    ctx.say(SaffronCity_Gym.JohanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_PRESTON, SaffronCity_Gym_Text_PrestonIntro, SaffronCity_Gym_Text_PrestonDefeat
- * msgbox SaffronCity_Gym_Text_PrestonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Preston : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Preston")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_PRESTON, SaffronCity_Gym.PrestonIntro, SaffronCity_Gym.PrestonDefeat))
+        return
+    ctx.say(SaffronCity_Gym.PrestonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_AMANDA, SaffronCity_Gym_Text_AmandaIntro, SaffronCity_Gym_Text_AmandaDefeat
- * msgbox SaffronCity_Gym_Text_AmandaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Amanda : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Amanda")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_AMANDA, SaffronCity_Gym.AmandaIntro, SaffronCity_Gym.AmandaDefeat))
+        return
+    ctx.say(SaffronCity_Gym.AmandaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_STACY, SaffronCity_Gym_Text_StacyIntro, SaffronCity_Gym_Text_StacyDefeat
- * msgbox SaffronCity_Gym_Text_StacyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Stacy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Stacy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_STACY, SaffronCity_Gym.StacyIntro, SaffronCity_Gym.StacyDefeat))
+        return
+    ctx.say(SaffronCity_Gym.StacyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_TASHA, SaffronCity_Gym_Text_TashaIntro, SaffronCity_Gym_Text_TashaDefeat
- * msgbox SaffronCity_Gym_Text_TashaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Tasha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Tasha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_TASHA, SaffronCity_Gym.TashaIntro, SaffronCity_Gym.TashaDefeat))
+        return
+    ctx.say(SaffronCity_Gym.TashaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * famechecker FAMECHECKER_SABRINA, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * trainerbattle_single TRAINER_LEADER_SABRINA, SaffronCity_Gym_Text_SabrinaIntro, SaffronCity_Gym_Text_SabrinaDefeat, SaffronCity_Gym_EventScript_DefeatedSabrina, NO_MUSIC
- * goto_if_unset FLAG_GOT_TM04_FROM_SABRINA, SaffronCity_Gym_EventScript_GiveTM04
- * msgbox SaffronCity_Gym_Text_ExplainTM04
- * release
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Sabrina : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Sabrina")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_SABRINA)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEADER_SABRINA, SaffronCity_Gym.SabrinaIntro, SaffronCity_Gym.SabrinaDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(KantoFlags.FLAG_DEFEATED_SABRINA)
+      ctx.setFlag(KantoFlags.FLAG_BADGE06_GET)
+      ctx.clearFlag(KantoFlags.FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM04_FROM_SABRINA)) {
+      ctx.say(SaffronCity_Gym.ExplainMarshBadgeTakeThis)
+      if (!ctx.giveItem(Items.TM04)) {
+        ctx.say(SaffronCity_Gym.BagFullOfOtherItems)
+        return
+      }
+      ctx.setFlag(KantoFlags.FLAG_GOT_TM04_FROM_SABRINA)
+      ctx.say(SaffronCity_Gym.ReceivedTM04FromSabrina)
+      ctx.say(SaffronCity_Gym.SabrinaPostBattle)
+      return
+    }
+    ctx.say(SaffronCity_Gym.ExplainTM04)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PSYCHIC_TYRON, SaffronCity_Gym_Text_TyronIntro, SaffronCity_Gym_Text_TyronDefeat
- * famechecker FAMECHECKER_SABRINA, 5
- * msgbox SaffronCity_Gym_Text_TyronPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Gym_EventScript_Tyron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_Tyron")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PSYCHIC_TYRON, SaffronCity_Gym.TyronIntro, SaffronCity_Gym.TyronDefeat))
+        return
+    ctx.say(SaffronCity_Gym.TyronPostBattle)
+  }
 }
 
 /**

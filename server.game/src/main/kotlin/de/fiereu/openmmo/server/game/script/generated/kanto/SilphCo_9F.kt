@@ -4,28 +4,25 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_9F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_ED, SilphCo_9F_Text_EdIntro, SilphCo_9F_Text_EdDefeat
- * msgbox SilphCo_9F_Text_EdPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_ED = 344
+private const val TRAINER_TEAM_ROCKET_GRUNT_37 = 387
+private const val TRAINER_TEAM_ROCKET_GRUNT_38 = 388
+
 internal object SilphCo_9F_EventScript_Ed : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_9F_EventScript_Ed")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SCIENTIST_ED, SilphCo_9F.EdIntro, SilphCo_9F.EdDefeat))
+        return
+    ctx.say(SilphCo_9F.EdPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_38, SilphCo_9F_Text_Grunt2Intro, SilphCo_9F_Text_Grunt2Defeat
- * msgbox SilphCo_9F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_9F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_9F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_38, SilphCo_9F.Grunt2Intro, SilphCo_9F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_9F.Grunt2PostBattle)
+  }
 }
 
 /**
@@ -46,16 +43,13 @@ internal object SilphCo_9F_EventScript_HealWoman : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_9F_EventScript_HealWoman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_37, SilphCo_9F_Text_Grunt1Intro, SilphCo_9F_Text_Grunt1Defeat
- * msgbox SilphCo_9F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_9F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_9F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_37, SilphCo_9F.Grunt1Intro, SilphCo_9F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_9F.Grunt1PostBattle)
+  }
 }
 
 /**

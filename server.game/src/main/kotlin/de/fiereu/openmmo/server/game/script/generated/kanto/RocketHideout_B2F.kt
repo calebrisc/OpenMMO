@@ -1,18 +1,19 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.RocketHideout_B2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_13, RocketHideout_B2F_Text_GruntIntro, RocketHideout_B2F_Text_GruntDefeat
- * msgbox RocketHideout_B2F_Text_GruntPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_TEAM_ROCKET_GRUNT_13 = 363
+
 internal object RocketHideout_B2F_EventScript_Grunt : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B2F_EventScript_Grunt")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_13, RocketHideout_B2F.GruntIntro, RocketHideout_B2F.GruntDefeat))
+        return
+    ctx.say(RocketHideout_B2F.GruntPostBattle)
+  }
 }
 
 /**
@@ -39,15 +40,8 @@ internal object RocketHideout_B2F_EventScript_ItemMoonStone : Script {
       TODO("port RocketHideout_B2F_EventScript_ItemMoonStone")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM12
- * end
- * ```
- */
 internal object RocketHideout_B2F_EventScript_ItemTM12 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B2F_EventScript_ItemTM12")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM12)
 }
 
 /**

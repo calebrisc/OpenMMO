@@ -4,19 +4,9 @@ import de.fiereu.openmmo.dialog.generated.kanto.CinnabarIsland
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BLAINE, 3
- * msgbox CinnabarIsland_Text_BlaineLivedHereSinceBeforeLab
- * release
- * end
- * ```
- */
 internal object CinnabarIsland_EventScript_Woman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_EventScript_Woman")
+  override suspend fun run(ctx: ScriptContext) =
+      ctx.say(CinnabarIsland.BlaineLivedHereSinceBeforeLab)
 }
 
 internal object CinnabarIsland_EventScript_OldMan : Script {
@@ -32,18 +22,8 @@ internal object CinnabarIsland_EventScript_PokemonLabSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(CinnabarIsland.PokemonLab)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_BLAINE, 0
- * msgbox CinnabarIsland_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object CinnabarIsland_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CinnabarIsland.GymSign)
 }
 
 internal val CinnabarIslandScripts: Map<String, Script> =

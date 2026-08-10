@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SafariZone_East
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -28,15 +29,8 @@ internal object SafariZone_East_EventScript_ItemFullRestore : Script {
       TODO("port SafariZone_East_EventScript_ItemFullRestore")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM11
- * end
- * ```
- */
 internal object SafariZone_East_EventScript_ItemTM11 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SafariZone_East_EventScript_ItemTM11")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM11)
 }
 
 /**

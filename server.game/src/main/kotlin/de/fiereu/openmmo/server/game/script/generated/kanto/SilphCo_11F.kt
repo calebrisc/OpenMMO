@@ -1,8 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_11F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_TEAM_ROCKET_GRUNT_40 = 390
+private const val TRAINER_TEAM_ROCKET_GRUNT_41 = 391
 
 /**
  * Not ported yet. Decomp body:
@@ -30,39 +34,26 @@ internal object SilphCo_11F_EventScript_Secretary : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SilphCo_11F.ThanksForRescuingUs)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_40, SilphCo_11F_Text_Grunt1Intro, SilphCo_11F_Text_Grunt1Defeat
- * msgbox SilphCo_11F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_11F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_11F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_40, SilphCo_11F.Grunt1Intro, SilphCo_11F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_11F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ZINC
- * end
- * ```
- */
 internal object SilphCo_11F_EventScript_ItemZinc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_11F_EventScript_ItemZinc")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ZINC)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_41, SilphCo_11F_Text_Grunt2Intro, SilphCo_11F_Text_Grunt2Defeat
- * msgbox SilphCo_11F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_11F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_11F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_41, SilphCo_11F.Grunt2Intro, SilphCo_11F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_11F.Grunt2PostBattle)
+  }
 }
 
 /**

@@ -1,39 +1,19 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_POTION
- * end
- * ```
- */
 internal object PowerPlant_EventScript_ItemMaxPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PowerPlant_EventScript_ItemMaxPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM17
- * end
- * ```
- */
 internal object PowerPlant_EventScript_ItemTM17 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PowerPlant_EventScript_ItemTM17")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM17)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM25
- * end
- * ```
- */
 internal object PowerPlant_EventScript_ItemTM25 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PowerPlant_EventScript_ItemTM25")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM25)
 }
 
 /**
@@ -48,15 +28,8 @@ internal object PowerPlant_EventScript_ItemThunderStone : Script {
       TODO("port PowerPlant_EventScript_ItemThunderStone")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ELIXIR
- * end
- * ```
- */
 internal object PowerPlant_EventScript_ItemElixir : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PowerPlant_EventScript_ItemElixir")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ELIXIR)
 }
 
 /**

@@ -134,18 +134,8 @@ internal object CeruleanCity_EventScript_CitySign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(CeruleanCity.CitySign)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_MISTY, 0
- * msgbox CeruleanCity_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.GymSign)
 }
 
 internal object CeruleanCity_EventScript_BikeShopSign : Script {

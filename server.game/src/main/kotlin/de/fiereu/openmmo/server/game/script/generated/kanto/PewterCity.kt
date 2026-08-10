@@ -39,19 +39,8 @@ internal object PewterCity_EventScript_MuseumGuide : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_EventScript_MuseumGuide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BROCK, 2
- * msgbox PewterCity_Text_BrockOnlySeriousTrainerHere
- * release
- * end
- * ```
- */
 internal object PewterCity_EventScript_FatMan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_EventScript_FatMan")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PewterCity.BrockOnlySeriousTrainerHere)
 }
 
 /**
@@ -118,18 +107,8 @@ internal object PewterCity_EventScript_PoliceNotice : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(PewterCity.CallPoliceIfInfoOnThieves)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_BROCK, 0
- * msgbox PewterCity_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object PewterCity_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(PewterCity.GymSign)
 }
 
 internal object PewterCity_EventScript_TrainerTips : Script {

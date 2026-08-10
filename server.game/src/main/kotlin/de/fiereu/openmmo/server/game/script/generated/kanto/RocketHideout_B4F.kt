@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -102,15 +103,8 @@ internal object RocketHideout_B4F_EventScript_Grunt2 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_Grunt2")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM49
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_ItemTM49 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_ItemTM49")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM49)
 }
 
 /**

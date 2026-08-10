@@ -1,42 +1,45 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_Meadow
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_51, FiveIsland_Meadow_Text_Rocket3Intro, FiveIsland_Meadow_Text_Rocket3Defeat
- * msgbox FiveIsland_Meadow_Text_Rocket3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_TEAM_ROCKET_GRUNT_49 = 567
+private const val TRAINER_TEAM_ROCKET_GRUNT_50 = 568
+private const val TRAINER_TEAM_ROCKET_GRUNT_51 = 569
+
 internal object FiveIsland_Meadow_EventScript_Rocket3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FiveIsland_Meadow_EventScript_Rocket3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_51,
+        FiveIsland_Meadow.Rocket3Intro,
+        FiveIsland_Meadow.Rocket3Defeat))
+        return
+    ctx.say(FiveIsland_Meadow.Rocket3PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_49, FiveIsland_Meadow_Text_Rocket1Intro, FiveIsland_Meadow_Text_Rocket1Defeat
- * msgbox FiveIsland_Meadow_Text_Rocket1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_Meadow_EventScript_Rocket1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FiveIsland_Meadow_EventScript_Rocket1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_49,
+        FiveIsland_Meadow.Rocket1Intro,
+        FiveIsland_Meadow.Rocket1Defeat))
+        return
+    ctx.say(FiveIsland_Meadow.Rocket1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_50, FiveIsland_Meadow_Text_Rocket2Intro, FiveIsland_Meadow_Text_Rocket2Defeat
- * msgbox FiveIsland_Meadow_Text_Rocket2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_Meadow_EventScript_Rocket2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FiveIsland_Meadow_EventScript_Rocket2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_50,
+        FiveIsland_Meadow.Rocket2Intro,
+        FiveIsland_Meadow.Rocket2Defeat))
+        return
+    ctx.say(FiveIsland_Meadow.Rocket2PostBattle)
+  }
 }
 
 /**
@@ -51,15 +54,8 @@ internal object FiveIsland_Meadow_EventScript_ItemMaxPotion : Script {
       TODO("port FiveIsland_Meadow_EventScript_ItemMaxPotion")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PP_UP
- * end
- * ```
- */
 internal object FiveIsland_Meadow_EventScript_ItemPPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FiveIsland_Meadow_EventScript_ItemPPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PP_UP)
 }
 
 /**

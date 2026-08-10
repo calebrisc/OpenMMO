@@ -87,18 +87,8 @@ internal object VermilionCity_EventScript_PokemonFanClubSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(VermilionCity.PokemonFanClubSign)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_LTSURGE, 0
- * msgbox VermilionCity_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object VermilionCity_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity.GymSign)
 }
 
 internal object VermilionCity_EventScript_HarborSign : Script {

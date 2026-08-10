@@ -1,46 +1,57 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.VermilionCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * famechecker FAMECHECKER_LTSURGE, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * trainerbattle_single TRAINER_LEADER_LT_SURGE, VermilionCity_Gym_Text_LtSurgeIntro, VermilionCity_Gym_Text_LtSurgeDefeat, VermilionCity_Gym_EventScript_DefeatedLtSurge, NO_MUSIC
- * goto_if_unset FLAG_GOT_TM34_FROM_SURGE, VermilionCity_Gym_EventScript_GiveTM34
- * msgbox VermilionCity_Gym_Text_LtSurgePostBattle
- * release
- * end
- * ```
- */
+private const val TRAINER_LEADER_LT_SURGE = 416
+
+private const val TRAINER_ENGINEER_BAILY = 220
+private const val TRAINER_SAILOR_DWAYNE = 141
+
 internal object VermilionCity_Gym_EventScript_LtSurge : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_Gym_EventScript_LtSurge")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_LT_SURGE)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEADER_LT_SURGE, VermilionCity_Gym.LtSurgeIntro, VermilionCity_Gym.LtSurgeDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(KantoFlags.FLAG_DEFEATED_LT_SURGE)
+      ctx.setFlag(KantoFlags.FLAG_BADGE03_GET)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM34_FROM_SURGE)) {
+      ctx.say(VermilionCity_Gym.ExplainThunderBadgeTakeThis)
+      if (!ctx.giveItem(Items.TM34)) {
+        ctx.say(VermilionCity_Gym.MakeRoomInYourBag)
+        return
+      }
+      ctx.setFlag(KantoFlags.FLAG_GOT_TM34_FROM_SURGE)
+      ctx.say(VermilionCity_Gym.ReceivedTM34FromLtSurge)
+      ctx.say(VermilionCity_Gym.ExplainTM34)
+      return
+    }
+    ctx.say(VermilionCity_Gym.LtSurgePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ENGINEER_BAILY, VermilionCity_Gym_Text_BailyIntro, VermilionCity_Gym_Text_BailyDefeat
- * msgbox VermilionCity_Gym_Text_BailyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VermilionCity_Gym_EventScript_Baily : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_Gym_EventScript_Baily")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ENGINEER_BAILY, VermilionCity_Gym.BailyIntro, VermilionCity_Gym.BailyDefeat))
+        return
+    ctx.say(VermilionCity_Gym.BailyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SAILOR_DWAYNE, VermilionCity_Gym_Text_DwayneIntro, VermilionCity_Gym_Text_DwayneDefeat
- * famechecker FAMECHECKER_LTSURGE, 4
- * msgbox VermilionCity_Gym_Text_DwaynePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VermilionCity_Gym_EventScript_Dwayne : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_Gym_EventScript_Dwayne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SAILOR_DWAYNE, VermilionCity_Gym.DwayneIntro, VermilionCity_Gym.DwayneDefeat))
+        return
+    ctx.say(VermilionCity_Gym.DwaynePostBattle)
+  }
 }
 
 /**

@@ -1,31 +1,29 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonMansion_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_SIMON, PokemonMansion_1F_Text_SimonIntro, PokemonMansion_1F_Text_SimonDefeat
- * msgbox PokemonMansion_1F_Text_SimonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BURGLAR_SIMON = 218
+private const val TRAINER_SCIENTIST_BRAYDON = 346
+
 internal object PokemonMansion_3F_EventScript_Simon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_3F_EventScript_Simon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_SIMON, PokemonMansion_1F.SimonIntro, PokemonMansion_1F.SimonDefeat))
+        return
+    ctx.say(PokemonMansion_1F.SimonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_BRAYDON, PokemonMansion_1F_Text_BraydonIntro, PokemonMansion_1F_Text_BraydonDefeat
- * msgbox PokemonMansion_1F_Text_BraydonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonMansion_3F_EventScript_Braydon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_3F_EventScript_Braydon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_BRAYDON, PokemonMansion_1F.BraydonIntro, PokemonMansion_1F.BraydonDefeat))
+        return
+    ctx.say(PokemonMansion_1F.BraydonPostBattle)
+  }
 }
 
 /**
@@ -40,15 +38,8 @@ internal object PokemonMansion_3F_EventScript_ItemMaxPotion : Script {
       TODO("port PokemonMansion_3F_EventScript_ItemMaxPotion")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_IRON
- * end
- * ```
- */
 internal object PokemonMansion_3F_EventScript_ItemIron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_3F_EventScript_ItemIron")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.IRON)
 }
 
 internal object PokemonMansion_3F_EventScript_DiaryFeb6th : Script {

@@ -1,43 +1,39 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_8F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_32, SilphCo_8F_Text_Grunt1Intro, SilphCo_8F_Text_Grunt1Defeat
- * msgbox SilphCo_8F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_PARKER = 343
+private const val TRAINER_TEAM_ROCKET_GRUNT_32 = 382
+private const val TRAINER_TEAM_ROCKET_GRUNT_36 = 386
+
 internal object SilphCo_8F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_32, SilphCo_8F.Grunt1Intro, SilphCo_8F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_8F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_36, SilphCo_8F_Text_Grunt2Intro, SilphCo_8F_Text_Grunt2Defeat
- * msgbox SilphCo_8F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_8F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_36, SilphCo_8F.Grunt2Intro, SilphCo_8F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_8F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_PARKER, SilphCo_8F_Text_ParkerIntro, SilphCo_8F_Text_ParkerDefeat
- * msgbox SilphCo_8F_Text_ParkerPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_8F_EventScript_Parker : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_Parker")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_PARKER, SilphCo_8F.ParkerIntro, SilphCo_8F.ParkerDefeat))
+        return
+    ctx.say(SilphCo_8F.ParkerPostBattle)
+  }
 }
 
 /**
@@ -55,30 +51,12 @@ internal object SilphCo_8F_EventScript_WorkerM : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_WorkerM")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_IRON
- * end
- * ```
- */
 internal object SilphCo_8F_EventScript_ItemIron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_ItemIron")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.IRON)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_GIOVANNI, 2
- * msgbox SilphCo_8F_Text_ToRocketBossMonsAreTools
- * release
- * end
- * ```
- */
 internal object SilphCo_8F_EventScript_Scientist : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_Scientist")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SilphCo_8F.ToRocketBossMonsAreTools)
 }
 
 /**

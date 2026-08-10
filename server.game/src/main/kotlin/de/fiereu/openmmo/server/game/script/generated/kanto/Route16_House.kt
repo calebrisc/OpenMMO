@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Route16_House
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -23,21 +24,8 @@ internal object Route16_House_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route16_House_EventScript_Woman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_FEAROW, CRY_MODE_NORMAL
- * msgbox Route16_House_Text_Fearow
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object Route16_House_EventScript_Fearow : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route16_House_EventScript_Fearow")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route16_House.Fearow)
 }
 
 internal val Route16_HouseScripts: Map<String, Script> =

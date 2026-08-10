@@ -4,19 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.FuchsiaCity_House1
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BILL, 2
- * msgbox FuchsiaCity_House1_Text_BillIsMyGrandson
- * release
- * end
- * ```
- */
 internal object FuchsiaCity_House1_EventScript_OldMan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_House1_EventScript_OldMan")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FuchsiaCity_House1.BillIsMyGrandson)
 }
 
 internal object FuchsiaCity_House1_EventScript_Woman : Script {

@@ -1,18 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route2
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ETHER
- * end
- * ```
- */
 internal object Route2_EventScript_ItemEther : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route2_EventScript_ItemEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ETHER)
 }
 
 /**

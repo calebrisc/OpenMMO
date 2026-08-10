@@ -4,60 +4,50 @@ import de.fiereu.openmmo.dialog.generated.kanto.SixIsland_WaterPath
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_AROMA_LADY_ROSE, SixIsland_WaterPath_Text_RoseIntro, SixIsland_WaterPath_Text_RoseDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_RoseRematch
- * msgbox SixIsland_WaterPath_Text_RosePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_AROMA_LADY_ROSE = 577
+private const val TRAINER_HIKER_EARL = 581
+private const val TRAINER_JUGGLER_EDWARD = 291
+private const val TRAINER_SWIMMER_FEMALE_DENISE = 579
+private const val TRAINER_SWIMMER_MALE_SAMIR = 578
+
 internal object SixIsland_WaterPath_EventScript_Rose : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Rose")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_AROMA_LADY_ROSE, SixIsland_WaterPath.RoseIntro, SixIsland_WaterPath.RoseDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.RosePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_EDWARD, SixIsland_WaterPath_Text_EdwardIntro, SixIsland_WaterPath_Text_EdwardDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_EdwardRematch
- * msgbox SixIsland_WaterPath_Text_EdwardPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Edward : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Edward")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_EDWARD, SixIsland_WaterPath.EdwardIntro, SixIsland_WaterPath.EdwardDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.EdwardPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_SAMIR, SixIsland_WaterPath_Text_SamirIntro, SixIsland_WaterPath_Text_SamirDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_SamirRematch
- * msgbox SixIsland_WaterPath_Text_SamirPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Samir : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Samir")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_SAMIR,
+        SixIsland_WaterPath.SamirIntro,
+        SixIsland_WaterPath.SamirDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.SamirPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_DENISE, SixIsland_WaterPath_Text_DeniseIntro, SixIsland_WaterPath_Text_DeniseDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_DeniseRematch
- * msgbox SixIsland_WaterPath_Text_DenisePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Denise : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Denise")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_DENISE,
+        SixIsland_WaterPath.DeniseIntro,
+        SixIsland_WaterPath.DeniseDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.DenisePostBattle)
+  }
 }
 
 /**
@@ -88,18 +78,13 @@ internal object SixIsland_WaterPath_EventScript_Mia : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Mia")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_EARL, SixIsland_WaterPath_Text_EarlIntro, SixIsland_WaterPath_Text_EarlDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_EarlRematch
- * msgbox SixIsland_WaterPath_Text_EarlPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Earl : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Earl")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_EARL, SixIsland_WaterPath.EarlIntro, SixIsland_WaterPath.EarlDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.EarlPostBattle)
+  }
 }
 
 /**

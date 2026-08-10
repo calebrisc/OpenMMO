@@ -1,7 +1,15 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.CinnabarIsland_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
+
+private const val TRAINER_LEADER_BLAINE = 419
+
+private const val TRAINER_SUPER_NERD_ERIK = 177
 
 /**
  * Not ported yet. Decomp body:
@@ -15,16 +23,13 @@ internal object CinnabarIsland_Gym_EventScript_Quinn : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Quinn")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SUPER_NERD_ERIK, CinnabarIsland_Gym_Text_ErikIntro, CinnabarIsland_Gym_Text_ErikDefeat
- * msgbox CinnabarIsland_Gym_Text_ErikPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Erik : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Erik")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SUPER_NERD_ERIK, CinnabarIsland_Gym.ErikIntro, CinnabarIsland_Gym.ErikDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.ErikPostBattle)
+  }
 }
 
 /**
@@ -88,19 +93,30 @@ internal object CinnabarIsland_Gym_EventScript_Zac : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Zac")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * famechecker FAMECHECKER_BLAINE, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * trainerbattle_single TRAINER_LEADER_BLAINE, CinnabarIsland_Gym_Text_BlaineIntro, CinnabarIsland_Gym_Text_BlaineDefeat, CinnabarIsland_Gym_EventScript_DefeatedBlaine, NO_MUSIC
- * goto_if_unset FLAG_GOT_TM38_FROM_BLAINE, CinnabarIsland_Gym_EventScript_GiveTM38
- * msgbox CinnabarIsland_Gym_Text_BlainePostBattle
- * release
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Blaine : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Blaine")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_BLAINE)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEADER_BLAINE, CinnabarIsland_Gym.BlaineIntro, CinnabarIsland_Gym.BlaineDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(KantoFlags.FLAG_DEFEATED_BLAINE)
+      ctx.setFlag(KantoFlags.FLAG_BADGE07_GET)
+      ctx.setVar(KantoVars.VAR_MAP_SCENE_CINNABAR_ISLAND, 1)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM38_FROM_BLAINE)) {
+      ctx.say(CinnabarIsland_Gym.ExplainVolcanoBadge)
+      if (!ctx.giveItem(Items.TM38)) {
+        ctx.say(CinnabarIsland_Gym.MakeSpaceForThis)
+        return
+      }
+      ctx.setFlag(KantoFlags.FLAG_GOT_TM38_FROM_BLAINE)
+      ctx.say(CinnabarIsland_Gym.ReceivedTM38FromBlaine)
+      ctx.say(CinnabarIsland_Gym.FireBlastIsUltimateFireMove)
+      return
+    }
+    ctx.say(CinnabarIsland_Gym.BlainePostBattle)
+  }
 }
 
 /**

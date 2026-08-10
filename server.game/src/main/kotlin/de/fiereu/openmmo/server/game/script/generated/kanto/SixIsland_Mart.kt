@@ -22,19 +22,9 @@ internal object SixIsland_Mart_EventScript_Clerk : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_Mart_EventScript_Clerk")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_AGATHA, 5
- * msgbox SixIsland_Mart_Text_AgathaOldestEverEliteFourMember
- * release
- * end
- * ```
- */
 internal object SixIsland_Mart_EventScript_OldWoman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_Mart_EventScript_OldWoman")
+  override suspend fun run(ctx: ScriptContext) =
+      ctx.say(SixIsland_Mart.AgathaOldestEverEliteFourMember)
 }
 
 internal object SixIsland_Mart_EventScript_Picnicker : Script {

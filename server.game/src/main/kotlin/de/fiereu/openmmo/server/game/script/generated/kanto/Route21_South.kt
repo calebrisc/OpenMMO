@@ -1,76 +1,58 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Route21_South
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_CLAUDE, Route21_South_Text_ClaudeIntro, Route21_South_Text_ClaudeDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_South_EventScript_ClaudeRematch
- * msgbox Route21_South_Text_ClaudePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_FISHERMAN_CLAUDE = 230
+private const val TRAINER_FISHERMAN_NOLAN = 232
+private const val TRAINER_SWIMMER_MALE_JACK = 246
+private const val TRAINER_SWIMMER_MALE_JEROME = 247
+private const val TRAINER_SWIMMER_MALE_ROLAND = 248
+
 internal object Route21_South_EventScript_Claude : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_South_EventScript_Claude")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_CLAUDE, Route21_South.ClaudeIntro, Route21_South.ClaudeDefeat))
+        return
+    ctx.say(Route21_South.ClaudePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_NOLAN, Route21_South_Text_NolanIntro, Route21_South_Text_NolanDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_South_EventScript_NolanRematch
- * msgbox Route21_South_Text_NolanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_South_EventScript_Nolan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_South_EventScript_Nolan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_NOLAN, Route21_South.NolanIntro, Route21_South.NolanDefeat))
+        return
+    ctx.say(Route21_South.NolanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_JACK, Route21_South_Text_JackIntro, Route21_South_Text_JackDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_South_EventScript_JackRematch
- * msgbox Route21_South_Text_JackPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_South_EventScript_Jack : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_South_EventScript_Jack")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_JACK, Route21_South.JackIntro, Route21_South.JackDefeat))
+        return
+    ctx.say(Route21_South.JackPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_JEROME, Route21_South_Text_JeromeIntro, Route21_South_Text_JeromeDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_South_EventScript_JeromeRematch
- * msgbox Route21_South_Text_JeromePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_South_EventScript_Jerome : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_South_EventScript_Jerome")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_JEROME, Route21_South.JeromeIntro, Route21_South.JeromeDefeat))
+        return
+    ctx.say(Route21_South.JeromePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_ROLAND, Route21_South_Text_RolandIntro, Route21_South_Text_RolandDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_South_EventScript_RolandRematch
- * msgbox Route21_South_Text_RolandPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_South_EventScript_Roland : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_South_EventScript_Roland")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_ROLAND, Route21_South.RolandIntro, Route21_South.RolandDefeat))
+        return
+    ctx.say(Route21_South.RolandPostBattle)
+  }
 }
 
 internal val Route21_SouthScripts: Map<String, Script> =

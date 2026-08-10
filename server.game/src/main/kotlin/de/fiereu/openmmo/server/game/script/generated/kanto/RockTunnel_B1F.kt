@@ -1,102 +1,89 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.RockTunnel_B1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_POKEMANIAC_COOPER, RockTunnel_B1F_Text_CooperIntro, RockTunnel_B1F_Text_CooperDefeat
- * msgbox RockTunnel_B1F_Text_CooperPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_HIKER_ALLEN = 190
+private const val TRAINER_HIKER_DUDLEY = 189
+private const val TRAINER_HIKER_ERIC = 191
+private const val TRAINER_PICNICKER_MARTHA = 159
+private const val TRAINER_PICNICKER_SOFIA = 158
+private const val TRAINER_POKEMANIAC_COOPER = 164
+private const val TRAINER_POKEMANIAC_STEVE = 165
+private const val TRAINER_POKEMANIAC_WINSTON = 166
+
 internal object RockTunnel_B1F_EventScript_Cooper : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Cooper")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_POKEMANIAC_COOPER, RockTunnel_B1F.CooperIntro, RockTunnel_B1F.CooperDefeat))
+        return
+    ctx.say(RockTunnel_B1F.CooperPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_DUDLEY, RockTunnel_B1F_Text_DudleyIntro, RockTunnel_B1F_Text_DudleyDefeat
- * msgbox RockTunnel_B1F_Text_DudleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Dudley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Dudley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_DUDLEY, RockTunnel_B1F.DudleyIntro, RockTunnel_B1F.DudleyDefeat))
+        return
+    ctx.say(RockTunnel_B1F.DudleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_SOFIA, RockTunnel_B1F_Text_SofiaIntro, RockTunnel_B1F_Text_SofiaDefeat
- * msgbox RockTunnel_B1F_Text_SofiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Sofia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Sofia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PICNICKER_SOFIA, RockTunnel_B1F.SofiaIntro, RockTunnel_B1F.SofiaDefeat))
+        return
+    ctx.say(RockTunnel_B1F.SofiaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_ALLEN, RockTunnel_B1F_Text_AllenIntro, RockTunnel_B1F_Text_AllenDefeat
- * msgbox RockTunnel_B1F_Text_AllenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Allen : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Allen")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_ALLEN, RockTunnel_B1F.AllenIntro, RockTunnel_B1F.AllenDefeat))
+        return
+    ctx.say(RockTunnel_B1F.AllenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_ERIC, RockTunnel_B1F_Text_EricIntro, RockTunnel_B1F_Text_EricDefeat
- * msgbox RockTunnel_B1F_Text_EricPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Eric : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Eric")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_ERIC, RockTunnel_B1F.EricIntro, RockTunnel_B1F.EricDefeat))
+        return
+    ctx.say(RockTunnel_B1F.EricPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_POKEMANIAC_STEVE, RockTunnel_B1F_Text_SteveIntro, RockTunnel_B1F_Text_SteveDefeat
- * msgbox RockTunnel_B1F_Text_StevePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Steve : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Steve")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_POKEMANIAC_STEVE, RockTunnel_B1F.SteveIntro, RockTunnel_B1F.SteveDefeat))
+        return
+    ctx.say(RockTunnel_B1F.StevePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_MARTHA, RockTunnel_B1F_Text_MarthaIntro, RockTunnel_B1F_Text_MarthaDefeat
- * msgbox RockTunnel_B1F_Text_MarthaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Martha : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Martha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PICNICKER_MARTHA, RockTunnel_B1F.MarthaIntro, RockTunnel_B1F.MarthaDefeat))
+        return
+    ctx.say(RockTunnel_B1F.MarthaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_POKEMANIAC_WINSTON, RockTunnel_B1F_Text_WinstonIntro, RockTunnel_B1F_Text_WinstonDefeat
- * msgbox RockTunnel_B1F_Text_WinstonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_Winston : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_Winston")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_POKEMANIAC_WINSTON, RockTunnel_B1F.WinstonIntro, RockTunnel_B1F.WinstonDefeat))
+        return
+    ctx.say(RockTunnel_B1F.WinstonPostBattle)
+  }
 }
 
 /**
@@ -123,15 +110,8 @@ internal object RockTunnel_B1F_EventScript_RockSlideTutor : Script {
       TODO("port RockTunnel_B1F_EventScript_RockSlideTutor")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RockTunnel_B1F_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
 /**

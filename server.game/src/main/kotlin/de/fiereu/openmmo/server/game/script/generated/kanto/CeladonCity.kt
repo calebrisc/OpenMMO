@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -81,15 +82,8 @@ internal object CeladonCity_EventScript_Boy : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.ScaldedTongueOnTea)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ETHER
- * end
- * ```
- */
 internal object CeladonCity_EventScript_ItemEther : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeladonCity_EventScript_ItemEther")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ETHER)
 }
 
 internal object CeladonCity_EventScript_SilphCoScientist : Script {
@@ -124,18 +118,8 @@ internal object CeladonCity_EventScript_DeptStoreSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(CeladonCity.DeptStoreSign)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_ERIKA, 0
- * msgbox CeladonCity_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object CeladonCity_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeladonCity_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.GymSign)
 }
 
 internal val CeladonCityScripts: Map<String, Script> =

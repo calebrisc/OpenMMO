@@ -4,16 +4,16 @@ import de.fiereu.openmmo.dialog.generated.kanto.SSAnne_Deck
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SAILOR_TREVOR, SSAnne_Deck_Text_TrevorIntro, SSAnne_Deck_Text_TrevorDefeat
- * msgbox SSAnne_Deck_Text_TrevorPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SAILOR_EDMOND = 134
+private const val TRAINER_SAILOR_TREVOR = 135
+
 internal object SSAnne_Deck_EventScript_Trevor : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_Deck_EventScript_Trevor")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SAILOR_TREVOR, SSAnne_Deck.TrevorIntro, SSAnne_Deck.TrevorDefeat))
+        return
+    ctx.say(SSAnne_Deck.TrevorPostBattle)
+  }
 }
 
 internal object SSAnne_Deck_EventScript_BaldingMan : Script {
@@ -24,16 +24,13 @@ internal object SSAnne_Deck_EventScript_Sailor : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SSAnne_Deck.ScrubbingDecksHardWork)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SAILOR_EDMOND, SSAnne_Deck_Text_EdmondIntro, SSAnne_Deck_Text_EdmondDefeat
- * msgbox SSAnne_Deck_Text_EdmondPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSAnne_Deck_EventScript_Edmond : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_Deck_EventScript_Edmond")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SAILOR_EDMOND, SSAnne_Deck.EdmondIntro, SSAnne_Deck.EdmondDefeat))
+        return
+    ctx.say(SSAnne_Deck.EdmondPostBattle)
+  }
 }
 
 internal object SSAnne_Deck_EventScript_Youngster : Script {

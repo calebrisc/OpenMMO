@@ -1,31 +1,31 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_5F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_29, SilphCo_5F_Text_Grunt2Intro, SilphCo_5F_Text_Grunt2Defeat
- * msgbox SilphCo_5F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_JUGGLER_DALTON = 286
+private const val TRAINER_SCIENTIST_BEAU = 340
+private const val TRAINER_TEAM_ROCKET_GRUNT_28 = 378
+private const val TRAINER_TEAM_ROCKET_GRUNT_29 = 379
+
 internal object SilphCo_5F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_29, SilphCo_5F.Grunt2Intro, SilphCo_5F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_5F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_DALTON, SilphCo_5F_Text_DaltonIntro, SilphCo_5F_Text_DaltonDefeat
- * msgbox SilphCo_5F_Text_DaltonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_Dalton : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_Dalton")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_DALTON, SilphCo_5F.DaltonIntro, SilphCo_5F.DaltonDefeat))
+        return
+    ctx.say(SilphCo_5F.DaltonPostBattle)
+  }
 }
 
 /**
@@ -43,76 +43,38 @@ internal object SilphCo_5F_EventScript_WorkerM : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_WorkerM")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_BEAU, SilphCo_5F_Text_BeauIntro, SilphCo_5F_Text_BeauDefeat
- * msgbox SilphCo_5F_Text_BeauPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_Beau : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_Beau")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_BEAU, SilphCo_5F.BeauIntro, SilphCo_5F.BeauDefeat))
+        return
+    ctx.say(SilphCo_5F.BeauPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_28, SilphCo_5F_Text_Grunt1Intro, SilphCo_5F_Text_Grunt1Defeat
- * msgbox SilphCo_5F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_28, SilphCo_5F.Grunt1Intro, SilphCo_5F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_5F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PROTEIN
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_ItemProtein : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_ItemProtein")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PROTEIN)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM01
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_ItemTM01 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_ItemTM01")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM01)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CARD_KEY
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_ItemCardKey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_ItemCardKey")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CARD_KEY)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_GIOVANNI, 1
- * msgbox SilphCo_5F_Text_RocketBossLookingForStrongMons
- * release
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_Scientist : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_Scientist")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SilphCo_5F.RocketBossLookingForStrongMons)
 }
 
 /**

@@ -1,19 +1,20 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_3F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_25, SilphCo_3F_Text_GruntIntro, SilphCo_3F_Text_GruntDefeat
- * msgbox SilphCo_3F_Text_GruntPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_JOSE = 338
+private const val TRAINER_TEAM_ROCKET_GRUNT_25 = 375
+
 internal object SilphCo_3F_EventScript_Grunt : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_3F_EventScript_Grunt")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_25, SilphCo_3F.GruntIntro, SilphCo_3F.GruntDefeat))
+        return
+    ctx.say(SilphCo_3F.GruntPostBattle)
+  }
 }
 
 /**
@@ -31,27 +32,17 @@ internal object SilphCo_3F_EventScript_WorkerM : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_3F_EventScript_WorkerM")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_JOSE, SilphCo_3F_Text_JoseIntro, SilphCo_3F_Text_JoseDefeat
- * msgbox SilphCo_3F_Text_JosePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_3F_EventScript_Jose : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_3F_EventScript_Jose")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_JOSE, SilphCo_3F.JoseIntro, SilphCo_3F.JoseDefeat))
+        return
+    ctx.say(SilphCo_3F.JosePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_HYPER_POTION
- * end
- * ```
- */
 internal object SilphCo_3F_EventScript_ItemHyperPotion : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_3F_EventScript_ItemHyperPotion")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.HYPER_POTION)
 }
 
 /**

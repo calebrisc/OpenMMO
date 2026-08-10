@@ -12,21 +12,8 @@ internal object ViridianCity_House_EventScript_LittleGirl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(ViridianCity_House.MyDaddyLovesMonsToo)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_SPEAROW, CRY_MODE_NORMAL
- * msgbox ViridianCity_House_Text_Speary
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object ViridianCity_House_EventScript_Speary : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_House_EventScript_Speary")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(ViridianCity_House.Speary)
 }
 
 internal object ViridianCity_House_EventScript_NicknameSign : Script {

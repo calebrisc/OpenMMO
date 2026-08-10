@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.TwoIsland
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -26,19 +27,8 @@ internal object TwoIsland_EventScript_Woman : Script {
       ctx.say(TwoIsland.ShopkeepersBrotherWorksGameCorner)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BRUNO, 4
- * msgbox TwoIsland_Text_BrunoCameToIslandWhileBack
- * release
- * end
- * ```
- */
 internal object TwoIsland_EventScript_Beauty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port TwoIsland_EventScript_Beauty")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(TwoIsland.BrunoCameToIslandWhileBack)
 }
 
 internal object TwoIsland_EventScript_Sailor : Script {
@@ -49,15 +39,8 @@ internal object TwoIsland_EventScript_PokeManiac : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(TwoIsland.BuyRareItemsHere)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object TwoIsland_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port TwoIsland_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
 internal object TwoIsland_EventScript_LittleBoy : Script {

@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SafariZone_West
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -16,15 +17,8 @@ internal object SafariZone_West_EventScript_ItemGoldTeeth : Script {
       TODO("port SafariZone_West_EventScript_ItemGoldTeeth")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM32
- * end
- * ```
- */
 internal object SafariZone_West_EventScript_ItemTM32 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SafariZone_West_EventScript_ItemTM32")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM32)
 }
 
 /**

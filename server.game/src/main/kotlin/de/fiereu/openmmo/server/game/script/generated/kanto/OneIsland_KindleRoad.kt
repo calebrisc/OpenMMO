@@ -4,18 +4,24 @@ import de.fiereu.openmmo.dialog.generated.kanto.OneIsland_KindleRoad
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_MARIA, OneIsland_KindleRoad_Text_MariaIntro, OneIsland_KindleRoad_Text_MariaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_MariaRematch
- * msgbox OneIsland_KindleRoad_Text_MariaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CRUSH_GIRL_TANYA = 552
+private const val TRAINER_FISHERMAN_TOMMY = 551
+private const val TRAINER_SWIMMER_MALE_FINN = 549
+
+private const val TRAINER_BLACK_BELT_HUGH = 554
+private const val TRAINER_BLACK_BELT_SHEA = 553
+private const val TRAINER_CAMPER_BRYCE = 555
+private const val TRAINER_SWIMMER_FEMALE_MARIA = 547
+
 internal object OneIsland_KindleRoad_EventScript_Maria : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Maria")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_MARIA,
+        OneIsland_KindleRoad.MariaIntro,
+        OneIsland_KindleRoad.MariaDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.MariaPostBattle)
+  }
 }
 
 /**
@@ -33,18 +39,13 @@ internal object OneIsland_KindleRoad_EventScript_Abigail : Script {
       TODO("port OneIsland_KindleRoad_EventScript_Abigail")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_FINN, OneIsland_KindleRoad_Text_FinnIntro, OneIsland_KindleRoad_Text_FinnDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_FinnRematch
- * msgbox OneIsland_KindleRoad_Text_FinnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Finn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Finn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_FINN, OneIsland_KindleRoad.FinnIntro, OneIsland_KindleRoad.FinnDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.FinnPostBattle)
+  }
 }
 
 /**
@@ -62,18 +63,13 @@ internal object OneIsland_KindleRoad_EventScript_Garrett : Script {
       TODO("port OneIsland_KindleRoad_EventScript_Garrett")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_TOMMY, OneIsland_KindleRoad_Text_TommyIntro, OneIsland_KindleRoad_Text_TommyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_TommyRematch
- * msgbox OneIsland_KindleRoad_Text_TommyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Tommy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Tommy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_TOMMY, OneIsland_KindleRoad.TommyIntro, OneIsland_KindleRoad.TommyDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.TommyPostBattle)
+  }
 }
 
 /**
@@ -91,60 +87,42 @@ internal object OneIsland_KindleRoad_EventScript_Sharon : Script {
       TODO("port OneIsland_KindleRoad_EventScript_Sharon")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CRUSH_GIRL_TANYA, OneIsland_KindleRoad_Text_TanyaIntro, OneIsland_KindleRoad_Text_TanyaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_TanyaRematch
- * msgbox OneIsland_KindleRoad_Text_TanyaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Tanya : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Tanya")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRUSH_GIRL_TANYA,
+        OneIsland_KindleRoad.TanyaIntro,
+        OneIsland_KindleRoad.TanyaDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.TanyaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_SHEA, OneIsland_KindleRoad_Text_SheaIntro, OneIsland_KindleRoad_Text_SheaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_SheaRematch
- * msgbox OneIsland_KindleRoad_Text_SheaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Shea : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Shea")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_SHEA, OneIsland_KindleRoad.SheaIntro, OneIsland_KindleRoad.SheaDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.SheaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_HUGH, OneIsland_KindleRoad_Text_HughIntro, OneIsland_KindleRoad_Text_HughDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_HughRematch
- * msgbox OneIsland_KindleRoad_Text_HughPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Hugh : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Hugh")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_HUGH, OneIsland_KindleRoad.HughIntro, OneIsland_KindleRoad.HughDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.HughPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAMPER_BRYCE, OneIsland_KindleRoad_Text_BryceIntro, OneIsland_KindleRoad_Text_BryceDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_BryceRematch
- * msgbox OneIsland_KindleRoad_Text_BrycePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Bryce : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Bryce")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CAMPER_BRYCE, OneIsland_KindleRoad.BryceIntro, OneIsland_KindleRoad.BryceDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.BrycePostBattle)
+  }
 }
 
 /**

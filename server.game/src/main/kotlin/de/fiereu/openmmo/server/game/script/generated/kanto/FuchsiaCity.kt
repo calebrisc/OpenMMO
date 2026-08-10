@@ -44,19 +44,8 @@ internal object FuchsiaCity_EventScript_SubstituteTutor : Script {
       TODO("port FuchsiaCity_EventScript_SubstituteTutor")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_KOGA, 3
- * msgbox FuchsiaCity_Text_MyFatherIsGymLeader
- * release
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_Lass : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_Lass")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FuchsiaCity.MyFatherIsGymLeader)
 }
 
 internal object FuchsiaCity_EventScript_CitySign : Script {
@@ -67,18 +56,8 @@ internal object FuchsiaCity_EventScript_SafariZoneSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(FuchsiaCity.SafariZoneSign)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * famechecker FAMECHECKER_KOGA, 0
- * msgbox FuchsiaCity_Text_GymSign
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_GymSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_GymSign")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FuchsiaCity.GymSign)
 }
 
 internal object FuchsiaCity_EventScript_WardensHomeSign : Script {

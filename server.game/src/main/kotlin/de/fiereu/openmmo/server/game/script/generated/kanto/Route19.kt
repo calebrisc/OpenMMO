@@ -4,144 +4,103 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route19
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_REECE, Route19_Text_ReeceIntro, Route19_Text_ReeceDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_ReeceRematch
- * msgbox Route19_Text_ReecePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SWIMMER_FEMALE_ALICE = 277
+private const val TRAINER_SWIMMER_FEMALE_ANYA = 276
+private const val TRAINER_SWIMMER_FEMALE_CONNIE = 278
+private const val TRAINER_SWIMMER_MALE_AXLE = 241
+private const val TRAINER_SWIMMER_MALE_DAVID = 239
+private const val TRAINER_SWIMMER_MALE_DOUGLAS = 238
+private const val TRAINER_SWIMMER_MALE_MATTHEW = 237
+private const val TRAINER_SWIMMER_MALE_REECE = 236
+private const val TRAINER_SWIMMER_MALE_RICHARD = 235
+private const val TRAINER_SWIMMER_MALE_TONY = 240
+
 internal object Route19_EventScript_Reece : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Reece")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_REECE, Route19.ReeceIntro, Route19.ReeceDefeat))
+        return
+    ctx.say(Route19.ReecePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_RICHARD, Route19_Text_RichardIntro, Route19_Text_RichardDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_RichardRematch
- * msgbox Route19_Text_RichardPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Richard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Richard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_RICHARD, Route19.RichardIntro, Route19.RichardDefeat))
+        return
+    ctx.say(Route19.RichardPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_TONY, Route19_Text_TonyIntro, Route19_Text_TonyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_TonyRematch
- * msgbox Route19_Text_TonyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Tony : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Tony")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SWIMMER_MALE_TONY, Route19.TonyIntro, Route19.TonyDefeat))
+        return
+    ctx.say(Route19.TonyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_MATTHEW, Route19_Text_MatthewIntro, Route19_Text_MatthewDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_MatthewRematch
- * msgbox Route19_Text_MatthewPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Matthew : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Matthew")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_MATTHEW, Route19.MatthewIntro, Route19.MatthewDefeat))
+        return
+    ctx.say(Route19.MatthewPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_DOUGLAS, Route19_Text_DouglasIntro, Route19_Text_DouglasDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_DouglasRematch
- * msgbox Route19_Text_DouglasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Douglas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Douglas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_DOUGLAS, Route19.DouglasIntro, Route19.DouglasDefeat))
+        return
+    ctx.say(Route19.DouglasPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_DAVID, Route19_Text_DavidIntro, Route19_Text_DavidDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_DavidRematch
- * msgbox Route19_Text_DavidPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_David : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_David")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_DAVID, Route19.DavidIntro, Route19.DavidDefeat))
+        return
+    ctx.say(Route19.DavidPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_AXLE, Route19_Text_AxleIntro, Route19_Text_AxleDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_AxleRematch
- * msgbox Route19_Text_AxlePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Axle : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Axle")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SWIMMER_MALE_AXLE, Route19.AxleIntro, Route19.AxleDefeat))
+        return
+    ctx.say(Route19.AxlePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_ALICE, Route19_Text_AliceIntro, Route19_Text_AliceDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_AliceRematch
- * msgbox Route19_Text_AlicePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Alice : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Alice")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_ALICE, Route19.AliceIntro, Route19.AliceDefeat))
+        return
+    ctx.say(Route19.AlicePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_CONNIE, Route19_Text_ConnieIntro, Route19_Text_ConnieDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_ConnieRematch
- * msgbox Route19_Text_ConniePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Connie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Connie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_CONNIE, Route19.ConnieIntro, Route19.ConnieDefeat))
+        return
+    ctx.say(Route19.ConniePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_ANYA, Route19_Text_AnyaIntro, Route19_Text_AnyaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_AnyaRematch
- * msgbox Route19_Text_AnyaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Anya : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Anya")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_ANYA, Route19.AnyaIntro, Route19.AnyaDefeat))
+        return
+    ctx.say(Route19.AnyaPostBattle)
+  }
 }
 
 /**
