@@ -1,32 +1,19 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonLeague_AgathasRoom
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_AGATHA, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * goto_if_set FLAG_DEFEATED_AGATHA, PokemonLeague_AgathasRoom_EventScript_PostBattle
- * famechecker FAMECHECKER_AGATHA, 0
- * famechecker FAMECHECKER_AGATHA, 4
- * famechecker FAMECHECKER_OAK, 4
- * call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_Intro
- * call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_RematchIntro
- * setflag FLAG_TEMP_3
- * setflag FLAG_TEMP_5
- * call_if_unset FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_AgathasRoom_EventScript_Battle
- * call_if_set FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_AgathasRoom_EventScript_Rematch
- * clearflag FLAG_TEMP_5
- * goto PokemonLeague_AgathasRoom_EventScript_DefeatedAgatha
- * end
- * ```
- */
+private const val AGATHA_ID = 412
+
 internal object PokemonLeague_AgathasRoom_EventScript_Agatha : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PokemonLeague_AgathasRoom_EventScript_Agatha")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isTrainerDefeated(AGATHA_ID)) return ctx.say(PokemonLeague_AgathasRoom.PostBattle)
+    if (!ctx.trainerBattleSingle(
+        AGATHA_ID, PokemonLeague_AgathasRoom.Intro, PokemonLeague_AgathasRoom.Defeat))
+        return
+    ctx.say(PokemonLeague_AgathasRoom.PostBattle)
+  }
 }
 
 internal val PokemonLeague_AgathasRoomScripts: Map<String, Script> =
