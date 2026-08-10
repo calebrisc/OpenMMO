@@ -3,26 +3,19 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.LavenderTown_VolunteerPokemonHouse
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_POKE_FLUTE, LavenderTown_VolunteerPokemonHouse_EventScript_AlreadyHavePokeFlute
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_IdLikeYouToHaveThis
- * checkitemspace ITEM_POKE_FLUTE
- * goto_if_eq VAR_RESULT, FALSE, LavenderTown_VolunteerPokemonHouse_EventScript_NoRoomForPokeFlute
- * setflag FLAG_GOT_POKE_FLUTE
- * giveitem_msg LavenderTown_VolunteerPokemonHouse_Text_ReceivedPokeFluteFromMrFuji, ITEM_POKE_FLUTE, 1, MUS_OBTAIN_KEY_ITEM
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_ExplainPokeFlute
- * release
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_MrFuji : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_MrFuji")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_POKE_FLUTE)) {
+      return ctx.say(LavenderTown_VolunteerPokemonHouse.HasPokeFluteHelpedYou)
+    }
+    ctx.say(LavenderTown_VolunteerPokemonHouse.IdLikeYouToHaveThis)
+    // The flute is a FireRed-only bag item the Emerald-sourced table lacks, so the flag is it.
+    ctx.setFlag(KantoFlags.FLAG_GOT_POKE_FLUTE)
+    ctx.sign(LavenderTown_VolunteerPokemonHouse.ReceivedPokeFluteFromMrFuji)
+    ctx.say(LavenderTown_VolunteerPokemonHouse.ExplainPokeFlute)
+  }
 }
 
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_Nidorino : Script {

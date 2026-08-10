@@ -1,106 +1,94 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.common.enums.Direction
+import de.fiereu.openmmo.dialog.generated.kanto.RocketHideout_B4F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.services.notice
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_GIOVANNI, 0
- * message RocketHideout_B4F_Text_GiovanniIntro
- * waitmessage
- * playbgm MUS_ENCOUNTER_ROCKET, 0
- * waitbuttonpress
- * trainerbattle_no_intro TRAINER_BOSS_GIOVANNI, RocketHideout_B4F_Text_GiovanniDefeat
- * msgbox RocketHideout_B4F_Text_GiovanniPostBattle
- * fadescreen FADE_TO_BLACK
- * closemessage
- * removeobject LOCALID_HIDEOUT_GIOVANNI
- * addobject LOCALID_SILPH_SCOPE
- * clearflag FLAG_HIDE_SILPH_SCOPE
- * setflag FLAG_HIDE_CELADON_ROCKETS
- * famechecker FAMECHECKER_GIOVANNI, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * fadescreen FADE_FROM_BLACK
- * release
- * end
- * ```
- */
+private const val TRAINER_TEAM_ROCKET_GRUNT_16 = 366
+private const val TRAINER_TEAM_ROCKET_GRUNT_17 = 367
+private const val TRAINER_TEAM_ROCKET_GRUNT_18 = 368
+private const val TRAINER_BOSS_GIOVANNI = 348
+
+// The scope is a FireRed-only bag item the Emerald-sourced table lacks, so possession is a flag.
+internal const val GOT_SILPH_SCOPE = "kanto/GOT_SILPH_SCOPE"
+
+// The barrier to Giovanni is a metatile the protocol cannot change, so once both door guards
+// are down the script walks the player through to the boss's room.
+private suspend fun doorGruntsCleared(ctx: ScriptContext) {
+  if (ctx.isTrainerDefeated(TRAINER_TEAM_ROCKET_GRUNT_16) &&
+      ctx.isTrainerDefeated(TRAINER_TEAM_ROCKET_GRUNT_17)) {
+    ctx.send(notice("The barrier to the boss's room released!"))
+    ctx.repositionSelf(19, 6, Direction.UP)
+  }
+}
+
 internal object RocketHideout_B4F_EventScript_Giovanni : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_Giovanni")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isTrainerDefeated(TRAINER_BOSS_GIOVANNI)) return
+    ctx.say(RocketHideout_B4F.GiovanniIntro)
+    if (!ctx.trainerBattleSingle(TRAINER_BOSS_GIOVANNI, null, RocketHideout_B4F.GiovanniDefeat))
+        return
+    ctx.say(RocketHideout_B4F.GiovanniPostBattle)
+    ctx.despawnInteracted()
+    ctx.setFlag(KantoFlags.FLAG_HIDE_HIDEOUT_GIOVANNI)
+    ctx.clearFlag(KantoFlags.FLAG_HIDE_SILPH_SCOPE)
+    ctx.setFlag(KantoFlags.FLAG_HIDE_CELADON_ROCKETS)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * removeobject LOCALID_SILPH_SCOPE
- * giveitem ITEM_SILPH_SCOPE
- * goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
- * release
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_SilphScope : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B4F_EventScript_SilphScope")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setFlag(GOT_SILPH_SCOPE)
+    ctx.despawnInteracted()
+    ctx.send(notice("Found the SILPH SCOPE!"))
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_18, RocketHideout_B4F_Text_Grunt1Intro, RocketHideout_B4F_Text_Grunt1Defeat, RocketHideout_B4F_EventScript_DefeatedGrunt1
- * msgbox RocketHideout_B4F_Text_Grunt1PostBattle
- * release
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_18,
+        RocketHideout_B4F.Grunt1Intro,
+        RocketHideout_B4F.Grunt1Defeat))
+        return
+    ctx.say(RocketHideout_B4F.Grunt1PostBattle)
+    ctx.clearFlag(KantoFlags.FLAG_HIDE_LIFT_KEY)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setflag FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT
- * removeobject LOCALID_LIFT_KEY
- * giveitem ITEM_LIFT_KEY
- * goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
- * release
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_LiftKey : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_LiftKey")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setFlag(KantoFlags.FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT)
+
+    ctx.despawnInteracted()
+    ctx.send(notice("Found the LIFT KEY!"))
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_17, RocketHideout_B4F_Text_Grunt3Intro, RocketHideout_B4F_Text_Grunt3Defeat, RocketHideout_B4F_EventScript_DefeatedGrunt3
- * msgbox RocketHideout_B4F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_17,
+        RocketHideout_B4F.Grunt3Intro,
+        RocketHideout_B4F.Grunt3Defeat))
+        return
+    doorGruntsCleared(ctx)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_16, RocketHideout_B4F_Text_Grunt2Intro, RocketHideout_B4F_Text_Grunt2Defeat, RocketHideout_B4F_EventScript_DefeatedGrunt2
- * msgbox RocketHideout_B4F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RocketHideout_B4F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B4F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_16,
+        RocketHideout_B4F.Grunt2Intro,
+        RocketHideout_B4F.Grunt2Defeat))
+        return
+    doorGruntsCleared(ctx)
+  }
 }
 
 internal object RocketHideout_B4F_EventScript_ItemTM49 : Script {

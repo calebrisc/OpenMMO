@@ -1,63 +1,50 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.common.enums.Direction
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonTower_7F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MRFUJI, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * setflag FLAG_HIDE_TOWER_FUJI
- * clearflag FLAG_HIDE_POKEHOUSE_FUJI
- * setflag FLAG_RESCUED_MR_FUJI
- * msgbox PokemonTower_7F_Text_MrFujiThankYouFollowMe
- * closemessage
- * warp MAP_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE, 4, 7
- * waitstate
- * release
- * end
- * ```
- */
+private const val GRUNT_1_ID = 369
+private const val GRUNT_2_ID = 370
+private const val GRUNT_3_ID = 371
+
 internal object PokemonTower_7F_EventScript_MrFuji : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_7F_EventScript_MrFuji")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setFlag(KantoFlags.FLAG_HIDE_TOWER_FUJI)
+    ctx.clearFlag(KantoFlags.FLAG_HIDE_POKEHOUSE_FUJI)
+    ctx.setFlag(KantoFlags.FLAG_RESCUED_MR_FUJI)
+    ctx.say(PokemonTower_7F.MrFujiThankYouFollowMe)
+    ctx.warp(0, 8, 2, 4, 7, Direction.UP)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_19, PokemonTower_7F_Text_Grunt1Intro, PokemonTower_7F_Text_Grunt1Defeat, PokemonTower_7F_EventScript_DefeatedGrunt1
- * msgbox PokemonTower_7F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_7F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_7F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        GRUNT_1_ID, PokemonTower_7F.Grunt1Intro, PokemonTower_7F.Grunt1Defeat))
+        return
+    ctx.say(PokemonTower_7F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_20, PokemonTower_7F_Text_Grunt2Intro, PokemonTower_7F_Text_Grunt2Defeat, PokemonTower_7F_EventScript_DefeatedGrunt2
- * msgbox PokemonTower_7F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_7F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_7F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        GRUNT_2_ID, PokemonTower_7F.Grunt2Intro, PokemonTower_7F.Grunt2Defeat))
+        return
+    ctx.say(PokemonTower_7F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_21, PokemonTower_7F_Text_Grunt3Intro, PokemonTower_7F_Text_Grunt3Defeat, PokemonTower_7F_EventScript_DefeatedGrunt3
- * msgbox PokemonTower_7F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_7F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_7F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        GRUNT_3_ID, PokemonTower_7F.Grunt3Intro, PokemonTower_7F.Grunt3Defeat))
+        return
+    ctx.say(PokemonTower_7F.Grunt3PostBattle)
+  }
 }
 
 internal val PokemonTower_7FScripts: Map<String, Script> =
