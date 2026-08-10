@@ -17,12 +17,14 @@ import de.fiereu.network.internal.SESSION_KEY
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.ints.shouldBeLessThan
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.netty.buffer.ByteBuf
 import io.netty.channel.Channel
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.embedded.EmbeddedChannel
 import java.security.interfaces.ECPrivateKey
 import java.security.interfaces.ECPublicKey
+import kotlin.time.Duration.Companion.milliseconds
 
 private data class Echo(val value: Int)
 
@@ -189,5 +191,43 @@ class EndToEndHandshakeTest :
         serverChannel.attr(SESSION_KEY).get().send(Echo(0xBABE))
         drain(serverChannel, clientChannel)
         clientApp.received shouldBe listOf(Echo(0xBABE))
+      }
+      test("server rejects a ClientHello whose timestamp exceeds maxHelloSkew") {
+        val rootKeyPair = EcKeys.generateEphemeralKeyPair()
+        val rootPrivate = rootKeyPair.private as ECPrivateKey
+        val rootPublic = rootKeyPair.public as ECPublicKey
+
+        val serverApp = CollectingHandler(Side.SERVER)
+        val clientApp = CollectingHandler(Side.CLIENT)
+
+        val serverOptions = PipelineOptions(checksumSize = 8, maxHelloSkew = 50.milliseconds)
+        val clientOptions = PipelineOptions(checksumSize = 8)
+
+        val serverChannel =
+            embedded(
+                Side.SERVER,
+                SessionIdentity.ServerRoot(rootPrivate),
+                EchoProtocol,
+                serverApp,
+                serverOptions,
+            )
+        // The client stamps its ClientHello with the current time on channel init.
+        val clientChannel =
+            embedded(
+                Side.CLIENT,
+                SessionIdentity.ClientTrust(rootPublic),
+                EchoProtocol,
+                clientApp,
+                clientOptions,
+            )
+
+        // Deliver the hello only after it has become stale.
+        Thread.sleep(150)
+        drain(clientChannel, serverChannel)
+
+        serverChannel.attr(SESSION_KEY).get().phase shouldNotBe SessionPhase.ESTABLISHED
+        serverChannel.isOpen shouldBe false
+        // No ServerHello was sent back.
+        serverChannel.readOutbound<ByteBuf>() shouldBe null
       }
     })

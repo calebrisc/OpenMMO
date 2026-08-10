@@ -35,7 +35,11 @@ internal class ServerSessionHandshakeHandler(
     on<ClientHelloPacket> { event ->
       val skew = abs(System.currentTimeMillis() - event.packet.timestamp)
       if (skew > options.maxHelloSkew.inWholeMilliseconds) {
-        throw StaleClientHelloException(skew)
+        log.warn {
+          "Rejecting ClientHello from ${event.session.remoteAddress}: " +
+              "clock skew ${skew}ms exceeds ${options.maxHelloSkew}"
+        }
+        throw StaleClientHelloException(skew / 1000)
       }
       val publicBytes =
           EcKeys.toUncompressedPoint(
@@ -79,7 +83,7 @@ internal class ServerSessionHandshakeHandler(
           appHandler,
       )
       (event.session as MutableSessionContext).transitionTo(SessionPhase.ESTABLISHED)
-      log.debug { "Handshake complete for ${event.session.remoteAddress}" }
+      log.info { "Handshake complete for ${event.session.remoteAddress}" }
     }
   }
 }
