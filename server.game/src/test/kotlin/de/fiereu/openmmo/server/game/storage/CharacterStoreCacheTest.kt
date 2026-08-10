@@ -116,6 +116,30 @@ class CharacterStoreCacheTest :
         }
       }
 
+      test("a pc monster lives in pcStorage for adds, updates and rollbacks") {
+        runTest {
+          val repo = FakeCharacterRepository()
+          val store = CharacterStore(repo, EntityIdService(), backgroundScope)
+          val created = store.createCharacter(1, "Ash", CharacterGender.MALE, Region.HOENN)
+          val boxed = testPokemon(created.info.id).copy(container = PokemonContainer.PC)
+
+          store.addPokemon(created.info.id, boxed)
+
+          store.getCharacter(created.info.id)!!.pokemon.size shouldBe 0
+          store.getCharacter(created.info.id)!!.pcStorage.single().id shouldBe boxed.id
+
+          store.updatePokemon(created.info.id, boxed.copy(level = 9))
+          store.getCharacter(created.info.id)!!.pcStorage.single().level shouldBe 9.toByte()
+          store.flushAll()
+          repo.saved[created.info.id]!!.pcStorage.single().level shouldBe 9.toByte()
+
+          // A rejected write rolls the box back, not the party.
+          repo.failNextSave = true
+          store.addPokemon(created.info.id, boxed.copy(id = boxed.id + 1, containerSlot = 1))
+          store.getCharacter(created.info.id)!!.pcStorage.size shouldBe 1
+        }
+      }
+
       test("a failed flush keeps the character dirty and retries") {
         runTest {
           val repo = FakeCharacterRepository()
