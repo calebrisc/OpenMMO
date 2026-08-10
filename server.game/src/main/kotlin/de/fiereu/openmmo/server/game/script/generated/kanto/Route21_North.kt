@@ -1,48 +1,38 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Route21_North
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_RONALD, Route21_North_Text_RonaldIntro, Route21_North_Text_RonaldDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_North_EventScript_RonaldRematch
- * msgbox Route21_North_Text_RonaldPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_FISHERMAN_RONALD = 229
+private const val TRAINER_FISHERMAN_WADE = 231
+private const val TRAINER_SWIMMER_MALE_SPENCER = 245
+
 internal object Route21_North_EventScript_Ronald : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_North_EventScript_Ronald")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_RONALD, Route21_North.RonaldIntro, Route21_North.RonaldDefeat))
+        return
+    ctx.say(Route21_North.RonaldPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_WADE, Route21_North_Text_WadeIntro, Route21_North_Text_WadeDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_North_EventScript_WadeRematch
- * msgbox Route21_North_Text_WadePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_North_EventScript_Wade : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_North_EventScript_Wade")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_WADE, Route21_North.WadeIntro, Route21_North.WadeDefeat))
+        return
+    ctx.say(Route21_North.WadePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_SPENCER, Route21_North_Text_SpencerIntro, Route21_North_Text_SpencerDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_North_EventScript_SpencerRematch
- * msgbox Route21_North_Text_SpencerPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_North_EventScript_Spencer : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_North_EventScript_Spencer")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_SPENCER, Route21_North.SpencerIntro, Route21_North.SpencerDefeat))
+        return
+    ctx.say(Route21_North.SpencerPostBattle)
+  }
 }
 
 /**

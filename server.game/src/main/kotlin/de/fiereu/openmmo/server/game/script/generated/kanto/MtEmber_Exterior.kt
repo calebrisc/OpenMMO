@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.MtEmber_Exterior
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_CRUSH_GIRL_JOCELYN = 592
+private const val TRAINER_PKMN_RANGER_BETH = 597
+private const val TRAINER_PKMN_RANGER_LOGAN = 595
 
 /**
  * Not ported yet. Decomp body:
@@ -61,40 +66,31 @@ internal object MtEmber_Exterior_EventScript_Grunt2 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtEmber_Exterior_EventScript_Grunt2")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CRUSH_GIRL_JOCELYN, MtEmber_Exterior_Text_JocelynIntro, MtEmber_Exterior_Text_JocelynDefeat
- * msgbox MtEmber_Exterior_Text_JocelynPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_Jocelyn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtEmber_Exterior_EventScript_Jocelyn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRUSH_GIRL_JOCELYN, MtEmber_Exterior.JocelynIntro, MtEmber_Exterior.JocelynDefeat))
+        return
+    ctx.say(MtEmber_Exterior.JocelynPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_RANGER_LOGAN, MtEmber_Exterior_Text_LoganIntro, MtEmber_Exterior_Text_LoganDefeat
- * msgbox MtEmber_Exterior_Text_LoganPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_Logan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtEmber_Exterior_EventScript_Logan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_RANGER_LOGAN, MtEmber_Exterior.LoganIntro, MtEmber_Exterior.LoganDefeat))
+        return
+    ctx.say(MtEmber_Exterior.LoganPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PKMN_RANGER_BETH, MtEmber_Exterior_Text_BethIntro, MtEmber_Exterior_Text_BethDefeat
- * msgbox MtEmber_Exterior_Text_BethPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_Beth : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtEmber_Exterior_EventScript_Beth")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_PKMN_RANGER_BETH, MtEmber_Exterior.BethIntro, MtEmber_Exterior.BethDefeat))
+        return
+    ctx.say(MtEmber_Exterior.BethPostBattle)
+  }
 }
 
 /**

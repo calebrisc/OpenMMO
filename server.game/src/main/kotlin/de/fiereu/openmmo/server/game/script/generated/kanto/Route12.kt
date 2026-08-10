@@ -1,63 +1,48 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route12
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_NED, Route12_Text_NedIntro, Route12_Text_NedDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_NedRematch
- * msgbox Route12_Text_NedPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CAMPER_JUSTIN = 477
+private const val TRAINER_FISHERMAN_ANDREW = 233
+private const val TRAINER_FISHERMAN_CHIP = 226
+private const val TRAINER_FISHERMAN_ELLIOT = 228
+private const val TRAINER_FISHERMAN_HANK = 227
+private const val TRAINER_FISHERMAN_NED = 225
+private const val TRAINER_ROCKER_LUCA = 285
+
 internal object Route12_EventScript_Ned : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Ned")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_FISHERMAN_NED, Route12.NedIntro, Route12.NedDefeat)) return
+    ctx.say(Route12.NedPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_CHIP, Route12_Text_ChipIntro, Route12_Text_ChipDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_ChipRematch
- * msgbox Route12_Text_ChipPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Chip : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Chip")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_FISHERMAN_CHIP, Route12.ChipIntro, Route12.ChipDefeat))
+        return
+    ctx.say(Route12.ChipPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_HANK, Route12_Text_HankIntro, Route12_Text_HankDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_HankRematch
- * msgbox Route12_Text_HankPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Hank : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Hank")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_FISHERMAN_HANK, Route12.HankIntro, Route12.HankDefeat))
+        return
+    ctx.say(Route12.HankPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_ELLIOT, Route12_Text_ElliotIntro, Route12_Text_ElliotDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_ElliotRematch
- * msgbox Route12_Text_ElliotPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Elliot : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Elliot")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_ELLIOT, Route12.ElliotIntro, Route12.ElliotDefeat))
+        return
+    ctx.say(Route12.ElliotPostBattle)
+  }
 }
 
 /**
@@ -93,68 +78,36 @@ internal object Route12_EventScript_Snorlax : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Snorlax")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ROCKER_LUCA, Route12_Text_LucaIntro, Route12_Text_LucaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_LucaRematch
- * msgbox Route12_Text_LucaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Luca : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Luca")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_ROCKER_LUCA, Route12.LucaIntro, Route12.LucaDefeat)) return
+    ctx.say(Route12.LucaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CAMPER_JUSTIN, Route12_Text_JustinIntro, Route12_Text_JustinDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_JustinRematch
- * msgbox Route12_Text_JustinPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Justin : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Justin")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CAMPER_JUSTIN, Route12.JustinIntro, Route12.JustinDefeat))
+        return
+    ctx.say(Route12.JustinPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_FISHERMAN_ANDREW, Route12_Text_AndrewIntro, Route12_Text_AndrewDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_AndrewRematch
- * msgbox Route12_Text_AndrewPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Andrew : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Andrew")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_FISHERMAN_ANDREW, Route12.AndrewIntro, Route12.AndrewDefeat))
+        return
+    ctx.say(Route12.AndrewPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM48
- * end
- * ```
- */
 internal object Route12_EventScript_ItemTM48 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_ItemTM48")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM48)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_IRON
- * end
- * ```
- */
 internal object Route12_EventScript_ItemIron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_ItemIron")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.IRON)
 }
 
 /**

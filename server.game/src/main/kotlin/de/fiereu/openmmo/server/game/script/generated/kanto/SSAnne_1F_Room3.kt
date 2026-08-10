@@ -8,21 +8,8 @@ internal object SSAnne_1F_Room3_EventScript_LittleGirl : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(SSAnne_1F_Room3.AlwaysTravelWithWigglytuff)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_WIGGLYTUFF, CRY_MODE_NORMAL
- * msgbox SSAnne_1F_Room3_Text_Wigglytuff
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SSAnne_1F_Room3_EventScript_Wigglytuff : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_1F_Room3_EventScript_Wigglytuff")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SSAnne_1F_Room3.Wigglytuff)
 }
 
 internal object SSAnne_1F_Room3_EventScript_BaldingMan : Script {

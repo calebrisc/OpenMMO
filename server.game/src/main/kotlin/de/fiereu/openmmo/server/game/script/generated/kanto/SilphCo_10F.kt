@@ -1,19 +1,20 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_10F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_TRAVIS, SilphCo_10F_Text_TravisIntro, SilphCo_10F_Text_TravisDefeat
- * msgbox SilphCo_10F_Text_TravisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_TRAVIS = 345
+private const val TRAINER_TEAM_ROCKET_GRUNT_39 = 389
+
 internal object SilphCo_10F_EventScript_Travis : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_Travis")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_TRAVIS, SilphCo_10F.TravisIntro, SilphCo_10F.TravisDefeat))
+        return
+    ctx.say(SilphCo_10F.TravisPostBattle)
+  }
 }
 
 /**
@@ -31,49 +32,25 @@ internal object SilphCo_10F_EventScript_WorkerF : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_WorkerF")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_39, SilphCo_10F_Text_GruntIntro, SilphCo_10F_Text_GruntDefeat
- * msgbox SilphCo_10F_Text_GruntPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_10F_EventScript_Grunt : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_Grunt")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_39, SilphCo_10F.GruntIntro, SilphCo_10F.GruntDefeat))
+        return
+    ctx.say(SilphCo_10F.GruntPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CARBOS
- * end
- * ```
- */
 internal object SilphCo_10F_EventScript_ItemCarbos : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_ItemCarbos")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CARBOS)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ULTRA_BALL
- * end
- * ```
- */
 internal object SilphCo_10F_EventScript_ItemUltraBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_ItemUltraBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ULTRA_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_RARE_CANDY
- * end
- * ```
- */
 internal object SilphCo_10F_EventScript_ItemRareCandy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_ItemRareCandy")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.RARE_CANDY)
 }
 
 /**

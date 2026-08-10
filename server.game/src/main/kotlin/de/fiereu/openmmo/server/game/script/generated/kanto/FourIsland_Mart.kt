@@ -22,19 +22,8 @@ internal object FourIsland_Mart_EventScript_Clerk : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_Mart_EventScript_Clerk")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_LORELEI, 2
- * msgbox FourIsland_Mart_Text_LoreleiGrewUpOnThisIsland
- * release
- * end
- * ```
- */
 internal object FourIsland_Mart_EventScript_OldMan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_Mart_EventScript_OldMan")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FourIsland_Mart.LoreleiGrewUpOnThisIsland)
 }
 
 internal object FourIsland_Mart_EventScript_Camper : Script {

@@ -4,52 +4,45 @@ import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_Dojo
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_HITOSHI, SaffronCity_Dojo_Text_HitoshiIntro, SaffronCity_Dojo_Text_HitoshiDefeat
- * msgbox SaffronCity_Dojo_Text_HitoshiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BLACK_BELT_AARON = 320
+private const val TRAINER_BLACK_BELT_HIDEKI = 319
+private const val TRAINER_BLACK_BELT_HITOSHI = 321
+private const val TRAINER_BLACK_BELT_MIKE = 318
+
 internal object SaffronCity_Dojo_EventScript_Hitoshi : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Dojo_EventScript_Hitoshi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_HITOSHI, SaffronCity_Dojo.HitoshiIntro, SaffronCity_Dojo.HitoshiDefeat))
+        return
+    ctx.say(SaffronCity_Dojo.HitoshiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_HIDEKI, SaffronCity_Dojo_Text_HidekiIntro, SaffronCity_Dojo_Text_HidekiDefeat
- * msgbox SaffronCity_Dojo_Text_HidekiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Dojo_EventScript_Hideki : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Dojo_EventScript_Hideki")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_HIDEKI, SaffronCity_Dojo.HidekiIntro, SaffronCity_Dojo.HidekiDefeat))
+        return
+    ctx.say(SaffronCity_Dojo.HidekiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_AARON, SaffronCity_Dojo_Text_AaronIntro, SaffronCity_Dojo_Text_AaronDefeat
- * msgbox SaffronCity_Dojo_Text_AaronPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Dojo_EventScript_Aaron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Dojo_EventScript_Aaron")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_AARON, SaffronCity_Dojo.AaronIntro, SaffronCity_Dojo.AaronDefeat))
+        return
+    ctx.say(SaffronCity_Dojo.AaronPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_MIKE, SaffronCity_Dojo_Text_MikeIntro, SaffronCity_Dojo_Text_MikeDefeat
- * msgbox SaffronCity_Dojo_Text_MikePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Dojo_EventScript_Mike : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Dojo_EventScript_Mike")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_MIKE, SaffronCity_Dojo.MikeIntro, SaffronCity_Dojo.MikeDefeat))
+        return
+    ctx.say(SaffronCity_Dojo.MikePostBattle)
+  }
 }
 
 /**

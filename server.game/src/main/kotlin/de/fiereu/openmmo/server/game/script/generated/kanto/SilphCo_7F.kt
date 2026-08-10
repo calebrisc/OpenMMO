@@ -1,8 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_7F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_SCIENTIST_JOSHUA = 342
+private const val TRAINER_TEAM_ROCKET_GRUNT_33 = 383
+private const val TRAINER_TEAM_ROCKET_GRUNT_34 = 384
+private const val TRAINER_TEAM_ROCKET_GRUNT_35 = 385
 
 /**
  * Not ported yet. Decomp body:
@@ -24,40 +30,31 @@ internal object SilphCo_7F_EventScript_LaprasGuy : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_LaprasGuy")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_33, SilphCo_7F_Text_Grunt1Intro, SilphCo_7F_Text_Grunt1Defeat
- * msgbox SilphCo_7F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_33, SilphCo_7F.Grunt1Intro, SilphCo_7F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_7F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_34, SilphCo_7F_Text_Grunt2Intro, SilphCo_7F_Text_Grunt2Defeat
- * msgbox SilphCo_7F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_34, SilphCo_7F.Grunt2Intro, SilphCo_7F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_7F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_35, SilphCo_7F_Text_Grunt3Intro, SilphCo_7F_Text_Grunt3Defeat
- * msgbox SilphCo_7F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_35, SilphCo_7F.Grunt3Intro, SilphCo_7F.Grunt3Defeat))
+        return
+    ctx.say(SilphCo_7F.Grunt3PostBattle)
+  }
 }
 
 /**
@@ -105,38 +102,21 @@ internal object SilphCo_7F_EventScript_WorkerM2 : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_WorkerM2")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_JOSHUA, SilphCo_7F_Text_JoshuaIntro, SilphCo_7F_Text_JoshuaDefeat
- * msgbox SilphCo_7F_Text_JoshuaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_Joshua : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_Joshua")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_JOSHUA, SilphCo_7F.JoshuaIntro, SilphCo_7F.JoshuaDefeat))
+        return
+    ctx.say(SilphCo_7F.JoshuaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_CALCIUM
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_ItemCalcium : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_ItemCalcium")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.CALCIUM)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM08
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_ItemTM08 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_ItemTM08")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM08)
 }
 
 /**

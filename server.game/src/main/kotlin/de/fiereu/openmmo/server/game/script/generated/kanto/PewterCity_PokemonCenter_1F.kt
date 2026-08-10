@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.PewterCity_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
@@ -29,19 +30,11 @@ internal object PewterCity_PokemonCenter_1F_EventScript_Gentleman : Script {
       ctx.say(PewterCity_PokemonCenter_1F.TeamRocketMtMoonImOnPhone)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * call EventScript_PkmnCenterNurse
- * release
- * end
- * ```
- */
 internal object PewterCity_PokemonCenter_1F_EventScript_Nurse : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_PokemonCenter_1F_EventScript_Nurse")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.healParty()
+    ctx.say(Misc.Text_MonsHealed)
+  }
 }
 
 internal object PewterCity_PokemonCenter_1F_EventScript_Youngster : Script {

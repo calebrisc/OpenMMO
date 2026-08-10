@@ -1,30 +1,28 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.SSAnne_2F_Room4
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GENTLEMAN_LAMAR, SSAnne_2F_Room4_Text_LamarIntro, SSAnne_2F_Room4_Text_LamarDefeat
- * msgbox SSAnne_2F_Room4_Text_LamarPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_GENTLEMAN_LAMAR = 483
+private const val TRAINER_LASS_DAWN = 127
+
 internal object SSAnne_2F_Room4_EventScript_Lamar : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_2F_Room4_EventScript_Lamar")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GENTLEMAN_LAMAR, SSAnne_2F_Room4.LamarIntro, SSAnne_2F_Room4.LamarDefeat))
+        return
+    ctx.say(SSAnne_2F_Room4.LamarPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LASS_DAWN, SSAnne_2F_Room4_Text_DawnIntro, SSAnne_2F_Room4_Text_DawnDefeat
- * msgbox SSAnne_2F_Room4_Text_DawnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSAnne_2F_Room4_EventScript_Dawn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_2F_Room4_EventScript_Dawn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LASS_DAWN, SSAnne_2F_Room4.DawnIntro, SSAnne_2F_Room4.DawnDefeat))
+        return
+    ctx.say(SSAnne_2F_Room4.DawnPostBattle)
+  }
 }
 
 /**

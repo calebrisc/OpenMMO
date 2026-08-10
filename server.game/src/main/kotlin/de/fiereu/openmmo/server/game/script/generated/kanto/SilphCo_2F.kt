@@ -4,52 +4,45 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_2F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_24, SilphCo_2F_Text_Grunt2Intro, SilphCo_2F_Text_Grunt2Defeat
- * msgbox SilphCo_2F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_CONNOR = 336
+private const val TRAINER_SCIENTIST_JERRY = 337
+private const val TRAINER_TEAM_ROCKET_GRUNT_23 = 373
+private const val TRAINER_TEAM_ROCKET_GRUNT_24 = 374
+
 internal object SilphCo_2F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_2F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_24, SilphCo_2F.Grunt2Intro, SilphCo_2F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_2F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_JERRY, SilphCo_2F_Text_JerryIntro, SilphCo_2F_Text_JerryDefeat
- * msgbox SilphCo_2F_Text_JerryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_2F_EventScript_Jerry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_2F_EventScript_Jerry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_JERRY, SilphCo_2F.JerryIntro, SilphCo_2F.JerryDefeat))
+        return
+    ctx.say(SilphCo_2F.JerryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_23, SilphCo_2F_Text_Grunt1Intro, SilphCo_2F_Text_Grunt1Defeat
- * msgbox SilphCo_2F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_2F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_2F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_23, SilphCo_2F.Grunt1Intro, SilphCo_2F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_2F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_CONNOR, SilphCo_2F_Text_ConnorIntro, SilphCo_2F_Text_ConnorDefeat
- * msgbox SilphCo_2F_Text_ConnorPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_2F_EventScript_Connor : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_2F_EventScript_Connor")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_CONNOR, SilphCo_2F.ConnorIntro, SilphCo_2F.ConnorDefeat))
+        return
+    ctx.say(SilphCo_2F.ConnorPostBattle)
+  }
 }
 
 /**

@@ -4,6 +4,10 @@ import de.fiereu.openmmo.dialog.generated.kanto.PokemonMansion_B1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_BURGLAR_LEWIS = 219
+
+private const val TRAINER_SCIENTIST_IVAN = 347
+
 /**
  * Not ported yet. Decomp body:
  * ```
@@ -16,28 +20,22 @@ internal object PokemonMansion_B1F_EventScript_ItemTM22 : Script {
       TODO("port PokemonMansion_B1F_EventScript_ItemTM22")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_LEWIS, PokemonMansion_B1F_Text_LewisIntro, PokemonMansion_B1F_Text_LewisDefeat
- * msgbox PokemonMansion_B1F_Text_LewisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_Lewis : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_B1F_EventScript_Lewis")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_LEWIS, PokemonMansion_B1F.LewisIntro, PokemonMansion_B1F.LewisDefeat))
+        return
+    ctx.say(PokemonMansion_B1F.LewisPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_IVAN, PokemonMansion_B1F_Text_IvanIntro, PokemonMansion_B1F_Text_IvanDefeat
- * msgbox PokemonMansion_B1F_Text_IvanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonMansion_B1F_EventScript_Ivan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_B1F_EventScript_Ivan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_IVAN, PokemonMansion_B1F.IvanIntro, PokemonMansion_B1F.IvanDefeat))
+        return
+    ctx.say(PokemonMansion_B1F.IvanPostBattle)
+  }
 }
 
 /**

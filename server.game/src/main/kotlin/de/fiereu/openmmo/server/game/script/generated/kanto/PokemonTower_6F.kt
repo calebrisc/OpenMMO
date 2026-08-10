@@ -1,42 +1,38 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonTower_6F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_ANGELICA, PokemonTower_6F_Text_AngelicaIntro, PokemonTower_6F_Text_AngelicaDefeat
- * msgbox PokemonTower_6F_Text_AngelicaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CHANNELER_ANGELICA = 451
+private const val TRAINER_CHANNELER_EMILIA = 452
+private const val TRAINER_CHANNELER_JENNIFER = 453
+
 internal object PokemonTower_6F_EventScript_Angelica : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_6F_EventScript_Angelica")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_ANGELICA, PokemonTower_6F.AngelicaIntro, PokemonTower_6F.AngelicaDefeat))
+        return
+    ctx.say(PokemonTower_6F.AngelicaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_JENNIFER, PokemonTower_6F_Text_JenniferIntro, PokemonTower_6F_Text_JenniferDefeat
- * msgbox PokemonTower_6F_Text_JenniferPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_6F_EventScript_Jennifer : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_6F_EventScript_Jennifer")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_JENNIFER, PokemonTower_6F.JenniferIntro, PokemonTower_6F.JenniferDefeat))
+        return
+    ctx.say(PokemonTower_6F.JenniferPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_EMILIA, PokemonTower_6F_Text_EmiliaIntro, PokemonTower_6F_Text_EmiliaDefeat
- * msgbox PokemonTower_6F_Text_EmiliaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_6F_EventScript_Emilia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_6F_EventScript_Emilia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_EMILIA, PokemonTower_6F.EmiliaIntro, PokemonTower_6F.EmiliaDefeat))
+        return
+    ctx.say(PokemonTower_6F.EmiliaPostBattle)
+  }
 }
 
 /**

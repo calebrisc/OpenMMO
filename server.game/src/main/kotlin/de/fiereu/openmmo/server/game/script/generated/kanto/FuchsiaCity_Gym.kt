@@ -1,94 +1,98 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.FuchsiaCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_KAYDEN, FuchsiaCity_Gym_Text_KaydenIntro, FuchsiaCity_Gym_Text_KaydenDefeat
- * msgbox FuchsiaCity_Gym_Text_KaydenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_LEADER_KOGA = 418
+
+private const val TRAINER_JUGGLER_KAYDEN = 292
+private const val TRAINER_JUGGLER_KIRK = 288
+private const val TRAINER_JUGGLER_NATE = 293
+private const val TRAINER_JUGGLER_SHAWN = 289
+private const val TRAINER_TAMER_EDGAR = 295
+private const val TRAINER_TAMER_PHIL = 294
+
 internal object FuchsiaCity_Gym_EventScript_Kayden : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Kayden")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_KAYDEN, FuchsiaCity_Gym.KaydenIntro, FuchsiaCity_Gym.KaydenDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.KaydenPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_SHAWN, FuchsiaCity_Gym_Text_ShawnIntro, FuchsiaCity_Gym_Text_ShawnDefeat
- * msgbox FuchsiaCity_Gym_Text_ShawnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Shawn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Shawn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_SHAWN, FuchsiaCity_Gym.ShawnIntro, FuchsiaCity_Gym.ShawnDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.ShawnPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_KIRK, FuchsiaCity_Gym_Text_KirkIntro, FuchsiaCity_Gym_Text_KirkDefeat
- * famechecker FAMECHECKER_KOGA, 2
- * msgbox FuchsiaCity_Gym_Text_KirkPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Kirk : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Kirk")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_KIRK, FuchsiaCity_Gym.KirkIntro, FuchsiaCity_Gym.KirkDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.KirkPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_EDGAR, FuchsiaCity_Gym_Text_EdgarIntro, FuchsiaCity_Gym_Text_EdgarDefeat
- * msgbox FuchsiaCity_Gym_Text_EdgarPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Edgar : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Edgar")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_EDGAR, FuchsiaCity_Gym.EdgarIntro, FuchsiaCity_Gym.EdgarDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.EdgarPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_PHIL, FuchsiaCity_Gym_Text_PhilIntro, FuchsiaCity_Gym_Text_PhilDefeat
- * msgbox FuchsiaCity_Gym_Text_PhilPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Phil : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Phil")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_PHIL, FuchsiaCity_Gym.PhilIntro, FuchsiaCity_Gym.PhilDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.PhilPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_NATE, FuchsiaCity_Gym_Text_NateIntro, FuchsiaCity_Gym_Text_NateDefeat
- * msgbox FuchsiaCity_Gym_Text_NatePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Nate : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Nate")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_NATE, FuchsiaCity_Gym.NateIntro, FuchsiaCity_Gym.NateDefeat))
+        return
+    ctx.say(FuchsiaCity_Gym.NatePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * famechecker FAMECHECKER_KOGA, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * trainerbattle_single TRAINER_LEADER_KOGA, FuchsiaCity_Gym_Text_KogaIntro, FuchsiaCity_Gym_Text_KogaDefeat, FuchsiaCity_Gym_EventScript_DefeatedKoga, NO_MUSIC
- * goto_if_unset FLAG_GOT_TM06_FROM_KOGA, FuchsiaCity_Gym_EventScript_GiveTM06
- * msgbox FuchsiaCity_Gym_Text_KogaPostBattle
- * release
- * end
- * ```
- */
 internal object FuchsiaCity_Gym_EventScript_Koga : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_Koga")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_KOGA)
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEADER_KOGA, FuchsiaCity_Gym.KogaIntro, FuchsiaCity_Gym.KogaDefeat))
+        return
+    if (firstWin) {
+      ctx.setFlag(KantoFlags.FLAG_DEFEATED_KOGA)
+      ctx.setFlag(KantoFlags.FLAG_BADGE05_GET)
+      ctx.clearFlag(KantoFlags.FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM06_FROM_KOGA)) {
+      ctx.say(FuchsiaCity_Gym.KogaExplainSoulBadge)
+      if (!ctx.giveItem(Items.TM06)) {
+        ctx.say(FuchsiaCity_Gym.MakeSpaceForThis)
+        return
+      }
+      ctx.setFlag(KantoFlags.FLAG_GOT_TM06_FROM_KOGA)
+      ctx.say(FuchsiaCity_Gym.ReceivedTM06FromKoga)
+      ctx.say(FuchsiaCity_Gym.KogaExplainTM06)
+      return
+    }
+    ctx.say(FuchsiaCity_Gym.KogaPostBattle)
+  }
 }
 
 /**

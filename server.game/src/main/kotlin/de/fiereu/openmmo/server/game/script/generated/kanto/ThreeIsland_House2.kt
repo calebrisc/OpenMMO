@@ -8,19 +8,8 @@ internal object ThreeIsland_House2_EventScript_Rocker : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(ThreeIsland_House2.CantMakeThisSpoonBend)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_SABRINA, 1
- * msgbox ThreeIsland_House2_Text_IAdmireSabrina
- * release
- * end
- * ```
- */
 internal object ThreeIsland_House2_EventScript_Man : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_House2_EventScript_Man")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(ThreeIsland_House2.IAdmireSabrina)
 }
 
 internal val ThreeIsland_House2Scripts: Map<String, Script> =

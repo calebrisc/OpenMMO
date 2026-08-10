@@ -1,43 +1,39 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_4F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_27, SilphCo_4F_Text_Grunt2Intro, SilphCo_4F_Text_Grunt2Defeat
- * msgbox SilphCo_4F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_SCIENTIST_RODNEY = 339
+private const val TRAINER_TEAM_ROCKET_GRUNT_26 = 376
+private const val TRAINER_TEAM_ROCKET_GRUNT_27 = 377
+
 internal object SilphCo_4F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_27, SilphCo_4F.Grunt2Intro, SilphCo_4F.Grunt2Defeat))
+        return
+    ctx.say(SilphCo_4F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_26, SilphCo_4F_Text_Grunt1Intro, SilphCo_4F_Text_Grunt1Defeat
- * msgbox SilphCo_4F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_26, SilphCo_4F.Grunt1Intro, SilphCo_4F.Grunt1Defeat))
+        return
+    ctx.say(SilphCo_4F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_RODNEY, SilphCo_4F_Text_RodneyIntro, SilphCo_4F_Text_RodneyDefeat
- * msgbox SilphCo_4F_Text_RodneyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_Rodney : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_Rodney")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_RODNEY, SilphCo_4F.RodneyIntro, SilphCo_4F.RodneyDefeat))
+        return
+    ctx.say(SilphCo_4F.RodneyPostBattle)
+  }
 }
 
 /**
@@ -55,48 +51,20 @@ internal object SilphCo_4F_EventScript_WorkerM : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_WorkerM")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_MAX_REVIVE
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_ItemMaxRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_ItemMaxRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ESCAPE_ROPE
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_ItemEscapeRope : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_ItemEscapeRope")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ESCAPE_ROPE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_FULL_HEAL
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_ItemFullHeal : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_ItemFullHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_HEAL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM41
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_ItemTM41 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_ItemTM41")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM41)
 }
 
 /**

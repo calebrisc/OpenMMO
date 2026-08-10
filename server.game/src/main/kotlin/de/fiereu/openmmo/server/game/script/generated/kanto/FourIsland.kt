@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.FourIsland
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -40,45 +41,20 @@ internal object FourIsland_EventScript_OldWoman : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_OldWoman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_STAR_PIECE
- * end
- * ```
- */
 internal object FourIsland_EventScript_ItemStarPiece : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_ItemStarPiece")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.STAR_PIECE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_STARDUST
- * end
- * ```
- */
 internal object FourIsland_EventScript_ItemStardust : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_ItemStardust")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.STARDUST)
 }
 
 internal object FourIsland_EventScript_FatMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FourIsland.MadeSlushieUsingIcefallCaveIce)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_LORELEI, 4
- * msgbox FourIsland_Text_LoreleiHasLotsOfStuffedDolls
- * release
- * end
- * ```
- */
 internal object FourIsland_EventScript_LittleGirl : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_LittleGirl")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(FourIsland.LoreleiHasLotsOfStuffedDolls)
 }
 
 internal object FourIsland_EventScript_IslandSign : Script {

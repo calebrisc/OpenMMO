@@ -1,180 +1,112 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route11
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_EDDIE, Route11_Text_EddieIntro, Route11_Text_EddieDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_EddieRematch
- * msgbox Route11_Text_EddiePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_ENGINEER_BERNIE = 222
+private const val TRAINER_ENGINEER_BRAXTON = 221
+private const val TRAINER_GAMER_DARIAN = 261
+private const val TRAINER_GAMER_DIRK = 260
+private const val TRAINER_GAMER_HUGO = 258
+private const val TRAINER_GAMER_JASPER = 259
+private const val TRAINER_YOUNGSTER_DAVE = 100
+private const val TRAINER_YOUNGSTER_DILLON = 98
+private const val TRAINER_YOUNGSTER_EDDIE = 97
+private const val TRAINER_YOUNGSTER_YASU = 99
+
 internal object Route11_EventScript_Eddie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Eddie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_EDDIE, Route11.EddieIntro, Route11.EddieDefeat))
+        return
+    ctx.say(Route11.EddiePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GAMER_HUGO, Route11_Text_HugoIntro, Route11_Text_HugoDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_HugoRematch
- * msgbox Route11_Text_HugoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Hugo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Hugo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_GAMER_HUGO, Route11.HugoIntro, Route11.HugoDefeat)) return
+    ctx.say(Route11.HugoPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_DILLON, Route11_Text_DillonIntro, Route11_Text_DillonDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_DillonRematch
- * msgbox Route11_Text_DillonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Dillon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Dillon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNGSTER_DILLON, Route11.DillonIntro, Route11.DillonDefeat))
+        return
+    ctx.say(Route11.DillonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_DAVE, Route11_Text_DaveIntro, Route11_Text_DaveDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_DaveRematch
- * msgbox Route11_Text_DavePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Dave : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Dave")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_DAVE, Route11.DaveIntro, Route11.DaveDefeat))
+        return
+    ctx.say(Route11.DavePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GAMER_JASPER, Route11_Text_JasperIntro, Route11_Text_JasperDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_JasperRematch
- * msgbox Route11_Text_JasperPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Jasper : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Jasper")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_GAMER_JASPER, Route11.JasperIntro, Route11.JasperDefeat))
+        return
+    ctx.say(Route11.JasperPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GAMER_DARIAN, Route11_Text_DarianIntro, Route11_Text_DarianDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_DarianRematch
- * msgbox Route11_Text_DarianPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Darian : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Darian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_GAMER_DARIAN, Route11.DarianIntro, Route11.DarianDefeat))
+        return
+    ctx.say(Route11.DarianPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ENGINEER_BRAXTON, Route11_Text_BraxtonIntro, Route11_Text_BraxtonDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_BraxtonRematch
- * msgbox Route11_Text_BraxtonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Braxton : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Braxton")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ENGINEER_BRAXTON, Route11.BraxtonIntro, Route11.BraxtonDefeat))
+        return
+    ctx.say(Route11.BraxtonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_YASU, Route11_Text_YasuIntro, Route11_Text_YasuDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_YasuRematch
- * msgbox Route11_Text_YasuPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Yasu : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Yasu")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNGSTER_YASU, Route11.YasuIntro, Route11.YasuDefeat))
+        return
+    ctx.say(Route11.YasuPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GAMER_DIRK, Route11_Text_DirkIntro, Route11_Text_DirkDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_DirkRematch
- * msgbox Route11_Text_DirkPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Dirk : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Dirk")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_GAMER_DIRK, Route11.DirkIntro, Route11.DirkDefeat)) return
+    ctx.say(Route11.DirkPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_ENGINEER_BERNIE, Route11_Text_BernieIntro, Route11_Text_BernieDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route11_EventScript_BernieRematch
- * msgbox Route11_Text_BerniePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route11_EventScript_Bernie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_Bernie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_ENGINEER_BERNIE, Route11.BernieIntro, Route11.BernieDefeat))
+        return
+    ctx.say(Route11.BerniePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_X_DEFEND
- * end
- * ```
- */
 internal object Route11_EventScript_ItemXDefend : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_ItemXDefend")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.X_DEFEND)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_GREAT_BALL
- * end
- * ```
- */
 internal object Route11_EventScript_ItemGreatBall : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_ItemGreatBall")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.GREAT_BALL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_AWAKENING
- * end
- * ```
- */
 internal object Route11_EventScript_ItemAwakening : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route11_EventScript_ItemAwakening")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.AWAKENING)
 }
 
 internal object Route11_EventScript_DiglettsCaveSign : Script {

@@ -1,7 +1,10 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.SixIsland_PatternBush
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_YOUNGSTER_NASH = 614
 
 /**
  * Not ported yet. Decomp body:
@@ -68,16 +71,13 @@ internal object SixIsland_PatternBush_EventScript_Vance : Script {
       TODO("port SixIsland_PatternBush_EventScript_Vance")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_YOUNGSTER_NASH, SixIsland_PatternBush_Text_NashIntro, SixIsland_PatternBush_Text_NashDefeat
- * msgbox SixIsland_PatternBush_Text_NashPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_PatternBush_EventScript_Nash : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_PatternBush_EventScript_Nash")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNGSTER_NASH, SixIsland_PatternBush.NashIntro, SixIsland_PatternBush.NashDefeat))
+        return
+    ctx.say(SixIsland_PatternBush.NashPostBattle)
+  }
 }
 
 /**

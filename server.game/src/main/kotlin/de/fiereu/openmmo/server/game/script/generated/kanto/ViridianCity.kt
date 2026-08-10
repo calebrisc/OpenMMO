@@ -22,11 +22,23 @@ internal object ViridianCity_OnTransition : Script {
       0 -> ctx.repositionNpc(LOCALID_TUTORIAL_MAN, 21, 11)
       1 -> ctx.repositionNpc(LOCALID_TUTORIAL_MAN, 21, 8)
     }
-    // TODO Unlock the Viridian gym once seven badges are in
-    //  The decomp checks FLAG_BADGE02_GET through FLAG_BADGE07_GET here. Badges are not tracked
-    //  yet, so the gym door stays locked.
+    // With the seven other badges in, the door trigger's var flips and the gym opens.
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_VIRIDIAN_CITY_GYM_DOOR) == 0 &&
+        BADGES_BEFORE_VIRIDIAN.all(ctx::isFlagSet)) {
+      ctx.setVar(KantoVars.VAR_MAP_SCENE_VIRIDIAN_CITY_GYM_DOOR, 1)
+    }
   }
 }
+
+private val BADGES_BEFORE_VIRIDIAN =
+    listOf(
+        KantoFlags.FLAG_BADGE02_GET,
+        KantoFlags.FLAG_BADGE03_GET,
+        KantoFlags.FLAG_BADGE04_GET,
+        KantoFlags.FLAG_BADGE05_GET,
+        KantoFlags.FLAG_BADGE06_GET,
+        KantoFlags.FLAG_BADGE07_GET,
+    )
 
 internal object ViridianCity_EventScript_RoadBlocked : Script {
   override suspend fun run(ctx: ScriptContext) {

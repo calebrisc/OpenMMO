@@ -4,159 +4,106 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route20
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_MELISSA, Route20_Text_MelissaIntro, Route20_Text_MelissaDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_MelissaRematch
- * msgbox Route20_Text_MelissaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BIRD_KEEPER_ROGER = 310
+private const val TRAINER_PICNICKER_IRENE = 473
+private const val TRAINER_PICNICKER_MISSY = 472
+private const val TRAINER_SWIMMER_FEMALE_MELISSA = 272
+private const val TRAINER_SWIMMER_FEMALE_NORA = 271
+private const val TRAINER_SWIMMER_FEMALE_SHIRLEY = 279
+private const val TRAINER_SWIMMER_FEMALE_TIFFANY = 270
+private const val TRAINER_SWIMMER_MALE_BARRY = 242
+private const val TRAINER_SWIMMER_MALE_DARRIN = 244
+private const val TRAINER_SWIMMER_MALE_DEAN = 243
+
 internal object Route20_EventScript_Melissa : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Melissa")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_MELISSA, Route20.MelissaIntro, Route20.MelissaDefeat))
+        return
+    ctx.say(Route20.MelissaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_MISSY, Route20_Text_MissyIntro, Route20_Text_MissyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_MissyRematch
- * msgbox Route20_Text_MissyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Missy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Missy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_PICNICKER_MISSY, Route20.MissyIntro, Route20.MissyDefeat))
+        return
+    ctx.say(Route20.MissyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_NORA, Route20_Text_NoraIntro, Route20_Text_NoraDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_NoraRematch
- * msgbox Route20_Text_NoraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Nora : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Nora")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_NORA, Route20.NoraIntro, Route20.NoraDefeat))
+        return
+    ctx.say(Route20.NoraPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_ROGER, Route20_Text_RogerIntro, Route20_Text_RogerDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_RogerRematch
- * msgbox Route20_Text_RogerPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Roger : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Roger")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_ROGER, Route20.RogerIntro, Route20.RogerDefeat))
+        return
+    ctx.say(Route20.RogerPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_DEAN, Route20_Text_DeanIntro, Route20_Text_DeanDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_DeanRematch
- * msgbox Route20_Text_DeanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Dean : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Dean")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SWIMMER_MALE_DEAN, Route20.DeanIntro, Route20.DeanDefeat))
+        return
+    ctx.say(Route20.DeanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_PICNICKER_IRENE, Route20_Text_IreneIntro, Route20_Text_IreneDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_IreneRematch
- * msgbox Route20_Text_IrenePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Irene : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Irene")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_PICNICKER_IRENE, Route20.IreneIntro, Route20.IreneDefeat))
+        return
+    ctx.say(Route20.IrenePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_BARRY, Route20_Text_BarryIntro, Route20_Text_BarryDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_BarryRematch
- * msgbox Route20_Text_BarryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Barry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Barry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_BARRY, Route20.BarryIntro, Route20.BarryDefeat))
+        return
+    ctx.say(Route20.BarryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_MALE_DARRIN, Route20_Text_DarrinIntro, Route20_Text_DarrinDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_DarrinRematch
- * msgbox Route20_Text_DarrinPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Darrin : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Darrin")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_MALE_DARRIN, Route20.DarrinIntro, Route20.DarrinDefeat))
+        return
+    ctx.say(Route20.DarrinPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_SHIRLEY, Route20_Text_ShirleyIntro, Route20_Text_ShirleyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_ShirleyRematch
- * msgbox Route20_Text_ShirleyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Shirley : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Shirley")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_SHIRLEY, Route20.ShirleyIntro, Route20.ShirleyDefeat))
+        return
+    ctx.say(Route20.ShirleyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SWIMMER_FEMALE_TIFFANY, Route20_Text_TiffanyIntro, Route20_Text_TiffanyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_TiffanyRematch
- * msgbox Route20_Text_TiffanyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route20_EventScript_Tiffany : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Tiffany")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SWIMMER_FEMALE_TIFFANY, Route20.TiffanyIntro, Route20.TiffanyDefeat))
+        return
+    ctx.say(Route20.TiffanyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_MISTY, 3
- * msgbox Route20_Text_MistyTrainsHere
- * release
- * end
- * ```
- */
 internal object Route20_EventScript_Camper : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route20_EventScript_Camper")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route20.MistyTrainsHere)
 }
 
 internal object Route20_EventScript_SeafoamIslandsSign : Script {

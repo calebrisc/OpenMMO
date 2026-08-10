@@ -1,51 +1,30 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route4
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_LASS_CRISSY = 119
 
 internal object Route4_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route4.TrippedOverGeodude)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_LASS_CRISSY, Route4_Text_CrissyIntro, Route4_Text_CrissyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route4_EventScript_CrissyRematch
- * msgbox Route4_Text_CrissyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route4_EventScript_Crissy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route4_EventScript_Crissy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LASS_CRISSY, Route4.CrissyIntro, Route4.CrissyDefeat))
+        return
+    ctx.say(Route4.CrissyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM05
- * end
- * ```
- */
 internal object Route4_EventScript_ItemTM05 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route4_EventScript_ItemTM05")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM05)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * famechecker FAMECHECKER_BROCK, 3
- * msgbox Route4_Text_PeopleLikeAndRespectBrock
- * release
- * end
- * ```
- */
 internal object Route4_EventScript_Boy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route4_EventScript_Boy")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(Route4.PeopleLikeAndRespectBrock)
 }
 
 /**

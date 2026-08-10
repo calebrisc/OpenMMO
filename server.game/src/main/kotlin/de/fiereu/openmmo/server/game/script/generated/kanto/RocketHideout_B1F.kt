@@ -1,54 +1,52 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.RocketHideout_B1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_9, RocketHideout_B1F_Text_Grunt2Intro, RocketHideout_B1F_Text_Grunt2Defeat
- * msgbox RocketHideout_B1F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_TEAM_ROCKET_GRUNT_10 = 360
+private const val TRAINER_TEAM_ROCKET_GRUNT_11 = 361
+private const val TRAINER_TEAM_ROCKET_GRUNT_8 = 358
+private const val TRAINER_TEAM_ROCKET_GRUNT_9 = 359
+
 internal object RocketHideout_B1F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B1F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_9, RocketHideout_B1F.Grunt2Intro, RocketHideout_B1F.Grunt2Defeat))
+        return
+    ctx.say(RocketHideout_B1F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_8, RocketHideout_B1F_Text_Grunt1Intro, RocketHideout_B1F_Text_Grunt1Defeat
- * msgbox RocketHideout_B1F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RocketHideout_B1F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B1F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_8, RocketHideout_B1F.Grunt1Intro, RocketHideout_B1F.Grunt1Defeat))
+        return
+    ctx.say(RocketHideout_B1F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_11, RocketHideout_B1F_Text_Grunt4Intro, RocketHideout_B1F_Text_Grunt4Defeat
- * msgbox RocketHideout_B1F_Text_Grunt4PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RocketHideout_B1F_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B1F_EventScript_Grunt4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_11,
+        RocketHideout_B1F.Grunt4Intro,
+        RocketHideout_B1F.Grunt4Defeat))
+        return
+    ctx.say(RocketHideout_B1F.Grunt4PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_10, RocketHideout_B1F_Text_Grunt3Intro, RocketHideout_B1F_Text_Grunt3Defeat
- * msgbox RocketHideout_B1F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object RocketHideout_B1F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port RocketHideout_B1F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_10,
+        RocketHideout_B1F.Grunt3Intro,
+        RocketHideout_B1F.Grunt3Defeat))
+        return
+    ctx.say(RocketHideout_B1F.Grunt3PostBattle)
+  }
 }
 
 /**

@@ -1,66 +1,59 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.VictoryRoad_2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_POKEMANIAC_DAWSON, VictoryRoad_2F_Text_DawsonIntro, VictoryRoad_2F_Text_DawsonDefeat
- * msgbox VictoryRoad_2F_Text_DawsonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BLACK_BELT_DAISUKE = 325
+private const val TRAINER_JUGGLER_GREGORY = 290
+private const val TRAINER_JUGGLER_NELSON = 287
+private const val TRAINER_POKEMANIAC_DAWSON = 167
+private const val TRAINER_TAMER_VINCENT = 298
+
 internal object VictoryRoad_2F_EventScript_Dawson : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_Dawson")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_POKEMANIAC_DAWSON, VictoryRoad_2F.DawsonIntro, VictoryRoad_2F.DawsonDefeat))
+        return
+    ctx.say(VictoryRoad_2F.DawsonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_DAISUKE, VictoryRoad_2F_Text_DaisukeIntro, VictoryRoad_2F_Text_DaisukeDefeat
- * msgbox VictoryRoad_2F_Text_DaisukePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_Daisuke : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_Daisuke")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_DAISUKE, VictoryRoad_2F.DaisukeIntro, VictoryRoad_2F.DaisukeDefeat))
+        return
+    ctx.say(VictoryRoad_2F.DaisukePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_NELSON, VictoryRoad_2F_Text_NelsonIntro, VictoryRoad_2F_Text_NelsonDefeat
- * msgbox VictoryRoad_2F_Text_NelsonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_Nelson : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_Nelson")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_NELSON, VictoryRoad_2F.NelsonIntro, VictoryRoad_2F.NelsonDefeat))
+        return
+    ctx.say(VictoryRoad_2F.NelsonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_VINCENT, VictoryRoad_2F_Text_VincentIntro, VictoryRoad_2F_Text_VincentDefeat
- * msgbox VictoryRoad_2F_Text_VincentPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_Vincent : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_Vincent")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_VINCENT, VictoryRoad_2F.VincentIntro, VictoryRoad_2F.VincentDefeat))
+        return
+    ctx.say(VictoryRoad_2F.VincentPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_JUGGLER_GREGORY, VictoryRoad_2F_Text_GregoryIntro, VictoryRoad_2F_Text_GregoryDefeat
- * msgbox VictoryRoad_2F_Text_GregoryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_Gregory : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_Gregory")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_JUGGLER_GREGORY, VictoryRoad_2F.GregoryIntro, VictoryRoad_2F.GregoryDefeat))
+        return
+    ctx.say(VictoryRoad_2F.GregoryPostBattle)
+  }
 }
 
 /**
@@ -75,15 +68,8 @@ internal object VictoryRoad_2F_EventScript_ItemGuardSpec : Script {
       TODO("port VictoryRoad_2F_EventScript_ItemGuardSpec")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM07
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_ItemTM07 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_ItemTM07")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM07)
 }
 
 /**
@@ -98,15 +84,8 @@ internal object VictoryRoad_2F_EventScript_ItemFullHeal : Script {
       TODO("port VictoryRoad_2F_EventScript_ItemFullHeal")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM37
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_ItemTM37 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_2F_EventScript_ItemTM37")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM37)
 }
 
 /**

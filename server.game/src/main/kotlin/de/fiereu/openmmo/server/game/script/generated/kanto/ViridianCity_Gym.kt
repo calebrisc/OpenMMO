@@ -1,121 +1,118 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.ViridianCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_TAKASHI, ViridianCity_Gym_Text_TakashiIntro, ViridianCity_Gym_Text_TakashiDefeat
- * msgbox ViridianCity_Gym_Text_TakashiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_LEADER_GIOVANNI = 350
+
+private const val TRAINER_BLACK_BELT_ATSUSHI = 322
+private const val TRAINER_BLACK_BELT_KIYO = 323
+private const val TRAINER_BLACK_BELT_TAKASHI = 324
+private const val TRAINER_COOLTRAINER_SAMUEL = 392
+private const val TRAINER_COOLTRAINER_WARREN = 401
+private const val TRAINER_COOLTRAINER_YUJI = 400
+private const val TRAINER_TAMER_COLE = 297
+private const val TRAINER_TAMER_JASON = 296
+
 internal object ViridianCity_Gym_EventScript_Takashi : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Takashi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_TAKASHI, ViridianCity_Gym.TakashiIntro, ViridianCity_Gym.TakashiDefeat))
+        return
+    ctx.say(ViridianCity_Gym.TakashiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COOLTRAINER_YUJI, ViridianCity_Gym_Text_YujiIntro, ViridianCity_Gym_Text_YujiDefeat
- * msgbox ViridianCity_Gym_Text_YujiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Yuji : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Yuji")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOLTRAINER_YUJI, ViridianCity_Gym.YujiIntro, ViridianCity_Gym.YujiDefeat))
+        return
+    ctx.say(ViridianCity_Gym.YujiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_ATSUSHI, ViridianCity_Gym_Text_AtsushiIntro, ViridianCity_Gym_Text_AtsushiDefeat
- * msgbox ViridianCity_Gym_Text_AtsushiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Atsushi : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Atsushi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_ATSUSHI, ViridianCity_Gym.AtsushiIntro, ViridianCity_Gym.AtsushiDefeat))
+        return
+    ctx.say(ViridianCity_Gym.AtsushiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_JASON, ViridianCity_Gym_Text_JasonIntro, ViridianCity_Gym_Text_JasonDefeat
- * msgbox ViridianCity_Gym_Text_JasonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Jason : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Jason")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_JASON, ViridianCity_Gym.JasonIntro, ViridianCity_Gym.JasonDefeat))
+        return
+    ctx.say(ViridianCity_Gym.JasonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TAMER_COLE, ViridianCity_Gym_Text_ColeIntro, ViridianCity_Gym_Text_ColeDefeat
- * msgbox ViridianCity_Gym_Text_ColePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Cole : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Cole")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TAMER_COLE, ViridianCity_Gym.ColeIntro, ViridianCity_Gym.ColeDefeat))
+        return
+    ctx.say(ViridianCity_Gym.ColePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_KIYO, ViridianCity_Gym_Text_KiyoIntro, ViridianCity_Gym_Text_KiyoDefeat
- * msgbox ViridianCity_Gym_Text_KiyoPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Kiyo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Kiyo")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_KIYO, ViridianCity_Gym.KiyoIntro, ViridianCity_Gym.KiyoDefeat))
+        return
+    ctx.say(ViridianCity_Gym.KiyoPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COOLTRAINER_SAMUEL, ViridianCity_Gym_Text_SamuelIntro, ViridianCity_Gym_Text_SamuelDefeat
- * msgbox ViridianCity_Gym_Text_SamuelPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Samuel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Samuel")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOLTRAINER_SAMUEL, ViridianCity_Gym.SamuelIntro, ViridianCity_Gym.SamuelDefeat))
+        return
+    ctx.say(ViridianCity_Gym.SamuelPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * famechecker FAMECHECKER_GIOVANNI, FCPICKSTATE_COLORED, UpdatePickStateFromSpecialVar8005
- * trainerbattle_single TRAINER_LEADER_GIOVANNI, ViridianCity_Gym_Text_GiovanniIntro, ViridianCity_Gym_Text_GiovanniDefeat, ViridianCity_Gym_EventScript_DefeatedGiovanni, NO_MUSIC
- * goto_if_unset FLAG_GOT_TM26_FROM_GIOVANNI, ViridianCity_Gym_EventScript_GiveTM26
- * msgbox ViridianCity_Gym_Text_GiovanniPostBattle
- * closemessage
- * fadescreen FADE_TO_BLACK
- * removeobject LOCALID_VIRIDIAN_GIOVANNI
- * fadescreen FADE_FROM_BLACK
- * release
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Giovanni : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Giovanni")
+  override suspend fun run(ctx: ScriptContext) {
+    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_GIOVANNI)
+    if (!ctx.trainerBattleSingle(TRAINER_LEADER_GIOVANNI, ViridianCity_Gym.GiovanniIntro)) return
+    if (firstWin) {
+      ctx.setFlag(KantoFlags.FLAG_DEFEATED_LEADER_GIOVANNI)
+      ctx.setFlag(KantoFlags.FLAG_BADGE08_GET)
+      ctx.setFlag(KantoFlags.FLAG_HIDE_MISC_KANTO_ROCKETS)
+      ctx.setVar(KantoVars.VAR_MAP_SCENE_ROUTE22, 3)
+    }
+    if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM26_FROM_GIOVANNI)) {
+      ctx.say(ViridianCity_Gym.ExplainEarthBadgeTakeThis)
+      if (!ctx.giveItem(Items.TM26)) {
+        ctx.say(ViridianCity_Gym.YouDoNotHaveSpace)
+        return
+      }
+      ctx.setFlag(KantoFlags.FLAG_GOT_TM26_FROM_GIOVANNI)
+      ctx.say(ViridianCity_Gym.ReceivedTM26FromGiovanni)
+      ctx.say(ViridianCity_Gym.ExplainTM26)
+      return
+    }
+    ctx.say(ViridianCity_Gym.GiovanniPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_COOLTRAINER_WARREN, ViridianCity_Gym_Text_WarrenIntro, ViridianCity_Gym_Text_WarrenDefeat
- * msgbox ViridianCity_Gym_Text_WarrenPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ViridianCity_Gym_EventScript_Warren : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_Warren")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOLTRAINER_WARREN, ViridianCity_Gym.WarrenIntro, ViridianCity_Gym.WarrenDefeat))
+        return
+    ctx.say(ViridianCity_Gym.WarrenPostBattle)
+  }
 }
 
 /**

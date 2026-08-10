@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.LavenderTown_House1
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -19,21 +20,8 @@ internal object LavenderTown_House1_EventScript_CooltrainerF : Script {
       TODO("port LavenderTown_House1_EventScript_CooltrainerF")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_CUBONE, CRY_MODE_NORMAL
- * msgbox LavenderTown_House1_Text_Cubone
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object LavenderTown_House1_EventScript_Cubone : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port LavenderTown_House1_EventScript_Cubone")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(LavenderTown_House1.Cubone)
 }
 
 internal val LavenderTown_House1Scripts: Map<String, Script> =

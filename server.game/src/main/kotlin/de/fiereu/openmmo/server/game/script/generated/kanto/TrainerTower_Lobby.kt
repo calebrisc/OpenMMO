@@ -1,21 +1,15 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.TrainerTower_Lobby
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * call EventScript_PkmnCenterNurse
- * release
- * end
- * ```
- */
 internal object TrainerTower_Lobby_EventScript_Nurse : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port TrainerTower_Lobby_EventScript_Nurse")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.healParty()
+    ctx.say(Misc.Text_MonsHealed)
+  }
 }
 
 /**

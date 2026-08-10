@@ -1,7 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.MtMoon_B2F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_TEAM_ROCKET_GRUNT = 351
+private const val TRAINER_TEAM_ROCKET_GRUNT_2 = 352
+private const val TRAINER_TEAM_ROCKET_GRUNT_3 = 353
+private const val TRAINER_TEAM_ROCKET_GRUNT_4 = 354
 
 /**
  * Not ported yet. Decomp body:
@@ -81,96 +88,56 @@ internal object MtMoon_B2F_EventScript_Miguel : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Miguel")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_4, MtMoon_B2F_Text_Grunt4Intro, MtMoon_B2F_Text_Grunt4Defeat
- * msgbox MtMoon_B2F_Text_Grunt4PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_Grunt4 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Grunt4")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_4, MtMoon_B2F.Grunt4Intro, MtMoon_B2F.Grunt4Defeat))
+        return
+    ctx.say(MtMoon_B2F.Grunt4PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT, MtMoon_B2F_Text_Grunt1Intro, MtMoon_B2F_Text_Grunt1Defeat
- * msgbox MtMoon_B2F_Text_Grunt1PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_Grunt1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Grunt1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT, MtMoon_B2F.Grunt1Intro, MtMoon_B2F.Grunt1Defeat))
+        return
+    ctx.say(MtMoon_B2F.Grunt1PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_3, MtMoon_B2F_Text_Grunt3Intro, MtMoon_B2F_Text_Grunt3Defeat
- * msgbox MtMoon_B2F_Text_Grunt3PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_Grunt3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Grunt3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_3, MtMoon_B2F.Grunt3Intro, MtMoon_B2F.Grunt3Defeat))
+        return
+    ctx.say(MtMoon_B2F.Grunt3PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_2, MtMoon_B2F_Text_Grunt2Intro, MtMoon_B2F_Text_Grunt2Defeat
- * msgbox MtMoon_B2F_Text_Grunt2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_Grunt2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Grunt2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_2, MtMoon_B2F.Grunt2Intro, MtMoon_B2F.Grunt2Defeat))
+        return
+    ctx.say(MtMoon_B2F.Grunt2PostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_STAR_PIECE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_ItemStarPiece : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_ItemStarPiece")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.STAR_PIECE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM46
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_ItemTM46 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_ItemTM46")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM46)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_REVIVE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_ItemRevive : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_ItemRevive")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.REVIVE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ANTIDOTE
- * end
- * ```
- */
 internal object MtMoon_B2F_EventScript_ItemAntidote : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_ItemAntidote")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ANTIDOTE)
 }
 
 internal val MtMoon_B2FScripts: Map<String, Script> =

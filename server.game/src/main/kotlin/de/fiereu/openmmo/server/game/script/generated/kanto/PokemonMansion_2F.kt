@@ -1,19 +1,19 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonMansion_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_ARNIE, PokemonMansion_1F_Text_ArnieIntro, PokemonMansion_1F_Text_ArnieDefeat
- * msgbox PokemonMansion_1F_Text_ArniePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BURGLAR_ARNIE = 216
+
 internal object PokemonMansion_2F_EventScript_Arnie : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_2F_EventScript_Arnie")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_ARNIE, PokemonMansion_1F.ArnieIntro, PokemonMansion_1F.ArnieDefeat))
+        return
+    ctx.say(PokemonMansion_1F.ArniePostBattle)
+  }
 }
 
 /**
@@ -28,26 +28,12 @@ internal object PokemonMansion_2F_EventScript_ItemCalcium : Script {
       TODO("port PokemonMansion_2F_EventScript_ItemCalcium")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ZINC
- * end
- * ```
- */
 internal object PokemonMansion_2F_EventScript_ItemZinc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_2F_EventScript_ItemZinc")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ZINC)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_HP_UP
- * end
- * ```
- */
 internal object PokemonMansion_2F_EventScript_ItemHPUp : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonMansion_2F_EventScript_ItemHPUp")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.HP_UP)
 }
 
 /**

@@ -4,144 +4,100 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route14
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIKER_GERALD, Route14_Text_GeraldIntro, Route14_Text_GeraldDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_GeraldRematch
- * msgbox Route14_Text_GeraldPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_BIKER_GERALD = 209
+private const val TRAINER_BIKER_ISAAC = 208
+private const val TRAINER_BIKER_LUKAS = 207
+private const val TRAINER_BIKER_MALIK = 196
+private const val TRAINER_BIRD_KEEPER_BECK = 315
+private const val TRAINER_BIRD_KEEPER_BENNY = 304
+private const val TRAINER_BIRD_KEEPER_CARTER = 313
+private const val TRAINER_BIRD_KEEPER_DONALD = 303
+private const val TRAINER_BIRD_KEEPER_MARLON = 316
+private const val TRAINER_BIRD_KEEPER_MITCH = 314
+
 internal object Route14_EventScript_Gerald : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Gerald")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BIKER_GERALD, Route14.GeraldIntro, Route14.GeraldDefeat))
+        return
+    ctx.say(Route14.GeraldPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_DONALD, Route14_Text_DonaldIntro, Route14_Text_DonaldDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_DonaldRematch
- * msgbox Route14_Text_DonaldPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Donald : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Donald")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_DONALD, Route14.DonaldIntro, Route14.DonaldDefeat))
+        return
+    ctx.say(Route14.DonaldPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_BECK, Route14_Text_BeckIntro, Route14_Text_BeckDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_BeckRematch
- * msgbox Route14_Text_BeckPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Beck : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Beck")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BIRD_KEEPER_BECK, Route14.BeckIntro, Route14.BeckDefeat))
+        return
+    ctx.say(Route14.BeckPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_MARLON, Route14_Text_MarlonIntro, Route14_Text_MarlonDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_MarlonRematch
- * msgbox Route14_Text_MarlonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Marlon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Marlon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_MARLON, Route14.MarlonIntro, Route14.MarlonDefeat))
+        return
+    ctx.say(Route14.MarlonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIKER_ISAAC, Route14_Text_IsaacIntro, Route14_Text_IsaacDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_IsaacRematch
- * msgbox Route14_Text_IsaacPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Isaac : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Isaac")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BIKER_ISAAC, Route14.IsaacIntro, Route14.IsaacDefeat))
+        return
+    ctx.say(Route14.IsaacPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIKER_MALIK, Route14_Text_MalikIntro, Route14_Text_MalikDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_MalikRematch
- * msgbox Route14_Text_MalikPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Malik : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Malik")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BIKER_MALIK, Route14.MalikIntro, Route14.MalikDefeat))
+        return
+    ctx.say(Route14.MalikPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_MITCH, Route14_Text_MitchIntro, Route14_Text_MitchDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_MitchRematch
- * msgbox Route14_Text_MitchPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Mitch : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Mitch")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_MITCH, Route14.MitchIntro, Route14.MitchDefeat))
+        return
+    ctx.say(Route14.MitchPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_CARTER, Route14_Text_CarterIntro, Route14_Text_CarterDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_CarterRematch
- * msgbox Route14_Text_CarterPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Carter : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Carter")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_CARTER, Route14.CarterIntro, Route14.CarterDefeat))
+        return
+    ctx.say(Route14.CarterPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIKER_LUKAS, Route14_Text_LukasIntro, Route14_Text_LukasDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_LukasRematch
- * msgbox Route14_Text_LukasPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Lukas : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Lukas")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_BIKER_LUKAS, Route14.LukasIntro, Route14.LukasDefeat))
+        return
+    ctx.say(Route14.LukasPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BIRD_KEEPER_BENNY, Route14_Text_BennyIntro, Route14_Text_BennyDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_BennyRematch
- * msgbox Route14_Text_BennyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Benny : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Benny")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BIRD_KEEPER_BENNY, Route14.BennyIntro, Route14.BennyDefeat))
+        return
+    ctx.say(Route14.BennyPostBattle)
+  }
 }
 
 /**

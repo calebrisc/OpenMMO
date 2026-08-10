@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.SixIsland_RuinValley
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+
+private const val TRAINER_RUIN_MANIAC_LARRY = 583
+
+private const val TRAINER_HIKER_DARYL = 584
 
 /**
  * Not ported yet. Decomp body:
@@ -52,32 +57,24 @@ internal object SixIsland_RuinValley_EventScript_Foster : Script {
       TODO("port SixIsland_RuinValley_EventScript_Foster")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_RUIN_MANIAC_LARRY, SixIsland_RuinValley_Text_LarryIntro, SixIsland_RuinValley_Text_LarryDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_RuinValley_EventScript_LarryRematch
- * msgbox SixIsland_RuinValley_Text_LarryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Larry : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_RuinValley_EventScript_Larry")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_RUIN_MANIAC_LARRY,
+        SixIsland_RuinValley.LarryIntro,
+        SixIsland_RuinValley.LarryDefeat))
+        return
+    ctx.say(SixIsland_RuinValley.LarryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_HIKER_DARYL, SixIsland_RuinValley_Text_DarylIntro, SixIsland_RuinValley_Text_DarylDefeat
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_RuinValley_EventScript_DarylRematch
- * msgbox SixIsland_RuinValley_Text_DarylPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Daryl : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_RuinValley_EventScript_Daryl")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_HIKER_DARYL, SixIsland_RuinValley.DarylIntro, SixIsland_RuinValley.DarylDefeat))
+        return
+    ctx.say(SixIsland_RuinValley.DarylPostBattle)
+  }
 }
 
 /**

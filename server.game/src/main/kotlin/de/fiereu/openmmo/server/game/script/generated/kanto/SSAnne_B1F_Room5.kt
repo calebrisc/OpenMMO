@@ -9,21 +9,8 @@ internal object SSAnne_B1F_Room5_EventScript_Boy : Script {
       ctx.say(SSAnne_B1F_Room5.MachokeHasStrengthToMoveRocks)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_MACHOKE, CRY_MODE_NORMAL
- * msgbox SSAnne_B1F_Room5_Text_Machoke
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object SSAnne_B1F_Room5_EventScript_Machoke : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_B1F_Room5_EventScript_Machoke")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(SSAnne_B1F_Room5.Machoke)
 }
 
 /**

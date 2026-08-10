@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.ThreeIsland
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
@@ -49,15 +50,8 @@ internal object ThreeIsland_EventScript_Biker : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_EventScript_Biker")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ZINC
- * end
- * ```
- */
 internal object ThreeIsland_EventScript_ItemZinc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_EventScript_ItemZinc")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ZINC)
 }
 
 internal object ThreeIsland_EventScript_Woman : Script {
@@ -70,21 +64,8 @@ internal object ThreeIsland_EventScript_LittleBoy : Script {
       ctx.say(ThreeIsland.WhenDodouEvolvesGoingToPlayGame)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_DODUO, CRY_MODE_NORMAL
- * msgbox ThreeIsland_Text_Doduo
- * waitmoncry
- * release
- * end
- * ```
- */
 internal object ThreeIsland_EventScript_Doduo : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_EventScript_Doduo")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(ThreeIsland.Doduo)
 }
 
 internal object ThreeIsland_EventScript_Biker6 : Script {

@@ -1,42 +1,38 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.PokemonTower_3F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_PATRICIA, PokemonTower_3F_Text_PatriciaIntro, PokemonTower_3F_Text_PatriciaDefeat
- * msgbox PokemonTower_3F_Text_PatriciaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
+private const val TRAINER_CHANNELER_CARLY = 442
+private const val TRAINER_CHANNELER_HOPE = 443
+private const val TRAINER_CHANNELER_PATRICIA = 441
+
 internal object PokemonTower_3F_EventScript_Patricia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_3F_EventScript_Patricia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_PATRICIA, PokemonTower_3F.PatriciaIntro, PokemonTower_3F.PatriciaDefeat))
+        return
+    ctx.say(PokemonTower_3F.PatriciaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_CARLY, PokemonTower_3F_Text_CarlyIntro, PokemonTower_3F_Text_CarlyDefeat
- * msgbox PokemonTower_3F_Text_CarlyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_3F_EventScript_Carly : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_3F_EventScript_Carly")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_CARLY, PokemonTower_3F.CarlyIntro, PokemonTower_3F.CarlyDefeat))
+        return
+    ctx.say(PokemonTower_3F.CarlyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_CHANNELER_HOPE, PokemonTower_3F_Text_HopeIntro, PokemonTower_3F_Text_HopeDefeat
- * msgbox PokemonTower_3F_Text_HopePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object PokemonTower_3F_EventScript_Hope : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_3F_EventScript_Hope")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CHANNELER_HOPE, PokemonTower_3F.HopeIntro, PokemonTower_3F.HopeDefeat))
+        return
+    ctx.say(PokemonTower_3F.HopePostBattle)
+  }
 }
 
 /**
