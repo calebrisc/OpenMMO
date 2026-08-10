@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.LavaridgeTown_Gym_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -19,6 +20,10 @@ internal object LavaridgeTown_Gym_1F_EventScript_Flannery : Script {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_LAVARIDGE_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE04_GET)
       ctx.setFlag(HoennFlags.FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_OVERHEAT)) {
+      if (!ctx.giveItem(Items.TM50)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_OVERHEAT)
     }
     ctx.say(LavaridgeTown_Gym_1F.FlanneryPostBattle)
   }

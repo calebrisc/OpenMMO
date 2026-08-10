@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.MauvilleCity_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -22,6 +23,10 @@ internal object MauvilleCity_Gym_EventScript_Wattson : Script {
     if (firstWin) {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_MAUVILLE_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE03_GET)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_SHOCK_WAVE)) {
+      if (!ctx.giveItem(Items.TM34)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_SHOCK_WAVE)
     }
     ctx.say(MauvilleCity_Gym.WattsonPostBattle)
   }

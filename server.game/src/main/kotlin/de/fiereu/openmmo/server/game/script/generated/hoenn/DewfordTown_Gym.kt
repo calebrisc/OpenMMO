@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.script.generated.hoenn
 
 import de.fiereu.openmmo.dialog.generated.hoenn.DewfordTown_Gym
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
@@ -16,6 +17,10 @@ internal object DewfordTown_Gym_EventScript_Brawly : Script {
     if (firstWin) {
       ctx.setFlag(HoennFlags.FLAG_DEFEATED_DEWFORD_GYM)
       ctx.setFlag(HoennFlags.FLAG_BADGE02_GET)
+    }
+    if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_BULK_UP)) {
+      if (!ctx.giveItem(Items.TM08)) return
+      ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_BULK_UP)
     }
     ctx.say(DewfordTown_Gym.BrawlyPostBattle)
   }

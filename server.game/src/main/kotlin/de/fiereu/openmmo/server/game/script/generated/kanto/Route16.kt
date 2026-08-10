@@ -98,7 +98,8 @@ internal object Route16_EventScript_Snorlax : Script {
       return ctx.say(Route16.MonSprawledOutInSlumber)
     }
     if (!ctx.askYesNo(Misc.Text_WantToUsePokeFlute)) return
-    if (ctx.wildBattle(SNORLAX_DEX, 30) == BattleResult.DEFEAT) return
+    val result = ctx.wildBattle(SNORLAX_DEX, 30)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
     ctx.setFlag(KantoFlags.FLAG_HIDE_ROUTE_16_SNORLAX)
     ctx.despawnInteracted()
     ctx.sign(Misc.Text_SnorlaxReturnedToMountains)
