@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.hoenn.Route131
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_RELI_AND_IAN = 686
+
 private const val TRAINER_HERMAN = 167
 private const val TRAINER_KARA = 457
 private const val TRAINER_KEVIN = 171
@@ -41,28 +43,20 @@ internal object Route131_EventScript_Kara : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_RELI_AND_IAN, Route131_Text_ReliIntro, Route131_Text_ReliDefeat, Route131_Text_ReliNotEnoughMons
- * msgbox Route131_Text_ReliPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Reli : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Reli")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RELI_AND_IAN, Route131.ReliIntro, Route131.ReliDefeat))
+        return
+    ctx.say(Route131.ReliPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_RELI_AND_IAN, Route131_Text_IanIntro, Route131_Text_IanDefeat, Route131_Text_IanNotEnoughMons
- * msgbox Route131_Text_IanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route131_EventScript_Ian : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route131_EventScript_Ian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_RELI_AND_IAN, Route131.IanIntro, Route131.IanDefeat))
+        return
+    ctx.say(Route131.IanPostBattle)
+  }
 }
 
 internal object Route131_EventScript_Kevin : Script {

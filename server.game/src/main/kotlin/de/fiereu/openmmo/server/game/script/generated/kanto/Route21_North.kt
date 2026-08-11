@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route21_North
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_SIS_AND_BRO_LIL_IAN = 491
+
 private const val TRAINER_FISHERMAN_RONALD = 229
 private const val TRAINER_FISHERMAN_WADE = 231
 private const val TRAINER_SWIMMER_MALE_SPENCER = 245
@@ -35,32 +37,22 @@ internal object Route21_North_EventScript_Spencer : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_LIL_IAN, Route21_North_Text_LilIntro, Route21_North_Text_LilDefeat, Route21_North_Text_LilNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_North_EventScript_LilRematch
- * msgbox Route21_North_Text_LilPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_North_EventScript_Lil : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_North_EventScript_Lil")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SIS_AND_BRO_LIL_IAN, Route21_North.LilIntro, Route21_North.LilDefeat))
+        return
+    ctx.say(Route21_North.LilPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_LIL_IAN, Route21_North_Text_IanIntro, Route21_North_Text_IanDefeat, Route21_North_Text_IanNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route21_North_EventScript_IanRematch
- * msgbox Route21_North_Text_IanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route21_North_EventScript_Ian : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route21_North_EventScript_Ian")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SIS_AND_BRO_LIL_IAN, Route21_North.IanIntro, Route21_North.IanDefeat))
+        return
+    ctx.say(Route21_North.IanPostBattle)
+  }
 }
 
 internal val Route21_NorthScripts: Map<String, Script> =

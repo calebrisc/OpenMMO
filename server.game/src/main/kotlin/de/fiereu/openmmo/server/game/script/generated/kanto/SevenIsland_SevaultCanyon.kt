@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_COOL_COUPLE_LEX_NYA = 601
+
 private const val TRAINER_COOLTRAINER_LEROY = 599
 private const val TRAINER_COOLTRAINER_MICHELLE = 600
 private const val TRAINER_CRUSH_GIRL_CYNDY = 591
@@ -78,34 +80,26 @@ internal object SevenIsland_SevaultCanyon_EventScript_Michelle : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_COOL_COUPLE_LEX_NYA, SevenIsland_SevaultCanyon_Text_LexIntro, SevenIsland_SevaultCanyon_Text_LexDefeat, SevenIsland_SevaultCanyon_Text_LexNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_LexRematch
- * msgbox SevenIsland_SevaultCanyon_Text_LexPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Lex : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Lex")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOL_COUPLE_LEX_NYA,
+        SevenIsland_SevaultCanyon.LexIntro,
+        SevenIsland_SevaultCanyon.LexDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.LexPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_COOL_COUPLE_LEX_NYA, SevenIsland_SevaultCanyon_Text_NyaIntro, SevenIsland_SevaultCanyon_Text_NyaDefeat, SevenIsland_SevaultCanyon_Text_NyaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_EventScript_NyaRematch
- * msgbox SevenIsland_SevaultCanyon_Text_NyaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_EventScript_Nya : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_Nya")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOL_COUPLE_LEX_NYA,
+        SevenIsland_SevaultCanyon.NyaIntro,
+        SevenIsland_SevaultCanyon.NyaDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon.NyaPostBattle)
+  }
 }
 
 /**

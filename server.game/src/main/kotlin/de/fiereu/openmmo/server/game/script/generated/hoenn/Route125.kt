@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_KIM_AND_IRIS = 678
+
 private const val TRAINER_AURON = 506
 private const val TRAINER_NOLEN = 161
 private const val TRAINER_PRESLEY = 403
@@ -56,28 +58,20 @@ internal object Route125_EventScript_Ernest : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route125_EventScript_Ernest")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_KIM_AND_IRIS, Route125_Text_KimIntro, Route125_Text_KimDefeat, Route125_Text_KimNotEnoughMons
- * msgbox Route125_Text_KimPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route125_EventScript_Kim : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route125_EventScript_Kim")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KIM_AND_IRIS, Route125.KimIntro, Route125.KimDefeat))
+        return
+    ctx.say(Route125.KimPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_KIM_AND_IRIS, Route125_Text_IrisIntro, Route125_Text_IrisDefeat, Route125_Text_IrisNotEnoughMons
- * msgbox Route125_Text_IrisPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route125_EventScript_Iris : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route125_EventScript_Iris")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KIM_AND_IRIS, Route125.IrisIntro, Route125.IrisDefeat))
+        return
+    ctx.say(Route125.IrisPostBattle)
+  }
 }
 
 internal object Route125_EventScript_Presley : Script {

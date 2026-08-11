@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_DEZ_AND_LUKE = 640
+
 private const val TRAINER_LEAH = 35
 private const val TRAINER_MARK = 145
 private const val TRAINER_ZANDER = 31
@@ -28,28 +30,20 @@ internal object MtPyre_2F_EventScript_PokefanM : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(MtPyre_2F.TumbledFromFloorAbove)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_DEZ_AND_LUKE, MtPyre_2F_Text_DezIntro, MtPyre_2F_Text_DezDefeat, MtPyre_2F_Text_DezNotEnoughMons
- * msgbox MtPyre_2F_Text_DezPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_2F_EventScript_Dez : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Dez")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DEZ_AND_LUKE, MtPyre_2F.DezIntro, MtPyre_2F.DezDefeat))
+        return
+    ctx.say(MtPyre_2F.DezPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_DEZ_AND_LUKE, MtPyre_2F_Text_LukeIntro, MtPyre_2F_Text_LukeDefeat, MtPyre_2F_Text_LukeNotEnoughMons
- * msgbox MtPyre_2F_Text_LukePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object MtPyre_2F_EventScript_Luke : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtPyre_2F_EventScript_Luke")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_DEZ_AND_LUKE, MtPyre_2F.LukeIntro, MtPyre_2F.LukeDefeat))
+        return
+    ctx.say(MtPyre_2F.LukePostBattle)
+  }
 }
 
 internal object MtPyre_2F_EventScript_Zander : Script {

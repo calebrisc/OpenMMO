@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.hoenn.SSTidalRooms
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_LEA_AND_JED = 641
+
 private const val TRAINER_COLTON = 294
 private const val TRAINER_GARRET = 138
 private const val TRAINER_MICAH = 255
@@ -36,28 +38,22 @@ internal object SSTidalRooms_EventScript_Thomas : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_LEA_AND_JED, SSTidalRooms_Text_JedIntro, SSTidalRooms_Text_JedDefeat, SSTidalRooms_Text_JedNotEnoughMons
- * msgbox SSTidalRooms_Text_JedPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Jed : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Jed")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEA_AND_JED, SSTidalRooms.JedIntro, SSTidalRooms.JedDefeat))
+        return
+    ctx.say(SSTidalRooms.JedPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_LEA_AND_JED, SSTidalRooms_Text_LeaIntro, SSTidalRooms_Text_LeaDefeat, SSTidalRooms_Text_LeaNotEnoughMons
- * msgbox SSTidalRooms_Text_LeaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SSTidalRooms_EventScript_Lea : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSTidalRooms_EventScript_Lea")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_LEA_AND_JED, SSTidalRooms.LeaIntro, SSTidalRooms.LeaDefeat))
+        return
+    ctx.say(SSTidalRooms.LeaPostBattle)
+  }
 }
 
 internal object SSTidalRooms_EventScript_Garret : Script {

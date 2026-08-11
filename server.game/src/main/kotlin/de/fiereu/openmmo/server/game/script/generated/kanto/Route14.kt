@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route14
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TWINS_KIRI_JAN = 487
+
 private const val TRAINER_BIKER_GERALD = 209
 private const val TRAINER_BIKER_ISAAC = 208
 private const val TRAINER_BIKER_LUKAS = 207
@@ -100,32 +102,20 @@ internal object Route14_EventScript_Benny : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_KIRI_JAN, Route14_Text_JanIntro, Route14_Text_JanDefeat, Route14_Text_JanNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_JanRematch
- * msgbox Route14_Text_JanPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Jan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Jan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TWINS_KIRI_JAN, Route14.JanIntro, Route14.JanDefeat))
+        return
+    ctx.say(Route14.JanPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_KIRI_JAN, Route14_Text_KiriIntro, Route14_Text_KiriDefeat, Route14_Text_KiriNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_KiriRematch
- * msgbox Route14_Text_KiriPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route14_EventScript_Kiri : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route14_EventScript_Kiri")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TWINS_KIRI_JAN, Route14.KiriIntro, Route14.KiriDefeat))
+        return
+    ctx.say(Route14.KiriPostBattle)
+  }
 }
 
 internal object Route14_EventScript_RouteSign : Script {

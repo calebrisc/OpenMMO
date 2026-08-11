@@ -8,6 +8,8 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
+private const val TRAINER_YOUNG_COUPLE_GIA_JES = 486
+
 private const val TRAINER_CAMPER_JUSTIN = 477
 private const val TRAINER_FISHERMAN_ANDREW = 233
 private const val TRAINER_FISHERMAN_CHIP = 226
@@ -97,32 +99,20 @@ internal object Route12_EventScript_ItemIron : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.IRON)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_GIA_JES, Route12_Text_GiaIntro, Route12_Text_GiaDefeat, Route12_Text_GiaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_GiaRematch
- * msgbox Route12_Text_GiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Gia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Gia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNG_COUPLE_GIA_JES, Route12.GiaIntro, Route12.GiaDefeat))
+        return
+    ctx.say(Route12.GiaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_GIA_JES, Route12_Text_JesIntro, Route12_Text_JesDefeat, Route12_Text_JesNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_JesRematch
- * msgbox Route12_Text_JesPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route12_EventScript_Jes : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route12_EventScript_Jes")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNG_COUPLE_GIA_JES, Route12.JesIntro, Route12.JesDefeat))
+        return
+    ctx.say(Route12.JesPostBattle)
+  }
 }
 
 internal object Route12_EventScript_RouteSign : Script {

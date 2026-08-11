@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_SIS_AND_BRO_AVA_GEB = 576
+
 private const val TRAINER_FISHERMAN_TYLOR = 573
 private const val TRAINER_SWIMMER_FEMALE_NICOLE = 575
 private const val TRAINER_SWIMMER_MALE_MYMO = 574
@@ -54,34 +56,26 @@ internal object SixIsland_OutcastIsland_EventScript_Nicole : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_AVA_GEB, SixIsland_OutcastIsland_Text_AvaIntro, SixIsland_OutcastIsland_Text_AvaDefeat, SixIsland_OutcastIsland_Text_AvaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_OutcastIsland_EventScript_AvaRematch
- * msgbox SixIsland_OutcastIsland_Text_AvaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_OutcastIsland_EventScript_Ava : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_OutcastIsland_EventScript_Ava")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SIS_AND_BRO_AVA_GEB,
+        SixIsland_OutcastIsland.AvaIntro,
+        SixIsland_OutcastIsland.AvaDefeat))
+        return
+    ctx.say(SixIsland_OutcastIsland.AvaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_AVA_GEB, SixIsland_OutcastIsland_Text_GebIntro, SixIsland_OutcastIsland_Text_GebDefeat, SixIsland_OutcastIsland_Text_GebNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_OutcastIsland_EventScript_GebRematch
- * msgbox SixIsland_OutcastIsland_Text_GebPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_OutcastIsland_EventScript_Geb : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_OutcastIsland_EventScript_Geb")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SIS_AND_BRO_AVA_GEB,
+        SixIsland_OutcastIsland.GebIntro,
+        SixIsland_OutcastIsland.GebDefeat))
+        return
+    ctx.say(SixIsland_OutcastIsland.GebPostBattle)
+  }
 }
 
 internal object SixIsland_OutcastIsland_EventScript_ItemPPUp : Script {

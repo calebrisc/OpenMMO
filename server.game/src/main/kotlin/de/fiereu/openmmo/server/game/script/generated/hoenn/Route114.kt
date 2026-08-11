@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TYRA_AND_IVY = 679
+
 private const val TRAINER_ANGELINA = 712
 private const val TRAINER_CHARLOTTE = 714
 private const val TRAINER_CLAUDE = 338
@@ -142,28 +144,20 @@ internal object Route114_EventScript_Bernie : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Bernie")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TYRA_AND_IVY, Route114_Text_IvyIntro, Route114_Text_IvyDefeat, Route114_Text_IvyNotEnoughMons
- * msgbox Route114_Text_IvyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Ivy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Ivy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TYRA_AND_IVY, Route114.IvyIntro, Route114.IvyDefeat))
+        return
+    ctx.say(Route114.IvyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TYRA_AND_IVY, Route114_Text_TyraIntro, Route114_Text_TyraDefeat, Route114_Text_TyraNotEnoughMons
- * msgbox Route114_Text_TyraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route114_EventScript_Tyra : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_Tyra")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TYRA_AND_IVY, Route114.TyraIntro, Route114.TyraDefeat))
+        return
+    ctx.say(Route114.TyraPostBattle)
+  }
 }
 
 internal object Route114_EventScript_Charlotte : Script {

@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_MIU_AND_YUKI = 484
+
 private const val TRAINER_ALBERTO = 12
 private const val TRAINER_BRAXTON = 75
 private const val TRAINER_DAVIS = 539
@@ -66,28 +68,20 @@ internal object Route123_EventScript_Violet : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_MIU_AND_YUKI, Route123_Text_YukiIntro, Route123_Text_YukiDefeat, Route123_Text_YukiNotEnoughMons
- * msgbox Route123_Text_YukiPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Yuki : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Yuki")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MIU_AND_YUKI, Route123.YukiIntro, Route123.YukiDefeat))
+        return
+    ctx.say(Route123.YukiPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_MIU_AND_YUKI, Route123_Text_MiuIntro, Route123_Text_MiuDefeat, Route123_Text_MiuNotEnoughMons
- * msgbox Route123_Text_MiuPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route123_EventScript_Miu : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route123_EventScript_Miu")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MIU_AND_YUKI, Route123.MiuIntro, Route123.MiuDefeat))
+        return
+    ctx.say(Route123.MiuPostBattle)
+  }
 }
 
 /**

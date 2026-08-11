@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_KATE_AND_JOY = 286
+
 private const val TRAINER_CALE = 764
 private const val TRAINER_MARCEL = 11
 private const val TRAINER_MYLES = 765
@@ -16,28 +18,20 @@ internal object Route121_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route121.AheadLoomsMtPyre)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_KATE_AND_JOY, Route121_Text_KateIntro, Route121_Text_KateDefeat, Route121_Text_KateNotEnoughMons
- * msgbox Route121_Text_KatePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Kate : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Kate")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KATE_AND_JOY, Route121.KateIntro, Route121.KateDefeat))
+        return
+    ctx.say(Route121.KatePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_KATE_AND_JOY, Route121_Text_JoyIntro, Route121_Text_JoyDefeat, Route121_Text_JoyNotEnoughMons
- * msgbox Route121_Text_JoyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route121_EventScript_Joy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route121_EventScript_Joy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_KATE_AND_JOY, Route121.JoyIntro, Route121.JoyDefeat))
+        return
+    ctx.say(Route121.JoyPostBattle)
+  }
 }
 
 internal object Route121_EventScript_Vanessa : Script {
