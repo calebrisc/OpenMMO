@@ -10,17 +10,15 @@ private const val TRAINER_FLANNERY_1 = 268
 
 internal object LavaridgeTown_Gym_1F_EventScript_Flannery : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_FLANNERY_1)
-    if (!ctx.trainerBattleSingle(
+    if (!ctx.leaderBattle(
         TRAINER_FLANNERY_1,
         LavaridgeTown_Gym_1F.FlanneryIntro,
-        LavaridgeTown_Gym_1F.FlanneryDefeat))
+        LavaridgeTown_Gym_1F.FlanneryDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_LAVARIDGE_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE04_GET)
+          ctx.setFlag(HoennFlags.FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_LAVARIDGE_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE04_GET)
-      ctx.setFlag(HoennFlags.FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_OVERHEAT)) {
       if (!ctx.giveItem(Items.TM50)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_OVERHEAT)

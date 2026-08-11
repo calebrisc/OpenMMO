@@ -16,14 +16,12 @@ private const val TRAINER_VIVIAN = 649
 
 internal object MauvilleCity_Gym_EventScript_Wattson : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_WATTSON_1)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_WATTSON_1, MauvilleCity_Gym.WattsonIntro, MauvilleCity_Gym.WattsonDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_WATTSON_1, MauvilleCity_Gym.WattsonIntro, MauvilleCity_Gym.WattsonDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_MAUVILLE_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE03_GET)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_MAUVILLE_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE03_GET)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_SHOCK_WAVE)) {
       if (!ctx.giveItem(Items.TM34)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_SHOCK_WAVE)

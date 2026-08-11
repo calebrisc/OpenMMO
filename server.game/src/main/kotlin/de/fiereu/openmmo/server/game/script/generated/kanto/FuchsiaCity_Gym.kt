@@ -71,15 +71,13 @@ internal object FuchsiaCity_Gym_EventScript_Nate : Script {
 
 internal object FuchsiaCity_Gym_EventScript_Koga : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_KOGA)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_LEADER_KOGA, FuchsiaCity_Gym.KogaIntro, FuchsiaCity_Gym.KogaDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_LEADER_KOGA, FuchsiaCity_Gym.KogaIntro, FuchsiaCity_Gym.KogaDefeat) {
+          ctx.setFlag(KantoFlags.FLAG_DEFEATED_KOGA)
+          ctx.setFlag(KantoFlags.FLAG_BADGE05_GET)
+          ctx.clearFlag(KantoFlags.FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(KantoFlags.FLAG_DEFEATED_KOGA)
-      ctx.setFlag(KantoFlags.FLAG_BADGE05_GET)
-      ctx.clearFlag(KantoFlags.FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL)
-    }
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM06_FROM_KOGA)) {
       ctx.say(FuchsiaCity_Gym.KogaExplainSoulBadge)
       if (!ctx.giveItem(Items.TM06)) {

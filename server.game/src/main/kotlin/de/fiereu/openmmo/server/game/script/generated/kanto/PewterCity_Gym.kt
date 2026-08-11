@@ -13,15 +13,14 @@ private const val TRAINER_CAMPER_LIAM = 142
 
 internal object PewterCity_Gym_EventScript_Brock : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_BROCK)
-    if (!ctx.trainerBattleSingle(TRAINER_LEADER_BROCK, PewterCity_Gym.BrockIntro)) return
-    if (firstWin) {
+    if (!ctx.leaderBattle(TRAINER_LEADER_BROCK, PewterCity_Gym.BrockIntro) {
       ctx.setFlag(KantoFlags.FLAG_DEFEATED_BROCK)
       ctx.setFlag(KantoFlags.FLAG_BADGE01_GET)
       ctx.setVar(KantoVars.VAR_MAP_SCENE_PEWTER_CITY, 1)
       ctx.setFlag(KantoFlags.FLAG_HIDE_PEWTER_CITY_GYM_GUIDE)
       ctx.clearFlag(KantoFlags.FLAG_HIDE_PEWTER_CITY_RUNNING_SHOES_GUY)
-    }
+    })
+        return
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM39_FROM_BROCK)) {
       ctx.say(PewterCity_Gym.TakeThisWithYou)
       if (!ctx.giveItem(Items.TM39)) {

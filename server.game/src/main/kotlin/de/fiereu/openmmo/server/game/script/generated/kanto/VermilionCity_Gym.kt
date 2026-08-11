@@ -50,14 +50,12 @@ private const val TRAINER_SAILOR_DWAYNE = 141
 
 internal object VermilionCity_Gym_EventScript_LtSurge : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_LT_SURGE)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_LEADER_LT_SURGE, VermilionCity_Gym.LtSurgeIntro, VermilionCity_Gym.LtSurgeDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_LEADER_LT_SURGE, VermilionCity_Gym.LtSurgeIntro, VermilionCity_Gym.LtSurgeDefeat) {
+          ctx.setFlag(KantoFlags.FLAG_DEFEATED_LT_SURGE)
+          ctx.setFlag(KantoFlags.FLAG_BADGE03_GET)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(KantoFlags.FLAG_DEFEATED_LT_SURGE)
-      ctx.setFlag(KantoFlags.FLAG_BADGE03_GET)
-    }
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM34_FROM_SURGE)) {
       ctx.say(VermilionCity_Gym.ExplainThunderBadgeTakeThis)
       if (!ctx.giveItem(Items.TM34)) {

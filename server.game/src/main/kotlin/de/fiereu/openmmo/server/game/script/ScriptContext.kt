@@ -192,6 +192,27 @@ internal constructor(
   fun isTrainerDefeated(trainerId: Int): Boolean = isFlagSet(defeatedTrainerFlag(trainerId))
 
   /**
+   * The shared gym leader shape: a one time fight whose first victory runs [onFirstWin] immediately
+   * after the durable defeated flag and before any dialog, so a disconnect between the win and the
+   * post battle lines cannot lose the badge. Returns false until the player has won.
+   */
+  suspend fun leaderBattle(
+      trainerId: Int,
+      intro: DialogLine? = null,
+      defeat: DialogLine? = null,
+      onFirstWin: () -> Unit = {},
+  ): Boolean {
+    val flag = defeatedTrainerFlag(trainerId)
+    if (isFlagSet(flag)) return true
+    intro?.let { say(it) }
+    if (trainerBattle(trainerId) != BattleResult.VICTORY) return false
+    setFlag(flag)
+    onFirstWin()
+    defeat?.let { say(it) }
+    return true
+  }
+
+  /**
    * The decomp finditem: bag the item, announce it, and set the ball's hide flag so it stays gone.
    * When the bag has no room the ball stays, like the engine's "too bad" path.
    */

@@ -72,15 +72,13 @@ internal object SaffronCity_Gym_EventScript_Tasha : Script {
 
 internal object SaffronCity_Gym_EventScript_Sabrina : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_SABRINA)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_LEADER_SABRINA, SaffronCity_Gym.SabrinaIntro, SaffronCity_Gym.SabrinaDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_LEADER_SABRINA, SaffronCity_Gym.SabrinaIntro, SaffronCity_Gym.SabrinaDefeat) {
+          ctx.setFlag(KantoFlags.FLAG_DEFEATED_SABRINA)
+          ctx.setFlag(KantoFlags.FLAG_BADGE06_GET)
+          ctx.clearFlag(KantoFlags.FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(KantoFlags.FLAG_DEFEATED_SABRINA)
-      ctx.setFlag(KantoFlags.FLAG_BADGE06_GET)
-      ctx.clearFlag(KantoFlags.FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS)
-    }
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM04_FROM_SABRINA)) {
       ctx.say(SaffronCity_Gym.ExplainMarshBadgeTakeThis)
       if (!ctx.giveItem(Items.TM04)) {

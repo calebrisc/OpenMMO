@@ -72,13 +72,12 @@ internal object CeladonCity_Gym_EventScript_Lisa : Script {
 
 internal object CeladonCity_Gym_EventScript_Erika : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_ERIKA)
-    if (!ctx.trainerBattleSingle(TRAINER_LEADER_ERIKA, null, CeladonCity_Gym.ErikaDefeat)) return
-    if (firstWin) {
+    if (!ctx.leaderBattle(TRAINER_LEADER_ERIKA, null, CeladonCity_Gym.ErikaDefeat) {
       ctx.setFlag(KantoFlags.FLAG_DEFEATED_ERIKA)
       ctx.setFlag(KantoFlags.FLAG_BADGE04_GET)
       ctx.clearFlag(KantoFlags.FLAG_HIDE_FAME_CHECKER_ERIKA_JOURNALS)
-    }
+    })
+        return
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM19_FROM_ERIKA)) {
       ctx.say(CeladonCity_Gym.ExplainRainbowBadgeTakeThis)
       if (!ctx.giveItem(Items.TM19)) {
