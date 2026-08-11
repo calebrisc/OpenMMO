@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.ThreeIsland_BondBridge
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TWINS_JOY_MEG = 560
+
 private const val TRAINER_AROMA_LADY_NIKKI = 523
 private const val TRAINER_AROMA_LADY_VIOLET = 558
 private const val TRAINER_SWIMMER_FEMALE_TISHA = 561
@@ -63,32 +65,22 @@ internal object ThreeIsland_BondBridge_EventScript_Tisha : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_JOY_MEG, ThreeIsland_BondBridge_Text_JoyIntro, ThreeIsland_BondBridge_Text_JoyDefeat, ThreeIsland_BondBridge_Text_JoyNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, ThreeIsland_BondBridge_EventScript_JoyRematch
- * msgbox ThreeIsland_BondBridge_Text_JoyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ThreeIsland_BondBridge_EventScript_Joy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_BondBridge_EventScript_Joy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TWINS_JOY_MEG, ThreeIsland_BondBridge.JoyIntro, ThreeIsland_BondBridge.JoyDefeat))
+        return
+    ctx.say(ThreeIsland_BondBridge.JoyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_JOY_MEG, ThreeIsland_BondBridge_Text_MegIntro, ThreeIsland_BondBridge_Text_MegDefeat, ThreeIsland_BondBridge_Text_MegNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, ThreeIsland_BondBridge_EventScript_MegRematch
- * msgbox ThreeIsland_BondBridge_Text_MegPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object ThreeIsland_BondBridge_EventScript_Meg : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ThreeIsland_BondBridge_EventScript_Meg")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TWINS_JOY_MEG, ThreeIsland_BondBridge.MegIntro, ThreeIsland_BondBridge.MegDefeat))
+        return
+    ctx.say(ThreeIsland_BondBridge.MegPostBattle)
+  }
 }
 
 internal object ThreeIsland_BondBridge_EventScript_BerryForestSign : Script {

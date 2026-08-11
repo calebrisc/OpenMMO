@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route19
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_SIS_AND_BRO_LIA_LUC = 490
+
 private const val TRAINER_SWIMMER_FEMALE_ALICE = 277
 private const val TRAINER_SWIMMER_FEMALE_ANYA = 276
 private const val TRAINER_SWIMMER_FEMALE_CONNIE = 278
@@ -103,32 +105,20 @@ internal object Route19_EventScript_Anya : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_LIA_LUC, Route19_Text_LiaIntro, Route19_Text_LiaDefeat, Route19_Text_LiaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_LiaRematch
- * msgbox Route19_Text_LiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Lia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Lia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SIS_AND_BRO_LIA_LUC, Route19.LiaIntro, Route19.LiaDefeat))
+        return
+    ctx.say(Route19.LiaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_SIS_AND_BRO_LIA_LUC, Route19_Text_LucIntro, Route19_Text_LucDefeat, Route19_Text_LucNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route19_EventScript_LucRematch
- * msgbox Route19_Text_LucPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route19_EventScript_Luc : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route19_EventScript_Luc")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_SIS_AND_BRO_LIA_LUC, Route19.LucIntro, Route19.LucDefeat))
+        return
+    ctx.say(Route19.LucPostBattle)
+  }
 }
 
 internal object Route19_EventScript_RouteSign : Script {

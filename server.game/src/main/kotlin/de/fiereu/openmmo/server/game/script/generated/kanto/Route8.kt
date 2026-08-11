@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route8
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TWINS_ELI_ANNE = 484
+
 private const val TRAINER_BIKER_JAREN = 536
 private const val TRAINER_BIKER_RICARDO = 535
 private const val TRAINER_GAMER_RICH = 264
@@ -84,32 +86,19 @@ internal object Route8_EventScript_Aidan : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_ELI_ANNE, Route8_Text_EliIntro, Route8_Text_EliDefeat, Route8_Text_EliNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route8_EventScript_EliRematch
- * msgbox Route8_Text_EliPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route8_EventScript_Eli : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route8_EventScript_Eli")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TWINS_ELI_ANNE, Route8.EliIntro, Route8.EliDefeat)) return
+    ctx.say(Route8.EliPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_ELI_ANNE, Route8_Text_AnneIntro, Route8_Text_AnneDefeat, Route8_Text_AnneNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route8_EventScript_AnneRematch
- * msgbox Route8_Text_AnnePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route8_EventScript_Anne : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route8_EventScript_Anne")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TWINS_ELI_ANNE, Route8.AnneIntro, Route8.AnneDefeat))
+        return
+    ctx.say(Route8.AnnePostBattle)
+  }
 }
 
 internal object Route8_EventScript_Ricardo : Script {

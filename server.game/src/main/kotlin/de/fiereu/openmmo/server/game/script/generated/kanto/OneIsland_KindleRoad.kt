@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_CRUSH_KIN_MIK_KIA = 557
+
 private const val TRAINER_CRUSH_GIRL_SHARON = 518
 private const val TRAINER_PICNICKER_CLAIRE = 556
 private const val TRAINER_SWIMMER_FEMALE_ABIGAIL = 548
@@ -130,32 +132,22 @@ internal object OneIsland_KindleRoad_EventScript_Claire : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_CRUSH_KIN_MIK_KIA, OneIsland_KindleRoad_Text_MikIntro, OneIsland_KindleRoad_Text_MikDefeat, OneIsland_KindleRoad_Text_MikNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_MikRematch
- * msgbox OneIsland_KindleRoad_Text_MikPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Mik : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Mik")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRUSH_KIN_MIK_KIA, OneIsland_KindleRoad.MikIntro, OneIsland_KindleRoad.MikDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.MikPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_CRUSH_KIN_MIK_KIA, OneIsland_KindleRoad_Text_KiaIntro, OneIsland_KindleRoad_Text_KiaDefeat, OneIsland_KindleRoad_Text_KiaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, OneIsland_KindleRoad_EventScript_KiaRematch
- * msgbox OneIsland_KindleRoad_Text_KiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EventScript_Kia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_KindleRoad_EventScript_Kia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_CRUSH_KIN_MIK_KIA, OneIsland_KindleRoad.KiaIntro, OneIsland_KindleRoad.KiaDefeat))
+        return
+    ctx.say(OneIsland_KindleRoad.KiaPostBattle)
+  }
 }
 
 internal object OneIsland_KindleRoad_EventScript_ItemEther : Script {

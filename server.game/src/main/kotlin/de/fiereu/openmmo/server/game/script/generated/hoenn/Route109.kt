@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_MEL_AND_PAUL = 680
+
 private const val TRAINER_ALICE = 448
 private const val TRAINER_AUSTINA = 58
 private const val TRAINER_CARTER = 345
@@ -163,28 +165,20 @@ internal object Route109_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route109.LittleKidsDartAround)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_MEL_AND_PAUL, Route109_Text_MelIntro, Route109_Text_MelDefeated, Route109_Text_MelNotEnoughPokemon
- * msgbox Route109_Text_MelPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Mel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Mel")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MEL_AND_PAUL, Route109.MelIntro, Route109.MelDefeated))
+        return
+    ctx.say(Route109.MelPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_MEL_AND_PAUL, Route109_Text_PaulIntro, Route109_Text_PaulDefeated, Route109_Text_PaulNotEnoughPokemon
- * msgbox Route109_Text_PaulPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route109_EventScript_Paul : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route109_EventScript_Paul")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_MEL_AND_PAUL, Route109.PaulIntro, Route109.PaulDefeated))
+        return
+    ctx.say(Route109.PaulPostBattle)
+  }
 }
 
 internal object Route109_EventScript_OldMan : Script {

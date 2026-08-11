@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.SevenIsland_SevaultCanyon_Entran
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_YOUNG_COUPLE_EVE_JON = 589
+
 private const val TRAINER_AROMA_LADY_MIAH = 588
 private const val TRAINER_JUGGLER_MASON = 590
 private const val TRAINER_PKMN_RANGER_MADELINE = 522
@@ -20,34 +22,26 @@ internal object SevenIsland_SevaultCanyon_Entrance_EventScript_Miah : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_EVE_JON, SevenIsland_SevaultCanyon_Entrance_Text_EveIntro, SevenIsland_SevaultCanyon_Entrance_Text_EveDefeat, SevenIsland_SevaultCanyon_Entrance_Text_EveNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_Entrance_EventScript_EveRematch
- * msgbox SevenIsland_SevaultCanyon_Entrance_Text_EvePostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_Entrance_EventScript_Eve : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_Entrance_EventScript_Eve")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNG_COUPLE_EVE_JON,
+        SevenIsland_SevaultCanyon_Entrance.EveIntro,
+        SevenIsland_SevaultCanyon_Entrance.EveDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon_Entrance.EvePostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_EVE_JON, SevenIsland_SevaultCanyon_Entrance_Text_JonIntro, SevenIsland_SevaultCanyon_Entrance_Text_JonDefeat, SevenIsland_SevaultCanyon_Entrance_Text_JonNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SevenIsland_SevaultCanyon_Entrance_EventScript_JonRematch
- * msgbox SevenIsland_SevaultCanyon_Entrance_Text_JonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SevenIsland_SevaultCanyon_Entrance_EventScript_Jon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_Entrance_EventScript_Jon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_YOUNG_COUPLE_EVE_JON,
+        SevenIsland_SevaultCanyon_Entrance.JonIntro,
+        SevenIsland_SevaultCanyon_Entrance.JonDefeat))
+        return
+    ctx.say(SevenIsland_SevaultCanyon_Entrance.JonPostBattle)
+  }
 }
 
 internal object SevenIsland_SevaultCanyon_Entrance_EventScript_Nicolas : Script {

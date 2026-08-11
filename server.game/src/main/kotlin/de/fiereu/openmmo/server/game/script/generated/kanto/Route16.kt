@@ -7,6 +7,8 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
+private const val TRAINER_YOUNG_COUPLE_LEA_JED = 489
+
 private const val TRAINER_BIKER_HIDEO = 201
 private const val TRAINER_BIKER_LAO = 199
 private const val TRAINER_BIKER_RUBEN = 202
@@ -62,32 +64,20 @@ internal object Route16_EventScript_Camron : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_LEA_JED, Route16_Text_LeaIntro, Route16_Text_LeaDefeat, Route16_Text_LeaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route16_EventScript_LeaRematch
- * msgbox Route16_Text_LeaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route16_EventScript_Lea : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route16_EventScript_Lea")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNG_COUPLE_LEA_JED, Route16.LeaIntro, Route16.LeaDefeat))
+        return
+    ctx.say(Route16.LeaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_YOUNG_COUPLE_LEA_JED, Route16_Text_JedIntro, Route16_Text_JedDefeat, Route16_Text_JedNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route16_EventScript_JedRematch
- * msgbox Route16_Text_JedPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route16_EventScript_Jed : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route16_EventScript_Jed")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_YOUNG_COUPLE_LEA_JED, Route16.JedIntro, Route16.JedDefeat))
+        return
+    ctx.say(Route16.JedPostBattle)
+  }
 }
 
 private const val SNORLAX_DEX = 143

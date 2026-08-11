@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TWINS_MIU_MIA = 580
+
 private const val TRAINER_AROMA_LADY_ROSE = 577
 private const val TRAINER_HIKER_EARL = 581
 private const val TRAINER_JUGGLER_EDWARD = 291
@@ -51,32 +53,22 @@ internal object SixIsland_WaterPath_EventScript_Denise : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_MIU_MIA, SixIsland_WaterPath_Text_MiuIntro, SixIsland_WaterPath_Text_MiuDefeat, SixIsland_WaterPath_Text_MiuNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_MiuRematch
- * msgbox SixIsland_WaterPath_Text_MiuPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Miu : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Miu")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TWINS_MIU_MIA, SixIsland_WaterPath.MiuIntro, SixIsland_WaterPath.MiuDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.MiuPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TWINS_MIU_MIA, SixIsland_WaterPath_Text_MiaIntro, SixIsland_WaterPath_Text_MiaDefeat, SixIsland_WaterPath_Text_MiaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, SixIsland_WaterPath_EventScript_MiaRematch
- * msgbox SixIsland_WaterPath_Text_MiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SixIsland_WaterPath_EventScript_Mia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SixIsland_WaterPath_EventScript_Mia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TWINS_MIU_MIA, SixIsland_WaterPath.MiaIntro, SixIsland_WaterPath.MiaDefeat))
+        return
+    ctx.say(SixIsland_WaterPath.MiaPostBattle)
+  }
 }
 
 internal object SixIsland_WaterPath_EventScript_Earl : Script {

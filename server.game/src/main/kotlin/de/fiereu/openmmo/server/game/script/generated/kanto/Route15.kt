@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_CRUSH_KIN_RON_MYA = 488
+
 private const val TRAINER_BEAUTY_GRACE = 273
 private const val TRAINER_BEAUTY_OLIVIA = 274
 private const val TRAINER_BIKER_ALEX = 198
@@ -103,32 +105,20 @@ internal object Route15_EventScript_ItemTM18 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM18)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_CRUSH_KIN_RON_MYA, Route15_Text_RonIntro, Route15_Text_RonDefeat, Route15_Text_RonNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route15_EventScript_RonRematch
- * msgbox Route15_Text_RonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route15_EventScript_Ron : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route15_EventScript_Ron")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CRUSH_KIN_RON_MYA, Route15.RonIntro, Route15.RonDefeat))
+        return
+    ctx.say(Route15.RonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_CRUSH_KIN_RON_MYA, Route15_Text_MyaIntro, Route15_Text_MyaDefeat, Route15_Text_MyaNotEnoughMons
- * specialvar VAR_RESULT, ShouldTryRematchBattle
- * goto_if_eq VAR_RESULT, TRUE, Route15_EventScript_MyaRematch
- * msgbox Route15_Text_MyaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route15_EventScript_Mya : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route15_EventScript_Mya")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_CRUSH_KIN_RON_MYA, Route15.MyaIntro, Route15.MyaDefeat))
+        return
+    ctx.say(Route15.MyaPostBattle)
+  }
 }
 
 internal object Route15_EventScript_RouteSign : Script {

@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TORI_AND_TIA = 677
+
 private const val TRAINER_COBY = 709
 private const val TRAINER_DILLON = 327
 private const val TRAINER_JAYLEN = 326
@@ -82,28 +84,20 @@ internal object Route113_EventScript_Lung : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TORI_AND_TIA, Route113_Text_ToriIntro, Route113_Text_ToriDefeat, Route113_Text_ToriNotEnoughMons
- * msgbox Route113_Text_ToriPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route113_EventScript_Tori : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route113_EventScript_Tori")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TORI_AND_TIA, Route113.ToriIntro, Route113.ToriDefeat))
+        return
+    ctx.say(Route113.ToriPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_TORI_AND_TIA, Route113_Text_TiaIntro, Route113_Text_TiaDefeat, Route113_Text_TiaNotEnoughMons
- * msgbox Route113_Text_TiaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route113_EventScript_Tia : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route113_EventScript_Tia")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_TORI_AND_TIA, Route113.TiaIntro, Route113.TiaDefeat))
+        return
+    ctx.say(Route113.TiaPostBattle)
+  }
 }
 
 internal object Route113_EventScript_ItemHyperPotion : Script {

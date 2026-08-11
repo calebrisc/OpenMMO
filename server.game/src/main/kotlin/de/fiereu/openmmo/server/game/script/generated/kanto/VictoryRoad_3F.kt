@@ -5,6 +5,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_COOL_COUPLE_RAY_TYRA = 485
+
 private const val TRAINER_COOLTRAINER_ALEXA = 404
 private const val TRAINER_COOLTRAINER_CAROLINE = 403
 private const val TRAINER_COOLTRAINER_COLBY = 394
@@ -54,28 +56,22 @@ internal object VictoryRoad_3F_EventScript_ItemTM50 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM50)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_COOL_COUPLE_RAY_TYRA, VictoryRoad_3F_Text_RayIntro, VictoryRoad_3F_Text_RayDefeat, VictoryRoad_3F_Text_RayNotEnoughMons
- * msgbox VictoryRoad_3F_Text_RayPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_3F_EventScript_Ray : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_3F_EventScript_Ray")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOL_COUPLE_RAY_TYRA, VictoryRoad_3F.RayIntro, VictoryRoad_3F.RayDefeat))
+        return
+    ctx.say(VictoryRoad_3F.RayPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_COOL_COUPLE_RAY_TYRA, VictoryRoad_3F_Text_TyraIntro, VictoryRoad_3F_Text_TyraDefeat, VictoryRoad_3F_Text_TyraNotEnoughMons
- * msgbox VictoryRoad_3F_Text_TyraPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VictoryRoad_3F_EventScript_Tyra : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VictoryRoad_3F_EventScript_Tyra")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_COOL_COUPLE_RAY_TYRA, VictoryRoad_3F.TyraIntro, VictoryRoad_3F.TyraDefeat))
+        return
+    ctx.say(VictoryRoad_3F.TyraPostBattle)
+  }
 }
 
 internal val VictoryRoad_3FScripts: Map<String, Script> =

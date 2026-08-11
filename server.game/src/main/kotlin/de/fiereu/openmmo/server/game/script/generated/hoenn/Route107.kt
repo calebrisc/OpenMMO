@@ -4,6 +4,8 @@ import de.fiereu.openmmo.dialog.generated.hoenn.Route107
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_LISA_AND_RAY = 692
+
 private const val TRAINER_BETH = 445
 private const val TRAINER_CAMRON = 739
 private const val TRAINER_DARRIN = 154
@@ -47,28 +49,20 @@ internal object Route107_EventScript_Beth : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_LISA_AND_RAY, Route107_Text_LisaIntro, Route107_Text_LisaDefeated, Route107_Text_LisaNotEnoughPokemon
- * msgbox Route107_Text_LisaPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route107_EventScript_Lisa : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route107_EventScript_Lisa")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LISA_AND_RAY, Route107.LisaIntro, Route107.LisaDefeated))
+        return
+    ctx.say(Route107.LisaPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_double TRAINER_LISA_AND_RAY, Route107_Text_RayIntro, Route107_Text_RayDefeated, Route107_Text_RayNotEnoughPokemon
- * msgbox Route107_Text_RayPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object Route107_EventScript_Ray : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route107_EventScript_Ray")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(TRAINER_LISA_AND_RAY, Route107.RayIntro, Route107.RayDefeated))
+        return
+    ctx.say(Route107.RayPostBattle)
+  }
 }
 
 internal object Route107_EventScript_Camron : Script {
