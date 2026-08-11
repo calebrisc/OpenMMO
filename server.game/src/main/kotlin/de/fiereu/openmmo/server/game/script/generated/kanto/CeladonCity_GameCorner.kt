@@ -1,8 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_GameCorner
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.services.notice
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val TRAINER_TEAM_ROCKET_GRUNT_7 = 357
 
 internal object CeladonCity_GameCorner_EventScript_InfoClerk : Script {
   override suspend fun run(ctx: ScriptContext) =
@@ -185,17 +190,15 @@ internal object CeladonCity_GameCorner_EventScript_Gentleman : Script {
       TODO("port CeladonCity_GameCorner_EventScript_Gentleman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_GRUNT_7, CeladonCity_GameCorner_Text_GruntIntro, CeladonCity_GameCorner_Text_GruntDefeat, CeladonCity_GameCorner_Text_DefeatedGrunt
- * msgbox CeladonCity_GameCorner_Text_GruntPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CeladonCity_GameCorner_EventScript_RocketGrunt : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_GameCorner_EventScript_RocketGrunt")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_7,
+        CeladonCity_GameCorner.GruntIntro,
+        CeladonCity_GameCorner.GruntDefeat))
+        return
+    ctx.say(CeladonCity_GameCorner.GruntPostBattle)
+  }
 }
 
 /**
@@ -476,19 +479,15 @@ internal object CeladonCity_GameCorner_EventScript_SlotMachine21 : Script {
       TODO("port CeladonCity_GameCorner_EventScript_SlotMachine21")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * msgbox CeladonCity_GameCorner_Text_SwitchBehindPosterPushIt
- * call_if_unset FLAG_OPENED_ROCKET_HIDEOUT, CeladonCity_GameCorner_EventScript_OpenRocketHideout
- * releaseall
- * end
- * ```
- */
 internal object CeladonCity_GameCorner_EventScript_Poster : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_GameCorner_EventScript_Poster")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.sign(CeladonCity_GameCorner.SwitchBehindPosterPushIt)
+    if (!ctx.isTrainerDefeated(TRAINER_TEAM_ROCKET_GRUNT_7)) return
+    ctx.setFlag(KantoFlags.FLAG_OPENED_ROCKET_HIDEOUT)
+    // The stairs are a metatile the protocol cannot open, so the switch takes the player down.
+    ctx.send(notice("The hidden stairs opened! You head down..."))
+    ctx.warp(0, 1, 42, 12, 2, Direction.DOWN)
+  }
 }
 
 /**
