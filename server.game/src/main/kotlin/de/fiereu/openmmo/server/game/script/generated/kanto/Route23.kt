@@ -3,110 +3,84 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.Route23
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.services.notice
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 2
- * bufferstdstring STR_VAR_1, STDSTRING_CASCADE_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_CascadeBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_CascadeBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE02_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the CASCADE BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your CASCADE BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 3
- * bufferstdstring STR_VAR_1, STDSTRING_THUNDER_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_ThunderBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_ThunderBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE03_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the THUNDER BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your THUNDER BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 4
- * bufferstdstring STR_VAR_1, STDSTRING_RAINBOW_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_RainbowBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_RainbowBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE04_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the RAINBOW BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your RAINBOW BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 5
- * bufferstdstring STR_VAR_1, STDSTRING_SOUL_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_SoulBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_SoulBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE05_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the SOUL BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your SOUL BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 6
- * bufferstdstring STR_VAR_1, STDSTRING_MARSH_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_MarshBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_MarshBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE06_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the MARSH BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your MARSH BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 7
- * bufferstdstring STR_VAR_1, STDSTRING_VOLCANO_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_VolcanoBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_VolcanoBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE07_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the VOLCANO BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your VOLCANO BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_TEMP_1, 8
- * bufferstdstring STR_VAR_1, STDSTRING_EARTH_BADGE
- * goto Route23_EventScript_BadgeGuard
- * end
- * ```
- */
 internal object Route23_EventScript_EarthBadgeGuard : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route23_EventScript_EarthBadgeGuard")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.isFlagSet(KantoFlags.FLAG_BADGE08_GET)) {
+      ctx.send(notice("The guard blocks the way: only trainers with the EARTH BADGE may pass."))
+      return
+    }
+    ctx.send(notice("The guard verified your EARTH BADGE and stands aside."))
+    ctx.despawnInteracted()
+  }
 }
 
 internal object Route23_EventScript_VictoryRoadGateSign : Script {
