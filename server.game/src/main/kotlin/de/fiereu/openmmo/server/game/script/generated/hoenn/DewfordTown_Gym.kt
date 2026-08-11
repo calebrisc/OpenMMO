@@ -10,14 +10,12 @@ private const val TRAINER_BRAWLY_1 = 266
 
 internal object DewfordTown_Gym_EventScript_Brawly : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_BRAWLY_1)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_BRAWLY_1, DewfordTown_Gym.BrawlyIntro, DewfordTown_Gym.BrawlyDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_BRAWLY_1, DewfordTown_Gym.BrawlyIntro, DewfordTown_Gym.BrawlyDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_DEWFORD_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE02_GET)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_DEWFORD_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE02_GET)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_BULK_UP)) {
       if (!ctx.giveItem(Items.TM08)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_BULK_UP)

@@ -95,15 +95,13 @@ internal object CinnabarIsland_Gym_EventScript_Zac : Script {
 
 internal object CinnabarIsland_Gym_EventScript_Blaine : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_BLAINE)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_LEADER_BLAINE, CinnabarIsland_Gym.BlaineIntro, CinnabarIsland_Gym.BlaineDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_LEADER_BLAINE, CinnabarIsland_Gym.BlaineIntro, CinnabarIsland_Gym.BlaineDefeat) {
+          ctx.setFlag(KantoFlags.FLAG_DEFEATED_BLAINE)
+          ctx.setFlag(KantoFlags.FLAG_BADGE07_GET)
+          ctx.setVar(KantoVars.VAR_MAP_SCENE_CINNABAR_ISLAND, 1)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(KantoFlags.FLAG_DEFEATED_BLAINE)
-      ctx.setFlag(KantoFlags.FLAG_BADGE07_GET)
-      ctx.setVar(KantoVars.VAR_MAP_SCENE_CINNABAR_ISLAND, 1)
-    }
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM38_FROM_BLAINE)) {
       ctx.say(CinnabarIsland_Gym.ExplainVolcanoBadge)
       if (!ctx.giveItem(Items.TM38)) {

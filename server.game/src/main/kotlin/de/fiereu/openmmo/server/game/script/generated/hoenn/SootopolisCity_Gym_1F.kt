@@ -10,15 +10,13 @@ private const val TRAINER_JUAN_1 = 272
 
 internal object SootopolisCity_Gym_1F_EventScript_Juan : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_JUAN_1)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_JUAN_1, SootopolisCity_Gym_1F.JuanIntro, SootopolisCity_Gym_1F.JuanDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_JUAN_1, SootopolisCity_Gym_1F.JuanIntro, SootopolisCity_Gym_1F.JuanDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_SOOTOPOLIS_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE08_GET)
+          ctx.setFlag(HoennFlags.FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_SOOTOPOLIS_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE08_GET)
-      ctx.setFlag(HoennFlags.FLAG_HIDE_SOOTOPOLIS_CITY_RESIDENTS)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_WATER_PULSE)) {
       if (!ctx.giveItem(Items.TM03)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_WATER_PULSE)

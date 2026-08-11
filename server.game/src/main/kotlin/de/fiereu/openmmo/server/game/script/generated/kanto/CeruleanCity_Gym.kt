@@ -31,14 +31,12 @@ internal object CeruleanCity_Gym_EventScript_Diana : Script {
 
 internal object CeruleanCity_Gym_EventScript_Misty : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_MISTY)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_LEADER_MISTY, CeruleanCity_Gym.MistyIntro, CeruleanCity_Gym.MistyDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_LEADER_MISTY, CeruleanCity_Gym.MistyIntro, CeruleanCity_Gym.MistyDefeat) {
+          ctx.setFlag(KantoFlags.FLAG_DEFEATED_MISTY)
+          ctx.setFlag(KantoFlags.FLAG_BADGE02_GET)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(KantoFlags.FLAG_DEFEATED_MISTY)
-      ctx.setFlag(KantoFlags.FLAG_BADGE02_GET)
-    }
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM03_FROM_MISTY)) {
       ctx.say(CeruleanCity_Gym.ExplainCascadeBadge)
       if (!ctx.giveItem(Items.TM03)) {

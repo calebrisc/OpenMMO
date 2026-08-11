@@ -23,17 +23,15 @@ private const val TRAINER_VIRGIL = 234
 
 internal object MossdeepCity_Gym_EventScript_TateAndLiza : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_TATE_AND_LIZA_1)
-    if (!ctx.trainerBattleSingle(
+    if (!ctx.leaderBattle(
         TRAINER_TATE_AND_LIZA_1,
         MossdeepCity_Gym.TateAndLizaIntro,
-        MossdeepCity_Gym.TateAndLizaDefeat))
+        MossdeepCity_Gym.TateAndLizaDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_MOSSDEEP_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE07_GET)
+          ctx.setFlag(HoennFlags.FLAG_HIDE_AQUA_HIDEOUT_GRUNTS)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_MOSSDEEP_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE07_GET)
-      ctx.setFlag(HoennFlags.FLAG_HIDE_AQUA_HIDEOUT_GRUNTS)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_CALM_MIND)) {
       if (!ctx.giveItem(Items.TM04)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_CALM_MIND)

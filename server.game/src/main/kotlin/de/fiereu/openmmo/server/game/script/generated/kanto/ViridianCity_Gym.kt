@@ -83,14 +83,13 @@ internal object ViridianCity_Gym_EventScript_Samuel : Script {
 
 internal object ViridianCity_Gym_EventScript_Giovanni : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_LEADER_GIOVANNI)
-    if (!ctx.trainerBattleSingle(TRAINER_LEADER_GIOVANNI, ViridianCity_Gym.GiovanniIntro)) return
-    if (firstWin) {
+    if (!ctx.leaderBattle(TRAINER_LEADER_GIOVANNI, ViridianCity_Gym.GiovanniIntro) {
       ctx.setFlag(KantoFlags.FLAG_DEFEATED_LEADER_GIOVANNI)
       ctx.setFlag(KantoFlags.FLAG_BADGE08_GET)
       ctx.setFlag(KantoFlags.FLAG_HIDE_MISC_KANTO_ROCKETS)
       ctx.setVar(KantoVars.VAR_MAP_SCENE_ROUTE22, 3)
-    }
+    })
+        return
     if (!ctx.isFlagSet(KantoFlags.FLAG_GOT_TM26_FROM_GIOVANNI)) {
       ctx.say(ViridianCity_Gym.ExplainEarthBadgeTakeThis)
       if (!ctx.giveItem(Items.TM26)) {

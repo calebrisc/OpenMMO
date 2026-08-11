@@ -17,14 +17,12 @@ private const val TRAINER_JARED = 401
 
 internal object FortreeCity_Gym_EventScript_Winona : Script {
   override suspend fun run(ctx: ScriptContext) {
-    val firstWin = !ctx.isTrainerDefeated(TRAINER_WINONA_1)
-    if (!ctx.trainerBattleSingle(
-        TRAINER_WINONA_1, FortreeCity_Gym.WinonaIntro, FortreeCity_Gym.WinonaDefeat))
+    if (!ctx.leaderBattle(
+        TRAINER_WINONA_1, FortreeCity_Gym.WinonaIntro, FortreeCity_Gym.WinonaDefeat) {
+          ctx.setFlag(HoennFlags.FLAG_DEFEATED_FORTREE_GYM)
+          ctx.setFlag(HoennFlags.FLAG_BADGE06_GET)
+        })
         return
-    if (firstWin) {
-      ctx.setFlag(HoennFlags.FLAG_DEFEATED_FORTREE_GYM)
-      ctx.setFlag(HoennFlags.FLAG_BADGE06_GET)
-    }
     if (!ctx.isFlagSet(HoennFlags.FLAG_RECEIVED_TM_AERIAL_ACE)) {
       if (!ctx.giveItem(Items.TM40)) return
       ctx.setFlag(HoennFlags.FLAG_RECEIVED_TM_AERIAL_ACE)
