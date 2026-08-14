@@ -118,6 +118,16 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
           opponentActiveSlot = battle.opponentSlot,
       )
 
+  /** Pushes the result of a bag item: the new hp, and the status if the item cleared one. */
+  fun sendItemUsed(battle: BattleInstance, mon: BattleMonState, cured: Boolean) {
+    broadcast(
+        battle,
+        BattleEntityDeltaPacket(entityId = mon.entityId, currentHp = mon.currentHp.toShort()))
+    if (cured) {
+      sendStatus(battle, mon.entityId, StatusCondition.NONE, 0)
+    }
+  }
+
   /** Sends [mon]'s status if it has one, for a battle start or a switch in. */
   fun sendCarriedStatus(battle: BattleInstance, mon: BattleMonState) {
     if (!mon.status.isSet) return

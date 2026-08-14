@@ -20,6 +20,7 @@ import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnPromptPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnReplyPacket
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleInstance
+import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.BattleMonState
 import de.fiereu.openmmo.server.game.battle.BattlePacketEmitter
 import de.fiereu.openmmo.server.game.battle.BattleRegistry
@@ -97,7 +98,7 @@ constructor(
     if (battle.activeMon().fainted && action.action != BattleAction.SWITCH) return
     when (action.action) {
       BattleAction.MOVE -> resolveTurn(battle, action.moveOrItemId)
-      BattleAction.ITEM -> catchWild(battle)
+      BattleAction.ITEM -> useItem(battle, action.moveOrItemId)
       BattleAction.SWITCH -> switchMon(battle, action.moveOrItemId)
       BattleAction.RUN -> flee(battle)
     }
@@ -375,6 +376,48 @@ constructor(
         }
       }
     }
+  }
+
+  /**
+   * Uses a bag item on the active monster. Every item used to throw a ball regardless of what was
+   * picked, so a Potion did nothing and was not consumed.
+   */
+  private suspend fun useItem(battle: BattleInstance, itemId: Short) {
+    val id = itemId.toInt()
+    val item = items.get(id)
+    val effect = item?.let { BattleItems.effectOf(it) }
+    // Only a recognised healing item diverts. Everything else throws a ball, which is what every
+    // item did before, so catching cannot regress on an id we have not accounted for.
+    if (item == null || effect == null) {
+      catchWild(battle)
+      return
+    }
+    val stored = characterStore.getCharacter(battle.charId)
+    if ((stored?.items?.get(id) ?: 0) <= 0) {
+      emitter.sendNotice(battle, "You have no ${item.name} left.")
+      emitter.sendPrompt(battle)
+      return
+    }
+    val mon = battle.activeMon()
+    val healed = BattleItems.healAmount(effect, mon.currentHp, mon.stats.hp)
+    val cured = effect.cures.contains(mon.status) && mon.status.isSet
+    if (healed <= 0 && !cured) {
+      // Refusing here keeps the item rather than spending a turn for nothing.
+      emitter.sendNotice(battle, "It would have no effect.")
+      emitter.sendPrompt(battle)
+      return
+    }
+    if (healed > 0) mon.currentHp += healed
+    if (cured) mon.clearStatus()
+    characterStore.addItem(battle.charId, id, -1)
+    log.info {
+      "char=${battle.charId} used ${item.name}: healed=$healed cured=$cured " +
+          "hp=${mon.currentHp}/${mon.stats.hp}"
+    }
+    emitter.sendItemUsed(battle, mon, cured)
+    // Using an item spends the turn, so the opposing side gets to act.
+    emitter.sendEvents(battle, engine.resolveSwitchTurn(battle))
+    afterTurn(battle)
   }
 
   private suspend fun switchMon(battle: BattleInstance, partyIndex: Short) {
