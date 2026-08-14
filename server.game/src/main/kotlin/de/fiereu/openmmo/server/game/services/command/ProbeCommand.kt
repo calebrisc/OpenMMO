@@ -1,6 +1,8 @@
 package de.fiereu.openmmo.server.game.services.command
 
 import de.fiereu.openmmo.common.CharacterPermissions
+import de.fiereu.openmmo.common.DynamicWarp
+import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.hasPermission
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
@@ -9,7 +11,9 @@ import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MovementTuning
+import de.fiereu.openmmo.server.game.services.ScriptWarpService
 import de.fiereu.openmmo.server.game.services.notice
+import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -26,10 +30,18 @@ import javax.inject.Singleton
  */
 private val log = KotlinLogging.logger {}
 
+// Pallet Town, where a new character starts and where players have spawned cleanly all along.
+private const val SAFE_REGION: Byte = 0
+private const val SAFE_BANK: Byte = 3
+private const val SAFE_MAP: Byte = 0
+private const val SAFE_X: Short = 11
+private const val SAFE_Y: Short = 10
+
 @Singleton
 class ProbeCommand
 @Inject
 constructor(
+    private val warps: ScriptWarpService,
     private val sessions: SessionRegistry,
     private val characterStore: CharacterStore,
     private val links: LinkService,
@@ -43,6 +55,35 @@ constructor(
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "unstuck") {
+      val name = ctx.args.getOrNull(1) ?: ctx.character.info.name
+      val target = characterStore.findCachedByName(name)
+      val targetSession = target?.let { sessions.getByCharacterId(it.info.id) }
+      val targetState = targetSession?.attributes?.get(PLAYER_STATE)
+      if (target == null || targetSession == null || targetState == null) {
+        ctx.reply("$name is not online.")
+        return
+      }
+      // Somewhere known to be standable, rather than guessing at a tile near wherever they are
+      // wedged. A stuck player would otherwise have to log out so the position could be edited
+      // underneath them, because the store writes its cached copy back over the database.
+      warps.warp(
+          targetSession,
+          targetState,
+          DynamicWarp(
+              regionId = SAFE_REGION,
+              bankId = SAFE_BANK,
+              mapId = SAFE_MAP,
+              x = SAFE_X,
+              y = SAFE_Y,
+              facing = Direction.DOWN,
+          ),
+      )
+      log.info { "Unstuck ${target.info.name} to $SAFE_REGION:$SAFE_BANK:$SAFE_MAP" }
+      targetSession.send(notice("You have been moved somewhere safe."))
+      ctx.reply("Moved ${target.info.name} to safety.")
+      return
+    }
     if (what == "roster") {
       val name = ctx.args.getOrNull(1)
       val state = ctx.args.getOrNull(2)?.toByteOrNull() ?: 0
