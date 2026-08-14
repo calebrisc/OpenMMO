@@ -21,12 +21,16 @@ data class BattleRules(
     val trainer: TrainerDef? = null,
 )
 
-/** One running battle. A wild encounter is the case where [opponent] holds a single monster. */
+/**
+ * One running battle. A wild encounter is the case where [opponent] holds a single monster.
+ *
+ * [participants] is the human side. Everything with one player goes through [host] and the
+ * delegating accessors below, so the ordinary case reads exactly as it did when a battle could only
+ * ever hold one player.
+ */
 class BattleInstance(
     val battleId: Long,
-    val charId: Long,
-    val session: SessionContext,
-    val party: List<BattleMonState>,
+    val participants: List<BattleParticipant>,
     val opponent: List<BattleMonState>,
     val rng: BattleRng,
     val catchable: Boolean = true,
@@ -34,14 +38,35 @@ class BattleInstance(
     /** The trainer who owns [opponent], or null for a wild encounter. */
     val trainer: TrainerDef? = null,
 ) {
+  /** The single-player battle, which is still how every battle starts today. */
+  constructor(
+      battleId: Long,
+      charId: Long,
+      session: SessionContext,
+      party: List<BattleMonState>,
+      opponent: List<BattleMonState>,
+      rng: BattleRng,
+      catchable: Boolean = true,
+      escapable: Boolean = true,
+      trainer: TrainerDef? = null,
+  ) : this(
+      battleId,
+      listOf(BattleParticipant(charId, session, party)),
+      opponent,
+      rng,
+      catchable,
+      escapable,
+      trainer,
+  )
+
+  init {
+    require(participants.isNotEmpty()) { "A battle needs at least one participant" }
+  }
+
   val key: BattleInterestKey = BattleInterestKey(battleId)
   var turn: Int = 1
-  var activeSlot: Int = 0
   var opponentSlot: Int = 0
 
-  // Which slots have been sent out as active. A monster's first appearance carries its full block,
-  // a return only its active detail.
-  val seenActive: MutableSet<Int> = mutableSetOf(0)
   val opponentSeen: MutableSet<Int> = mutableSetOf(0)
 
   /** Completes when the battle leaves the registry. */
@@ -50,9 +75,47 @@ class BattleInstance(
   /** Result held until the client confirms that its battle-to-map transition has finished. */
   var pendingResult: BattleResult? = null
 
-  fun activeMon(): BattleMonState = party[activeSlot]
+  /** The player who started the battle, and the only one in an ordinary battle. */
+  val host: BattleParticipant
+    get() = participants.first()
+
+  val coop: Boolean
+    get() = participants.size > 1
+
+  val charId: Long
+    get() = host.charId
+
+  val session: SessionContext
+    get() = host.session
+
+  val party: List<BattleMonState>
+    get() = host.party
+
+  var activeSlot: Int
+    get() = host.activeSlot
+    set(value) {
+      host.activeSlot = value
+    }
+
+  val seenActive: MutableSet<Int>
+    get() = host.seenActive
+
+  fun activeMon(): BattleMonState = host.activeMon()
 
   fun opponentMon(): BattleMonState = opponent[opponentSlot]
 
-  fun isPlayerSide(entityId: Long): Boolean = party.any { it.entityId == entityId }
+  fun participantFor(charId: Long): BattleParticipant? =
+      participants.firstOrNull { it.charId == charId }
+
+  fun participantOwning(entityId: Long): BattleParticipant? =
+      participants.firstOrNull { it.owns(entityId) }
+
+  fun isPlayerSide(entityId: Long): Boolean = participants.any { it.owns(entityId) }
+
+  /** Every monster the human side currently has out. */
+  fun activeMons(): List<BattleMonState> = participants.map { it.activeMon() }
+
+  /** True once no participant has anything left to send out. */
+  val allParticipantsDefeated: Boolean
+    get() = participants.all { it.defeated }
 }

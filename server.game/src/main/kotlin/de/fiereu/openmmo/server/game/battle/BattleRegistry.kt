@@ -6,7 +6,10 @@ import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/** The running battles, one per character. */
+/**
+ * The running battles. A character is in at most one, but a battle can hold several characters, so
+ * the index maps every participant to the same instance.
+ */
 @Singleton
 class BattleRegistry @Inject constructor() {
 
@@ -20,24 +23,35 @@ class BattleRegistry @Inject constructor() {
       opponent: List<BattleMonState>,
       rng: BattleRng,
       rules: BattleRules = BattleRules(),
+  ): BattleInstance =
+      create(listOf(BattleParticipant(charId, session, party)), opponent, rng, rules)
+
+  fun create(
+      participants: List<BattleParticipant>,
+      opponent: List<BattleMonState>,
+      rng: BattleRng,
+      rules: BattleRules = BattleRules(),
   ): BattleInstance {
     val battle =
         BattleInstance(
             ids.getAndIncrement(),
-            charId,
-            session,
-            party,
+            participants,
             opponent,
             rng,
             rules.catchable,
             rules.escapable,
             rules.trainer,
         )
-    byChar[charId] = battle
+    participants.forEach { byChar[it.charId] = battle }
     return battle
   }
 
   fun byChar(charId: Long): BattleInstance? = byChar[charId]
 
-  fun remove(charId: Long): BattleInstance? = byChar.remove(charId)
+  /** Removes the battle [charId] is in, and with it every other participant's entry. */
+  fun remove(charId: Long): BattleInstance? {
+    val battle = byChar.remove(charId) ?: return null
+    battle.participants.forEach { byChar.remove(it.charId, battle) }
+    return battle
+  }
 }
