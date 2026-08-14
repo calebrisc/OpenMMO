@@ -8,6 +8,7 @@ import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MovementTuning
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
+import io.github.oshai.kotlinlogging.KotlinLogging
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,6 +20,8 @@ import javax.inject.Singleton
  * says which of the three it was, and they appear to stall because we never answer. This drives the
  * other half of that conversation: pick a byte, send it, and see what window opens.
  */
+private val log = KotlinLogging.logger {}
+
 @Singleton
 class ProbeCommand
 @Inject
@@ -47,6 +50,7 @@ constructor(
       }
       MovementTuning.walk = walk
       if (run != null) MovementTuning.run = run
+      log.info { "Relayed movement modes set to walk=$walk run=${MovementTuning.run}" }
       ctx.reply("Relaying walk=${MovementTuning.walk} run=${MovementTuning.run}. Walk around now.")
       return
     }

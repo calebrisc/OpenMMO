@@ -2,12 +2,14 @@ package de.fiereu.openmmo.server.game.services
 
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.net.game.packets.EntityLeavePacket
+import de.fiereu.openmmo.net.game.packets.GbaEntityMovePacket
 import de.fiereu.openmmo.net.game.packets.LoadEntityPacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.world.interest.InterestManager
 import de.fiereu.openmmo.server.game.world.interest.InterestPolicy
 import de.fiereu.openmmo.server.game.world.interest.MapInterestKey
+import io.github.oshai.kotlinlogging.KotlinLogging
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,6 +18,8 @@ import javax.inject.Singleton
  * This layer adds the entity spawn/despawn semantics and the area-of-interest filter that only make
  * sense for spatial presence.
  */
+private val log = KotlinLogging.logger {}
+
 @Singleton
 class PresenceService
 @Inject
@@ -41,9 +45,23 @@ constructor(
   }
 
   /** Send a packet to everyone observing the player on its current map (excludes the player). */
+  /**
+   * Temporary: counts who a relayed packet reaches, to tell a silent fan-out from a client that
+   * ignores it.
+   */
   fun broadcastToObservers(ctx: SessionContext, packet: Any) {
     val key = currentMapKey(ctx) ?: mapKeyFor(ctx) ?: return
-    for (other in observers(ctx, key)) other.send(packet)
+    val watching = observers(ctx, key)
+    // Temporary while chasing players who see each other frozen: says whether a step reaches
+    // anybody at all, which separates a relay that fans out to nobody from a client that is being
+    // sent the step and declining to draw it.
+    if (packet is GbaEntityMovePacket) {
+      log.info {
+        "relay ${packet.entityId} -> ${watching.size} observer(s) on $key " +
+            "at (${packet.x}, ${packet.y}) mode=${packet.movementMode}"
+      }
+    }
+    for (other in watching) other.send(packet)
   }
 
   /**
