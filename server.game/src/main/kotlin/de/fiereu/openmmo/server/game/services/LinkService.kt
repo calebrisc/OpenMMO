@@ -12,6 +12,7 @@ import de.fiereu.openmmo.net.game.packets.PartyRosterPacket
 import de.fiereu.openmmo.net.game.packets.RequestConfirmationPromptPacket
 import de.fiereu.openmmo.net.game.packets.SendChatCommandPacket
 import de.fiereu.openmmo.net.game.packets.StringCommandPacket
+import de.fiereu.openmmo.net.game.packets.TradeActionPacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -38,7 +39,11 @@ private const val NOT_IN_WORLD = "You are not in the world yet."
 private const val INVITE_PROMPT_SECONDS = 60
 
 /** The candidate request types, announced one at a time so a hit can be named. */
-private val SWEEP_VALUES = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 32, 64)
+/** Value 2 crashed a client outright, so a sweep steps over it. */
+private val KNOWN_HARMFUL = setOf(2)
+
+/** Confirmed live: this is the value that opens the other player's trade window. */
+private const val TRADE_REQUEST_TYPE: Byte = 0
 
 private val SWEEP_GAP = 2.seconds
 
@@ -65,6 +70,12 @@ constructor(
 ) {
   // Keyed by the invited character.
   private val pending = ConcurrentHashMap<Long, PendingInvite>()
+
+  /**
+   * Who each player last pointed at. The client names its target in one packet and says what it
+   * wants in another, so the action arrives with no target of its own.
+   */
+  private val lastTarget = ConcurrentHashMap<Long, Long>()
 
   fun linkFor(charId: Long): Link? = linkStore.forChar(charId)
 
@@ -94,6 +105,7 @@ constructor(
   fun onNamedInvite(session: SessionContext, targetName: String) {
     val charId = session.attributes[PLAYER_STATE]?.characterId ?: return
     if (targetName.isBlank()) return
+    characterStore.findCachedByName(targetName)?.let { lastTarget[charId] = it.info.id }
     val reply = invite(session, charId, targetName)
     session.send(notice(reply))
     val target = characterStore.findCachedByName(targetName) ?: return
@@ -125,21 +137,56 @@ constructor(
    * finally draws a prompt can be named. Sixteen rounds by hand is how an experiment gets abandoned
    * half way.
    */
-  suspend fun sweepInvite(ctx: SessionContext, inviterId: Long, targetName: String): String {
+  suspend fun sweepInvite(
+      ctx: SessionContext,
+      inviterId: Long,
+      targetName: String,
+      from: Int,
+      to: Int,
+  ): String {
     val target = characterStore.findCachedByName(targetName) ?: return "$targetName is not online."
     val inviter = characterStore.getCharacter(inviterId) ?: return NOT_IN_WORLD
-    val targetSession =
-        sessionRegistry.getByCharacterId(target.info.id) ?: return "$targetName is not online."
-    for (value in SWEEP_VALUES) {
+    val tried = mutableListOf<Int>()
+    for (value in from..to) {
+      // Value 2 took a client down mid-sweep. Whatever it opens cannot be rendered cold, and one
+      // crash is enough to have learned that.
+      if (value in KNOWN_HARMFUL) continue
+      // Re-resolve every time: if the last value killed them, stop rather than sweep at a ghost.
+      val targetSession = sessionRegistry.getByCharacterId(target.info.id)
+      if (targetSession == null || !targetSession.channel.isActive) {
+        return "${target.info.name} dropped after ${tried.lastOrNull()}. Stopped. Tried $tried."
+      }
       val label = notice("Trying invite value $value.")
       ctx.send(label)
       targetSession.send(label)
       targetSession.send(
           DuelInvitePacket(flags = 0, requestType = value.toByte(), name = inviter.info.name))
+      tried += value
       log.info { "Sweep sent invite value=$value to ${target.info.name}" }
       delay(SWEEP_GAP)
     }
-    return "Swept ${SWEEP_VALUES.size} values at ${target.info.name}. Which one drew a prompt?"
+    return "Tried $tried at ${target.info.name}. Which one opened something?"
+  }
+
+  /**
+   * The client's Trade button. It sends this with no target, having named the player in an earlier
+   * packet, so the reply goes to whoever they last pointed at.
+   */
+  fun onTradeAction(event: PacketEvent<TradeActionPacket>) {
+    val session = event.session
+    val charId = session.attributes[PLAYER_STATE]?.characterId ?: return
+    val targetId = lastTarget[charId]
+    val requester = characterStore.getCharacter(charId) ?: return
+    log.info { "TradeAction action=${event.packet.action} char=$charId target=$targetId" }
+    if (targetId == null) {
+      session.send(notice("Click the player first, then Trade."))
+      return
+    }
+    val targetSession = sessionRegistry.getByCharacterId(targetId) ?: return
+    targetSession.send(
+        DuelInvitePacket(flags = 0, requestType = TRADE_REQUEST_TYPE, name = requester.info.name))
+    val targetName = characterStore.getCharacter(targetId)?.info?.name
+    session.send(notice("Trade request sent to $targetName."))
   }
 
   fun onSendChatCommand(event: PacketEvent<SendChatCommandPacket>) {

@@ -34,6 +34,7 @@ import de.fiereu.openmmo.net.game.packets.ShopSellRequestPacket
 import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
 import de.fiereu.openmmo.net.game.packets.StringCommandPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
+import de.fiereu.openmmo.net.game.packets.TradeActionPacket
 import de.fiereu.openmmo.net.game.packets.UnblockPlayerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
@@ -135,6 +136,7 @@ constructor(
     onSuspend<BlockPlayerPacket> { event -> socialService.onBlockPlayer(event) }
     onSuspend<UnblockPlayerPacket> { event -> socialService.onUnblockPlayer(event) }
     on<PartyInfoRequestPacket> { event -> linkService.onPartyInfoRequest(event) }
+    on<TradeActionPacket> { event -> linkService.onTradeAction(event) }
     on<SendChatCommandPacket> { event -> linkService.onSendChatCommand(event) }
     on<StringCommandPacket> { event -> linkService.onStringCommand(event) }
     on<LinkKickMemberPacket> { event -> linkService.onKickMember(event) }

@@ -38,10 +38,12 @@ constructor(
     if (what == "sweep") {
       val name = ctx.args.getOrNull(1)
       if (name == null) {
-        ctx.reply("Usage: /probe sweep <name>")
+        ctx.reply("Usage: /probe sweep <name> [from] [to]")
         return
       }
-      ctx.reply(links.sweepInvite(ctx.session, ctx.characterId, name))
+      val from = ctx.args.getOrNull(2)?.toIntOrNull() ?: 0
+      val to = ctx.args.getOrNull(3)?.toIntOrNull() ?: (from + 7)
+      ctx.reply(links.sweepInvite(ctx.session, ctx.characterId, name, from, to))
       return
     }
     if (what == "prompt") {
