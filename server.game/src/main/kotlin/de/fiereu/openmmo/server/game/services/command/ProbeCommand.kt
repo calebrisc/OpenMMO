@@ -1,17 +1,18 @@
 package de.fiereu.openmmo.server.game.services.command
 
 import de.fiereu.openmmo.common.CharacterPermissions
-import de.fiereu.openmmo.common.DynamicWarp
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.hasPermission
+import de.fiereu.openmmo.maps.MapManager
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
 import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.services.LinkService
+import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MovementTuning
-import de.fiereu.openmmo.server.game.services.ScriptWarpService
+import de.fiereu.openmmo.server.game.services.PresenceService
 import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
@@ -41,7 +42,9 @@ private const val SAFE_Y: Short = 10
 class ProbeCommand
 @Inject
 constructor(
-    private val warps: ScriptWarpService,
+    private val maps: MapManager,
+    private val mapLoad: MapLoadService,
+    private val presence: PresenceService,
     private val sessions: SessionRegistry,
     private val characterStore: CharacterStore,
     private val links: LinkService,
@@ -64,21 +67,28 @@ constructor(
         ctx.reply("$name is not online.")
         return
       }
-      // Somewhere known to be standable, rather than guessing at a tile near wherever they are
-      // wedged. A stuck player would otherwise have to log out so the position could be edited
-      // underneath them, because the store writes its cached copy back over the database.
-      warps.warp(
-          targetSession,
-          targetState,
-          DynamicWarp(
-              regionId = SAFE_REGION,
-              bankId = SAFE_BANK,
-              mapId = SAFE_MAP,
-              x = SAFE_X,
-              y = SAFE_Y,
-              facing = Direction.DOWN,
-          ),
-      )
+      // Placed the way a login places somebody rather than warped: the warp blacks the screen
+      // and waits for the client to confirm the map, and when that confirmation never came the
+      // player sat through the timeout and arrived frozen. Nothing here waits on the client.
+      val map = maps.getMap(SAFE_REGION, SAFE_BANK, SAFE_MAP)
+      if (map == null) {
+        ctx.reply("The safe map is missing from this build.")
+        return
+      }
+      characterStore.updatePosition(
+          target.info.id, SAFE_X, SAFE_Y, SAFE_BANK, SAFE_MAP, Direction.DOWN)
+      characterStore.flushCharacterAsync(target.info.id)
+      targetState.regionId = SAFE_REGION.toInt()
+      targetState.bankId = SAFE_BANK.toInt()
+      targetState.mapId = SAFE_MAP.toInt()
+      targetState.x = SAFE_X
+      targetState.y = SAFE_Y
+      targetState.facingDirection = Direction.DOWN
+      targetState.inDialog = false
+      targetState.consecutiveDesyncs = 0
+      mapLoad.resetClientCache(targetSession, map)
+      targetSession.send(maps.createLoadMapPacket(map, reloadPlayer = true, deleteCache = true))
+      presence.refresh(targetSession)
       log.info { "Unstuck ${target.info.name} to $SAFE_REGION:$SAFE_BANK:$SAFE_MAP" }
       targetSession.send(notice("You have been moved somewhere safe."))
       ctx.reply("Moved ${target.info.name} to safety.")
