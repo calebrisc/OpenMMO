@@ -3,16 +3,18 @@ package de.fiereu.openmmo.server.game.services
 /**
  * The movement mode stamped on a step relayed to everyone else.
  *
- * Found by trying values against two live clients: at 0 both players see each other walk normally,
- * while 1, 3 and 4 leave the other player frozen after a single step. An earlier guess of 1 for
- * walking is what left players standing still on each other's screens.
+ * Both values were found by trying them against two live clients. At 0 a player walks, runs and
+ * moves over water correctly on everyone else's screen; 1, 3 and 4 leave the observer frozen after
+ * a single step, and the old run value of 2 broke movement on water. Earlier guesses of 1 for
+ * walking and 2 for running are what left players standing still on each other's screens.
  *
- * pokeserver-only, and tunable live with /probe mm because the remaining values are still guesses.
+ * So the byte is not the walk-or-run selector it was taken for. It is kept as two values, and
+ * tunable with /probe mm, only because what it really means is still unknown.
  */
 object MovementTuning {
-  /** Confirmed live: the only value that makes an observer animate an ordinary step. */
+  /** Confirmed live. */
   @Volatile var walk: Int = 0
 
-  /** Not yet confirmed the way [walk] was. Running may well want its own value. */
-  @Volatile var run: Int = 2
+  /** Confirmed live, including over water. */
+  @Volatile var run: Int = 0
 }

@@ -22,6 +22,9 @@ private val log = KotlinLogging.logger {}
 /** Rejected steps in a row before the client is sent a whole map rather than another nudge. */
 private const val DESYNC_RELOAD_THRESHOLD = 4
 
+/** The least time between two resync map pushes to one player. */
+private const val RELOAD_COOLDOWN_MS = 15_000L
+
 /** Resolve a cardinal Gen-3 ledge hop to its tile two spaces away. */
 internal fun ledgeLanding(
     map: MapDef,
@@ -109,7 +112,13 @@ constructor(
           "DESYNC: char=$charId claims (${msg.x}, ${msg.y}), server has ($fromX, $fromY), " +
               "count=${state.consecutiveDesyncs}"
         }
-        if (state.consecutiveDesyncs >= DESYNC_RELOAD_THRESHOLD) {
+        val now = System.currentTimeMillis()
+        val sinceLastReload = now - state.lastDesyncReloadAt
+        // A reload cannot fix a player standing somewhere the server will not accept, so without a
+        // cooldown it just fires on every step: the screen fades to black over and over and the
+        // player is worse off than when they were merely stuck.
+        if (state.consecutiveDesyncs >= DESYNC_RELOAD_THRESHOLD &&
+            sinceLastReload >= RELOAD_COOLDOWN_MS) {
           // A position fix is stamped with the server's map, so a client that thinks it is on a
           // different one discards it and the disagreement never heals: the player walks on while
           // everyone else watches them stand still. Send the whole map instead.
@@ -118,6 +127,7 @@ constructor(
                 "bank=${currentMap.bankId} map=${currentMap.mapId}"
           }
           state.consecutiveDesyncs = 0
+          state.lastDesyncReloadAt = now
           ctx.send(mapManager.createLoadMapPacket(currentMap, reloadPlayer = true))
         }
         sendPositionReset(ctx, charId, currentMap, fromX, fromY, msg.direction)

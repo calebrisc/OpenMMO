@@ -30,6 +30,8 @@ data class PlayerState(
      * answered with a whole map instead.
      */
     @field:Volatile var consecutiveDesyncs: Int = 0,
+    /** When the last map was pushed to resync this player, so it cannot be pushed on a loop. */
+    @field:Volatile var lastDesyncReloadAt: Long = 0,
     /**
      * A script is warping and will run the destination's entry scripts itself. The arrival must not
      * start a second copy, which [inDialog] alone cannot prevent because a stray dialog packet
