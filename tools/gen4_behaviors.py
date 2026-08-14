@@ -78,8 +78,14 @@ def main():
                 "value": value,
                 "name": name,
                 "named": bool(name and "UNUSED" not in name),
-                "encounter": bool(flag & ENCOUNTER),
-                "surfable": bool(flag & SURFABLE),
+                # Platinum's flags are only trustworthy for behaviours Platinum itself named.
+                # For a slot it marks unused the flag is a guess, and HeartGold measurably
+                # disagrees: behaviour 6 is flagged as generating encounters but is commoner on
+                # maps with NO land encounters than on maps with them, so it is ordinary walkable
+                # ground. Named grass, 2 and 3, correlates the right way and is kept.
+                "encounter": bool(flag & ENCOUNTER) and bool(name and "UNUSED" not in name),
+                "surfable": bool(flag & SURFABLE) and bool(name and "UNUSED" not in name),
+                "flagsTrusted": bool(name and "UNUSED" not in name),
             }
         )
 

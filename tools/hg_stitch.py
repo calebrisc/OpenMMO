@@ -10,6 +10,10 @@ Matrix format, from src/map_matrix.c:15-60:
     [u16 headers[w*h]]  [u8 altitudes[w*h]]  u16 models[w*h]
 When hasHeaders is 0 every cell belongs to the map that loaded the matrix.
 
+Validated by rendering an interior: MAP_NEW_BARK_PLAYER_HOUSE_1F comes out as a walled
+rectangle with an open floor, furniture blocks and a doorway gap, which is what the room is. A town
+looks noisy by comparison because towns are noisy, not because the stitch is wrong.
+
 Usage: hg_stitch.py <decomp-dir> <map-table.json> <out.json> [--sample NAME]
 """
 
