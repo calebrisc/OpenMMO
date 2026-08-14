@@ -5,7 +5,12 @@ import de.fiereu.openmmo.server.game.storage.CharacterStore
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/** Watches somebody else's battle. The first step towards fighting one together. */
+/**
+ * Watches somebody else's battle.
+ *
+ * Not called spectate: the client owns that name and answers it itself, so the command never
+ * reaches the server. Renamed here from watch for the same reason.
+ */
 @Singleton
 class WatchCommand
 @Inject
@@ -13,8 +18,8 @@ constructor(
     private val battles: BattleService,
     private val characterStore: CharacterStore,
 ) : ChatCommand {
-  override val name = "spectate"
-  override val usage = "/spectate <name> | /spectate stop"
+  override val name = "observe"
+  override val usage = "/observe <name> | /observe stop"
   override val description = "watches another player's battle"
 
   override suspend fun run(ctx: CommandContext) {

@@ -222,7 +222,7 @@ constructor(
         ?.send(
             notice(
                 "${inviter.info.name} invited you to their link. " +
-                    "Type /link accept to join, or /link decline."))
+                    "Type /squad accept to join, or /squad decline."))
     log.info { "Link invite char=$inviterId -> ${target.info.id}" }
     return "Invited ${target.info.name} to your link."
   }
@@ -269,7 +269,7 @@ constructor(
 
   fun leave(charId: Long): String {
     val name = characterStore.getCharacter(charId)?.info?.name ?: "Someone"
-    val remaining = linkStore.remove(charId) ?: return "You are not in a link."
+    val remaining = linkStore.remove(charId) ?: return "You are not in a squad."
     sessionRegistry.getByCharacterId(charId)?.send(PartyRosterPacket(ROSTER_REPLACE, emptyList()))
     clearGroup(charId)
     if (!linkStore.contains(remaining)) {
@@ -290,12 +290,12 @@ constructor(
   }
 
   fun kick(charId: Long, targetName: String): String {
-    val link = linkStore.forChar(charId) ?: return "You are not in a link."
+    val link = linkStore.forChar(charId) ?: return "You are not in a squad."
     if (link.leader.charId != charId) return "Only the link leader can remove somebody."
     val target =
         link.members.firstOrNull { it.name.equals(targetName, ignoreCase = true) }
             ?: return "$targetName is not in your link."
-    if (target.charId == charId) return "Use /link leave to leave your own link."
+    if (target.charId == charId) return "Use /squad leave to leave your own squad."
     sessionRegistry.getByCharacterId(target.charId)?.send(notice("You were removed from the link."))
     val remaining = linkStore.remove(target.charId)
     if (remaining != null && remaining.members.isNotEmpty()) {
@@ -307,7 +307,8 @@ constructor(
   }
 
   fun describe(charId: Long): String {
-    val link = linkStore.forChar(charId) ?: return "You are not in a link. Try /link invite <name>."
+    val link =
+        linkStore.forChar(charId) ?: return "You are not in a squad. Try /squad invite <name>."
     val names =
         link.members.joinToString(", ") { member ->
           if (member.charId == link.leader.charId) "${member.name} (leader)" else member.name
