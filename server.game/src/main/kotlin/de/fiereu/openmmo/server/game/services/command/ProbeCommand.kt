@@ -6,6 +6,10 @@ import de.fiereu.openmmo.common.hasPermission
 import de.fiereu.openmmo.maps.MapManager
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
+import de.fiereu.openmmo.net.game.packets.EntityAppearanceInfo
+import de.fiereu.openmmo.net.game.packets.EntityGroupMember
+import de.fiereu.openmmo.net.game.packets.EntityGroupSnapshotPacket
+import de.fiereu.openmmo.net.game.packets.GroupListFrameSet
 import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
@@ -92,6 +96,42 @@ constructor(
       log.info { "Unstuck ${target.info.name} to $SAFE_REGION:$SAFE_BANK:$SAFE_MAP" }
       targetSession.send(notice("You have been moved somewhere safe."))
       ctx.reply("Moved ${target.info.name} to safety.")
+      return
+    }
+    if (what == "group") {
+      val name = ctx.args.getOrNull(1)
+      val target = name?.let { characterStore.findCachedByName(it) }
+      val targetSession = target?.let { sessions.getByCharacterId(it.info.id) }
+      if (target == null || targetSession == null) {
+        ctx.reply("Usage: /probe group <name>")
+        return
+      }
+      // The one packet that names a leader, which is the shape of "you are in a group" rather than
+      // the bare member list the roster turned out to be. The roster did nothing across every
+      // state, so this is the next candidate.
+      val members =
+          listOf(ctx.character, target).map { who ->
+            EntityGroupMember(
+                entityId = who.info.id,
+                appearance =
+                    EntityAppearanceInfo(
+                        name = who.info.name,
+                        gender = 0,
+                        formId = 0,
+                        kind = 0,
+                        palettePack = 0,
+                        slots = List(4) { 0 },
+                    ),
+                frames = GroupListFrameSet(listType = null, frames = emptyList()),
+            )
+          }
+      targetSession.send(
+          EntityGroupSnapshotPacket(
+              present = true,
+              leaderId = ctx.characterId,
+              members = members,
+          ))
+      ctx.reply("Sent a group snapshot to ${target.info.name}, led by you.")
       return
     }
     if (what == "roster") {
