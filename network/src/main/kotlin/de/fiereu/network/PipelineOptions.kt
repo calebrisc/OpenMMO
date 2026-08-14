@@ -2,7 +2,6 @@ package de.fiereu.network
 
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 data class PipelineOptions(
     val checksumSize: Int = 16,

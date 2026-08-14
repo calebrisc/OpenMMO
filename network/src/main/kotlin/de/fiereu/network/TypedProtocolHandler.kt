@@ -37,7 +37,9 @@ abstract class TypedProtocolHandler<P : Protocol>(
   open fun isRegistered(type: KClass<*>): Boolean = handlers.containsKey(type)
 
   protected open fun onUnhandled(event: PacketEvent<*>) {
-    log.error { "Unhandled packet ${event.packet::class.simpleName} on $side" }
+    // The contents are the whole point of the line: an unhandled packet is one we are still
+    // working out, and its field values are what identify what the client was asking for.
+    log.error { "Unhandled packet ${event.packet::class.simpleName} on $side: ${event.packet}" }
   }
 
   final override fun onPacket(event: PacketEvent<*>) {
