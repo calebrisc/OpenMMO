@@ -3,6 +3,10 @@ package de.fiereu.openmmo.server.game.services
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
+import de.fiereu.openmmo.net.game.packets.EntityAppearanceInfo
+import de.fiereu.openmmo.net.game.packets.EntityGroupMember
+import de.fiereu.openmmo.net.game.packets.EntityGroupSnapshotPacket
+import de.fiereu.openmmo.net.game.packets.GroupListFrameSet
 import de.fiereu.openmmo.net.game.packets.InGameChallengeResponsePacket
 import de.fiereu.openmmo.net.game.packets.LinkKickMemberPacket
 import de.fiereu.openmmo.net.game.packets.PartyInfoRequestPacket
@@ -267,6 +271,7 @@ constructor(
     val name = characterStore.getCharacter(charId)?.info?.name ?: "Someone"
     val remaining = linkStore.remove(charId) ?: return "You are not in a link."
     sessionRegistry.getByCharacterId(charId)?.send(PartyRosterPacket(ROSTER_REPLACE, emptyList()))
+    clearGroup(charId)
     if (!linkStore.contains(remaining)) {
       // Dropping below two ends it, so tell whoever was left and clear their roster too.
       announce(remaining, "The link broke up.")
@@ -274,6 +279,7 @@ constructor(
         sessionRegistry
             .getByCharacterId(member.charId)
             ?.send(PartyRosterPacket(ROSTER_REPLACE, emptyList()))
+        clearGroup(member.charId)
       }
       return "You left the link."
     }
@@ -349,8 +355,43 @@ constructor(
 
   private fun broadcastRoster(link: Link) {
     val roster = rosterOf(link)
-    sessionsIn(link).forEach { it.send(roster) }
+    val snapshot = snapshotOf(link)
+    for (session in sessionsIn(link)) {
+      session.send(roster)
+      // The snapshot is what actually draws the party: it names a leader, and confirmed live it
+      // puts the group on screen. The roster alone drew nothing at any state.
+      session.send(snapshot)
+    }
   }
+
+  /** Clears the party from a player's screen. */
+  private fun clearGroup(charId: Long) {
+    sessionRegistry
+        .getByCharacterId(charId)
+        ?.send(EntityGroupSnapshotPacket(present = false, leaderId = null, members = null))
+  }
+
+  private fun snapshotOf(link: Link): EntityGroupSnapshotPacket =
+      EntityGroupSnapshotPacket(
+          present = true,
+          leaderId = link.leader.charId,
+          members =
+              link.members.map { member ->
+                EntityGroupMember(
+                    entityId = member.charId,
+                    appearance =
+                        EntityAppearanceInfo(
+                            name = member.name,
+                            gender = 0,
+                            formId = 0,
+                            kind = 0,
+                            palettePack = 0,
+                            slots = List(4) { 0 },
+                        ),
+                    frames = GroupListFrameSet(listType = null, frames = emptyList()),
+                )
+              },
+      )
 
   private fun broadcastLeave(link: Link, charId: Long) {
     sessionsIn(link).forEach { it.send(PartyMemberLeavePacket(memberId = charId)) }
