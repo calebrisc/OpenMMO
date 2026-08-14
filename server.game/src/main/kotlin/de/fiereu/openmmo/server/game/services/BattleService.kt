@@ -188,7 +188,12 @@ constructor(
 
   /** Drops a watcher out again. */
   fun stopWatching(session: SessionContext): String {
-    val keys = interestManager.keysOf(session).filterIsInstance<BattleInterestKey>()
+    val charId = session.attributes[PLAYER_STATE]?.characterId
+    // Never unsubscribe somebody from a battle they are fighting: they would stop receiving
+    // their own moves and the client would hang with the fight still running.
+    val own = charId?.let { battles.byChar(it) }?.key
+    val keys =
+        interestManager.keysOf(session).filterIsInstance<BattleInterestKey>().filter { it != own }
     if (keys.isEmpty()) return "You are not watching a battle."
     keys.forEach { interestManager.leave(session, it) }
     return "Stopped watching."
@@ -526,6 +531,7 @@ constructor(
             hp = reward.newCurrentHp.toShort(),
             eVs = reward.newEvs,
             moves = winner.moves.map { PokemonMove(it.id, it.pp) },
+            status = winner.status,
         )
     winner.source = grown
     winner.stats = reward.newStats

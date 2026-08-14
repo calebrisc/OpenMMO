@@ -27,10 +27,17 @@ class BattleMonState(
 
   /** Carried in from the party and written back out, so it outlives the battle. */
   var status: StatusCondition = source.status
-  /** Turns of sleep still owed. Only meaningful while [status] is [StatusCondition.SLEEP]. */
-  var sleepTurns: Int = 0
-  /** Turns spent badly poisoned, which is the numerator of the toxic damage fraction. */
-  var toxicCounter: Int = 0
+  /**
+   * Turns of sleep still owed. Only meaningful while [status] is [StatusCondition.SLEEP]. A monster
+   * that walks in asleep owes a full sleep, not zero, or it wakes on its first action.
+   */
+  var sleepTurns: Int =
+      if (source.status == StatusCondition.SLEEP) StatusRules.MAX_SLEEP_TURNS else 0
+  /**
+   * Turns spent badly poisoned, the numerator of the toxic fraction. Starts at one for a monster
+   * that walks in poisoned, so its first tick is a sixteenth rather than a single hp.
+   */
+  var toxicCounter: Int = if (source.status == StatusCondition.TOXIC) 1 else 0
 
   private val stages = EnumMap<BattleStat, Int>(BattleStat::class.java)
 

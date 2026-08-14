@@ -33,6 +33,9 @@ class LinkStore @Inject constructor() {
 
   fun forChar(charId: Long): Link? = linkByChar[charId]?.let { links[it] }
 
+  /** Whether the link is still live, as opposed to one [remove] has just disbanded. */
+  fun contains(link: Link): Boolean = links.containsKey(link.id)
+
   /** Starts a link around [leader], or returns the one they are already in. */
   fun create(leader: LinkMember): Link {
     forChar(leader.charId)?.let {
@@ -52,7 +55,11 @@ class LinkStore @Inject constructor() {
     return true
   }
 
-  /** Removes [charId] and disbands the link once fewer than two players are left. */
+  /**
+   * Removes [charId] and disbands the link once fewer than two players are left. The returned link
+   * lists whoever was still in it, which is who has to be told; use [contains] to ask whether it
+   * survived.
+   */
   fun remove(charId: Long): Link? {
     val link = forChar(charId) ?: return null
     link.members.removeAll { it.charId == charId }

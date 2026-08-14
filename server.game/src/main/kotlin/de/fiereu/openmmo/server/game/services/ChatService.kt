@@ -49,7 +49,8 @@ constructor(
     val sender = characterStore.getCharacter(charId)?.info?.name ?: "Unknown"
     log.info { "Chat [${msg.type}] $sender: ${msg.message}" }
 
-    if (chatCommandService.tryHandle(ctx, msg.message)) return
+    // Commands are handled on the send path only. Live capture shows the client types through
+    // that one, and running them here as well would execute a /give twice if it ever used both.
 
     when (msg.type) {
       ChatType.TEAM -> sendToGuild(charId, sender, msg.message)
@@ -114,12 +115,14 @@ constructor(
       ctx.send(notice("Your message to $targetName could not be delivered."))
       return
     }
+    val senderId = ctx.attributes[PLAYER_STATE]?.characterId ?: 0
     val packet =
         ChatMessagePacket(
             type = ChatType.WHISPER,
             language = Language.EN,
             message = message,
             sender = sender,
+            senderId = senderId,
         )
     target.send(packet)
     // Echo it back so the sender sees their own whisper in the log.
@@ -139,6 +142,7 @@ constructor(
             language = Language.EN,
             message = message,
             sender = sender,
+            senderId = charId,
         )
     linkService.sessionsIn(link).forEach { it.send(packet) }
   }

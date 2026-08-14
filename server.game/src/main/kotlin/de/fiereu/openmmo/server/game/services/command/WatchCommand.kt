@@ -13,8 +13,8 @@ constructor(
     private val battles: BattleService,
     private val characterStore: CharacterStore,
 ) : ChatCommand {
-  override val name = "watch"
-  override val usage = "/watch <name> | /watch stop"
+  override val name = "spectate"
+  override val usage = "/spectate <name> | /spectate stop"
   override val description = "watches another player's battle"
 
   override suspend fun run(ctx: CommandContext) {

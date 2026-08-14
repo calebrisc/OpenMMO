@@ -83,6 +83,22 @@ class LinkStoreTest :
         remaining.leader.charId shouldBe 2L
       }
 
+      test("a link of three survives a leaver and a link of two does not") {
+        val store = LinkStore()
+        val three = store.create(member(1))
+        store.add(three, member(2))
+        store.add(three, member(3))
+        store.contains(store.remove(3L)!!).shouldBeTrue()
+
+        val two = LinkStore()
+        val link = two.create(member(1))
+        two.add(link, member(2))
+        // The survivor list is non-empty, so only the store can say it broke up.
+        val remaining = two.remove(2L)!!
+        remaining.members.size shouldBe 1
+        two.contains(remaining).shouldBeFalse()
+      }
+
       test("removing somebody who is not in a link reports nothing") {
         LinkStore().remove(99L) shouldBe null
       }

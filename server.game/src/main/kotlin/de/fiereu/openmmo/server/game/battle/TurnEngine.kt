@@ -165,12 +165,14 @@ constructor(
   ): Boolean =
       when (attacker.status) {
         StatusCondition.SLEEP -> {
-          attacker.sleepTurns--
+          // Test before spending the turn: decrementing first let a one turn sleep expire
+          // without ever costing a move.
           if (attacker.sleepTurns <= 0) {
             attacker.clearStatus()
             events += BattleEvent.StatusCleared(attacker.entityId, StatusCondition.SLEEP)
             true
           } else {
+            attacker.sleepTurns--
             events += BattleEvent.StatusBlockedMove(attacker.entityId, StatusCondition.SLEEP)
             false
           }

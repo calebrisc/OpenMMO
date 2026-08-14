@@ -79,6 +79,7 @@ constructor(
   fun accept(charId: Long): String {
     val invite = pending.remove(charId) ?: return "You have no link invite."
     if (System.currentTimeMillis() - invite.sentAtMillis > INVITE_TIMEOUT.inWholeMilliseconds) {
+      dropEmptyLink(invite.fromCharId)
       return "That link invite expired."
     }
     val character = characterStore.getCharacter(charId) ?: return "You are not in the world yet."
@@ -97,16 +98,30 @@ constructor(
     val invite = pending.remove(charId) ?: return "You have no link invite."
     val name = characterStore.getCharacter(charId)?.info?.name ?: "Someone"
     sessionRegistry.getByCharacterId(invite.fromCharId)?.send(notice("$name declined your invite."))
+    dropEmptyLink(invite.fromCharId)
     return "Invite declined."
+  }
+
+  /**
+   * An invite starts a link before anyone has accepted, so a decline or an expiry can leave the
+   * inviter alone in one. That would read as a group they never formed and would stop anyone else
+   * inviting them.
+   */
+  private fun dropEmptyLink(charId: Long) {
+    val link = linkStore.forChar(charId) ?: return
+    if (link.members.size > 1) return
+    if (pending.values.any { it.linkId == link.id }) return
+    linkStore.remove(charId)
+    sessionRegistry.getByCharacterId(charId)?.send(PartyRosterPacket(ROSTER_REPLACE, emptyList()))
   }
 
   fun leave(charId: Long): String {
     val name = characterStore.getCharacter(charId)?.info?.name ?: "Someone"
     val remaining = linkStore.remove(charId) ?: return "You are not in a link."
     sessionRegistry.getByCharacterId(charId)?.send(PartyRosterPacket(ROSTER_REPLACE, emptyList()))
-    if (remaining.members.isEmpty()) {
-      // Dropping below two players ends it, so tell whoever was left.
-      announceTo(remaining, "The link broke up.")
+    if (!linkStore.contains(remaining)) {
+      // Dropping below two ends it, so tell whoever was left and clear their roster too.
+      announce(remaining, "The link broke up.")
       remaining.members.forEach { member ->
         sessionRegistry
             .getByCharacterId(member.charId)
@@ -183,8 +198,6 @@ constructor(
   private fun announce(link: Link, message: String) {
     sessionsIn(link).forEach { it.send(notice(message)) }
   }
-
-  private fun announceTo(link: Link, message: String) = announce(link, message)
 
   private fun broadcastRoster(link: Link) {
     val roster = rosterOf(link)

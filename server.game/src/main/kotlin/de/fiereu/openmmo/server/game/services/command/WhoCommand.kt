@@ -12,8 +12,8 @@ constructor(
     private val sessionRegistry: SessionRegistry,
     private val characterStore: CharacterStore,
 ) : ChatCommand {
-  override val name = "who"
-  override val usage = "/who"
+  override val name = "players"
+  override val usage = "/players"
   override val description = "lists everyone online"
 
   override suspend fun run(ctx: CommandContext) {

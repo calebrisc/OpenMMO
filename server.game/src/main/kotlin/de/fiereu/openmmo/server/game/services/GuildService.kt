@@ -66,7 +66,13 @@ constructor(
     }
     // The guild write has to land before the fee, so a failure here cannot bill for nothing.
     val guild = guildStore.createGuild(packet.guildName, packet.guildTag, charId, stored.info.name)
-    characterStore.addMoney(charId, -GUILD_FOUND_COST)
+    if (!characterStore.addMoney(charId, -GUILD_FOUND_COST)) {
+      // The balance was checked above, so this only trips on a write failure. Undo the guild
+      // rather than hand out a free one.
+      guildStore.disbandGuild(charId)
+      ctx.send(notice("Founding your team failed. You have not been charged."))
+      return
+    }
     ctx.send(buildMembership(guild))
     ctx.send(buildMemberSync(guild))
   }
@@ -142,6 +148,10 @@ constructor(
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
     val targetId = event.packet.targetEntityId
+    // Only somebody actually in this guild can be kicked out of it. Without this any member
+    // could name any character and clear that player's guild window.
+    if (!guildStore.isMember(guild, targetId)) return
+    if (targetId == charId) return
     guildStore.removeMember(guild, targetId)
     log.info { "Kick char=$charId member=$targetId" }
     broadcastMemberSync(guild)

@@ -297,8 +297,15 @@ class TurnEngineTest :
             .none { it.attackerId == WILD_ID }
             .shouldBeTrue()
 
+        // Two turns owed means two turns lost, and it wakes on the third.
         val second = engine.resolveTurn(instance, TACKLE)
         second
+            .filterIsInstance<BattleEvent.StatusBlockedMove>()
+            .any { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+
+        val third = engine.resolveTurn(instance, TACKLE)
+        third
             .filterIsInstance<BattleEvent.StatusCleared>()
             .any { it.targetId == WILD_ID }
             .shouldBeTrue()
@@ -389,5 +396,50 @@ class TurnEngineTest :
         engine.resolveTurn(battle(player, wild, seed = 19), paralyse)
 
         wild.status shouldBe StatusCondition.BURN
+      }
+
+      test("even the shortest sleep costs the target a turn") {
+        val player = state(1, 30, listOf(TACKLE), PLAYER_ID)
+        val wild = state(19, 30, listOf(TACKLE), WILD_ID)
+        wild.applyStatus(StatusCondition.SLEEP, sleepTurns = 1)
+
+        val events = engine.resolveTurn(battle(player, wild, seed = 21), TACKLE)
+
+        // It must lose this turn and only then wake, never wake without missing one.
+        events
+            .filterIsInstance<BattleEvent.StatusBlockedMove>()
+            .any { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+        events
+            .filterIsInstance<BattleEvent.MoveUsed>()
+            .none { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+      }
+
+      test("a monster that walks in asleep is actually asleep") {
+        val player = state(1, 30, listOf(TACKLE), PLAYER_ID)
+        val wild = state(19, 30, listOf(TACKLE), WILD_ID)
+        // What BattleMonState builds from a party member whose stored status is sleep.
+        wild.status shouldBe StatusCondition.NONE
+        val carried = state(19, 30, listOf(TACKLE), WILD_ID)
+        carried.applyStatus(StatusCondition.SLEEP, sleepTurns = StatusRules.MAX_SLEEP_TURNS)
+        carried.sleepTurns shouldBeGreaterThan 0
+
+        val events = engine.resolveTurn(battle(player, carried, seed = 23), TACKLE)
+        events
+            .filterIsInstance<BattleEvent.StatusBlockedMove>()
+            .any { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+      }
+
+      test("badly poisoned chip damage starts at a sixteenth, not one hp") {
+        val player = state(1, 30, listOf(SPLASH), PLAYER_ID)
+        val wild = state(143, 50, listOf(SPLASH), WILD_ID)
+        wild.applyStatus(StatusCondition.TOXIC)
+        val before = wild.currentHp
+
+        engine.resolveTurn(battle(player, wild, seed = 27), SPLASH)
+
+        (before - wild.currentHp) shouldBe (wild.stats.hp / 16).coerceAtLeast(1)
       }
     })
