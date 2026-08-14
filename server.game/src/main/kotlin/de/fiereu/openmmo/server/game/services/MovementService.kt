@@ -125,6 +125,14 @@ constructor(
       }
     }
 
+    // Anything set beyond direction and running is a movement state we do not model. The bike
+    // is the obvious candidate, so say so once rather than dropping it in silence.
+    if (msg.unknownStateBits != 0) {
+      log.info {
+        "char=$charId stepped with unmodelled state bits 0x%02x (whole byte 0x%02x)"
+            .format(msg.unknownStateBits, msg.state)
+      }
+    }
     // Only once the step is accepted, so a locked player keeps the facing its script left.
     state.consecutiveDesyncs = 0
     state.facingDirection = msg.direction

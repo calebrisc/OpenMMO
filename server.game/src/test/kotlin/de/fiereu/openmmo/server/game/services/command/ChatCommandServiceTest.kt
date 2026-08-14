@@ -112,7 +112,9 @@ class ChatCommandServiceTest :
 
           service.tryHandle(session, "/secret") shouldBe true
           gated.ran shouldBe false
-          session.replies().single() shouldContain "Unknown command"
+          // A command they may not run must not read as one that does not exist: that made a
+          // working feature look broken for an evening.
+          session.replies().single() shouldContain "do not have access"
 
           val info = store.getCharacter(charId)!!.info
           store.updateCharacter(

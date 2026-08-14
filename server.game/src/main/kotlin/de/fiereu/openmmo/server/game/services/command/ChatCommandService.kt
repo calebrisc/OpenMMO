@@ -43,11 +43,15 @@ constructor(
     }
 
     val command = commands[name]
-    if (command == null || !character.info.hasPermission(command.permission)) {
-      if (command != null) {
-        log.info { "char=${character.info.id} may not run /$name" }
-      }
+    if (command == null) {
       session.send(notice("Unknown command: $name. Try /help."))
+      return true
+    }
+    if (!character.info.hasPermission(command.permission)) {
+      // Saying "unknown" here made a command the player simply could not run look like a broken
+      // one, and cost an evening of chasing a feature that was working.
+      log.info { "char=${character.info.id} may not run /$name" }
+      session.send(notice("You do not have access to /$name."))
       return true
     }
 
