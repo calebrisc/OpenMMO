@@ -35,6 +35,14 @@ data class BattleFieldStatePacket(
     val activeSlot: Int,
     val opponentParty: List<BattleOpponentBlock>,
     val opponentActiveSlot: Int,
+    /**
+     * The byte that opens the player's own side. Every capture has a 1 and the codec used to write
+     * one back without ever reading it, while the opposing side carries a live value in the same
+     * position. If it counts the occupants of a side, a shared battle needs it above one, and
+     * adding a monster to a side afterwards does nothing because the client was told there is only
+     * room for the one.
+     */
+    val playerSideOpener: Int = 1,
 ) {
   init {
     require(playerAppearance.size == APPEARANCE_SIZE) {
@@ -98,7 +106,7 @@ object BattleFieldStatePacketCodec : PacketCodec<BattleFieldStatePacket>() {
         field(fixedBytes(BattleFieldStatePacket.APPEARANCE_SIZE)) { it.playerAppearance }
     padding(5)
 
-    constant(1)
+    val playerSideOpener = field(U8) { it.playerSideOpener }
     val partyCount = field(U8) { it.playerParty.size }
     reserved(0)
     val party =
@@ -149,6 +157,7 @@ object BattleFieldStatePacketCodec : PacketCodec<BattleFieldStatePacket>() {
         active.slot,
         opponents,
         opponentActive.slot,
+        playerSideOpener,
     )
   }
 }

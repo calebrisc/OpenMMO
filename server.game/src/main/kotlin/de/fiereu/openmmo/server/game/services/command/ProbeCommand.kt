@@ -13,6 +13,7 @@ import de.fiereu.openmmo.net.game.packets.GroupListFrameSet
 import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
+import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
@@ -98,6 +99,18 @@ constructor(
       log.info { "Unstuck ${target.info.name} to $SAFE_REGION:$SAFE_BANK:$SAFE_MAP" }
       targetSession.send(notice("You have been moved somewhere safe."))
       ctx.reply("Moved ${target.info.name} to safety.")
+      return
+    }
+    if (what == "slots") {
+      val value = ctx.args.getOrNull(1)?.toIntOrNull()
+      if (value == null) {
+        ctx.reply(
+            "Player side opens with ${BattleFieldTuning.playerSideOpener}. Set with /probe slots <n>.")
+        return
+      }
+      BattleFieldTuning.playerSideOpener = value
+      log.info { "Player side opener set to $value" }
+      ctx.reply("Your side will open with $value. Start a battle to see it.")
       return
     }
     if (what == "side") {
