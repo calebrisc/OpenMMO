@@ -63,6 +63,7 @@ constructor(
                   language = msg.language ?: Language.EN,
                   message = msg.message,
                   sender = sender,
+                  senderId = charId,
               ),
           )
     }
@@ -96,6 +97,7 @@ constructor(
             language = Language.EN,
             message = text,
             sender = sender,
+            senderId = charId,
         ),
     )
   }
