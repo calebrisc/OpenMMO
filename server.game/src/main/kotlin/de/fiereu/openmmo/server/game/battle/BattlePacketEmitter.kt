@@ -23,6 +23,7 @@ import de.fiereu.openmmo.net.game.packets.battle.BattleSideAddPokemonPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSidePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSlotEventEnumPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSlotFlagEventPacket
+import de.fiereu.openmmo.net.game.packets.battle.BattleStartScenePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleStatCountersPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSwitchInPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleTileMapPacket
@@ -78,6 +79,18 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     // Without it, opening the bag crashes. Opcode 0x40 is left alone here, since re-sending it
     // would wipe the balls out of the battle bag.
     battle.session.send(BattleSidePacket(side = PLAYER_SIDE))
+    if (BattleFieldTuning.announceDouble) {
+      // Never sent before. If a side holds two monsters only when the battle says so up front,
+      // this is where it has to be said.
+      broadcast(
+          battle,
+          BattleStartScenePacket(
+              battleType = BattleFieldTuning.battleType.toByte(),
+              doubleBattle = true,
+              perspective = BattleFieldTuning.perspective.toByte(),
+          ),
+      )
+    }
     broadcast(battle, fieldState(battle, playerName))
     // A monster that walked in already poisoned or asleep carries no status in its battle
     // block, so the icon has to be sent separately.

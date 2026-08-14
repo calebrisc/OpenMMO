@@ -101,6 +101,23 @@ constructor(
       ctx.reply("Moved ${target.info.name} to safety.")
       return
     }
+    if (what == "double") {
+      val on = ctx.args.getOrNull(1)?.lowercase()
+      if (on == "on" || on == "off") BattleFieldTuning.announceDouble = on == "on"
+      BattleFieldTuning.battleType =
+          ctx.args.getOrNull(2)?.toIntOrNull() ?: BattleFieldTuning.battleType
+      BattleFieldTuning.perspective =
+          ctx.args.getOrNull(3)?.toIntOrNull() ?: BattleFieldTuning.perspective
+      log.info {
+        "Double announce=${BattleFieldTuning.announceDouble} " +
+            "type=${BattleFieldTuning.battleType} perspective=${BattleFieldTuning.perspective}"
+      }
+      ctx.reply(
+          "Doubles announce is ${if (BattleFieldTuning.announceDouble) "on" else "off"}, " +
+              "type=${BattleFieldTuning.battleType} perspective=${BattleFieldTuning.perspective}. " +
+              "Start a battle.")
+      return
+    }
     if (what == "slots") {
       val value = ctx.args.getOrNull(1)?.toIntOrNull()
       if (value == null) {

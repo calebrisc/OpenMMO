@@ -10,4 +10,16 @@ package de.fiereu.openmmo.server.game.battle
  */
 object BattleFieldTuning {
   @Volatile var playerSideOpener: Int = 1
+
+  /**
+   * Whether to open a battle by declaring it a double, using the scene packet the server has never
+   * sent. Its own field is named for it, which makes it the most direct way left to ask the client
+   * for two monsters on a side after the opener byte turned out not to be a count.
+   */
+  @Volatile var announceDouble: Boolean = false
+
+  /** Sent with the scene when [announceDouble] is on. Both are unknown, so both are tunable. */
+  @Volatile var battleType: Int = 0
+
+  @Volatile var perspective: Int = 0
 }
