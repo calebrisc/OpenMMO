@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.maps
 
+import de.fiereu.openmmo.common.utils.isNdsRegion
 import de.fiereu.openmmo.maps.generated.GeneratedMaps
 import de.fiereu.openmmo.net.game.packets.LoadMapPacket
 import de.fiereu.openmmo.net.game.packets.MapData
@@ -39,23 +40,33 @@ class MapManager @Inject constructor() {
           regionId = map.regionId.toInt() and 0xFF,
           bankId = map.bankId.toInt() and 0xFF,
           mapId = map.mapId.toInt() and 0xFF,
+          // A DS region's geometry comes off the player's own cartridge, so the server sends only
+          // the few things it owns. Sending the GBA shape instead is rejected by the codec, which
+          // is a hard failure on the first map a Johto player loads.
           mapData =
-              MapData.GbaMapData(
-                  width = map.width,
-                  height = map.height,
-                  paletteIdx1 = map.paletteIdx1,
-                  paletteIdx2 = map.paletteIdx2,
-                  borderWidth = map.borderWidth,
-                  borderHeight = map.borderHeight,
-                  unknownShort = map.unknownShort,
-                  unknownByte = map.unknownByte,
-                  borderTiles = map.borderTiles,
-                  lighting = map.lighting,
-                  weather = map.weather,
-                  mapType = map.mapType,
-                  encounterType = map.encounterType,
-                  connections = map.connections,
-              ),
+              if (isNdsRegion(map.regionId.toInt() and 0xFF)) {
+                MapData.NdsMapData(
+                    lighting = map.lighting,
+                    weather = map.weather,
+                    mapType = map.mapType,
+                )
+              } else
+                  MapData.GbaMapData(
+                      width = map.width,
+                      height = map.height,
+                      paletteIdx1 = map.paletteIdx1,
+                      paletteIdx2 = map.paletteIdx2,
+                      borderWidth = map.borderWidth,
+                      borderHeight = map.borderHeight,
+                      unknownShort = map.unknownShort,
+                      unknownByte = map.unknownByte,
+                      borderTiles = map.borderTiles,
+                      lighting = map.lighting,
+                      weather = map.weather,
+                      mapType = map.mapType,
+                      encounterType = map.encounterType,
+                      connections = map.connections,
+                  ),
       )
 
   private fun key(regionId: Byte, bankId: Byte, mapId: Byte): Long =
