@@ -29,8 +29,10 @@ import de.fiereu.openmmo.net.game.packets.RequestCharactersPacket
 import de.fiereu.openmmo.net.game.packets.RequestPlayerPacket
 import de.fiereu.openmmo.net.game.packets.RequestSocialProfilePacket
 import de.fiereu.openmmo.net.game.packets.SelectCharacterPacket
+import de.fiereu.openmmo.net.game.packets.SendChatCommandPacket
 import de.fiereu.openmmo.net.game.packets.ShopSellRequestPacket
 import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
+import de.fiereu.openmmo.net.game.packets.StringCommandPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
 import de.fiereu.openmmo.net.game.packets.UnblockPlayerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionPacket
@@ -133,6 +135,8 @@ constructor(
     onSuspend<BlockPlayerPacket> { event -> socialService.onBlockPlayer(event) }
     onSuspend<UnblockPlayerPacket> { event -> socialService.onUnblockPlayer(event) }
     on<PartyInfoRequestPacket> { event -> linkService.onPartyInfoRequest(event) }
+    on<SendChatCommandPacket> { event -> linkService.onSendChatCommand(event) }
+    on<StringCommandPacket> { event -> linkService.onStringCommand(event) }
     on<LinkKickMemberPacket> { event -> linkService.onKickMember(event) }
     on<InGameChallengeResponsePacket> { event -> linkService.onChallengeResponse(event) }
     on<RequestSocialProfilePacket> { event -> socialService.onRequestSocialProfile(event) }

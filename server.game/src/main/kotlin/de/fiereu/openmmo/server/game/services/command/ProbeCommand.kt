@@ -4,6 +4,7 @@ import de.fiereu.openmmo.common.CharacterPermissions
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
+import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import javax.inject.Inject
@@ -23,14 +24,27 @@ class ProbeCommand
 constructor(
     private val sessions: SessionRegistry,
     private val characterStore: CharacterStore,
+    private val links: LinkService,
 ) : ChatCommand {
   override val name = "probe"
-  override val usage = "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed>"
+  override val usage =
+      "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
+          "/probe requesttype <n>"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "requesttype") {
+      val value = ctx.args.getOrNull(1)?.toByteOrNull()
+      if (value == null) {
+        ctx.reply("Link invites currently send requestType=${links.inviteRequestType}.")
+        return
+      }
+      links.inviteRequestType = value
+      ctx.reply("The client's Invite to Link button will now reply with requestType=$value.")
+      return
+    }
     val targetName = ctx.args.getOrNull(1)
     if (what == null || targetName == null) {
       ctx.reply("Usage: $usage")

@@ -2,12 +2,15 @@ package de.fiereu.openmmo.server.game.services
 
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
+import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
 import de.fiereu.openmmo.net.game.packets.InGameChallengeResponsePacket
 import de.fiereu.openmmo.net.game.packets.LinkKickMemberPacket
 import de.fiereu.openmmo.net.game.packets.PartyInfoRequestPacket
 import de.fiereu.openmmo.net.game.packets.PartyMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberLeavePacket
 import de.fiereu.openmmo.net.game.packets.PartyRosterPacket
+import de.fiereu.openmmo.net.game.packets.SendChatCommandPacket
+import de.fiereu.openmmo.net.game.packets.StringCommandPacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -51,6 +54,45 @@ constructor(
   private val pending = ConcurrentHashMap<Long, PendingInvite>()
 
   fun linkFor(charId: Long): Link? = linkStore.forChar(charId)
+
+  /**
+   * Which value the invite carries. The client distinguishes a link request from a duel or a trade
+   * with a byte we have not decoded, and it shows the invited player nothing at all until the
+   * server answers, so the way to find it is to send one and see whether the prompt appears.
+   * Settable live with /probe requesttype so a sweep does not need a redeploy.
+   */
+  @Volatile var inviteRequestType: Byte = 0
+
+  /**
+   * The client's own Invite to Link button. It sends us the target's name and nothing that says
+   * which of invite, trade or challenge was pressed, then waits. Answering is what makes its prompt
+   * appear, which is why the button has never done anything.
+   */
+  fun onNamedInvite(session: SessionContext, targetName: String) {
+    val charId = session.attributes[PLAYER_STATE]?.characterId ?: return
+    if (targetName.isBlank()) return
+    val reply = invite(session, charId, targetName)
+    session.send(notice(reply))
+    val target = characterStore.findCachedByName(targetName) ?: return
+    val inviter = characterStore.getCharacter(charId) ?: return
+    sessionRegistry
+        .getByCharacterId(target.info.id)
+        ?.send(
+            DuelInvitePacket(
+                flags = 0,
+                requestType = inviteRequestType,
+                name = inviter.info.name,
+            ))
+    log.info { "Sent link invite prompt requestType=$inviteRequestType to ${target.info.name}" }
+  }
+
+  fun onSendChatCommand(event: PacketEvent<SendChatCommandPacket>) {
+    onNamedInvite(event.session, event.packet.message)
+  }
+
+  fun onStringCommand(event: PacketEvent<StringCommandPacket>) {
+    onNamedInvite(event.session, event.packet.command)
+  }
 
   /** Invites [targetName] to the caller's link, starting one if they are not in a link yet. */
   fun invite(ctx: SessionContext, inviterId: Long, targetName: String): String {
