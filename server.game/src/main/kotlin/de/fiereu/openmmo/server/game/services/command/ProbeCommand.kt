@@ -5,6 +5,7 @@ import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.services.LinkService
+import de.fiereu.openmmo.server.game.services.MovementTuning
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import javax.inject.Inject
@@ -35,6 +36,20 @@ constructor(
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "mm") {
+      val walk = ctx.args.getOrNull(1)?.toIntOrNull()
+      val run = ctx.args.getOrNull(2)?.toIntOrNull()
+      if (walk == null) {
+        ctx.reply(
+            "Relayed movement modes: walk=${MovementTuning.walk} run=${MovementTuning.run}. " +
+                "Set with /probe mm <walk> [run].")
+        return
+      }
+      MovementTuning.walk = walk
+      if (run != null) MovementTuning.run = run
+      ctx.reply("Relaying walk=${MovementTuning.walk} run=${MovementTuning.run}. Walk around now.")
+      return
+    }
     if (what == "sweep") {
       val name = ctx.args.getOrNull(1)
       if (name == null) {
