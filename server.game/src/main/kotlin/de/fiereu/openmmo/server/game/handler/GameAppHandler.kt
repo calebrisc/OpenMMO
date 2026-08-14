@@ -13,6 +13,7 @@ import de.fiereu.openmmo.net.game.packets.ChatMessageSendPacket
 import de.fiereu.openmmo.net.game.packets.CreateCharacterPacket
 import de.fiereu.openmmo.net.game.packets.DeleteCharacterPacket
 import de.fiereu.openmmo.net.game.packets.DialogChoicePacket
+import de.fiereu.openmmo.net.game.packets.DialogOptionPacket
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.ExchangeItemRequestPacket
 import de.fiereu.openmmo.net.game.packets.FaceDirectionPacket
@@ -72,6 +73,7 @@ import de.fiereu.openmmo.server.game.script.ScriptRunner
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.ChatService
 import de.fiereu.openmmo.server.game.services.DialogService
+import de.fiereu.openmmo.server.game.services.FieldItemService
 import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
 import de.fiereu.openmmo.server.game.services.LinkService
@@ -105,6 +107,7 @@ constructor(
     private val guildService: GuildService,
     private val battleService: BattleService,
     private val chatService: ChatService,
+    private val fieldItemService: FieldItemService,
     private val linkService: LinkService,
     private val shopService: ShopService,
     private val scriptRunner: ScriptRunner,
@@ -128,6 +131,7 @@ constructor(
     onSuspend<TileInteractPacket> { event -> interactionService.onTileInteract(event) }
     onSuspend<DialogActionResponsePacket> { event -> dialogService.onInteractive(event) }
     onSuspend<DialogChoicePacket> { event -> dialogService.onDialogChoice(event) }
+    onSuspend<DialogOptionPacket> { event -> fieldItemService.onUseItem(event) }
     onSuspend<ExchangeItemRequestPacket> { event -> shopService.onBuy(event) }
     onSuspend<ShopSellRequestPacket> { event -> shopService.onSell(event) }
 
