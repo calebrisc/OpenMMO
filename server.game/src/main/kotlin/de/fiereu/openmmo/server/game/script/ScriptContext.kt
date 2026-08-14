@@ -23,6 +23,8 @@ import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.PlayerState
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 
+private const val BATTLES_UNAVAILABLE = "Battle service is unavailable"
+
 /** What a [Script] uses to talk to the player it interacted with and read or write story state. */
 class ScriptContext
 internal constructor(
@@ -154,17 +156,17 @@ internal constructor(
 
   /** Run a non-catchable, non-escapable story battle and wait for its result. */
   suspend fun battle(dexId: Int, level: Int, vararg moveIds: Int): BattleResult =
-      checkNotNull(battles) { "Battle service is unavailable" }
+      checkNotNull(battles) { BATTLES_UNAVAILABLE }
           .startScriptedBattle(session, dexId, level, moveIds.toList())
 
   /** The decomp dowildbattle: a scripted encounter the player may catch or flee, awaited. */
   suspend fun wildBattle(dexId: Int, level: Int): BattleResult =
-      checkNotNull(battles) { "Battle service is unavailable" }
+      checkNotNull(battles) { BATTLES_UNAVAILABLE }
           .startScriptedBattle(session, dexId, level, catchable = true, escapable = true)
 
   /** Fight the decomp trainer with this id, using the region the player is standing in. */
   suspend fun trainerBattle(trainerId: Int): BattleResult {
-    return checkNotNull(battles) { "Battle service is unavailable" }
+    return checkNotNull(battles) { BATTLES_UNAVAILABLE }
         .startTrainerBattle(session, currentRegion(), trainerId)
   }
 

@@ -7,9 +7,11 @@ import de.fiereu.openmmo.server.game.services.command.CatchCommand
 import de.fiereu.openmmo.server.game.services.command.ChatCommand
 import de.fiereu.openmmo.server.game.services.command.GiveCommand
 import de.fiereu.openmmo.server.game.services.command.HelpCommand
+import de.fiereu.openmmo.server.game.services.command.PmCommand
 import de.fiereu.openmmo.server.game.services.command.PosCommand
 import de.fiereu.openmmo.server.game.services.command.StoryCommand
 import de.fiereu.openmmo.server.game.services.command.TestBattleCommand
+import de.fiereu.openmmo.server.game.services.command.WhoCommand
 
 /**
  * A name must not start with a client side command. The client resolves those itself and never
@@ -28,4 +30,8 @@ interface ChatCommandModule {
   @Binds @IntoSet fun giveCommand(command: GiveCommand): ChatCommand
 
   @Binds @IntoSet fun storyCommand(command: StoryCommand): ChatCommand
+
+  @Binds @IntoSet fun whoCommand(command: WhoCommand): ChatCommand
+
+  @Binds @IntoSet fun pmCommand(command: PmCommand): ChatCommand
 }

@@ -1,6 +1,5 @@
 package de.fiereu.openmmo.server.game.handler
 
-import de.fiereu.network.PacketEvent
 import de.fiereu.network.Side
 import de.fiereu.network.coroutines.CoroutineProtocolHandler
 import de.fiereu.openmmo.common.enums.ChatType
@@ -64,6 +63,7 @@ import de.fiereu.openmmo.net.game.packets.guild.GuildRankLabelUpdatePacket
 import de.fiereu.openmmo.net.game.packets.guild.GuildRankPermissionUpdatePacket
 import de.fiereu.openmmo.server.game.script.ScriptRunner
 import de.fiereu.openmmo.server.game.services.BattleService
+import de.fiereu.openmmo.server.game.services.ChatService
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
@@ -73,7 +73,6 @@ import de.fiereu.openmmo.server.game.services.MultiplayerService
 import de.fiereu.openmmo.server.game.services.PresenceService
 import de.fiereu.openmmo.server.game.services.ShopService
 import de.fiereu.openmmo.server.game.services.SocialService
-import de.fiereu.openmmo.server.game.services.command.ChatCommandService
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SCRIPT_SCOPE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
@@ -97,7 +96,7 @@ constructor(
     private val socialService: SocialService,
     private val guildService: GuildService,
     private val battleService: BattleService,
-    private val chatCommandService: ChatCommandService,
+    private val chatService: ChatService,
     private val shopService: ShopService,
     private val scriptRunner: ScriptRunner,
     private val sessionRegistry: SessionRegistry,
@@ -123,10 +122,10 @@ constructor(
     onSuspend<ExchangeItemRequestPacket> { event -> shopService.onBuy(event) }
     onSuspend<ShopSellRequestPacket> { event -> shopService.onSell(event) }
 
-    on<AddFriendPacket> { event -> socialService.onAddFriend(event) }
-    on<RemoveFriendPacket> { event -> socialService.onRemoveFriend(event) }
-    on<BlockPlayerPacket> { event -> socialService.onBlockPlayer(event) }
-    on<UnblockPlayerPacket> { event -> socialService.onUnblockPlayer(event) }
+    onSuspend<AddFriendPacket> { event -> socialService.onAddFriend(event) }
+    onSuspend<RemoveFriendPacket> { event -> socialService.onRemoveFriend(event) }
+    onSuspend<BlockPlayerPacket> { event -> socialService.onBlockPlayer(event) }
+    onSuspend<UnblockPlayerPacket> { event -> socialService.onUnblockPlayer(event) }
     on<RequestSocialProfilePacket> { event -> socialService.onRequestSocialProfile(event) }
     on<CancelSocialInteractionPacket> { event -> socialService.onCancelSocialInteraction(event) }
 
@@ -171,12 +170,9 @@ constructor(
     // The client sends an empty heartbeat packet.
     on<NullPacket> {}
     on<KeepAlivePacket> { event -> event.session.send(event.packet) }
-    onSuspend<ChatMessagePacket> { event -> onChatMessage(event) }
-    // What the client sends when the player types. The text rides in target unless the mode
-    // carries a message of its own.
-    onSuspend<ChatMessageSendPacket> { event ->
-      chatCommandService.tryHandle(event.session, event.packet.message ?: event.packet.target)
-    }
+    onSuspend<ChatMessagePacket> { event -> chatService.onChatMessage(event) }
+    // What the client sends when the player types.
+    onSuspend<ChatMessageSendPacket> { event -> chatService.onChatSend(event) }
   }
 
   override fun onInactive() {
@@ -203,26 +199,6 @@ constructor(
             language = Language.EN,
             message = "A player left the game.",
             sender = "",
-        ),
-    )
-  }
-
-  private suspend fun onChatMessage(event: PacketEvent<ChatMessagePacket>) {
-    val state = event.session.attributes[PLAYER_STATE]
-    if (state == null) {
-      log.warn { "Chat message from session without PlayerState" }
-      return
-    }
-    val charId = state.characterId ?: return
-    val msg = event.packet
-    val sender = characterStore.getCharacter(charId)?.info?.name ?: "Unknown"
-    log.info { "Chat [${msg.type}] $sender: ${msg.message}" }
-    multiplayerService.broadcastMessage(
-        ChatMessagePacket(
-            type = msg.type,
-            language = msg.language,
-            message = msg.message,
-            sender = sender,
         ),
     )
   }

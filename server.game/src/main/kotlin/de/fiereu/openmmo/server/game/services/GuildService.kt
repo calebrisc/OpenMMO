@@ -20,11 +20,13 @@ import de.fiereu.openmmo.net.game.packets.guild.GuildRankLabelUpdatePacket
 import de.fiereu.openmmo.net.game.packets.guild.GuildRankPermissionUpdatePacket
 import de.fiereu.openmmo.net.game.packets.guild.SyncGuildMembersPacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
+import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.Guild
 import de.fiereu.openmmo.server.game.storage.GuildMember
 import de.fiereu.openmmo.server.game.storage.GuildStore
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,6 +43,7 @@ class GuildService
 constructor(
     private val guildStore: GuildStore,
     private val characterStore: CharacterStore,
+    private val sessionRegistry: SessionRegistry,
 ) {
 
   suspend fun onCreateGuild(event: PacketEvent<GuildCreatePacket>) {
@@ -52,17 +55,23 @@ constructor(
     log.info {
       "CreateGuild name='${packet.guildName}' tag='${packet.guildTag}' char=$charId money=${stored.info.money}"
     }
-    if (stored.info.money < GUILD_FOUND_COST) {
-      log.info { "Insufficient funds to found a guild (need $GUILD_FOUND_COST)" }
+    if (guildStore.getGuildForChar(charId) != null) {
+      ctx.send(notice("You are already in a team."))
       return
     }
-    characterStore.addMoney(charId, -GUILD_FOUND_COST)
+    if (stored.info.money < GUILD_FOUND_COST) {
+      log.info { "Insufficient funds to found a guild (need $GUILD_FOUND_COST)" }
+      ctx.send(notice("Founding a team costs $GUILD_FOUND_COST."))
+      return
+    }
+    // The guild write has to land before the fee, so a failure here cannot bill for nothing.
     val guild = guildStore.createGuild(packet.guildName, packet.guildTag, charId, stored.info.name)
+    characterStore.addMoney(charId, -GUILD_FOUND_COST)
     ctx.send(buildMembership(guild))
     ctx.send(buildMemberSync(guild))
   }
 
-  fun onActivityLogPageRequest(event: PacketEvent<GuildActivityLogPageRequestPacket>) {
+  suspend fun onActivityLogPageRequest(event: PacketEvent<GuildActivityLogPageRequestPacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
@@ -76,21 +85,42 @@ constructor(
     ctx.send(packet)
   }
 
-  fun onGuildInvite(event: PacketEvent<GuildInvitePacket>) {
+  suspend fun onGuildInvite(event: PacketEvent<GuildInvitePacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
     val target = event.packet.targetName
     log.info { "GuildInvite char=$charId target='$target'" }
+    // Only a loaded character has an id the client can address, so the target has to be online.
+    val invited = characterStore.findCachedByName(target)
+    if (invited == null) {
+      ctx.send(notice("$target is not online."))
+      return
+    }
+    if (invited.info.id == charId) return
+    if (guildStore.getGuildForChar(invited.info.id) != null) {
+      ctx.send(notice("$target is already in a team."))
+      return
+    }
     guildStore.addMember(
         guild,
-        GuildMember(syntheticId(target), target, GuildRank.GRUNT, leader = false),
+        GuildMember(
+            id = invited.info.id,
+            name = invited.info.name,
+            rank = GuildRank.GRUNT,
+            leader = false,
+            joinedAt = Instant.now(),
+        ),
     )
-    ctx.send(buildMemberSync(guild))
+    broadcastMemberSync(guild)
+    sessionRegistry.getByCharacterId(invited.info.id)?.let { joined ->
+      joined.send(buildMembership(guild))
+      joined.send(notice("You joined ${guild.name}."))
+    }
   }
 
-  fun onRankAssign(event: PacketEvent<GuildMemberRankAssignPacket>) {
+  suspend fun onRankAssign(event: PacketEvent<GuildMemberRankAssignPacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
@@ -103,29 +133,36 @@ constructor(
       guildStore.setMemberRank(guild, event.packet.memberEntityId, rank)
       log.info { "RankAssign char=$charId member=${event.packet.memberEntityId} rank=$rank" }
     }
-    ctx.send(buildMemberSync(guild))
+    broadcastMemberSync(guild)
   }
 
-  fun onKick(event: PacketEvent<GuildMemberKickPacket>) {
+  suspend fun onKick(event: PacketEvent<GuildMemberKickPacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
-    guildStore.removeMember(guild, event.packet.targetEntityId)
-    log.info { "Kick char=$charId member=${event.packet.targetEntityId}" }
-    ctx.send(buildMemberSync(guild))
+    val targetId = event.packet.targetEntityId
+    guildStore.removeMember(guild, targetId)
+    log.info { "Kick char=$charId member=$targetId" }
+    broadcastMemberSync(guild)
+    sessionRegistry.getByCharacterId(targetId)?.let { kicked ->
+      kicked.send(GuildMembershipPacket(inGuild = false, profile = null))
+      kicked.send(notice("You were removed from ${guild.name}."))
+    }
   }
 
-  fun onLeave(event: PacketEvent<GuildLeavePacket>) {
+  suspend fun onLeave(event: PacketEvent<GuildLeavePacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
+    val guild = guildStore.getGuildForChar(charId)
     guildStore.leaveGuild(charId)
     log.info { "GuildLeave char=$charId" }
     ctx.send(GuildMembershipPacket(inGuild = false, profile = null))
+    guild?.let { broadcastMemberSync(it) }
   }
 
-  fun onDisband(event: PacketEvent<GuildDisbandPacket>) {
+  suspend fun onDisband(event: PacketEvent<GuildDisbandPacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
@@ -135,35 +172,46 @@ constructor(
     if (guild == null) return
     // We disband immediately on initiate, so a follow-up cancel has no pending state to undo.
     if (!initiate) return
+    val members = guild.members.map { it.id }
     guildStore.disbandGuild(charId)
     log.info { "Guild ${guild.id} disbanded by char=$charId" }
     // TODO: The guild window does not close after disbanding. Sending
     // GuildMembershipPacket(inGuild = false) updates the state (reopening the
     // window shows the create-guild screen) but does not dismiss the currently
     // open window. Check against the real game to see what packet closes it.
-    ctx.send(GuildMembershipPacket(inGuild = false, profile = null))
+    for (memberId in members) {
+      val session = sessionRegistry.getByCharacterId(memberId) ?: continue
+      session.send(GuildMembershipPacket(inGuild = false, profile = null))
+      if (memberId != charId) {
+        session.send(notice("${guild.name} was disbanded."))
+      }
+    }
   }
 
-  fun onMotdUpdate(event: PacketEvent<GuildMotdUpdatePacket>) {
+  suspend fun onMotdUpdate(event: PacketEvent<GuildMotdUpdatePacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
-    log.info { "GuildMotdUpdate char=$charId guild=${guild.id} motd='${event.packet.motdText}'" }
+    val motd = event.packet.motdText
+    guildStore.setMotd(guild, motd)
+    log.info { "GuildMotdUpdate char=$charId guild=${guild.id} motd='$motd'" }
+    broadcast(guild) { buildMembership(guild) }
   }
 
-  fun onRankLabelUpdate(event: PacketEvent<GuildRankLabelUpdatePacket>) {
+  suspend fun onRankLabelUpdate(event: PacketEvent<GuildRankLabelUpdatePacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
-    val rank = GuildRank.entries.getOrNull(event.packet.rankOrdinal)
+    val rank = GuildRank.entries.getOrNull(event.packet.rankOrdinal) ?: return
+    guildStore.setRankLabel(guild, rank, event.packet.rankLabel)
     log.info {
       "GuildRankLabelUpdate char=$charId guild=${guild.id} rank=$rank label='${event.packet.rankLabel}'"
     }
   }
 
-  fun onRankPermissionUpdate(event: PacketEvent<GuildRankPermissionUpdatePacket>) {
+  suspend fun onRankPermissionUpdate(event: PacketEvent<GuildRankPermissionUpdatePacket>) {
     val state = event.session.attributes[PLAYER_STATE] ?: return
     val charId = state.characterId ?: return
     val guild = guildStore.getGuildForChar(charId) ?: return
@@ -176,9 +224,22 @@ constructor(
             perms
           }
         }
-    guild.permissions.clear()
-    guild.permissions.putAll(sanitized)
+    guildStore.setPermissions(guild, sanitized)
     log.info { "RankPermUpdate char=$charId perms=$sanitized" }
+  }
+
+  /** Every online member of [guild], for the caller to send to. */
+  fun onlineMembers(guild: Guild) =
+      guild.members.mapNotNull { sessionRegistry.getByCharacterId(it.id) }
+
+  private fun broadcastMemberSync(guild: Guild) {
+    val packet = buildMemberSync(guild)
+    onlineMembers(guild).forEach { it.send(packet) }
+  }
+
+  private fun broadcast(guild: Guild, packet: () -> Any) {
+    val built = packet()
+    onlineMembers(guild).forEach { it.send(built) }
   }
 
   private fun buildMembership(guild: Guild): GuildMembershipPacket =
@@ -189,8 +250,8 @@ constructor(
                   guildId = guild.id,
                   name = guild.name,
                   tag = guild.tag,
-                  foundedAt = 0,
-                  message = "Your Team has been successfully created!",
+                  foundedAt = guild.foundedAt.epochSecond.toInt(),
+                  message = guild.motd.ifEmpty { "Your Team has been successfully created!" },
                   updatedAt = 0,
                   value1 = 5,
                   value2 = 5,
@@ -213,9 +274,9 @@ constructor(
                 GuildMemberEntry(
                     entityId = member.id,
                     rank = member.rank.ordinal.toByte(),
-                    joinedAt = 0,
+                    joinedAt = member.joinedAt.epochSecond.toInt(),
                     name = member.name,
-                    online = true,
+                    online = sessionRegistry.getByCharacterId(member.id) != null,
                     lastSeen = 0,
                     appearance = List(5) { 0 },
                     leader = member.leader,
@@ -236,6 +297,4 @@ constructor(
                 )
               },
       )
-
-  private fun syntheticId(name: String): Long = (name.hashCode().toLong() shl 16) or 0x9000L
 }

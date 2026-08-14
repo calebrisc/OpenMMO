@@ -17,7 +17,11 @@ fun main() {
   component.databaseBootstrap().migrate()
   val characterStore = component.characterStore()
   characterStore.startPeriodicFlush()
-  runBlocking { component.devCharacterSeeder().seed() }
+  runBlocking {
+    // Guilds have to be in memory before the first player can ask which one they are in.
+    component.guildStore().loadAll()
+    component.devCharacterSeeder().seed()
+  }
   Runtime.getRuntime()
       .addShutdownHook(
           Thread {

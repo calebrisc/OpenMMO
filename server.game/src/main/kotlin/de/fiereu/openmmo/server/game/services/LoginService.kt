@@ -276,7 +276,7 @@ constructor(
         ))
   }
 
-  fun onRequestPlayer(event: PacketEvent<RequestPlayerPacket>) {
+  suspend fun onRequestPlayer(event: PacketEvent<RequestPlayerPacket>) {
     val ctx = event.session
     val state = ctx.attributes[PLAYER_STATE]
     if (state == null) {
