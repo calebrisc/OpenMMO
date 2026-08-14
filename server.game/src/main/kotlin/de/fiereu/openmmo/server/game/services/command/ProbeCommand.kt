@@ -13,6 +13,7 @@ import de.fiereu.openmmo.net.game.packets.GroupListFrameSet
 import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
+import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MovementTuning
@@ -46,6 +47,7 @@ private const val SAFE_Y: Short = 10
 class ProbeCommand
 @Inject
 constructor(
+    private val battles: BattleService,
     private val maps: MapManager,
     private val mapLoad: MapLoadService,
     private val presence: PresenceService,
@@ -96,6 +98,11 @@ constructor(
       log.info { "Unstuck ${target.info.name} to $SAFE_REGION:$SAFE_BANK:$SAFE_MAP" }
       targetSession.send(notice("You have been moved somewhere safe."))
       ctx.reply("Moved ${target.info.name} to safety.")
+      return
+    }
+    if (what == "side") {
+      val slot = ctx.args.getOrNull(1)?.toIntOrNull() ?: 1
+      ctx.reply(battles.probeAddToOwnSide(ctx.characterId, slot))
       return
     }
     if (what == "group") {

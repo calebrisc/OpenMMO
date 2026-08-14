@@ -47,6 +47,9 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
+/** The side byte the player's own monsters ride on in a switch in. */
+private const val PLAYER_SIDE_WIRE = 0
+
 /**
  * A prompt waiting for its answer, kept after the battle ends. A trainer battle can raise one
  * monster past a level more than once, so these are held per monster rather than per player.
@@ -163,6 +166,21 @@ constructor(
 
   /** True while the character has a battle running, so callers can skip starting another. */
   fun inBattle(charId: Long): Boolean = battles.byChar(charId) != null
+
+  /**
+   * Puts a second monster on the player's own side of a running battle.
+   *
+   * The battle state packet describes exactly one active monster per side, which is what stands
+   * between this server and a shared battle. This packet adds one to a side independently, so if
+   * the client draws it there is a way to show two people fighting together, and if it does not the
+   * limit is real. Nothing else can answer that.
+   */
+  fun probeAddToOwnSide(charId: Long, slot: Int): String {
+    val battle = battles.byChar(charId) ?: return "Start a battle first."
+    val extra = battle.party.getOrNull(1) ?: return "You need a second monster in your party."
+    emitter.addToSide(battle, PLAYER_SIDE_WIRE, slot, extra)
+    return "Added ${extra.species.name} to your side in slot $slot. Does it appear?"
+  }
 
   fun onSpectateRequest(event: PacketEvent<SpectateRequestPacket>) {
     watch(event.session, event.packet.targetEntityId)

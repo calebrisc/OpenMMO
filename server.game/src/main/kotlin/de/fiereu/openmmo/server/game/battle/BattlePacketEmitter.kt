@@ -10,6 +10,7 @@ import de.fiereu.openmmo.net.game.packets.EntityMovePpPacket
 import de.fiereu.openmmo.net.game.packets.EntityPresencePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionEvent
+import de.fiereu.openmmo.net.game.packets.battle.BattleAddPokemon
 import de.fiereu.openmmo.net.game.packets.battle.BattleBulkStatePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleEffectTarget
 import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacket
@@ -18,6 +19,7 @@ import de.fiereu.openmmo.net.game.packets.battle.BattleEventBody
 import de.fiereu.openmmo.net.game.packets.battle.BattleFieldStatePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleOpponentBlock
 import de.fiereu.openmmo.net.game.packets.battle.BattleQueuedEventPacket
+import de.fiereu.openmmo.net.game.packets.battle.BattleSideAddPokemonPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSidePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSlotEventEnumPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSlotFlagEventPacket
@@ -126,6 +128,26 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     if (cured) {
       sendStatus(battle, mon.entityId, StatusCondition.NONE, 0)
     }
+  }
+
+  /** Adds a monster to a side of a running battle, in a slot of its own. */
+  fun addToSide(battle: BattleInstance, side: Int, slot: Int, mon: BattleMonState) {
+    broadcast(
+        battle,
+        BattleSideAddPokemonPacket(
+            side = side.toByte(),
+            pokemon =
+                BattleAddPokemon(
+                    entityId = mon.entityId,
+                    frontSpriteId = mon.species.id.toShort(),
+                    backSpriteId = mon.species.id.toShort(),
+                    side = side.toByte(),
+                    slot = slot.toByte(),
+                    partyIndex = (mon.partyIndex ?: 0).toByte(),
+                    statusEffect = null,
+                ),
+        ),
+    )
   }
 
   /** Sends [mon]'s status if it has one, for a battle start or a switch in. */
