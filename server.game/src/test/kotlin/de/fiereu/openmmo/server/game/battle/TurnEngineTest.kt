@@ -4,7 +4,10 @@ import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
 import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.IVs
+import de.fiereu.openmmo.common.enums.MoveEffect
 import de.fiereu.openmmo.common.enums.PokemonContainer
+import de.fiereu.openmmo.common.enums.StatusCondition
+import de.fiereu.openmmo.moves.MoveDef
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
@@ -72,6 +75,22 @@ private fun battle(
     BattleInstance(1L, 100L, FakeSession(100L), listOf(player), listOf(wild), BattleRng(seed))
 
 private val engine = TurnEngine(MoveRegistry(), TypeChart())
+
+/**
+ * A move carrying [effect], so a test names a mechanic rather than a move number. The most accurate
+ * one wins, so a test of the effect is not also a test of the accuracy roll. An accuracy of zero
+ * means the move never misses.
+ */
+private fun moveWithEffect(effect: MoveEffect): Short =
+    MoveRegistry()
+        .all()
+        .filter { it.effect == effect }
+        .sortedWith(
+            compareByDescending<MoveDef> { if (it.accuracy == 0) 101 else it.accuracy }
+                .thenBy { it.id })
+        .first()
+        .id
+        .toShort()
 
 class TurnEngineTest :
     FunSpec({
@@ -246,5 +265,129 @@ class TurnEngineTest :
         events.filterIsInstance<BattleEvent.MoveFailed>().shouldNotBeEmpty()
         wild.currentHp shouldBe before
         wild.stage(BattleStat.ATTACK) shouldBe 0
+      }
+
+      test("a sleep move puts the target under and it cannot act") {
+        val sleepMove = moveWithEffect(MoveEffect.SLEEP)
+        val player = state(1, 30, listOf(sleepMove), PLAYER_ID)
+        // Rattata, which no type immunity protects from sleep.
+        val wild = state(19, 30, listOf(TACKLE), WILD_ID)
+        val events = engine.resolveTurn(battle(player, wild, seed = 3), sleepMove)
+
+        val inflicted =
+            events.filterIsInstance<BattleEvent.StatusInflicted>().first { it.targetId == WILD_ID }
+        inflicted.status shouldBe StatusCondition.SLEEP
+        wild.status shouldBe StatusCondition.SLEEP
+        wild.sleepTurns shouldBeGreaterThan 0
+      }
+
+      test("a sleeping monster loses its turn and wakes when the counter runs out") {
+        val player = state(1, 30, listOf(TACKLE), PLAYER_ID)
+        val wild = state(19, 30, listOf(TACKLE), WILD_ID)
+        wild.applyStatus(StatusCondition.SLEEP, sleepTurns = 2)
+        val instance = battle(player, wild, seed = 4)
+
+        val first = engine.resolveTurn(instance, TACKLE)
+        first
+            .filterIsInstance<BattleEvent.StatusBlockedMove>()
+            .any { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+        first
+            .filterIsInstance<BattleEvent.MoveUsed>()
+            .none { it.attackerId == WILD_ID }
+            .shouldBeTrue()
+
+        val second = engine.resolveTurn(instance, TACKLE)
+        second
+            .filterIsInstance<BattleEvent.StatusCleared>()
+            .any { it.targetId == WILD_ID }
+            .shouldBeTrue()
+        wild.status shouldBe StatusCondition.NONE
+      }
+
+      test("poison bites at the end of the turn") {
+        val player = state(1, 30, listOf(TACKLE), PLAYER_ID)
+        val wild = state(19, 30, listOf(TACKLE), WILD_ID)
+        wild.applyStatus(StatusCondition.POISON)
+        val expected = (wild.stats.hp / 8).coerceAtLeast(1)
+        val before = wild.currentHp
+
+        val events = engine.resolveTurn(battle(player, wild, seed = 5), TACKLE)
+
+        val chip =
+            events.filterIsInstance<BattleEvent.StatusDamage>().first { it.targetId == WILD_ID }
+        chip.status shouldBe StatusCondition.POISON
+        val damageFromMove =
+            events
+                .filterIsInstance<BattleEvent.DamageDealt>()
+                .filter { it.targetId == WILD_ID }
+                .sumOf { before - it.newHp }
+        (before - damageFromMove - chip.newHp) shouldBe expected
+      }
+
+      test("badly poisoned damage climbs turn on turn") {
+        val player = state(1, 30, listOf(SPLASH), PLAYER_ID)
+        val wild = state(143, 50, listOf(SPLASH), WILD_ID)
+        wild.applyStatus(StatusCondition.TOXIC)
+        val instance = battle(player, wild, seed = 6)
+
+        var previousHp = wild.currentHp
+        val ticks = mutableListOf<Int>()
+        repeat(3) {
+          engine.resolveTurn(instance, SPLASH)
+          ticks += previousHp - wild.currentHp
+          previousHp = wild.currentHp
+        }
+
+        (ticks[1] > ticks[0]).shouldBeTrue()
+        (ticks[2] > ticks[1]).shouldBeTrue()
+      }
+
+      test("paralysis quarters speed so the slower monster moves first") {
+        val fastMove = TACKLE
+        val player = state(19, 30, listOf(fastMove), PLAYER_ID)
+        val wild = state(143, 30, listOf(fastMove), WILD_ID)
+        // Rattata outruns Snorlax comfortably until it is paralysed.
+        (player.effective(BattleStat.SPEED) > wild.effective(BattleStat.SPEED)).shouldBeTrue()
+        player.applyStatus(StatusCondition.PARALYSIS)
+
+        // A seed where the paralysis roll does not also cost the turn.
+        val events = engine.resolveTurn(battle(player, wild, seed = 11), fastMove)
+        val order = events.filterIsInstance<BattleEvent.MoveUsed>().map { it.attackerId }
+        order.first() shouldBe WILD_ID
+      }
+
+      test("a burn halves physical damage") {
+        fun run(burned: Boolean): Int {
+          val player = state(1, 30, listOf(TACKLE), PLAYER_ID)
+          val wild = state(143, 30, listOf(SPLASH), WILD_ID)
+          if (burned) player.applyStatus(StatusCondition.BURN)
+          val before = wild.currentHp
+          engine.resolveTurn(battle(player, wild, seed = 13), TACKLE)
+          return before - wild.currentHp
+        }
+        (run(burned = true) < run(burned = false)).shouldBeTrue()
+      }
+
+      test("a type immune to the condition never catches it") {
+        val paralyse = moveWithEffect(MoveEffect.PARALYZE)
+        val player = state(1, 30, listOf(paralyse), PLAYER_ID)
+        // Pikachu is Electric, so paralysis slides off.
+        val wild = state(25, 30, listOf(SPLASH), WILD_ID)
+        val events = engine.resolveTurn(battle(player, wild, seed = 17), paralyse)
+
+        wild.status shouldBe StatusCondition.NONE
+        events.filterIsInstance<BattleEvent.MoveFailed>().shouldNotBeEmpty()
+      }
+
+      test("a second status does not replace the first") {
+        val paralyse = moveWithEffect(MoveEffect.PARALYZE)
+        val player = state(1, 30, listOf(paralyse), PLAYER_ID)
+        val wild = state(19, 30, listOf(SPLASH), WILD_ID)
+        wild.applyStatus(StatusCondition.BURN)
+
+        engine.resolveTurn(battle(player, wild, seed = 19), paralyse)
+
+        wild.status shouldBe StatusCondition.BURN
       }
     })

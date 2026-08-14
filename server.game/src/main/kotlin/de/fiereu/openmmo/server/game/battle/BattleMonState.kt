@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.battle
 
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
+import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.net.game.packets.battle.BattleMonBlock
 import de.fiereu.openmmo.net.game.packets.battle.BattleOpponentBlock
 import de.fiereu.openmmo.pokemon.SpeciesDef
@@ -24,7 +25,31 @@ class BattleMonState(
   val moves: MutableList<PokemonMove> =
       source.moves.map { PokemonMove(it.id, it.pp) }.toMutableList()
 
+  /** Carried in from the party and written back out, so it outlives the battle. */
+  var status: StatusCondition = source.status
+  /** Turns of sleep still owed. Only meaningful while [status] is [StatusCondition.SLEEP]. */
+  var sleepTurns: Int = 0
+  /** Turns spent badly poisoned, which is the numerator of the toxic damage fraction. */
+  var toxicCounter: Int = 0
+
   private val stages = EnumMap<BattleStat, Int>(BattleStat::class.java)
+
+  fun applyStatus(status: StatusCondition, sleepTurns: Int = 0) {
+    this.status = status
+    this.sleepTurns = if (status == StatusCondition.SLEEP) sleepTurns else 0
+    this.toxicCounter = if (status == StatusCondition.TOXIC) 1 else 0
+  }
+
+  fun clearStatus() {
+    status = StatusCondition.NONE
+    sleepTurns = 0
+    toxicCounter = 0
+  }
+
+  /** Switching out sends the badly poisoned damage back to where it started. */
+  fun resetToxicRamp() {
+    if (status == StatusCondition.TOXIC) toxicCounter = 1
+  }
 
   val level: Int
     get() = source.level.toInt()

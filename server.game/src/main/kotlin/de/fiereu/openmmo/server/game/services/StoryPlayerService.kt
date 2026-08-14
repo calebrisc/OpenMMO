@@ -5,6 +5,7 @@ import de.fiereu.openmmo.common.MAX_PARTY_SIZE
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
 import de.fiereu.openmmo.common.enums.PokemonContainer
+import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.moves.MoveRegistry
@@ -84,6 +85,7 @@ constructor(
                     val maxPp = moves.get(move.id.toInt())?.pp ?: move.pp.toInt()
                     PokemonMove(move.id, maxPp.toByte())
                   },
+              status = StatusCondition.NONE,
           )
         }
     healed.forEach { characters.updatePokemon(characterId, it) }

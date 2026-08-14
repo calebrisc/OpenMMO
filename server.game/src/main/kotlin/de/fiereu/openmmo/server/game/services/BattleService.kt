@@ -382,10 +382,13 @@ constructor(
   private fun performSwitch(battle: BattleInstance, target: Int) {
     val oldSlot = battle.activeSlot
     val fullBlock = target !in battle.seenActive
+    // Leaving the field resets the toxic damage ramp, so a switch out and back in starts over.
+    battle.party.getOrNull(oldSlot)?.resetToxicRamp()
     battle.activeSlot = target
     battle.seenActive.add(target)
     log.info { "Switch char=${battle.charId} slot $oldSlot -> $target (fullBlock=$fullBlock)" }
     emitter.sendSwitchIn(battle, oldSlot, fullBlock)
+    emitter.sendCarriedStatus(battle, battle.activeMon())
   }
 
   private fun flee(battle: BattleInstance) {
@@ -424,6 +427,8 @@ constructor(
                 ot = stored.info.name,
                 hp = battle.opponentMon().currentHp.toShort(),
                 moves = battle.opponentMon().moves.map { PokemonMove(it.id, it.pp) },
+                // Sleeping one first is how a catch is meant to go, so it keeps the status.
+                status = battle.opponentMon().status,
                 caughtAt = LocalDateTime.now(),
             )
     log.info { "Caught wild ${battle.opponentMon().species.name} for char=${battle.charId}" }
@@ -519,6 +524,7 @@ constructor(
           state.source.copy(
               hp = state.currentHp.toShort(),
               moves = state.moves.map { PokemonMove(it.id, it.pp) },
+              status = state.status,
           )
       characterStore.updatePokemon(battle.charId, updated)
     }

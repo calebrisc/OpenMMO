@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.battle
 
 import de.fiereu.openmmo.common.enums.MoveEffect
+import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.moves.MoveDef
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.typechart.TypeChart
@@ -43,6 +44,20 @@ sealed interface BattleEvent {
   ) : BattleEvent
 
   data class Fainted(val targetId: Long) : BattleEvent
+
+  /** A major status landed on [targetId]. */
+  data class StatusInflicted(val targetId: Long, val status: StatusCondition, val sleepTurns: Int) :
+      BattleEvent
+
+  /** End of turn chip damage from poison, burn or toxic. */
+  data class StatusDamage(val targetId: Long, val newHp: Int, val status: StatusCondition) :
+      BattleEvent
+
+  /** The monster could not move this turn because it is asleep, frozen or fully paralysed. */
+  data class StatusBlockedMove(val attackerId: Long, val status: StatusCondition) : BattleEvent
+
+  /** Woke up or thawed out, so the status is gone. */
+  data class StatusCleared(val targetId: Long, val previous: StatusCondition) : BattleEvent
 }
 
 private data class TurnAction(
@@ -79,6 +94,7 @@ constructor(
       execute(battle, action, events)
       if (player.fainted || enemy.fainted) break
     }
+    endOfTurn(listOf(player, enemy), events)
     return events
   }
 
@@ -88,7 +104,24 @@ constructor(
     val enemy = battle.opponentMon()
     if (enemy.fainted) return events
     execute(battle, TurnAction(enemy, battle.activeMon(), pickEnemyMove(battle, enemy)), events)
+    endOfTurn(listOf(battle.activeMon(), enemy), events)
     return events
+  }
+
+  /** Poison, burn and toxic bite after both sides have acted. */
+  private fun endOfTurn(
+      participants: List<BattleMonState>,
+      events: MutableList<BattleEvent>,
+  ) {
+    for (mon in participants) {
+      if (mon.fainted) continue
+      val damage = StatusRules.endOfTurnDamage(mon.status, mon.stats.hp, mon.toxicCounter)
+      if (damage <= 0) continue
+      mon.currentHp = (mon.currentHp - damage).coerceAtLeast(0)
+      events += BattleEvent.StatusDamage(mon.entityId, mon.currentHp, mon.status)
+      if (mon.status == StatusCondition.TOXIC) mon.toxicCounter++
+      if (mon.fainted) events += BattleEvent.Fainted(mon.entityId)
+    }
   }
 
   /** The enemy AI picks a random usable move, falling back to Tackle with no pp left. */
@@ -106,10 +139,81 @@ constructor(
     val pa = a.move?.priority ?: 0
     val pb = b.move?.priority ?: 0
     if (pa != pb) return if (pa > pb) listOf(a, b) else listOf(b, a)
-    val sa = a.attacker.effective(BattleStat.SPEED)
-    val sb = b.attacker.effective(BattleStat.SPEED)
+    val sa = speed(a.attacker)
+    val sb = speed(b.attacker)
     if (sa != sb) return if (sa > sb) listOf(a, b) else listOf(b, a)
     return if (battle.rng.coinFlip()) listOf(a, b) else listOf(b, a)
+  }
+
+  private fun speed(mon: BattleMonState): Int {
+    val base = mon.effective(BattleStat.SPEED)
+    return if (mon.status == StatusCondition.PARALYSIS) {
+      base / StatusRules.PARALYSIS_SPEED_DIVISOR
+    } else {
+      base
+    }
+  }
+
+  /**
+   * Whether [attacker] gets to move. Sleep counts down, freeze and paralysis roll, and waking or
+   * thawing clears the status before the move goes through.
+   */
+  private fun canAct(
+      battle: BattleInstance,
+      attacker: BattleMonState,
+      events: MutableList<BattleEvent>,
+  ): Boolean =
+      when (attacker.status) {
+        StatusCondition.SLEEP -> {
+          attacker.sleepTurns--
+          if (attacker.sleepTurns <= 0) {
+            attacker.clearStatus()
+            events += BattleEvent.StatusCleared(attacker.entityId, StatusCondition.SLEEP)
+            true
+          } else {
+            events += BattleEvent.StatusBlockedMove(attacker.entityId, StatusCondition.SLEEP)
+            false
+          }
+        }
+        StatusCondition.FREEZE ->
+            if (battle.rng.accuracyRoll() <= StatusRules.THAW_PERCENT) {
+              attacker.clearStatus()
+              events += BattleEvent.StatusCleared(attacker.entityId, StatusCondition.FREEZE)
+              true
+            } else {
+              events += BattleEvent.StatusBlockedMove(attacker.entityId, StatusCondition.FREEZE)
+              false
+            }
+        StatusCondition.PARALYSIS ->
+            if (battle.rng.accuracyRoll() <= StatusRules.FULL_PARALYSIS_PERCENT) {
+              events += BattleEvent.StatusBlockedMove(attacker.entityId, StatusCondition.PARALYSIS)
+              false
+            } else {
+              true
+            }
+        else -> true
+      }
+
+  /** Lands [status] on [target], or returns false when something already holds it back. */
+  private fun inflict(
+      battle: BattleInstance,
+      target: BattleMonState,
+      status: StatusCondition,
+      events: MutableList<BattleEvent>,
+  ): Boolean {
+    // One major status at a time, and a type that shrugs it off never catches it.
+    if (target.status.isSet) return false
+    if (StatusRules.isImmune(target.species, status)) return false
+    val sleepTurns =
+        if (status == StatusCondition.SLEEP) {
+          StatusRules.MIN_SLEEP_TURNS +
+              battle.rng.pick(StatusRules.MAX_SLEEP_TURNS - StatusRules.MIN_SLEEP_TURNS + 1)
+        } else {
+          0
+        }
+    target.applyStatus(status, sleepTurns)
+    events += BattleEvent.StatusInflicted(target.entityId, status, sleepTurns)
+    return true
   }
 
   private fun execute(
@@ -123,6 +227,8 @@ constructor(
       events += BattleEvent.MoveFailed(attacker.entityId, 0)
       return
     }
+    // Sleep, freeze and paralysis are checked before the move is announced or its pp is spent.
+    if (!canAct(battle, attacker, events)) return
     val moveId = move.id.toShort()
     val slot = attacker.moves.indexOfFirst { it.id == moveId }
     if (slot >= 0 && attacker.moves[slot].pp > 0) {
@@ -141,9 +247,15 @@ constructor(
     }
 
     val stage = stageEffect(move.effect)
+    val status = StatusRules.inflicted(move.effect)
     when {
       move.power > 0 -> damage(battle, action, move, events)
       stage != null -> applyStage(action, stage, events)
+      // A status move whose condition will not stick reports a plain failure, as the games do.
+      status != null ->
+          if (!inflict(battle, action.defender, status, events)) {
+            events += BattleEvent.MoveFailed(attacker.entityId, moveId)
+          }
       else -> events += BattleEvent.MoveFailed(attacker.entityId, moveId)
     }
   }
@@ -174,9 +286,13 @@ constructor(
     val defStat = if (physical) BattleStat.DEFENSE else BattleStat.SP_DEFENSE
     val crit = battle.rng.critRoll(CRIT_DENOMINATOR)
     // A crit ignores the attacker's negative stages and the defender's positive stages.
-    val atk =
+    var atk =
         if (crit && attacker.stage(atkStat) < 0) attacker.unstaged(atkStat)
         else attacker.effective(atkStat)
+    // A burn halves physical attack, and only physical.
+    if (physical && attacker.status == StatusCondition.BURN) {
+      atk /= StatusRules.BURN_ATTACK_DIVISOR
+    }
     val def =
         if (crit && defender.stage(defStat) > 0) defender.unstaged(defStat)
         else defender.effective(defStat)
@@ -199,6 +315,14 @@ constructor(
           battle.rng.accuracyRoll() <= move.secondaryEffectChance) {
         applyStage(action, secondary, events)
       }
+    }
+    // A status riding on a damaging hit rolls against the same secondary chance.
+    val status = StatusRules.inflicted(move.effect)
+    if (status != null &&
+        StatusRules.isSecondary(move.effect) &&
+        move.secondaryEffectChance > 0 &&
+        battle.rng.accuracyRoll() <= move.secondaryEffectChance) {
+      inflict(battle, defender, status, events)
     }
   }
 

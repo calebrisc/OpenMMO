@@ -4,6 +4,7 @@ import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.PokemonNature
+import de.fiereu.openmmo.common.enums.StatusCondition
 import java.time.LocalDateTime
 
 const val MAX_MOVE_SLOTS = 4
@@ -32,7 +33,9 @@ data class Pokemon(
     val isFatefulEncounter: Boolean,
     val isRaidEncounter: Boolean,
     val caughtAt: LocalDateTime,
-    val isEgg: Boolean = false
+    val isEgg: Boolean = false,
+    /** Survives the battle it was inflicted in. Cleared by a Pokemon Center. */
+    val status: StatusCondition = StatusCondition.NONE,
 ) {
   // seed is an unsigned 32-bit value on the wire, so mask before the modulo to avoid a negative
   // index when the high bit is set.

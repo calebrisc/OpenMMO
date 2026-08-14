@@ -10,6 +10,7 @@ import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.SkinSlot
+import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.db.game.tables.records.CharacterFlagsRecord
 import de.fiereu.openmmo.db.game.tables.records.CharacterItemsRecord
 import de.fiereu.openmmo.db.game.tables.records.CharacterSkinsRecord
@@ -346,6 +347,7 @@ constructor(
           isRaidEncounter = isRaidEncounter,
           isEgg = isEgg,
           caughtAt = caughtAt,
+          status = status.name,
       )
 
   private fun PokemonRecord.toPokemon(): Pokemon =
@@ -378,6 +380,7 @@ constructor(
           isRaidEncounter = isRaidEncounter ?: false,
           isEgg = isEgg ?: false,
           caughtAt = caughtAt,
+          status = StatusCondition.parse(status),
       )
 
   private fun PokemonRecord.hydrateEvs(): EVs =

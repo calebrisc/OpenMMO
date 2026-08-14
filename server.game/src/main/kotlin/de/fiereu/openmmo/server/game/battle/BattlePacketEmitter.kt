@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.battle
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
+import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.common.utils.hexToBytes
 import de.fiereu.openmmo.net.game.packets.EntityMovePpPacket
 import de.fiereu.openmmo.net.game.packets.EntityPresencePacket
@@ -95,7 +96,17 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
             opponentActiveSlot = battle.opponentSlot,
         ),
     )
+    // A monster that walked in already poisoned or asleep carries no status in its battle block,
+    // so the icon has to be sent separately.
+    battle.party.forEach { sendCarriedStatus(battle, it) }
+    battle.opponent.forEach { sendCarriedStatus(battle, it) }
     sendPrompt(battle)
+  }
+
+  /** Sends [mon]'s status if it has one, for a battle start or a switch in. */
+  fun sendCarriedStatus(battle: BattleInstance, mon: BattleMonState) {
+    if (!mon.status.isSet) return
+    sendStatus(battle, mon.entityId, mon.status, mon.sleepTurns)
   }
 
   fun sendEvents(battle: BattleInstance, events: List<BattleEvent>) {
@@ -163,6 +174,17 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
               battle,
               BattleEntityMoveEventPacket(event.attackerId, event.moveId, MOVE_EVENT_KIND, targets))
         }
+        is BattleEvent.StatusInflicted ->
+            sendStatus(battle, event.targetId, event.status, event.sleepTurns)
+        is BattleEvent.StatusCleared -> sendStatus(battle, event.targetId, StatusCondition.NONE, 0)
+        is BattleEvent.StatusDamage ->
+            broadcast(
+                battle,
+                BattleEntityDeltaPacket(
+                    entityId = event.targetId, currentHp = event.newHp.toShort()))
+        // Nothing is animated for a turn lost to sleep, freeze or paralysis: the status icon the
+        // client already shows is what explains it. Worth revisiting with a live client.
+        is BattleEvent.StatusBlockedMove -> Unit
         is BattleEvent.DamageDealt -> Unit
         is BattleEvent.StageChanged -> Unit
         is BattleEvent.Fainted -> Unit
@@ -170,6 +192,22 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
       }
       i++
     }
+  }
+
+  /** Tells the client a monster's status changed, which is what draws the icon. */
+  fun sendStatus(
+      battle: BattleInstance,
+      entityId: Long,
+      status: StatusCondition,
+      sleepTurns: Int,
+  ) {
+    broadcast(
+        battle,
+        BattleEntityDeltaPacket(
+            entityId = entityId,
+            status = StatusRules.wireValue(status, sleepTurns),
+        ),
+    )
   }
 
   fun sendSwitchIn(battle: BattleInstance, oldSlot: Int, fullBlock: Boolean) {
