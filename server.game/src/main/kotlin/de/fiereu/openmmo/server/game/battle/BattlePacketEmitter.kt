@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.battle
 
+import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
@@ -69,39 +70,53 @@ private const val NOT_VERY_EFFECTIVE_BIT = 0x10
 class BattlePacketEmitter @Inject constructor(private val interestManager: InterestManager) {
 
   fun sendStart(battle: BattleInstance, playerName: String) {
+    battle.playerName = playerName
     battle.session.send(EntityPresencePacket(entityId = battle.charId, status = PRESENCE_IN_BATTLE))
     // Tell the client which side is local so the battle bag knows which monster an item targets.
     // Without it, opening the bag crashes. Opcode 0x40 is left alone here, since re-sending it
     // would wipe the balls out of the battle bag.
     battle.session.send(BattleSidePacket(side = PLAYER_SIDE))
-    broadcast(
-        battle,
-        BattleFieldStatePacket(
-            playerName = playerName,
-            playerId = battle.charId,
-            // TODO Send the player's own appearance and the map's battle backdrop
-            //  These are the captured values, so every player appears as the captured character.
-            playerAppearance = CAPTURED_APPEARANCE,
-            background = 0,
-            opposing = if (battle.trainer == null) OpposingSide.WILD else OpposingSide.TRAINER,
-            // TODO Check whether Hoenn needs a region tag, both decomps number trainers from 1
-            trainerId = (battle.trainer?.id ?: 0).toShort(),
-            playerParty = battle.party.mapIndexed { slot, mon -> mon.toBlock(slot, true) },
-            activeSlot = battle.activeSlot,
-            opponentParty =
-                battle.opponent.mapIndexed { slot, mon ->
-                  if (slot in battle.opponentSeen) mon.toOpponentBlock(slot)
-                  else BattleOpponentBlock(slot = slot, revealed = false)
-                },
-            opponentActiveSlot = battle.opponentSlot,
-        ),
-    )
-    // A monster that walked in already poisoned or asleep carries no status in its battle block,
-    // so the icon has to be sent separately.
+    broadcast(battle, fieldState(battle, playerName))
+    // A monster that walked in already poisoned or asleep carries no status in its battle
+    // block, so the icon has to be sent separately.
     battle.party.forEach { sendCarriedStatus(battle, it) }
     battle.opponent.forEach { sendCarriedStatus(battle, it) }
     sendPrompt(battle)
   }
+
+  /**
+   * Catches a session up on a battle already in progress, for somebody who just started watching.
+   * The side packet goes out too: without it the client's battle bag has no local side and crashes
+   * when opened.
+   */
+  fun sendSnapshotTo(session: SessionContext, battle: BattleInstance) {
+    session.send(BattleSidePacket(side = PLAYER_SIDE))
+    session.send(fieldState(battle, battle.playerName))
+    (battle.party + battle.opponent)
+        .filter { it.status.isSet }
+        .forEach { session.send(statusDelta(it)) }
+  }
+
+  private fun fieldState(battle: BattleInstance, playerName: String): BattleFieldStatePacket =
+      BattleFieldStatePacket(
+          playerName = playerName,
+          playerId = battle.charId,
+          // TODO Send the player's own appearance and the map's battle backdrop
+          //  These are the captured values, so every player appears as the captured character.
+          playerAppearance = CAPTURED_APPEARANCE,
+          background = 0,
+          opposing = if (battle.trainer == null) OpposingSide.WILD else OpposingSide.TRAINER,
+          // TODO Check whether Hoenn needs a region tag, both decomps number trainers from 1
+          trainerId = (battle.trainer?.id ?: 0).toShort(),
+          playerParty = battle.party.mapIndexed { slot, mon -> mon.toBlock(slot, true) },
+          activeSlot = battle.activeSlot,
+          opponentParty =
+              battle.opponent.mapIndexed { slot, mon ->
+                if (slot in battle.opponentSeen) mon.toOpponentBlock(slot)
+                else BattleOpponentBlock(slot = slot, revealed = false)
+              },
+          opponentActiveSlot = battle.opponentSlot,
+      )
 
   /** Sends [mon]'s status if it has one, for a battle start or a switch in. */
   fun sendCarriedStatus(battle: BattleInstance, mon: BattleMonState) {
@@ -210,6 +225,12 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     )
   }
 
+  private fun statusDelta(mon: BattleMonState): BattleEntityDeltaPacket =
+      BattleEntityDeltaPacket(
+          entityId = mon.entityId,
+          status = StatusRules.wireValue(mon.status, mon.sleepTurns),
+      )
+
   fun sendSwitchIn(battle: BattleInstance, oldSlot: Int, fullBlock: Boolean) {
     broadcast(
         battle,
@@ -238,7 +259,9 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
 
   fun sendPrompt(battle: BattleInstance) {
     broadcast(battle, BattleTileMapPacket(groupId = battle.turn.toShort(), slotTiles = null))
-    broadcast(battle, BattleQueuedEventPacket(packed = ACTION_PROMPT))
+    // Only the players choose an action. A spectator joined to the same key must not be
+    // handed the action UI.
+    battle.participants.forEach { it.session.send(BattleQueuedEventPacket(packed = ACTION_PROMPT)) }
   }
 
   /** Opens the party switch screen after the active mon faints, in place of the action prompt. */

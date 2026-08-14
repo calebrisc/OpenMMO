@@ -75,6 +75,9 @@ class BattleInstance(
   /** Result held until the client confirms that its battle-to-map transition has finished. */
   var pendingResult: BattleResult? = null
 
+  /** Kept so a spectator joining part way through can be sent the same field state. */
+  var playerName: String = ""
+
   /** The player who started the battle, and the only one in an ordinary battle. */
   val host: BattleParticipant
     get() = participants.first()

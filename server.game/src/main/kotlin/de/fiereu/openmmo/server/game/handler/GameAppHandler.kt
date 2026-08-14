@@ -30,6 +30,7 @@ import de.fiereu.openmmo.net.game.packets.RequestPlayerPacket
 import de.fiereu.openmmo.net.game.packets.RequestSocialProfilePacket
 import de.fiereu.openmmo.net.game.packets.SelectCharacterPacket
 import de.fiereu.openmmo.net.game.packets.ShopSellRequestPacket
+import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
 import de.fiereu.openmmo.net.game.packets.UnblockPlayerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionPacket
@@ -178,6 +179,7 @@ constructor(
     // The client sends an empty heartbeat packet.
     on<NullPacket> {}
     on<KeepAlivePacket> { event -> event.session.send(event.packet) }
+    on<SpectateRequestPacket> { event -> battleService.onSpectateRequest(event) }
     onSuspend<ChatMessagePacket> { event -> chatService.onChatMessage(event) }
     // What the client sends when the player types.
     onSuspend<ChatMessageSendPacket> { event -> chatService.onChatSend(event) }

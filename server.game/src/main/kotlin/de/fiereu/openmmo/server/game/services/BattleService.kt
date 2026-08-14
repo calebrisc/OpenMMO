@@ -12,6 +12,7 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.MapLoadedAckPacket
 import de.fiereu.openmmo.net.game.packets.SocialListEntryAddPacket
+import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleListEventDetail
 import de.fiereu.openmmo.net.game.packets.battle.BattleListEventPacket
@@ -33,6 +34,7 @@ import de.fiereu.openmmo.server.game.battle.WildMonFactory
 import de.fiereu.openmmo.server.game.battle.acquiredMonsterDelta
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
+import de.fiereu.openmmo.server.game.world.interest.BattleInterestKey
 import de.fiereu.openmmo.server.game.world.interest.InterestManager
 import de.fiereu.openmmo.trainer.TrainerDef
 import de.fiereu.openmmo.trainer.TrainerRegistry
@@ -160,6 +162,37 @@ constructor(
 
   /** True while the character has a battle running, so callers can skip starting another. */
   fun inBattle(charId: Long): Boolean = battles.byChar(charId) != null
+
+  fun onSpectateRequest(event: PacketEvent<SpectateRequestPacket>) {
+    watch(event.session, event.packet.targetEntityId)
+  }
+
+  /**
+   * Joins [session] to the battle [targetCharId] is fighting, as a viewer. Returns what to tell the
+   * watcher.
+   */
+  fun watch(session: SessionContext, targetCharId: Long): String {
+    val watcherId = session.attributes[PLAYER_STATE]?.characterId
+    if (watcherId != null && battles.byChar(watcherId) != null) {
+      return "You cannot watch a battle while you are in one."
+    }
+    val battle = battles.byChar(targetCharId) ?: return "They are not in a battle."
+    if (watcherId != null && battle.participantFor(watcherId) != null) {
+      return "That is your own battle."
+    }
+    interestManager.join(session, battle.key)
+    emitter.sendSnapshotTo(session, battle)
+    log.info { "char=$watcherId is watching battle ${battle.battleId}" }
+    return "Watching. It ends when the battle does."
+  }
+
+  /** Drops a watcher out again. */
+  fun stopWatching(session: SessionContext): String {
+    val keys = interestManager.keysOf(session).filterIsInstance<BattleInterestKey>()
+    if (keys.isEmpty()) return "You are not watching a battle."
+    keys.forEach { interestManager.leave(session, it) }
+    return "Stopped watching."
+  }
 
   fun startWildBattle(session: SessionContext, dexId: Int, level: Int) {
     createWildBattle(session, dexId, level, catchable = true, escapable = true)
@@ -532,6 +565,9 @@ constructor(
   }
 
   private fun finishBattle(battle: BattleInstance, result: BattleResult) {
+    // Spectators are joined to the same key, so clear the whole bucket rather than only the
+    // player: a watcher left behind would keep receiving the next battle on a reused id.
+    interestManager.members(battle.key).forEach { interestManager.leave(it, battle.key) }
     interestManager.leave(battle.session, battle.key)
     battles.remove(battle.charId)
     battle.completion.complete(result)
