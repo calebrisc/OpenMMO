@@ -7,6 +7,7 @@ import de.fiereu.openmmo.server.game.services.command.CatchCommand
 import de.fiereu.openmmo.server.game.services.command.ChatCommand
 import de.fiereu.openmmo.server.game.services.command.GiveCommand
 import de.fiereu.openmmo.server.game.services.command.HelpCommand
+import de.fiereu.openmmo.server.game.services.command.LinkCommand
 import de.fiereu.openmmo.server.game.services.command.PmCommand
 import de.fiereu.openmmo.server.game.services.command.PosCommand
 import de.fiereu.openmmo.server.game.services.command.StoryCommand
@@ -34,4 +35,6 @@ interface ChatCommandModule {
   @Binds @IntoSet fun whoCommand(command: WhoCommand): ChatCommand
 
   @Binds @IntoSet fun pmCommand(command: PmCommand): ChatCommand
+
+  @Binds @IntoSet fun linkCommand(command: LinkCommand): ChatCommand
 }

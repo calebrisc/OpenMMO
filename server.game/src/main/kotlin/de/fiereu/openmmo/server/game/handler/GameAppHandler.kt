@@ -16,11 +16,14 @@ import de.fiereu.openmmo.net.game.packets.DialogChoicePacket
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.ExchangeItemRequestPacket
 import de.fiereu.openmmo.net.game.packets.FaceDirectionPacket
+import de.fiereu.openmmo.net.game.packets.InGameChallengeResponsePacket
 import de.fiereu.openmmo.net.game.packets.JoinPacket
 import de.fiereu.openmmo.net.game.packets.KeepAlivePacket
+import de.fiereu.openmmo.net.game.packets.LinkKickMemberPacket
 import de.fiereu.openmmo.net.game.packets.MapLoadedAckPacket
 import de.fiereu.openmmo.net.game.packets.MovementPacket
 import de.fiereu.openmmo.net.game.packets.NullPacket
+import de.fiereu.openmmo.net.game.packets.PartyInfoRequestPacket
 import de.fiereu.openmmo.net.game.packets.RemoveFriendPacket
 import de.fiereu.openmmo.net.game.packets.RequestCharactersPacket
 import de.fiereu.openmmo.net.game.packets.RequestPlayerPacket
@@ -67,6 +70,7 @@ import de.fiereu.openmmo.server.game.services.ChatService
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
+import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.LoginService
 import de.fiereu.openmmo.server.game.services.MovementService
 import de.fiereu.openmmo.server.game.services.MultiplayerService
@@ -97,6 +101,7 @@ constructor(
     private val guildService: GuildService,
     private val battleService: BattleService,
     private val chatService: ChatService,
+    private val linkService: LinkService,
     private val shopService: ShopService,
     private val scriptRunner: ScriptRunner,
     private val sessionRegistry: SessionRegistry,
@@ -126,6 +131,9 @@ constructor(
     onSuspend<RemoveFriendPacket> { event -> socialService.onRemoveFriend(event) }
     onSuspend<BlockPlayerPacket> { event -> socialService.onBlockPlayer(event) }
     onSuspend<UnblockPlayerPacket> { event -> socialService.onUnblockPlayer(event) }
+    on<PartyInfoRequestPacket> { event -> linkService.onPartyInfoRequest(event) }
+    on<LinkKickMemberPacket> { event -> linkService.onKickMember(event) }
+    on<InGameChallengeResponsePacket> { event -> linkService.onChallengeResponse(event) }
     on<RequestSocialProfilePacket> { event -> socialService.onRequestSocialProfile(event) }
     on<CancelSocialInteractionPacket> { event -> socialService.onCancelSocialInteraction(event) }
 
@@ -189,6 +197,7 @@ constructor(
       // which runs on another thread and would race the flush below.
       scriptRunner.rollBack(session, state, entityId = -1)
       state.inDialog = false
+      linkService.onDisconnect(charId)
       presenceService.leave(session)
       sessionRegistry.unbindCharacter(charId)
       characterStore.unloadCharacterAsync(charId)

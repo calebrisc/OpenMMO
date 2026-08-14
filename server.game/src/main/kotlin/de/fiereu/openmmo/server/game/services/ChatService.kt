@@ -31,6 +31,7 @@ constructor(
     private val sessionRegistry: SessionRegistry,
     private val characterStore: CharacterStore,
     private val guildStore: GuildStore,
+    private val linkService: LinkService,
     private val socialService: SocialService,
     private val chatCommandService: ChatCommandService,
 ) {
@@ -52,6 +53,7 @@ constructor(
 
     when (msg.type) {
       ChatType.TEAM -> sendToGuild(charId, sender, msg.message)
+      ChatType.LINK -> sendToLink(charId, sender, msg.message)
       ChatType.WHISPER -> ctx.send(notice("Whisper needs a name: /pm <name> <message>"))
       else ->
           broadcast(
@@ -119,6 +121,22 @@ constructor(
     // Echo it back so the sender sees their own whisper in the log.
     ctx.send(packet)
     log.info { "Whisper $sender -> $targetName" }
+  }
+
+  private fun sendToLink(charId: Long, sender: String, message: String) {
+    val link = linkService.linkFor(charId)
+    if (link == null) {
+      sessionRegistry.getByCharacterId(charId)?.send(notice("You are not in a link."))
+      return
+    }
+    val packet =
+        ChatMessagePacket(
+            type = ChatType.LINK,
+            language = Language.EN,
+            message = message,
+            sender = sender,
+        )
+    linkService.sessionsIn(link).forEach { it.send(packet) }
   }
 
   private fun sendToGuild(charId: Long, sender: String, message: String) {
