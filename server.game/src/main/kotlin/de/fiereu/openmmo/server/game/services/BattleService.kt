@@ -549,8 +549,27 @@ constructor(
    * Pays the active monster for knocking [defeated] out. A trainer's team is paid for one at a
    * time, as each faints, which is when the captures show the delta going out.
    */
+  /**
+   * Shares the win with the whole party rather than only the monster that was out.
+   *
+   * The games these maps come from pay whichever monsters were sent out, and paying the party is a
+   * later generation's rule, so this is a deliberate house rule rather than accuracy. A fainted
+   * monster still earns nothing.
+   */
   private fun awardXp(battle: BattleInstance, defeated: BattleMonState) {
-    val winner = battle.activeMon()
+    val active = battle.activeMon()
+    val earners = battle.party.filter { !it.fainted }
+    for (earner in earners) {
+      awardXpTo(battle, earner, defeated, promptMoves = earner === active)
+    }
+  }
+
+  private fun awardXpTo(
+      battle: BattleInstance,
+      winner: BattleMonState,
+      defeated: BattleMonState,
+      promptMoves: Boolean,
+  ) {
     val reward = rewards.apply(winner, defeated.species, defeated.level, battle.trainer != null)
     log.info {
       "char=${battle.charId} won: +${reward.xpGained} xp, level ${winner.level} -> ${reward.newLevel}"
@@ -562,7 +581,9 @@ constructor(
     for (move in outcome.learned) {
       emitter.sendNotice(battle, "${winner.species.name} learned ${move.name}!")
     }
-    if (outcome.offered.isNotEmpty()) {
+    // Only the monster that fought is asked which move to drop. Several prompts at once would
+    // stack windows on the player with no way to tell them apart.
+    if (promptMoves && outcome.offered.isNotEmpty()) {
       val offered = outcome.offered.map { it.moveId.toShort() }
       pendingLearns[winner.entityId] = PendingMoveLearn(battle.charId, winner.entityId, offered)
       battle.session.send(MoveLearnPromptPacket(winner.entityId, offered))
