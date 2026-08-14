@@ -13,9 +13,15 @@ class UnknownPacketTypeException(val type: KClass<*>, val side: Side) :
 
 class ChecksumMismatchException : NetworkException("Checksum verification failed")
 
-class TrailingBytesException(val opcode: UByte, val remaining: Int) :
+class TrailingBytesException(
+    val opcode: UByte,
+    val remaining: Int,
+    /** The whole body as hex, so the undecoded tail can be read off the log. */
+    val bodyHex: String = "",
+) :
     NetworkException(
-        "Codec for opcode 0x${opcode.toString(16)} did not consume $remaining trailing byte(s)")
+        "Codec for opcode 0x${opcode.toString(16)} did not consume $remaining trailing " +
+            "byte(s), body=$bodyHex")
 
 class EmptyFrameException : NetworkException("Received empty frame")
 

@@ -5,6 +5,7 @@ import de.fiereu.network.internal.OutgoingPacket
 import de.fiereu.network.internal.SESSION_KEY
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.buffer.ByteBuf
+import io.netty.buffer.ByteBufUtil
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
@@ -57,9 +58,22 @@ abstract class ProtocolHandler(
         log.error { "No incoming codec for opcode 0x${opcode.toString(16)} on $side" }
         return
       }
+      // Absolute, so the error path can re-read the body without a mark decode might clobber.
+      val bodyStart = msg.readerIndex()
       val packet = decode(registration.codec, msg)
       val trailing = msg.readableBytes()
-      if (trailing > 0) throw TrailingBytesException(opcode, trailing)
+      if (trailing > 0) {
+        // Dropping one packet we could not fully parse beats dropping the player. The client
+        // sends shapes we have not finished decoding, and closing the connection over one of
+        // them makes the whole game look broken. The body is logged so the rest can be read
+        // off and the codec finished.
+        val body = ByteBufUtil.hexDump(msg, bodyStart, msg.writerIndex() - bodyStart)
+        log.error {
+          "Codec for opcode 0x${opcode.toString(16)} did not consume $trailing trailing " +
+              "byte(s), dropping it. body=$body"
+        }
+        return
+      }
       try {
         onPacket(PacketEvent(packet, session))
       } catch (t: Throwable) {

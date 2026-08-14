@@ -86,7 +86,9 @@ constructor(
     if (text.isBlank()) return
     if (chatCommandService.tryHandle(ctx, text)) return
     // Anything that is not a command used to be dropped here.
-    log.info { "Chat [send] $sender: $text" }
+    // mode is the channel the player typed into. We do not know the mapping yet, so it is
+    // logged rather than used, and everything still goes out as NORMAL.
+    log.info { "Chat [send] mode=${packet.mode} target='${packet.target}' $sender: $text" }
     broadcast(
         sender,
         ChatMessagePacket(
