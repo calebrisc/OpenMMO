@@ -4,6 +4,8 @@ import de.fiereu.openmmo.common.CharacterPermissions
 import de.fiereu.openmmo.common.hasPermission
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
+import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
+import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MovementTuning
@@ -41,6 +43,37 @@ constructor(
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "roster") {
+      val name = ctx.args.getOrNull(1)
+      val state = ctx.args.getOrNull(2)?.toByteOrNull() ?: 0
+      val target = name?.let { characterStore.findCachedByName(it) }
+      val targetSession = target?.let { sessions.getByCharacterId(it.info.id) }
+      if (targetSession == null) {
+        ctx.reply("Usage: /probe roster <name> [state]")
+        return
+      }
+      // The client has a whole link interface with a member list, kick and leave, and the server
+      // has never sent it a roster. Both players go in it, so if the panel fills in we have found
+      // where a link actually lives.
+      val members =
+          listOf(ctx.character, target).map { who ->
+            GroupRosterMember(
+                entityId = who.info.id,
+                name = who.info.name,
+                guildName = "",
+                trackedEntities = emptyList(),
+            )
+          }
+      targetSession.send(
+          GroupMemberRosterPacket(
+              reset = true,
+              updateState = true,
+              state = state,
+              members = members,
+          ))
+      ctx.reply("Sent a two person roster to ${target.info.name} with state=$state.")
+      return
+    }
     if (what == "grant") {
       val name = ctx.args.getOrNull(1)
       if (name == null) {

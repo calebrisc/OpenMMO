@@ -39,8 +39,11 @@ private const val NOT_IN_WORLD = "You are not in the world yet."
 private const val INVITE_PROMPT_SECONDS = 60
 
 /** The candidate request types, announced one at a time so a hit can be named. */
-/** Value 2 crashed a client outright, so a sweep steps over it. */
-private val KNOWN_HARMFUL = setOf(2)
+/**
+ * Values a sweep must not send. 2 crashed a client with a render error; 3 shut one down cleanly,
+ * which reads more like a disconnect instruction than a prompt. Both cost a session.
+ */
+private val KNOWN_HARMFUL = setOf(2, 3)
 
 /** Confirmed live: this is the value that opens the other player's trade window. */
 private const val TRADE_REQUEST_TYPE: Byte = 0
