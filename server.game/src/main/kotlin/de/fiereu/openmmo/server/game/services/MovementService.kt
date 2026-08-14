@@ -19,6 +19,9 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
+/** Rejected steps in a row before the client is sent a whole map rather than another nudge. */
+private const val DESYNC_RELOAD_THRESHOLD = 4
+
 /** Resolve a cardinal Gen-3 ledge hop to its tile two spaces away. */
 internal fun ledgeLanding(
     map: MapDef,
@@ -101,8 +104,21 @@ constructor(
         return
       }
       !atServerTile -> {
+        state.consecutiveDesyncs += 1
         log.debug {
-          "DESYNC: char=$charId claims (${msg.x}, ${msg.y}), server has ($fromX, $fromY), resetting"
+          "DESYNC: char=$charId claims (${msg.x}, ${msg.y}), server has ($fromX, $fromY), " +
+              "count=${state.consecutiveDesyncs}"
+        }
+        if (state.consecutiveDesyncs >= DESYNC_RELOAD_THRESHOLD) {
+          // A position fix is stamped with the server's map, so a client that thinks it is on a
+          // different one discards it and the disagreement never heals: the player walks on while
+          // everyone else watches them stand still. Send the whole map instead.
+          log.warn {
+            "char=$charId desynced ${state.consecutiveDesyncs} steps running, reloading " +
+                "bank=${currentMap.bankId} map=${currentMap.mapId}"
+          }
+          state.consecutiveDesyncs = 0
+          ctx.send(mapManager.createLoadMapPacket(currentMap, reloadPlayer = true))
         }
         sendPositionReset(ctx, charId, currentMap, fromX, fromY, msg.direction)
         return
@@ -110,6 +126,7 @@ constructor(
     }
 
     // Only once the step is accepted, so a locked player keeps the facing its script left.
+    state.consecutiveDesyncs = 0
     state.facingDirection = msg.direction
 
     var toX = fromX + msg.direction.dx

@@ -24,6 +24,13 @@ data class PlayerState(
     /** Trusts one source tile after scripted movement. */
     @field:Volatile var acceptNextMoveSource: Boolean = false,
     /**
+     * Steps rejected in a row for disagreeing with the server's position. A position fix names the
+     * map the server thinks the player is on, so a client that has walked onto a different map
+     * ignores it and the two never reconcile. Counting the rejections lets that be caught and
+     * answered with a whole map instead.
+     */
+    @field:Volatile var consecutiveDesyncs: Int = 0,
+    /**
      * A script is warping and will run the destination's entry scripts itself. The arrival must not
      * start a second copy, which [inDialog] alone cannot prevent because a stray dialog packet
      * clears it while the script is parked on the map load.
