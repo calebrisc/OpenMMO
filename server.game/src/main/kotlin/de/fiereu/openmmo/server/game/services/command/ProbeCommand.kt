@@ -29,12 +29,21 @@ constructor(
   override val name = "probe"
   override val usage =
       "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
-          "/probe requesttype <n> | /probe prompt on|off"
+          "/probe requesttype <n> | /probe prompt on|off | /probe sweep <name>"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "sweep") {
+      val name = ctx.args.getOrNull(1)
+      if (name == null) {
+        ctx.reply("Usage: /probe sweep <name>")
+        return
+      }
+      ctx.reply(links.sweepInvite(ctx.session, ctx.characterId, name))
+      return
+    }
     if (what == "prompt") {
       val on = ctx.args.getOrNull(1)?.lowercase()
       if (on != "on" && on != "off") {

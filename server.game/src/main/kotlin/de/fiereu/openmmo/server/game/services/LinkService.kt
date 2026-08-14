@@ -25,13 +25,22 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.delay
 
 private val log = KotlinLogging.logger {}
 
 private val INVITE_TIMEOUT = 2.minutes
 
 /** What the prompt counts down from. The client has a line for an invite nobody answered. */
+private const val NOT_IN_WORLD = "You are not in the world yet."
+
 private const val INVITE_PROMPT_SECONDS = 60
+
+/** The candidate request types, announced one at a time so a hit can be named. */
+private val SWEEP_VALUES = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 32, 64)
+
+private val SWEEP_GAP = 2.seconds
 
 /** Replaces the whole roster rather than merging into it. */
 private const val ROSTER_REPLACE = 0
@@ -68,11 +77,14 @@ constructor(
   @Volatile var inviteRequestType: Byte = 0
 
   /**
-   * Whether to send the confirmation prompt as well as the duel-style invite. The prompt carries a
-   * request and a response timeout, and the client has a line for an invite nobody answered in
-   * time, which is the strongest sign it is the popup the invite button is waiting on.
+   * DO NOT TURN THIS ON. RequestConfirmationPromptPacket is the anti-bot CAPTCHA, not an invite:
+   * sending it opens "solve the captcha in your web browser" on the target and points them at
+   * pokemmo.com/captcha/<their id>/<the id we sent>, which no private server can answer, so it
+   * simply blocks them. The two timeouts are the captcha's own countdown, not an invite's.
+   *
+   * Kept only so the shape can be re-tested deliberately.
    */
-  @Volatile var sendConfirmationPrompt: Boolean = true
+  @Volatile var sendConfirmationPrompt: Boolean = false
 
   /**
    * The client's own Invite to Link button. It sends us the target's name and nothing that says
@@ -108,6 +120,28 @@ constructor(
     }
   }
 
+  /**
+   * Sends the invite once per candidate value, announcing each in chat first so whichever one
+   * finally draws a prompt can be named. Sixteen rounds by hand is how an experiment gets abandoned
+   * half way.
+   */
+  suspend fun sweepInvite(ctx: SessionContext, inviterId: Long, targetName: String): String {
+    val target = characterStore.findCachedByName(targetName) ?: return "$targetName is not online."
+    val inviter = characterStore.getCharacter(inviterId) ?: return NOT_IN_WORLD
+    val targetSession =
+        sessionRegistry.getByCharacterId(target.info.id) ?: return "$targetName is not online."
+    for (value in SWEEP_VALUES) {
+      val label = notice("Trying invite value $value.")
+      ctx.send(label)
+      targetSession.send(label)
+      targetSession.send(
+          DuelInvitePacket(flags = 0, requestType = value.toByte(), name = inviter.info.name))
+      log.info { "Sweep sent invite value=$value to ${target.info.name}" }
+      delay(SWEEP_GAP)
+    }
+    return "Swept ${SWEEP_VALUES.size} values at ${target.info.name}. Which one drew a prompt?"
+  }
+
   fun onSendChatCommand(event: PacketEvent<SendChatCommandPacket>) {
     onNamedInvite(event.session, event.packet.message)
   }
@@ -118,7 +152,7 @@ constructor(
 
   /** Invites [targetName] to the caller's link, starting one if they are not in a link yet. */
   fun invite(ctx: SessionContext, inviterId: Long, targetName: String): String {
-    val inviter = characterStore.getCharacter(inviterId) ?: return "You are not in the world yet."
+    val inviter = characterStore.getCharacter(inviterId) ?: return NOT_IN_WORLD
     val target = characterStore.findCachedByName(targetName) ?: return "$targetName is not online."
     if (target.info.id == inviterId) return "You cannot link with yourself."
     if (linkStore.forChar(target.info.id) != null)
@@ -146,7 +180,7 @@ constructor(
       dropEmptyLink(invite.fromCharId)
       return "That link invite expired."
     }
-    val character = characterStore.getCharacter(charId) ?: return "You are not in the world yet."
+    val character = characterStore.getCharacter(charId) ?: return NOT_IN_WORLD
     val link = linkStore.forChar(invite.fromCharId)
     if (link == null || link.id != invite.linkId) return "That link no longer exists."
     if (!linkStore.add(link, LinkMember(charId, character.info.name))) {
