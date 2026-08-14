@@ -9,6 +9,7 @@ import de.fiereu.openmmo.net.game.packets.PartyInfoRequestPacket
 import de.fiereu.openmmo.net.game.packets.PartyMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberLeavePacket
 import de.fiereu.openmmo.net.game.packets.PartyRosterPacket
+import de.fiereu.openmmo.net.game.packets.RequestConfirmationPromptPacket
 import de.fiereu.openmmo.net.game.packets.SendChatCommandPacket
 import de.fiereu.openmmo.net.game.packets.StringCommandPacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
@@ -28,6 +29,9 @@ import kotlin.time.Duration.Companion.minutes
 private val log = KotlinLogging.logger {}
 
 private val INVITE_TIMEOUT = 2.minutes
+
+/** What the prompt counts down from. The client has a line for an invite nobody answered. */
+private const val INVITE_PROMPT_SECONDS = 60
 
 /** Replaces the whole roster rather than merging into it. */
 private const val ROSTER_REPLACE = 0
@@ -64,6 +68,13 @@ constructor(
   @Volatile var inviteRequestType: Byte = 0
 
   /**
+   * Whether to send the confirmation prompt as well as the duel-style invite. The prompt carries a
+   * request and a response timeout, and the client has a line for an invite nobody answered in
+   * time, which is the strongest sign it is the popup the invite button is waiting on.
+   */
+  @Volatile var sendConfirmationPrompt: Boolean = true
+
+  /**
    * The client's own Invite to Link button. It sends us the target's name and nothing that says
    * which of invite, trade or challenge was pressed, then waits. Answering is what makes its prompt
    * appear, which is why the button has never done anything.
@@ -75,15 +86,26 @@ constructor(
     session.send(notice(reply))
     val target = characterStore.findCachedByName(targetName) ?: return
     val inviter = characterStore.getCharacter(charId) ?: return
-    sessionRegistry
-        .getByCharacterId(target.info.id)
-        ?.send(
-            DuelInvitePacket(
-                flags = 0,
-                requestType = inviteRequestType,
-                name = inviter.info.name,
-            ))
-    log.info { "Sent link invite prompt requestType=$inviteRequestType to ${target.info.name}" }
+    val targetSession = sessionRegistry.getByCharacterId(target.info.id) ?: return
+    targetSession.send(
+        DuelInvitePacket(
+            flags = 0,
+            requestType = inviteRequestType,
+            name = inviter.info.name,
+        ))
+    if (sendConfirmationPrompt) {
+      targetSession.send(
+          RequestConfirmationPromptPacket(
+              visible = true,
+              entityId = charId,
+              requestTimeoutSeconds = INVITE_PROMPT_SECONDS,
+              responseTimeoutSeconds = INVITE_PROMPT_SECONDS,
+          ))
+    }
+    log.info {
+      "Sent link invite to ${target.info.name} requestType=$inviteRequestType " +
+          "prompt=$sendConfirmationPrompt"
+    }
   }
 
   fun onSendChatCommand(event: PacketEvent<SendChatCommandPacket>) {

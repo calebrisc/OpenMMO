@@ -29,12 +29,22 @@ constructor(
   override val name = "probe"
   override val usage =
       "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
-          "/probe requesttype <n>"
+          "/probe requesttype <n> | /probe prompt on|off"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "prompt") {
+      val on = ctx.args.getOrNull(1)?.lowercase()
+      if (on != "on" && on != "off") {
+        ctx.reply("Confirmation prompt is ${if (links.sendConfirmationPrompt) "on" else "off"}.")
+        return
+      }
+      links.sendConfirmationPrompt = on == "on"
+      ctx.reply("Confirmation prompt $on.")
+      return
+    }
     if (what == "requesttype") {
       val value = ctx.args.getOrNull(1)?.toByteOrNull()
       if (value == null) {
