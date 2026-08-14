@@ -1,11 +1,13 @@
 package de.fiereu.openmmo.server.game.services.command
 
 import de.fiereu.openmmo.common.CharacterPermissions
+import de.fiereu.openmmo.common.hasPermission
 import de.fiereu.openmmo.net.game.packets.DuelInviteOutcomePacket
 import de.fiereu.openmmo.net.game.packets.DuelInvitePacket
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MovementTuning
+import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -39,6 +41,33 @@ constructor(
 
   override suspend fun run(ctx: CommandContext) {
     val what = ctx.args.getOrNull(0)?.lowercase()
+    if (what == "grant") {
+      val name = ctx.args.getOrNull(1)
+      if (name == null) {
+        ctx.reply("Usage: /probe grant <name>")
+        return
+      }
+      val target = characterStore.findCachedByName(name)
+      if (target == null) {
+        ctx.reply("$name is not online.")
+        return
+      }
+      if (target.info.hasPermission(CharacterPermissions.DEVELOPER)) {
+        ctx.reply("${target.info.name} already has developer access.")
+        return
+      }
+      // Through the store rather than the database: it is the authority while a player is online
+      // and would otherwise write its cached copy straight back over the change.
+      val granted = target.info.permissions or CharacterPermissions.DEVELOPER
+      characterStore.updateCharacter(target.info.copy(permissions = granted))
+      characterStore.flushCharacterAsync(target.info.id)
+      log.info { "Granted developer to ${target.info.name} (permissions=$granted)" }
+      sessions
+          .getByCharacterId(target.info.id)
+          ?.send(notice("You have been given developer access."))
+      ctx.reply("${target.info.name} now has developer access.")
+      return
+    }
     if (what == "mm") {
       val walk = ctx.args.getOrNull(1)?.toIntOrNull()
       val run = ctx.args.getOrNull(2)?.toIntOrNull()
