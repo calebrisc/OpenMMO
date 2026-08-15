@@ -47,6 +47,15 @@ object FeedOrigin {
     get() = configured.contains("127.0.0.1")
 }
 
+object ArchiveOrigin {
+  val configured: String by lazy {
+    property("archive.origin") ?: "https://github.com/openmmo-org/archive"
+  }
+  val configuredRaw: String by lazy {
+    property("archive.rawOrigin") ?: "https://raw.githubusercontent.com/openmmo-org/archive/master"
+  }
+}
+
 private const val LOGIN_HOST_SLOT = "loginserver.pokemmo.com"
 
 /** Same width as the slot, and parses to 127.0.0.1. A hostname could not be padded to fit. */

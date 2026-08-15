@@ -13,7 +13,9 @@ plugins {
 dependencies {
   implementation(libs.bundles.crypto)
   implementation(libs.kotlinx.coroutines)
+  implementation(libs.kotlinx.serialization.json)
   implementation(libs.tomlkt)
+  implementation(libs.vcdiff.core)
   implementation(compose.desktop.currentOs)
   implementation(compose.material3)
   testImplementation(libs.bundles.kotest)
@@ -66,6 +68,14 @@ tasks.matching { it.name == "prepareAppResources" }.configureEach { dependsOn(st
 val feedOrigin =
     (project.findProperty("openmmo.feedOrigin") as String?) ?: "https://127.0.0.1:20443"
 
+val archiveOrigin =
+    (project.findProperty("openmmo.archiveOrigin") as String?)
+        ?: "https://github.com/openmmo-org/archive"
+
+val archiveRawOrigin =
+    (project.findProperty("openmmo.archiveRawOrigin") as String?)
+        ?: "https://raw.githubusercontent.com/openmmo-org/archive/master"
+
 // Loopback by default. A hostname cannot be padded, so a replacement must be exactly 23 wide.
 
 val launcherPropertiesDir = layout.buildDirectory.dir("launcherProperties")
@@ -73,9 +83,11 @@ val launcherPropertiesDir = layout.buildDirectory.dir("launcherProperties")
 val writeLauncherProperties by
     tasks.registering(WriteProperties::class) {
       group = "openmmo"
-      description = "Bakes the feed origin into the launcher"
+      description = "Bakes the feed and archive origins into the launcher"
       destinationFile.set(launcherPropertiesDir.map { it.file("launcher.properties") })
       property("feed.origin", feedOrigin)
+      property("archive.origin", archiveOrigin)
+      property("archive.rawOrigin", archiveRawOrigin)
     }
 
 sourceSets.main.get().resources.srcDir(launcherPropertiesDir)
@@ -87,10 +99,14 @@ fun JavaExec.devFeed() {
   mainClass.set("de.fiereu.openmmo.launcher.launch.DevFeedServerCli")
   classpath(sourceSets.main.get().runtimeClasspath)
   systemProperty("openmmo.manifests", layout.projectDirectory.dir("manifests").asFile.path)
-  listOf("openmmo.root", "openmmo.manifests", "openmmo.devFeedPort", "openmmo.revision").forEach {
-      name ->
-    (project.findProperty(name) as String?)?.let { systemProperty(name, it) }
-  }
+  listOf(
+          "openmmo.root",
+          "openmmo.manifests",
+          "openmmo.devFeedPort",
+          "openmmo.revision",
+          "openmmo.archiveOrigin",
+          "openmmo.archiveRawOrigin")
+      .forEach { name -> (project.findProperty(name) as String?)?.let { systemProperty(name, it) } }
   standardInput = System.`in`
 }
 
