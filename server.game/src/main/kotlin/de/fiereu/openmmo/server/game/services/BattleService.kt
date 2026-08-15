@@ -529,7 +529,13 @@ constructor(
     battle.activeSlot = target
     battle.seenActive.add(target)
     log.info { "Switch char=${battle.charId} slot $oldSlot -> $target" }
-    emitter.sendSwitchIn(battle, oldSlot, fullBlock = false)
+    // Through the field state rather than the switch-in packet. Both readings of that packet were
+    // tried against a live client and both killed it: a full description of a monster the field
+    // state had already described, and the short form for one that had never been out. There is no
+    // capture of a player's own first switch to settle it, and the field state is the one thing
+    // proven to tell this client which monster is out, since it opens every battle and is what a
+    // spectator joining midway is sent.
+    emitter.sendSnapshotTo(battle.session, battle)
     emitter.sendCarriedStatus(battle, battle.activeMon())
   }
 

@@ -21,6 +21,9 @@ private const val BOSS_HP_MULTIPLIER = 8
 private const val DEFAULT_BOSS_LEVEL = 30
 private const val MAX_RAIDERS = 4
 
+/** How many waiting players it takes to form a raid without anybody arranging it. */
+private const val QUEUE_TARGET = 2
+
 /** A boss and everybody currently fighting it. */
 private class Raid(val boss: BattleMonState, val bossName: String) {
   val raiders = mutableSetOf<Long>()
@@ -54,6 +57,9 @@ constructor(
 
   private val raids = ConcurrentHashMap<Long, Raid>()
 
+  /** Players waiting for a raid to form, in the order they asked. */
+  private val queue = LinkedHashSet<Long>()
+
   init {
     // The boss takes damage in whichever raider's battle landed it, so without this the others
     // would have no way of seeing the pool they are all working on go down.
@@ -75,7 +81,14 @@ constructor(
 
   fun describe(charId: Long): String {
     purge(charId)
-    val raid = raids[charId] ?: return "You are not in a raid. /raid start to begin one."
+    val raid =
+        raids[charId]
+            ?: run {
+              val waiting = synchronized(queue) { queue.size }
+              return if (charId in synchronized(queue) { queue.toList() })
+                  "Waiting for a raid ($waiting in the queue). /raid queue leave to stop waiting."
+              else "You are not in a raid. /raid queue to wait for one, or /raid start to begin one."
+            }
     val names = raid.raiders.mapNotNull { characterStore.getCharacter(it)?.info?.name }
     return "Raid against ${raid.bossName}: ${raid.boss.currentHp}/${raid.boss.stats.hp} hp left. " +
         "Raiders: ${names.joinToString()}."
@@ -95,7 +108,11 @@ constructor(
     party.forEach { purge(it) }
     val busy = party.filter { raids.containsKey(it) }
     if (busy.isNotEmpty()) return "Somebody in your squad is already raiding."
+    return launch(party, dexId, level)
+  }
 
+  /** Builds the boss and drops every one of [party] into their own battle against it. */
+  private fun launch(party: List<Long>, dexId: Int?, level: Int?): String {
     val bossLevel = (level ?: DEFAULT_BOSS_LEVEL).coerceIn(2, 100)
     val bossDex = dexId ?: DEFAULT_BOSSES.random()
     val species = speciesRegistry.get(bossDex) ?: return "There is no species $bossDex."
@@ -122,15 +139,77 @@ constructor(
     if (raid.raiders.isEmpty()) {
       return "The raid could not be started."
     }
-    log.info {
-      "Raid against ${species.name} level $bossLevel started by char=$charId with $started"
-    }
+    log.info { "Raid against ${species.name} level $bossLevel started with $started" }
     val announcement =
         notice(
             "A raid against ${species.name} has begun. " +
                 "You are all fighting the same one, so every hit counts.")
     raid.raiders.forEach { sessionRegistry.getByCharacterId(it)?.send(announcement) }
     return "Raid started against ${species.name} with ${started.size} raider(s)."
+  }
+
+  /**
+   * Joins the raid queue and carries on playing.
+   *
+   * Nobody has to be in a squad, or in a voice call, or even know each other. Players wait in the
+   * overworld and a raid forms itself the moment enough of them are waiting, which is the only way
+   * a group comes together on a server where not everyone is talking to each other.
+   */
+  fun joinQueue(charId: Long): String {
+    purge(charId)
+    if (raids.containsKey(charId)) return "You are already in a raid."
+    if (battleRegistry.byChar(charId) != null) return "Finish your battle first."
+    val waiting: Int
+    synchronized(queue) {
+      if (!queue.add(charId)) return "You are already in the queue."
+      waiting = queue.size
+    }
+    val name = characterStore.getCharacter(charId)?.info?.name ?: "Somebody"
+    announceToQueue("$name is waiting for a raid ($waiting in the queue).", except = charId)
+    val formed = tryForm()
+    if (formed != null) return formed
+    return "In the raid queue ($waiting waiting). Carry on playing, you will be pulled in " +
+        "when $QUEUE_TARGET are ready."
+  }
+
+  fun leaveQueue(charId: Long): String =
+      synchronized(queue) {
+        if (queue.remove(charId)) "You left the raid queue." else "You are not in the queue."
+      }
+
+  /**
+   * Forms a raid as soon as enough free players are waiting.
+   *
+   * Anyone who has gone offline or wandered into a battle since queueing is passed over rather than
+   * dragged out of it, and stays in the queue for the next attempt.
+   */
+  private fun tryForm(): String? {
+    val group: List<Long>
+    synchronized(queue) {
+      val free =
+          queue.filter {
+            sessionRegistry.getByCharacterId(it) != null &&
+                battleRegistry.byChar(it) == null &&
+                !raids.containsKey(it)
+          }
+      if (free.size < QUEUE_TARGET) return null
+      group = free.take(MAX_RAIDERS)
+      queue.removeAll(group.toSet())
+    }
+    val names = group.mapNotNull { characterStore.getCharacter(it)?.info?.name }
+    log.info { "Raid queue formed a group of ${group.size}: $names" }
+    group.forEach {
+      sessionRegistry
+          .getByCharacterId(it)
+          ?.send(notice("The queue found you a raid with ${names.joinToString()}."))
+    }
+    return launch(group, null, null)
+  }
+
+  private fun announceToQueue(message: String, except: Long) {
+    val packet = notice(message)
+    val waiting = synchronized(queue) { queue.toList() }
+    waiting.filter { it != except }.forEach { sessionRegistry.getByCharacterId(it)?.send(packet) }
   }
 
   /**
@@ -154,7 +233,10 @@ constructor(
     }
   }
 
-  fun onDisconnect(charId: Long) = leave(charId)
+  fun onDisconnect(charId: Long) {
+    synchronized(queue) { queue.remove(charId) }
+    leave(charId)
+  }
 
   /**
    * Forgets a raid whose battle is over.

@@ -46,6 +46,7 @@ import de.fiereu.openmmo.trainer.TrainerRegistry
 import de.fiereu.openmmo.typechart.TypeChart
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldBeNull
@@ -150,22 +151,23 @@ private fun FakeSession.finishBattleTransition(service: BattleService) {
 @OptIn(ExperimentalCoroutinesApi::class)
 class BattleServiceTest :
     FunSpec({
-      test("a switch to a monster that has not been out sends no full block") {
+      test("a switch redescribes the field rather than sending a switch-in packet") {
         runTest {
           val fx = Fixture(backgroundScope)
           val (session, charId) = fx.playerWithParty()
-          // A second party member, which is the one the switch reaches for. The client crashed on
-          // exactly this: the field state had already described the whole party, so a switch that
-          // described one of them a second time was a duplicate the client could not take.
           fx.store.addPokemon(charId, bulbasaur(charId, 50, 999).copy(containerSlot = 1))
 
           session.startBattle(fx.service)
           session.sent.clear()
           session.act(fx.service, BattleAction.SWITCH, 1)
 
-          val switchIn = session.sent.filterIsInstance<BattleSwitchInPacket>()
-          switchIn.shouldNotBeEmpty()
-          switchIn.forEach { it.fullBlock shouldBe false }
+          // The switch-in packet killed a live client twice, once carrying a full description and
+          // once carrying the short one, so a switch must not reach for it at all.
+          session.sent.filterIsInstance<BattleSwitchInPacket>().shouldBeEmpty()
+          // The field state names the active slot, and it is the only capture-proven way to say so.
+          val field = session.sent.filterIsInstance<BattleFieldStatePacket>()
+          field.shouldNotBeEmpty()
+          field.last().activeSlot shouldBe 1
         }
       }
 
