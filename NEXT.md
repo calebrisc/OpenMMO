@@ -53,6 +53,28 @@ holds three monsters in 46 bytes (`s2c/40/side_party_three.bin`). Both were trie
 produced nothing visible. Now there are working examples to compare against, which is the
 prerequisite for co-op battles and for raids showing teammates.
 
+### 3b. The dex is sent correctly and the client does not apply it
+
+A real login state decodes through the existing codec to the last byte, and its two lists are plain
+national dex numbers, so the format was never wrong. A test now pins that this server fills those
+lists from everything a player owns.
+
+So the Unova monsters in a Kanto player's dex are the client's own defaults, left behind by a
+starter selection screen: the archive capture shows every starter of every generation sitting in a
+caught list. Ours are simply not applied. The remaining question is whether the client only reads
+those lists when it first makes a character, in which case the live unlock packet sent on a catch is
+the only thing that can move the dex, and that is untested.
+
+### 3c. Adding a monster to a side is not what its captures show
+
+Of the 0x42 captures, the 15-byte ones carry a front sprite of 5004 and a back sprite of 3. 5004 is
+the poke ball item id, which appears in this server's own battle logs when a ball is thrown, so
+those are bag stacks rather than monsters, sharing the packet shape exactly as the side party packet
+documents. The 16-byte form carries species 361 and a party index and is the monster one.
+
+There is still no capture of a second monster joining a side, so co-op battles remain unproven and
+the four attempts at them are still guesses.
+
 ### 4. Shapes worth checking before touching anything else
 
 `LocalPlayerState` 0xF3 has 24 captures (411 and 465 bytes) and carries the two dex lists, which is
