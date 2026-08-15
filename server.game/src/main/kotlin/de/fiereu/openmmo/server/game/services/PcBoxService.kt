@@ -8,6 +8,7 @@ import de.fiereu.openmmo.net.game.packets.PcBoxRenamePacket
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
+import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -97,10 +98,25 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
     resend(ctx, charId)
   }
 
+  /**
+   * Opens the storage box for a player who interacted with one.
+   *
+   * The client asks on opcode 0x27, which it also uses for every other tile interaction, so the
+   * request cannot be told apart by its opcode and the caller has to decide. Captures pair each
+   * open with a close seconds later, so true shows the box and false puts it away. Both containers
+   * go with it, drawn from what the player actually holds rather than whatever the client cached.
+   */
+  fun open(ctx: SessionContext, charId: Long) {
+    resend(ctx, charId)
+    ctx.send(PcTogglePacket(shown = true))
+    log.info { "char=$charId opened the pc" }
+  }
+
   /** Closing the box needs no state change, but it is answered so the client is not left waiting. */
   fun onClose(event: PacketEvent<StorageBoxClosePacket>) {
     val charId = event.session.attributes[PLAYER_STATE]?.characterId ?: return
     resend(event.session, charId)
+    event.session.send(PcTogglePacket(shown = false))
   }
 
   /**

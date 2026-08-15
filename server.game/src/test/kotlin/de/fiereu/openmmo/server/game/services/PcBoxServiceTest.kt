@@ -9,6 +9,8 @@ import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
+import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
+import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
@@ -44,6 +46,22 @@ class PcBoxServiceTest :
         fun party(id: Long) = store.getCharacter(id)?.pokemon.orEmpty()
 
         fun pc(id: Long) = store.getCharacter(id)?.pcStorage.orEmpty()
+      }
+
+      test("asking for the box opens it and sends what the player holds") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(2)
+
+          fx.boxes.open(session, id)
+
+          // The request carries nothing, so the answer is the whole of it: true shows the box.
+          val toggles = session.sent.filterIsInstance<PcTogglePacket>()
+          toggles.last().shown shouldBe true
+          // Drawn from what the player actually holds, not whatever the client had cached.
+          session.sent.filterIsInstance<PokemonContainerPacket>().size shouldBe 2
+          id shouldBe id
+        }
       }
 
       test("depositing moves a monster from the party into the pc") {
