@@ -325,14 +325,12 @@ constructor(
     // Replacing a fallen monster is automatic and takes the next one that can still fight, rather
     // than asking, so a duel never stalls waiting on a menu.
     if (hostDown) {
-      val old = battle.activeSlot
       battle.activeSlot = hostNext
-      emitter.sendDuelSwitchIn(battle, hostSwitched = true, oldSlot = old)
+      emitter.sendDuelSwitchIn(battle, hostSwitched = true)
     }
     if (challengedDown) {
-      val old = battle.opponentSlot
       battle.opponentSlot = challengedNext
-      emitter.sendDuelSwitchIn(battle, hostSwitched = false, oldSlot = old)
+      emitter.sendDuelSwitchIn(battle, hostSwitched = false)
     }
     emitter.sendPrompt(battle)
   }
@@ -347,9 +345,8 @@ constructor(
     when (choice) {
       is DuelChoice.Move -> Unit
       is DuelChoice.Switch -> {
-        val old = if (isHost) battle.activeSlot else battle.opponentSlot
         if (isHost) battle.activeSlot = choice.slot else battle.opponentSlot = choice.slot
-        emitter.sendDuelSwitchIn(battle, hostSwitched = isHost, oldSlot = old)
+        emitter.sendDuelSwitchIn(battle, hostSwitched = isHost)
       }
       is DuelChoice.Item -> {
         val charId = if (isHost) battle.charId else duel.charId

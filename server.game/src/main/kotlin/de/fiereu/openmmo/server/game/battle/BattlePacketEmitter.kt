@@ -137,7 +137,7 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
    * player's side of the field. Only the owner is sent the moves, and only the watcher is ever sent
    * a full block, since the owner was given their whole party when the battle opened.
    */
-  fun sendDuelSwitchIn(battle: BattleInstance, hostSwitched: Boolean, oldSlot: Int) {
+  fun sendDuelSwitchIn(battle: BattleInstance, hostSwitched: Boolean) {
     val duel = battle.duel ?: return
     val mon = if (hostSwitched) battle.activeMon() else battle.opponentMon()
     val slot = if (hostSwitched) battle.activeSlot else battle.opponentSlot
@@ -146,8 +146,6 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
 
     fun packetFor(owner: Boolean) =
         BattleSwitchInPacket(
-            newSlot = slot,
-            oldSlot = oldSlot,
             mon = mon.toBlock(slot, movesPresent = owner),
             fullBlock = !owner && firstSighting,
             side = if (owner) SWITCH_IN_NEAR else SWITCH_IN_FAR,
@@ -356,12 +354,11 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
           status = StatusRules.wireValue(mon.status, mon.sleepTurns),
       )
 
-  fun sendSwitchIn(battle: BattleInstance, oldSlot: Int, fullBlock: Boolean) {
+  fun sendSwitchIn(battle: BattleInstance, fullBlock: Boolean) {
     broadcast(
         battle,
         BattleSwitchInPacket(
-            newSlot = battle.activeSlot,
-            oldSlot = oldSlot,
+            // The party position rides in the block. It has no other home on the wire.
             mon = battle.activeMon().toBlock(slot = battle.activeSlot, movesPresent = true),
             fullBlock = fullBlock,
         ),
@@ -369,12 +366,10 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
   }
 
   /** The opposing side sends out its next monster. Its moves stay hidden from the player. */
-  fun sendOpponentSwitchIn(battle: BattleInstance, oldSlot: Int, fullBlock: Boolean) {
+  fun sendOpponentSwitchIn(battle: BattleInstance, fullBlock: Boolean) {
     broadcast(
         battle,
         BattleSwitchInPacket(
-            newSlot = battle.opponentSlot,
-            oldSlot = oldSlot,
             mon = battle.opponentMon().toBlock(battle.opponentSlot, movesPresent = false),
             fullBlock = fullBlock,
             side = OPPONENT_SIDE,

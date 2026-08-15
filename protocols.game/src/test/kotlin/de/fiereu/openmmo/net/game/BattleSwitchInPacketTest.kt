@@ -31,8 +31,6 @@ class BattleSwitchInPacketTest :
       test("encodes a return switch-in as just the active detail") {
         val packet =
             BattleSwitchInPacket(
-                newSlot = 0,
-                oldSlot = 1,
                 mon =
                     BattleMonBlock(
                         slot = 0,
@@ -68,13 +66,35 @@ class BattleSwitchInPacketTest :
       // matches the captured Patrat bytes now built from structured fields.
       test("round-trips a full-block switch-in") {
         val packet =
-            BattleSwitchInPacket(newSlot = 1, oldSlot = 0, mon = patrat(), fullBlock = true)
+            BattleSwitchInPacket(mon = patrat(), fullBlock = true)
         val bytes = BattleSwitchInPacketCodec.encodeToBytes(packet)
         bytes.size shouldBe 65
         val decoded = BattleSwitchInPacketCodec.decodeBytes(bytes)
-        decoded.newSlot shouldBe 1
-        decoded.oldSlot shouldBe 0
         decoded.fullBlock shouldBe true
         decoded.mon shouldBe patrat()
       }
-    })
+    
+      // The shape nobody had: a player's own monster coming out for the first time. Two real
+      // captures, both with the flag set and the party position inside the block, which is what
+      // three earlier readings of this packet got wrong.
+      listOf(
+              "player_first_switch_in_a.bin" to Triple(19, 3, 5),
+              "player_first_switch_in_b.bin" to Triple(11, 7, 3),
+          )
+          .forEach { (name, expected) ->
+            val (species, level, partySlot) = expected
+            test("decodes $name, the player's own first switch") {
+              val bytes = fixture("game/s2c/35/$name")
+              val decoded = BattleSwitchInPacketCodec.decodeBytes(bytes)
+
+              decoded.side shouldBe 0
+              decoded.fullBlock shouldBe true
+              decoded.mon.species shouldBe species.toShort()
+              decoded.mon.level shouldBe level.toByte()
+              // The party position rides here and nowhere else. Writing it into the flag byte
+              // instead is what killed a live client on a switch to the fifth party member.
+              decoded.mon.slot shouldBe partySlot
+              BattleSwitchInPacketCodec.encodeToBytes(decoded).toHex() shouldBe bytes.toHex()
+            }
+          }
+})

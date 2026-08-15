@@ -91,7 +91,7 @@ class RaidServiceTest :
         }
       }
 
-      test("a raid boss carries far more health than the monster it is built from") {
+      test("a solo boss is a fight, not a wall") {
         runTest {
           val fx = Fixture(backgroundScope)
           val (_, id) = fx.player("Ash")
@@ -99,9 +99,11 @@ class RaidServiceTest :
           fx.raids.start(id, dexId = 143, level = 30) shouldContain "Raid started"
 
           val boss = fx.registry.byChar(id)!!.opponentMon()
-          val ordinary = fx.wildMons.create(143, 30, de.fiereu.openmmo.server.game.battle.BattleRng())!!
-          // Eight times the pool, so one player cannot end it in the turns they get.
-          (boss.stats.hp > ordinary.hp * 4) shouldBe true
+          val ordinary =
+              fx.wildMons.create(143, 30, de.fiereu.openmmo.server.game.battle.BattleRng())!!
+          // Well beyond a wild encounter, but a flat multiplier made it hopeless for one player.
+          (boss.stats.hp > ordinary.hp * 2) shouldBe true
+          (boss.stats.hp < ordinary.hp * 6) shouldBe true
           boss.currentHp shouldBe boss.stats.hp
         }
       }
@@ -159,7 +161,7 @@ class RaidServiceTest :
 
 private fun monster(ownerId: Long): Pokemon =
     Pokemon(
-        id = EntityIdService().newMonsterId(),
+        id = sharedEntityIds.newMonsterId(),
         ownerId = ownerId,
         container = PokemonContainer.PARTY,
         containerSlot = 0,
@@ -181,3 +183,6 @@ private fun monster(ownerId: Long): Pokemon =
         isRaidEncounter = false,
         caughtAt = LocalDateTime.now(),
     )
+
+/** One generator for the whole file: a fresh one per monster can hand out the same id twice. */
+private val sharedEntityIds = EntityIdService()

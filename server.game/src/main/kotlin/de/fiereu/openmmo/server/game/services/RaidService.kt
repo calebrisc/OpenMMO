@@ -16,8 +16,13 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
-/** How much tougher a boss is than the monster it is built from. */
-private const val BOSS_HP_MULTIPLIER = 8
+/**
+ * How much of a boss's health each raider is worth.
+ *
+ * A flat multiplier made a raid trivial for four and hopeless for one, so the pool is built from
+ * how many actually turned up. One raider still faces something well beyond a wild encounter.
+ */
+private const val BOSS_HP_PER_RAIDER = 3
 private const val DEFAULT_BOSS_LEVEL = 30
 private const val MAX_RAIDERS = 4
 
@@ -113,6 +118,10 @@ constructor(
 
   /** Builds the boss and drops every one of [party] into their own battle against it. */
   private fun launch(party: List<Long>, dexId: Int?, level: Int?): String {
+    // Only those actually online size the boss, or a squad member who logged off leaves the rest
+    // fighting a pool built for somebody who never arrived.
+    val present = party.filter { sessionRegistry.getByCharacterId(it) != null }
+    if (present.isEmpty()) return "Nobody is online to raid."
     val bossLevel = (level ?: DEFAULT_BOSS_LEVEL).coerceIn(2, 100)
     val bossDex = dexId ?: DEFAULT_BOSSES.random()
     val species = speciesRegistry.get(bossDex) ?: return "There is no species $bossDex."
@@ -123,13 +132,13 @@ constructor(
     val base = StatCalculator.computeAll(species, rolled)
     // A deeper pool of health is what makes it a raid rather than a wild encounter: one player
     // cannot chew through it alone in the turns they have.
-    val bossStats = base.copy(hp = base.hp * BOSS_HP_MULTIPLIER)
+    val bossStats = base.copy(hp = base.hp * BOSS_HP_PER_RAIDER * present.size)
     val source = rolled.copy(hp = bossStats.hp.toShort())
     val boss = BattleMonState(source.id, species, null, source, bossStats)
 
     val raid = Raid(boss, species.name)
     val started = mutableListOf<String>()
-    for (raiderId in party) {
+    for (raiderId in present) {
       val session = sessionRegistry.getByCharacterId(raiderId) ?: continue
       if (battles.startSharedBossBattle(session, boss) == null) continue
       raid.raiders += raiderId
@@ -142,7 +151,7 @@ constructor(
     log.info { "Raid against ${species.name} level $bossLevel started with $started" }
     val announcement =
         notice(
-            "A raid against ${species.name} has begun. " +
+            "A raid against ${species.name} has begun with ${present.size} raider(s). " +
                 "You are all fighting the same one, so every hit counts.")
     raid.raiders.forEach { sessionRegistry.getByCharacterId(it)?.send(announcement) }
     return "Raid started against ${species.name} with ${started.size} raider(s)."

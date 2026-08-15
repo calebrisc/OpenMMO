@@ -3,14 +3,19 @@ package de.fiereu.openmmo.net.game.packets.battle
 import de.fiereu.bytecodec.*
 
 /**
- * Brings a monster onto the field after a switch (opcode 0x35). The header names the new and
- * previous active party slots. A monster coming out for the first time carries its full block, the
- * same layout as the field state. One already seen active is sent as just its 21-byte active
- * detail. When [fullBlock] is false the decode fills only species, level, and gender.
+ * Brings a monster onto the field after a switch (opcode 0x35).
+ *
+ * The two bytes after the side were read as the new and previous party slots, and are not: across
+ * every capture they carry 1 and 0 when a full block follows and 0 and 1 when it does not, whatever
+ * monster is coming out. They say which of the two shapes this is. The party position rides in the
+ * block, and writing it into the flag instead is what killed a live client on a switch to the fifth
+ * party member: the client only ever sees a 1 there.
+ *
+ * A monster coming out for the first time carries its full block, the same layout as the field
+ * state. One already seen active is sent as just its 21-byte active detail, and the decode then
+ * fills only species, level and gender.
  */
 data class BattleSwitchInPacket(
-    val newSlot: Int,
-    val oldSlot: Int,
     val mon: BattleMonBlock,
     val fullBlock: Boolean,
     /** 0 sends out one of the player's own, 1 one of the opponent's. */
@@ -60,9 +65,11 @@ object BattleSwitchInPacketCodec : PacketCodec<BattleSwitchInPacket>() {
   override fun CodecScope<BattleSwitchInPacket>.body(): BattleSwitchInPacket {
     val side = field(S8) { it.side }
     reserved(0)
-    val newSlot = field(U8) { it.newSlot }
-    val oldSlot = field(U8) { it.oldSlot }
+    // The pair is complementary in every capture, so one of them decides the shape and the other
+    // follows it.
+    val hasFullBlock = field(U8) { if (it.fullBlock) 1 else 0 } == 1
+    field(U8) { if (it.fullBlock) 0 else 1 }
     val section = field(SwitchInMonCodec) { SwitchInMon(it.mon, it.fullBlock) }
-    return BattleSwitchInPacket(newSlot, oldSlot, section.mon, section.fullBlock, side)
+    return BattleSwitchInPacket(section.mon, section.fullBlock || hasFullBlock, side)
   }
 }

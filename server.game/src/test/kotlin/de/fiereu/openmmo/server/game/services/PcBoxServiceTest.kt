@@ -116,7 +116,7 @@ class PcBoxServiceTest :
 
 private fun monster(ownerId: Long, dexId: Int, slot: Short): Pokemon =
     Pokemon(
-        id = EntityIdService().newMonsterId(),
+        id = sharedEntityIds.newMonsterId(),
         ownerId = ownerId,
         container = PokemonContainer.PARTY,
         containerSlot = slot,
@@ -138,3 +138,6 @@ private fun monster(ownerId: Long, dexId: Int, slot: Short): Pokemon =
         isRaidEncounter = false,
         caughtAt = LocalDateTime.now(),
     )
+
+/** One generator for the whole file: a fresh one per monster can hand out the same id twice. */
+private val sharedEntityIds = EntityIdService()

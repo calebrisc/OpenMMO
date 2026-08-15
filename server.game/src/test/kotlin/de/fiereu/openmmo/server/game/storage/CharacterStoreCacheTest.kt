@@ -17,7 +17,7 @@ import kotlinx.coroutines.test.runTest
 
 private fun testPokemon(ownerId: Long): Pokemon =
     Pokemon(
-        id = EntityIdService().newMonsterId(),
+        id = sharedEntityIds.newMonsterId(),
         ownerId = ownerId,
         container = PokemonContainer.PARTY,
         containerSlot = 0,
@@ -317,3 +317,6 @@ private fun CharacterStore.bumpMoneyLazily(id: Long, by: Int) {
   val info = getCharacter(id)!!.info
   updateCharacter(info.copy(money = info.money + by))
 }
+
+/** One generator for the whole file: a fresh one per monster can hand out the same id twice. */
+private val sharedEntityIds = EntityIdService()

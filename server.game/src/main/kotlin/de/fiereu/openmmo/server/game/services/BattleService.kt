@@ -18,6 +18,7 @@ import de.fiereu.openmmo.net.game.packets.battle.BattleListEventDetail
 import de.fiereu.openmmo.net.game.packets.battle.BattleListEventPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnPromptPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnReplyPacket
+import de.fiereu.openmmo.pokemon.EvolutionTable
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleInstance
 import de.fiereu.openmmo.server.game.battle.BattleItems
@@ -511,31 +512,25 @@ constructor(
     val next = battle.opponent.indexOfFirst { !it.fainted }
     if (next < 0) return
     val fullBlock = next !in battle.opponentSeen
-    val oldSlot = battle.opponentSlot
     battle.opponentSlot = next
     battle.opponentSeen.add(next)
     log.info { "Opponent sends out slot $next for char=${battle.charId}" }
-    emitter.sendOpponentSwitchIn(battle, oldSlot, fullBlock)
+    emitter.sendOpponentSwitchIn(battle, fullBlock)
   }
 
   private fun performSwitch(battle: BattleInstance, target: Int) {
     val oldSlot = battle.activeSlot
-    // Never a full block. The field state already described the whole party, so a second full
-    // description of a monster the client has registered crashed it on the first switch to a slot
-    // that had not been out yet. The opposing side is the opposite case and still sends one: its
-    // unseen monsters open as unrevealed placeholders, so a switch in is their first real
-    // description. Both captures of a player's own switch carry the active detail alone.
+    // Asked before the monster is marked seen, or it is always already seen and never described.
+    val fullBlock = target !in battle.seenActive
+    // Leaving the field resets the toxic damage ramp, so a switch out and back in starts over.
     battle.party.getOrNull(oldSlot)?.resetToxicRamp()
     battle.activeSlot = target
     battle.seenActive.add(target)
     log.info { "Switch char=${battle.charId} slot $oldSlot -> $target" }
-    // Through the field state rather than the switch-in packet. Both readings of that packet were
-    // tried against a live client and both killed it: a full description of a monster the field
-    // state had already described, and the short form for one that had never been out. There is no
-    // capture of a player's own first switch to settle it, and the field state is the one thing
-    // proven to tell this client which monster is out, since it opens every battle and is what a
-    // spectator joining midway is sent.
-    emitter.sendSnapshotTo(battle.session, battle)
+    // A monster coming out for the first time carries its full block, as every capture of this
+    // packet does. The crash was never about which description to send: the party position was
+    // going into the byte that says whether one follows.
+    emitter.sendSwitchIn(battle, fullBlock)
     emitter.sendCarriedStatus(battle, battle.activeMon())
   }
 
@@ -668,6 +663,34 @@ constructor(
     winner.source = grown
     winner.stats = reward.newStats
     characterStore.updatePokemon(battle.charId, grown)
+    evolveIfDue(battle, winner, reward.newLevel)
+  }
+
+  /**
+   * Grows a monster into what it becomes, if this level is the one.
+   *
+   * Nothing here ever evolved: the table the games use was never carried across, so a monster
+   * levelled past its threshold and stayed as it was forever. The species is changed on the live
+   * battle state as well as in the store, so the rest of the battle is fought by what it became.
+   */
+  private fun evolveIfDue(battle: BattleInstance, winner: BattleMonState, level: Int) {
+    val evolution = EvolutionTable.at(winner.source.dexId, level) ?: return
+    val into = speciesRegistry.get(evolution.into)
+    if (into == null) {
+      log.warn { "No species data for ${evolution.into}, leaving ${winner.species.name} as it is" }
+      return
+    }
+    val was = winner.species.name
+    val evolved = winner.source.copy(dexId = evolution.into)
+    winner.source = evolved
+    winner.species = into
+    winner.stats = StatCalculator.computeAll(into, evolved)
+    winner.currentHp = winner.currentHp.coerceAtMost(winner.stats.hp)
+    characterStore.updatePokemon(battle.charId, evolved)
+    characterStore.flushCharacterAsync(battle.charId)
+    pokedex.recordCaught(battle.charId, battle.session, evolution.into)
+    log.info { "char=${battle.charId} evolved $was into ${into.name} at level $level" }
+    emitter.sendNotice(battle, "$was evolved into ${into.name}!")
   }
 
   private fun endDefeat(battle: BattleInstance) {

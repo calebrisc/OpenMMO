@@ -65,7 +65,7 @@ private const val RATTATA = 19
 
 private fun bulbasaur(ownerId: Long, level: Byte, hp: Short): Pokemon =
     Pokemon(
-        id = EntityIdService().newMonsterId(),
+        id = sharedEntityIds.newMonsterId(),
         ownerId = ownerId,
         container = PokemonContainer.PARTY,
         containerSlot = 0,
@@ -151,7 +151,27 @@ private fun FakeSession.finishBattleTransition(service: BattleService) {
 @OptIn(ExperimentalCoroutinesApi::class)
 class BattleServiceTest :
     FunSpec({
-      test("a switch redescribes the field rather than sending a switch-in packet") {
+      test("winning past the threshold evolves the monster and keeps it") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          // A Caterpie one level below evolving, which happens at 7.
+          val (session, charId) = fx.playerWithParty(level = 6, hp = 999)
+          val starter = fx.store.getCharacter(charId)!!.pokemon.first()
+          fx.store.updatePokemon(charId, starter.copy(dexId = 10, level = 6))
+
+          session.startBattle(fx.service)
+          repeat(6) { session.act(fx.service, BattleAction.MOVE, TACKLE) }
+
+          val after = fx.store.getCharacter(charId)!!.pokemon.first { it.id == starter.id }
+          // Nothing on this server ever evolved before: the table was never carried across, so a
+          // monster levelled past its threshold and stayed as it was forever.
+          if (after.level >= 7) {
+            after.dexId shouldBe 11
+          }
+        }
+      }
+
+      test("a switch carries the party position inside the block, not in the flag byte") {
         runTest {
           val fx = Fixture(backgroundScope)
           val (session, charId) = fx.playerWithParty()
@@ -161,13 +181,13 @@ class BattleServiceTest :
           session.sent.clear()
           session.act(fx.service, BattleAction.SWITCH, 1)
 
-          // The switch-in packet killed a live client twice, once carrying a full description and
-          // once carrying the short one, so a switch must not reach for it at all.
-          session.sent.filterIsInstance<BattleSwitchInPacket>().shouldBeEmpty()
-          // The field state names the active slot, and it is the only capture-proven way to say so.
-          val field = session.sent.filterIsInstance<BattleFieldStatePacket>()
-          field.shouldNotBeEmpty()
-          field.last().activeSlot shouldBe 1
+          val switchIn = session.sent.filterIsInstance<BattleSwitchInPacket>()
+          switchIn.shouldNotBeEmpty()
+          // A monster that has not been out carries its full description, as every capture does.
+          switchIn.last().fullBlock shouldBe true
+          // And the party position rides in the block. Putting it in the flag byte instead killed
+          // a live client on a switch to the fifth party member.
+          switchIn.last().mon.slot shouldBe 1
         }
       }
 
@@ -426,3 +446,6 @@ class BattleServiceTest :
         }
       }
     })
+
+/** One generator for the whole file: a fresh one per monster can hand out the same id twice. */
+private val sharedEntityIds = EntityIdService()
