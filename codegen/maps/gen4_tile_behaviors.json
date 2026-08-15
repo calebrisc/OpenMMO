@@ -1,0 +1,2057 @@
+{
+  "source": "pokeplatinum",
+  "note": "Gen 4 tile behaviours, lifted from Platinum because HeartGold names only five of them. The attribute word is u16: bit 15 set means impassable, the low byte is the behaviour. Verified against HeartGold by the four behaviours it does name.",
+  "collisionMask": 32768,
+  "behaviorMask": 255,
+  "invalid": 255,
+  "behaviors": [
+    {
+      "value": 0,
+      "name": "TILE_BEHAVIOR_NONE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 1,
+      "name": "TILE_BEHAVIOR_UNUSED_x01",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 2,
+      "name": "TILE_BEHAVIOR_TALL_GRASS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 3,
+      "name": "TILE_BEHAVIOR_VERY_TALL_GRASS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 4,
+      "name": "TILE_BEHAVIOR_UNUSED_x04",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 5,
+      "name": "TILE_BEHAVIOR_UNUSED_x05",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 6,
+      "name": "TILE_BEHAVIOR_UNUSED_x06",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 7,
+      "name": "TILE_BEHAVIOR_UNUSED_x07",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 8,
+      "name": "TILE_BEHAVIOR_CAVE_FLOOR",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 9,
+      "name": "TILE_BEHAVIOR_UNUSED_x09",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 10,
+      "name": "TILE_BEHAVIOR_UNUSED_x0A",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 11,
+      "name": "TILE_BEHAVIOR_OLD_CHATEAU_FLOOR",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 12,
+      "name": "TILE_BEHAVIOR_MOUNTAIN_FLOOR",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 13,
+      "name": "TILE_BEHAVIOR_UNUSED_x0D",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 14,
+      "name": "TILE_BEHAVIOR_UNUSED_x0E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 15,
+      "name": "TILE_BEHAVIOR_UNUSED_x0F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 16,
+      "name": "TILE_BEHAVIOR_WATER_RIVER",
+      "named": true,
+      "encounter": true,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 17,
+      "name": "TILE_BEHAVIOR_UNUSED_x11",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 18,
+      "name": "TILE_BEHAVIOR_UNUSED_x12",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 19,
+      "name": "TILE_BEHAVIOR_WATERFALL",
+      "named": true,
+      "encounter": false,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 20,
+      "name": "TILE_BEHAVIOR_UNUSED_x14",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 21,
+      "name": "TILE_BEHAVIOR_WATER_SEA",
+      "named": true,
+      "encounter": true,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 22,
+      "name": "TILE_BEHAVIOR_PUDDLE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 23,
+      "name": "TILE_BEHAVIOR_SHALLOW_WATER",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 24,
+      "name": "TILE_BEHAVIOR_UNUSED_x18",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 25,
+      "name": "TILE_BEHAVIOR_UNUSED_x19",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 26,
+      "name": "TILE_BEHAVIOR_UNUSED_x1A",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 27,
+      "name": "TILE_BEHAVIOR_UNUSED_x1B",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 28,
+      "name": "TILE_BEHAVIOR_UNUSED_x1C",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 29,
+      "name": "TILE_BEHAVIOR_PUDDLE_NO_SPLASHING",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 30,
+      "name": "TILE_BEHAVIOR_UNUSED_x1E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 31,
+      "name": "TILE_BEHAVIOR_UNUSED_x1F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 32,
+      "name": "TILE_BEHAVIOR_ICE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 33,
+      "name": "TILE_BEHAVIOR_SAND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 34,
+      "name": "TILE_BEHAVIOR_UNUSED_x22",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 35,
+      "name": "TILE_BEHAVIOR_UNUSED_x23",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 36,
+      "name": "TILE_BEHAVIOR_UNUSED_x24",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 37,
+      "name": "TILE_BEHAVIOR_UNUSED_x25",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 38,
+      "name": "TILE_BEHAVIOR_UNUSED_x26",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 39,
+      "name": "TILE_BEHAVIOR_UNUSED_x27",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 40,
+      "name": "TILE_BEHAVIOR_UNUSED_x28",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 41,
+      "name": "TILE_BEHAVIOR_UNUSED_x29",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 42,
+      "name": "TILE_BEHAVIOR_UNUSED_x2A",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 43,
+      "name": "TILE_BEHAVIOR_UNUSED_x2B",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 44,
+      "name": "TILE_BEHAVIOR_REFLECTIVE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 45,
+      "name": "TILE_BEHAVIOR_FORBIDS_EXPLORATION_KIT",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 46,
+      "name": "TILE_BEHAVIOR_UNUSED_x2E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 47,
+      "name": "TILE_BEHAVIOR_UNUSED_x2F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 48,
+      "name": "TILE_BEHAVIOR_BLOCK_EASTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 49,
+      "name": "TILE_BEHAVIOR_BLOCK_WESTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 50,
+      "name": "TILE_BEHAVIOR_BLOCK_NORTHWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 51,
+      "name": "TILE_BEHAVIOR_BLOCK_SOUTHWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 52,
+      "name": "TILE_BEHAVIOR_BLOCK_NORTH_AND_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 53,
+      "name": "TILE_BEHAVIOR_BLOCK_NORTH_AND_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 54,
+      "name": "TILE_BEHAVIOR_BLOCK_SOUTH_AND_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 55,
+      "name": "TILE_BEHAVIOR_BLOCK_SOUTH_AND_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 56,
+      "name": "TILE_BEHAVIOR_JUMP_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 57,
+      "name": "TILE_BEHAVIOR_JUMP_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 58,
+      "name": "TILE_BEHAVIOR_JUMP_NORTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 59,
+      "name": "TILE_BEHAVIOR_JUMP_SOUTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 60,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x3C",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 61,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x3D",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 62,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x3E",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 63,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x3F",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 64,
+      "name": "TILE_BEHAVIOR_SLIDE_EASTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 65,
+      "name": "TILE_BEHAVIOR_SLIDE_WESTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 66,
+      "name": "TILE_BEHAVIOR_SLIDE_NORTHWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 67,
+      "name": "TILE_BEHAVIOR_SLIDE_SOUTHWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 68,
+      "name": "TILE_BEHAVIOR_UNUSED_x44",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 69,
+      "name": "TILE_BEHAVIOR_UNUSED_x45",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 70,
+      "name": "TILE_BEHAVIOR_UNUSED_x46",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 71,
+      "name": "TILE_BEHAVIOR_UNUSED_x47",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 72,
+      "name": "TILE_BEHAVIOR_UNUSED_x48",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 73,
+      "name": "TILE_BEHAVIOR_BLOCK_NORTH_AND_SOUTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 74,
+      "name": "TILE_BEHAVIOR_BLOCK_EAST_AND_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 75,
+      "name": "TILE_BEHAVIOR_ROCK_CLIMB_N_S",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 76,
+      "name": "TILE_BEHAVIOR_ROCK_CLIMB_E_W",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 77,
+      "name": "TILE_BEHAVIOR_UNUSED_x4D",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 78,
+      "name": "TILE_BEHAVIOR_UNUSED_x4E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 79,
+      "name": "TILE_BEHAVIOR_UNUSED_x4F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 80,
+      "name": "TILE_BEHAVIOR_UNUSED_x50",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 81,
+      "name": "TILE_BEHAVIOR_UNUSED_x51",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 82,
+      "name": "TILE_BEHAVIOR_UNUSED_x52",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 83,
+      "name": "TILE_BEHAVIOR_UNUSED_x53",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 84,
+      "name": "TILE_BEHAVIOR_UNUSED_x54",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 85,
+      "name": "TILE_BEHAVIOR_UNUSED_x55",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 86,
+      "name": "TILE_BEHAVIOR_PASTORIA_GYM_H_GROUND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 87,
+      "name": "TILE_BEHAVIOR_PASTORIA_GYM_M_GROUND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 88,
+      "name": "TILE_BEHAVIOR_PASTORIA_GYM_L_GROUND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 89,
+      "name": "TILE_BEHAVIOR_DYNAMIC_HEIGHT_COLLISION",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 90,
+      "name": "TILE_BEHAVIOR_JUMP_NORTH_TWICE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 91,
+      "name": "TILE_BEHAVIOR_JUMP_SOUTH_TWICE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 92,
+      "name": "TILE_BEHAVIOR_JUMP_WEST_TWICE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 93,
+      "name": "TILE_BEHAVIOR_JUMP_EAST_TWICE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 94,
+      "name": "TILE_BEHAVIOR_WARP_STAIRS_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 95,
+      "name": "TILE_BEHAVIOR_WARP_STAIRS_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 96,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x60",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 97,
+      "name": "TILE_BEHAVIOR_UNUSED_x61",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 98,
+      "name": "TILE_BEHAVIOR_WARP_ENTRANCE_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 99,
+      "name": "TILE_BEHAVIOR_WARP_ENTRANCE_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 100,
+      "name": "TILE_BEHAVIOR_WARP_ENTRANCE_NORTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 101,
+      "name": "TILE_BEHAVIOR_WARP_ENTRANCE_SOUTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 102,
+      "name": "TILE_BEHAVIOR_UNUSED_x66",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 103,
+      "name": "TILE_BEHAVIOR_WARP_PANEL",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 104,
+      "name": "TILE_BEHAVIOR_UNUSED_x68",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 105,
+      "name": "TILE_BEHAVIOR_DOOR",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 106,
+      "name": "TILE_BEHAVIOR_ESCALATOR_FLIP_FACE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 107,
+      "name": "TILE_BEHAVIOR_ESCALATOR",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 108,
+      "name": "TILE_BEHAVIOR_WARP_EAST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 109,
+      "name": "TILE_BEHAVIOR_WARP_WEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 110,
+      "name": "TILE_BEHAVIOR_WARP_NORTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 111,
+      "name": "TILE_BEHAVIOR_WARP_SOUTH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 112,
+      "name": "TILE_BEHAVIOR_BRIDGE_START",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 113,
+      "name": "TILE_BEHAVIOR_BRIDGE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 114,
+      "name": "TILE_BEHAVIOR_BRIDGE_OVER_CAVE",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 115,
+      "name": "TILE_BEHAVIOR_BRIDGE_OVER_WATER",
+      "named": true,
+      "encounter": false,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 116,
+      "name": "TILE_BEHAVIOR_BRIDGE_OVER_SAND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 117,
+      "name": "TILE_BEHAVIOR_BRIDGE_OVER_SNOW",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 118,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_N_S",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 119,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_N_S_OVER_ENCS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 120,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_N_S_OVER_WATER",
+      "named": true,
+      "encounter": false,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 121,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_N_S_OVER_SAND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 122,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_E_W",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 123,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_E_W_OVER_ENCS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 124,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_E_W_OVER_WATER",
+      "named": true,
+      "encounter": false,
+      "surfable": true,
+      "flagsTrusted": true
+    },
+    {
+      "value": 125,
+      "name": "TILE_BEHAVIOR_BIKE_BRIDGE_E_W_OVER_SAND",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 126,
+      "name": "TILE_BEHAVIOR_UNUSED_x7E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 127,
+      "name": "TILE_BEHAVIOR_UNUSED_x7F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 128,
+      "name": "TILE_BEHAVIOR_TABLE",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 129,
+      "name": "TILE_BEHAVIOR_UNUSED_x81",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 130,
+      "name": "TILE_BEHAVIOR_UNUSED_x82",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 131,
+      "name": "TILE_BEHAVIOR_PC",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 132,
+      "name": "TILE_BEHAVIOR_UNUSED_x84",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 133,
+      "name": "TILE_BEHAVIOR_TOWN_MAP",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 134,
+      "name": "TILE_BEHAVIOR_TV",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 135,
+      "name": "TILE_BEHAVIOR_UNUSED_x87",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 136,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x88",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 137,
+      "name": "TILE_BEHAVIOR_UNUSED_x89",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 138,
+      "name": "TILE_BEHAVIOR_UNUSED_x8A",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 139,
+      "name": "TILE_BEHAVIOR_UNUSED_x8B",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 140,
+      "name": "TILE_BEHAVIOR_UNUSED_x8C",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 141,
+      "name": "TILE_BEHAVIOR_UNUSED_x8D",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 142,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x8E",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 143,
+      "name": "TILE_BEHAVIOR_UNKNOWN_x8F",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 144,
+      "name": "TILE_BEHAVIOR_UNUSED_x90",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 145,
+      "name": "TILE_BEHAVIOR_UNUSED_x91",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 146,
+      "name": "TILE_BEHAVIOR_UNUSED_x92",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 147,
+      "name": "TILE_BEHAVIOR_UNUSED_x93",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 148,
+      "name": "TILE_BEHAVIOR_UNUSED_x94",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 149,
+      "name": "TILE_BEHAVIOR_UNUSED_x95",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 150,
+      "name": "TILE_BEHAVIOR_UNUSED_x96",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 151,
+      "name": "TILE_BEHAVIOR_UNUSED_x97",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 152,
+      "name": "TILE_BEHAVIOR_UNUSED_x98",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 153,
+      "name": "TILE_BEHAVIOR_UNUSED_x99",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 154,
+      "name": "TILE_BEHAVIOR_UNUSED_x9A",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 155,
+      "name": "TILE_BEHAVIOR_UNUSED_x9B",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 156,
+      "name": "TILE_BEHAVIOR_UNUSED_x9C",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 157,
+      "name": "TILE_BEHAVIOR_UNUSED_x9D",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 158,
+      "name": "TILE_BEHAVIOR_UNUSED_x9E",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 159,
+      "name": "TILE_BEHAVIOR_UNUSED_x9F",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 160,
+      "name": "TILE_BEHAVIOR_BERRY_PATCH",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 161,
+      "name": "TILE_BEHAVIOR_SNOW_DEEP",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 162,
+      "name": "TILE_BEHAVIOR_SNOW_DEEPER",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 163,
+      "name": "TILE_BEHAVIOR_SNOW_DEEPEST",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 164,
+      "name": "TILE_BEHAVIOR_MUD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 165,
+      "name": "TILE_BEHAVIOR_MUD_DEEP",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 166,
+      "name": "TILE_BEHAVIOR_MUD_WITH_GRASS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 167,
+      "name": "TILE_BEHAVIOR_MUD_DEEP_WITH_GRASS",
+      "named": true,
+      "encounter": true,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 168,
+      "name": "TILE_BEHAVIOR_SNOW_SHALLOW",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 169,
+      "name": "TILE_BEHAVIOR_SNOW_WITH_SHADOWS",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 170,
+      "name": "TILE_BEHAVIOR_UNUSED_xAA",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 171,
+      "name": "TILE_BEHAVIOR_UNUSED_xAB",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 172,
+      "name": "TILE_BEHAVIOR_UNUSED_xAC",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 173,
+      "name": "TILE_BEHAVIOR_UNUSED_xAD",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 174,
+      "name": "TILE_BEHAVIOR_UNUSED_xAE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 175,
+      "name": "TILE_BEHAVIOR_UNUSED_xAF",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 176,
+      "name": "TILE_BEHAVIOR_UNUSED_xB0",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 177,
+      "name": "TILE_BEHAVIOR_UNUSED_xB1",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 178,
+      "name": "TILE_BEHAVIOR_UNUSED_xB2",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 179,
+      "name": "TILE_BEHAVIOR_UNUSED_xB3",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 180,
+      "name": "TILE_BEHAVIOR_UNUSED_xB4",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 181,
+      "name": "TILE_BEHAVIOR_UNUSED_xB5",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 182,
+      "name": "TILE_BEHAVIOR_UNUSED_xB6",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 183,
+      "name": "TILE_BEHAVIOR_UNUSED_xB7",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 184,
+      "name": "TILE_BEHAVIOR_UNUSED_xB8",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 185,
+      "name": "TILE_BEHAVIOR_UNUSED_xB9",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 186,
+      "name": "TILE_BEHAVIOR_UNUSED_xBA",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 187,
+      "name": "TILE_BEHAVIOR_UNUSED_xBB",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 188,
+      "name": "TILE_BEHAVIOR_UNUSED_xBC",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 189,
+      "name": "TILE_BEHAVIOR_UNUSED_xBD",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 190,
+      "name": "TILE_BEHAVIOR_UNUSED_xBE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 191,
+      "name": "TILE_BEHAVIOR_UNUSED_xBF",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 192,
+      "name": "TILE_BEHAVIOR_UNUSED_xC0",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 193,
+      "name": "TILE_BEHAVIOR_UNUSED_xC1",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 194,
+      "name": "TILE_BEHAVIOR_UNUSED_xC2",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 195,
+      "name": "TILE_BEHAVIOR_UNUSED_xC3",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 196,
+      "name": "TILE_BEHAVIOR_UNUSED_xC4",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 197,
+      "name": "TILE_BEHAVIOR_UNUSED_xC5",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 198,
+      "name": "TILE_BEHAVIOR_UNUSED_xC6",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 199,
+      "name": "TILE_BEHAVIOR_UNUSED_xC7",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 200,
+      "name": "TILE_BEHAVIOR_UNUSED_xC8",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 201,
+      "name": "TILE_BEHAVIOR_UNUSED_xC9",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 202,
+      "name": "TILE_BEHAVIOR_UNUSED_xCA",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 203,
+      "name": "TILE_BEHAVIOR_UNUSED_xCB",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 204,
+      "name": "TILE_BEHAVIOR_UNUSED_xCC",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 205,
+      "name": "TILE_BEHAVIOR_UNUSED_xCD",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 206,
+      "name": "TILE_BEHAVIOR_UNUSED_xCE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 207,
+      "name": "TILE_BEHAVIOR_UNUSED_xCF",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 208,
+      "name": "TILE_BEHAVIOR_UNUSED_xD0",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 209,
+      "name": "TILE_BEHAVIOR_UNUSED_xD1",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 210,
+      "name": "TILE_BEHAVIOR_UNUSED_xD2",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 211,
+      "name": "TILE_BEHAVIOR_UNUSED_xD3",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 212,
+      "name": "TILE_BEHAVIOR_UNUSED_xD4",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 213,
+      "name": "TILE_BEHAVIOR_UNUSED_xD5",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 214,
+      "name": "TILE_BEHAVIOR_UNUSED_xD6",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 215,
+      "name": "TILE_BEHAVIOR_BIKE_RAMP_EASTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 216,
+      "name": "TILE_BEHAVIOR_BIKE_RAMP_WESTWARD",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 217,
+      "name": "TILE_BEHAVIOR_BIKE_SLOPE_TOP",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 218,
+      "name": "TILE_BEHAVIOR_BIKE_SLOPE_BOTTOM",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 219,
+      "name": "TILE_BEHAVIOR_BIKE_PARKING",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 220,
+      "name": "TILE_BEHAVIOR_UNUSED_xDC",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 221,
+      "name": "TILE_BEHAVIOR_UNUSED_xDD",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 222,
+      "name": "TILE_BEHAVIOR_UNUSED_xDE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 223,
+      "name": "TILE_BEHAVIOR_UNUSED_xDF",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 224,
+      "name": "TILE_BEHAVIOR_SMALL_BOOKSHELF_1",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 225,
+      "name": "TILE_BEHAVIOR_BOOKSHELF_1",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 226,
+      "name": "TILE_BEHAVIOR_BOOKSHELF_2",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 227,
+      "name": "TILE_BEHAVIOR_UNUSED_xE3",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 228,
+      "name": "TILE_BEHAVIOR_TRASH_CAN",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 229,
+      "name": "TILE_BEHAVIOR_MART_SHELF_1",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 230,
+      "name": "TILE_BEHAVIOR_UNUSED_xE6",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 231,
+      "name": "TILE_BEHAVIOR_UNUSED_xE7",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 232,
+      "name": "TILE_BEHAVIOR_UNUSED_xE8",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 233,
+      "name": "TILE_BEHAVIOR_UNUSED_xE9",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 234,
+      "name": "TILE_BEHAVIOR_SMALL_BOOKSHELF_2",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 235,
+      "name": "TILE_BEHAVIOR_MART_SHELF_2",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 236,
+      "name": "TILE_BEHAVIOR_MART_SHELF_3",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    },
+    {
+      "value": 237,
+      "name": "TILE_BEHAVIOR_UNUSED_xED",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 238,
+      "name": "TILE_BEHAVIOR_UNUSED_xEE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 239,
+      "name": "TILE_BEHAVIOR_UNUSED_xEF",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 240,
+      "name": "TILE_BEHAVIOR_UNUSED_xF0",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 241,
+      "name": "TILE_BEHAVIOR_UNUSED_xF1",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 242,
+      "name": "TILE_BEHAVIOR_UNUSED_xF2",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 243,
+      "name": "TILE_BEHAVIOR_UNUSED_xF3",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 244,
+      "name": "TILE_BEHAVIOR_UNUSED_xF4",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 245,
+      "name": "TILE_BEHAVIOR_UNUSED_xF5",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 246,
+      "name": "TILE_BEHAVIOR_UNUSED_xF6",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 247,
+      "name": "TILE_BEHAVIOR_UNUSED_xF7",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 248,
+      "name": "TILE_BEHAVIOR_UNUSED_xF8",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 249,
+      "name": "TILE_BEHAVIOR_UNUSED_xF9",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 250,
+      "name": "TILE_BEHAVIOR_UNUSED_xFA",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 251,
+      "name": "TILE_BEHAVIOR_UNUSED_xFB",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 252,
+      "name": "TILE_BEHAVIOR_UNUSED_xFC",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 253,
+      "name": "TILE_BEHAVIOR_UNUSED_xFD",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 254,
+      "name": "TILE_BEHAVIOR_UNUSED_xFE",
+      "named": false,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": false
+    },
+    {
+      "value": 255,
+      "name": "TILE_BEHAVIOR_MAX",
+      "named": true,
+      "encounter": false,
+      "surfable": false,
+      "flagsTrusted": true
+    }
+  ]
+}

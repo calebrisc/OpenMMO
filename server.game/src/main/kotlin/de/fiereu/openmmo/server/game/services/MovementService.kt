@@ -4,9 +4,11 @@ import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.enums.TileBehavior
+import de.fiereu.openmmo.common.utils.isNdsRegion
 import de.fiereu.openmmo.maps.MapDef
 import de.fiereu.openmmo.maps.MapManager
 import de.fiereu.openmmo.net.game.packets.EntityFaceTurnPacket
+import de.fiereu.openmmo.net.game.packets.EntityMovePacket
 import de.fiereu.openmmo.net.game.packets.FaceDirectionPacket
 import de.fiereu.openmmo.net.game.packets.GbaEntityMovePacket
 import de.fiereu.openmmo.net.game.packets.MapData
@@ -24,6 +26,9 @@ private const val DESYNC_RELOAD_THRESHOLD = 4
 
 /** The least time between two resync map pushes to one player. */
 private const val RELOAD_COOLDOWN_MS = 15_000L
+
+/** Puts the client on the tile without animating a step there. */
+private const val SNAP_MOVEMENT_MODE = 2
 
 /** Resolve a cardinal Gen-3 ledge hop to its tile two spaces away. */
 internal fun ledgeLanding(
@@ -221,7 +226,7 @@ constructor(
     // The client already walked itself there, so only the observers need telling.
     presenceService.broadcastToObservers(
         ctx,
-        gbaMovePacket(charId, currentMap, toX, toY, msg.direction, msg.running),
+        movePacket(charId, currentMap, toX, toY, msg.direction, running = msg.running),
     )
 
     // Story coordinate events take precedence over random encounters on the same step.
@@ -241,26 +246,45 @@ constructor(
   ) {
     // A reset must keep the original snap mode (2): a walk-mode packet makes the client try to
     // animate to its own tile and it wedges until relog.
-    ctx.send(gbaMovePacket(charId, map, x, y, direction).copy(movementMode = 2))
+    ctx.send(movePacket(charId, map, x, y, direction, snap = true))
   }
 
-  private fun gbaMovePacket(
+  /**
+   * The step to send observers. The GBA form packs its coordinates into a byte each, which a DS
+   * region overruns: HeartGold addresses tiles across a whole matrix and reaches four figures, so
+   * one would silently wrap.
+   *
+   * The wider form carries no movement mode, so on a DS region a run reads as a walk and a reset
+   * cannot ask the client to snap. Whether the client wants a different packet there is a live
+   * question; until it is answered, a correct position beats a wrapped one.
+   */
+  private fun movePacket(
       charId: Long,
       map: MapDef,
       x: Int,
       y: Int,
       direction: Direction,
       running: Boolean = false,
-  ): GbaEntityMovePacket =
-      GbaEntityMovePacket(
-          entityId = charId,
-          bankId = map.bankId.toInt() and 0xff,
-          mapId = map.mapId.toInt() and 0xff,
-          x = x,
-          y = y,
-          movementMode = if (running) MovementTuning.run else MovementTuning.walk,
-          direction = direction,
-      )
+      snap: Boolean = false,
+  ): Any =
+      if (isNdsRegion(map.regionId.toInt() and 0xFF)) {
+        EntityMovePacket(entityId = charId, x = x, y = y, direction = direction)
+      } else {
+        GbaEntityMovePacket(
+            entityId = charId,
+            bankId = map.bankId.toInt() and 0xff,
+            mapId = map.mapId.toInt() and 0xff,
+            x = x,
+            y = y,
+            movementMode =
+                when {
+                  snap -> SNAP_MOVEMENT_MODE
+                  running -> MovementTuning.run
+                  else -> MovementTuning.walk
+                },
+            direction = direction,
+        )
+      }
 
   /** Turning in place. Only observers need it, the client has already turned itself. */
   fun onFaceDirection(event: PacketEvent<FaceDirectionPacket>) {
