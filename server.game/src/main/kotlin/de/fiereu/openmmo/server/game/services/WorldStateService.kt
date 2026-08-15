@@ -85,11 +85,11 @@ class WorldStateService @Inject constructor() {
         skinTone = 0,
         hairColor = 0,
         playtime = 0.0,
-        flags = 0,
+        flags = PlayerStateTuning.flags,
         partyDex = partyDex,
         partyForms = partyDex.map { 0.toByte() },
-        pokedexSeen = emptyList(),
-        pokedexCaught = emptyList(),
+        pokedexSeen = Pokedex.seenOf(stored),
+        pokedexCaught = Pokedex.caughtOf(stored),
         badges = emptyList(),
         variables =
             if (fullVars) StoryClientState.allVariables(info.positionRegionId, stored.storyVars)

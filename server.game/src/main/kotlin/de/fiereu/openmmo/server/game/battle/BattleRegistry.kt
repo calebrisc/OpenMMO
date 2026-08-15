@@ -46,12 +46,30 @@ class BattleRegistry @Inject constructor() {
     return battle
   }
 
+  /**
+   * A battle between two players. The challenger hosts and the challenged owns the opposing side,
+   * so both are indexed onto the one instance and either one's actions find it.
+   */
+  fun createDuel(
+      host: BattleParticipant,
+      opponentSide: DuelSide,
+      opponentParty: List<BattleMonState>,
+      rng: BattleRng,
+  ): BattleInstance {
+    val battle =
+        create(listOf(host), opponentParty, rng, BattleRules(catchable = false, escapable = false))
+    battle.duel = opponentSide
+    byChar[opponentSide.charId] = battle
+    return battle
+  }
+
   fun byChar(charId: Long): BattleInstance? = byChar[charId]
 
   /** Removes the battle [charId] is in, and with it every other participant's entry. */
   fun remove(charId: Long): BattleInstance? {
     val battle = byChar.remove(charId) ?: return null
     battle.participants.forEach { byChar.remove(it.charId, battle) }
+    battle.duel?.let { byChar.remove(it.charId, battle) }
     return battle
   }
 }

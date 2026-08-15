@@ -47,6 +47,14 @@ private const val PRESENCE_IN_BATTLE: Byte = 1
 private const val PRESENCE_OVERWORLD: Byte = 0
 
 // The active battle side reported to the client so the bag knows which monster an item targets.
+/**
+ * Which half of the field a switch in lands on, which is not the same numbering as [PLAYER_SIDE].
+ * That one names the local side for [de.fiereu.openmmo.net.game.packets.battle.BattleSidePacket] and
+ * happens to share a value with [OPPONENT_SIDE], so picking between those two decides nothing.
+ */
+private const val SWITCH_IN_NEAR: Byte = 0
+private const val SWITCH_IN_FAR: Byte = 1
+
 private const val PLAYER_SIDE: Byte = 1
 
 // The side byte a switch-in carries, which is not the same numbering as BattleSidePacket.
@@ -98,6 +106,78 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     battle.opponent.forEach { sendCarriedStatus(battle, it) }
     sendPrompt(battle)
   }
+
+  /**
+   * Opens a duel. Each player is the local side of their own screen, so neither view can be
+   * broadcast: the challenged player receives the same battle mirrored, with the two parties the
+   * other way round.
+   */
+  fun sendDuelStart(battle: BattleInstance, hostName: String) {
+    val duel = battle.duel ?: return
+    battle.playerName = hostName
+
+    battle.session.send(EntityPresencePacket(entityId = battle.charId, status = PRESENCE_IN_BATTLE))
+    battle.session.send(BattleSidePacket(side = PLAYER_SIDE))
+    battle.session.send(fieldState(battle, hostName))
+
+    duel.session.send(EntityPresencePacket(entityId = duel.charId, status = PRESENCE_IN_BATTLE))
+    duel.session.send(BattleSidePacket(side = PLAYER_SIDE))
+    duel.session.send(mirroredFieldState(battle, duel))
+
+    battle.party.forEach { sendCarriedStatus(battle, it) }
+    battle.opponent.forEach { sendCarriedStatus(battle, it) }
+    sendPrompt(battle)
+  }
+
+  /**
+   * A switch in a duel, sent to each player from their own point of view.
+   *
+   * The side byte says whether the monster belongs to the near or far half of the screen, so one
+   * broadcast cannot serve both players: the same packet would put one player's switch on the other
+   * player's side of the field. Only the owner is sent the moves, and only the watcher is ever sent
+   * a full block, since the owner was given their whole party when the battle opened.
+   */
+  fun sendDuelSwitchIn(battle: BattleInstance, hostSwitched: Boolean, oldSlot: Int) {
+    val duel = battle.duel ?: return
+    val mon = if (hostSwitched) battle.activeMon() else battle.opponentMon()
+    val slot = if (hostSwitched) battle.activeSlot else battle.opponentSlot
+    val seen = if (hostSwitched) battle.seenActive else battle.opponentSeen
+    val firstSighting = slot !in seen
+
+    fun packetFor(owner: Boolean) =
+        BattleSwitchInPacket(
+            newSlot = slot,
+            oldSlot = oldSlot,
+            mon = mon.toBlock(slot, movesPresent = owner),
+            fullBlock = !owner && firstSighting,
+            side = if (owner) SWITCH_IN_NEAR else SWITCH_IN_FAR,
+        )
+
+    battle.session.send(packetFor(hostSwitched))
+    duel.session.send(packetFor(!hostSwitched))
+    seen.add(slot)
+  }
+
+  /** The battle as the challenged player sees it, with the sides swapped. */
+  private fun mirroredFieldState(battle: BattleInstance, duel: DuelSide): BattleFieldStatePacket =
+      BattleFieldStatePacket(
+          playerName = duel.name,
+          playerId = duel.charId,
+          playerAppearance = CAPTURED_APPEARANCE,
+          background = 0,
+          opposing = OpposingSide.TRAINER,
+          trainerId = 0,
+          playerParty = battle.opponent.mapIndexed { slot, mon -> mon.toBlock(slot, true) },
+          activeSlot = battle.opponentSlot,
+          // The host's bench stays hidden the way a trainer's does, so only what has been sent out
+          // is described.
+          opponentParty =
+              battle.party.mapIndexed { slot, mon ->
+                if (slot in battle.seenActive) mon.toOpponentBlock(slot)
+                else BattleOpponentBlock(slot = slot, revealed = false)
+              },
+          opponentActiveSlot = battle.activeSlot,
+      )
 
   /**
    * Catches a session up on a battle already in progress, for somebody who just started watching.
@@ -306,7 +386,7 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     broadcast(battle, BattleTileMapPacket(groupId = battle.turn.toShort(), slotTiles = null))
     // Only the players choose an action. A spectator joined to the same key must not be
     // handed the action UI.
-    battle.participants.forEach { it.session.send(BattleQueuedEventPacket(packed = ACTION_PROMPT)) }
+    battle.sessions().forEach { it.send(BattleQueuedEventPacket(packed = ACTION_PROMPT)) }
   }
 
   /** Opens the party switch screen after the active mon faints, in place of the action prompt. */

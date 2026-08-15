@@ -18,6 +18,9 @@ import de.fiereu.openmmo.server.game.battle.BattleRewards
 import de.fiereu.openmmo.server.game.battle.MoveLearner
 import de.fiereu.openmmo.server.game.battle.TurnEngine
 import de.fiereu.openmmo.server.game.battle.WildMonFactory
+import de.fiereu.openmmo.server.game.session.SessionRegistry
+import de.fiereu.openmmo.server.game.services.DuelService
+import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.NpcService
@@ -98,6 +101,18 @@ class ScriptPrimitivesTest :
                   moveRegistry = MoveRegistry(),
                   trainers = TrainerRegistry(),
                   items = ItemRegistry(),
+                  pokedex = PokedexService(store),
+                  duels =
+                      DuelService(
+                          store,
+                          registry,
+                          TurnEngine(MoveRegistry(), TypeChart()),
+                          BattlePacketEmitter(interest),
+                          SpeciesRegistry(),
+                          interest,
+                          SessionRegistry(),
+                          ItemRegistry(),
+                      ),
               )
           val player =
               StoryPlayerService(

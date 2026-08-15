@@ -1,5 +1,8 @@
 package de.fiereu.openmmo.server.game.services
 
+import de.fiereu.openmmo.server.game.session.SessionRegistry
+import de.fiereu.openmmo.server.game.services.DuelService
+import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.network.PacketEvent
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
@@ -13,6 +16,7 @@ import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.EntityMovePpPacket
 import de.fiereu.openmmo.net.game.packets.EntityPresencePacket
+import de.fiereu.openmmo.net.game.packets.PokedexSpeciesUnlockPacket
 import de.fiereu.openmmo.net.game.packets.MapLoadedAckPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleBulkStatePacket
@@ -106,6 +110,18 @@ private class Fixture(scope: CoroutineScope) {
           moveRegistry = MoveRegistry(),
           trainers = TrainerRegistry(),
           items = ItemRegistry(),
+          pokedex = PokedexService(store),
+          duels =
+              DuelService(
+                  store,
+                  registry,
+                  TurnEngine(MoveRegistry(), TypeChart()),
+                  BattlePacketEmitter(interestManager),
+                  SpeciesRegistry(),
+                  interestManager,
+                  SessionRegistry(),
+                  ItemRegistry(),
+              ),
       )
 
   suspend fun playerWithParty(level: Byte = 50, hp: Short = 999): Pair<FakeSession, Long> {
@@ -134,6 +150,45 @@ private fun FakeSession.finishBattleTransition(service: BattleService) {
 @OptIn(ExperimentalCoroutinesApi::class)
 class BattleServiceTest :
     FunSpec({
+      test("a switch to a monster that has not been out sends no full block") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, charId) = fx.playerWithParty()
+          // A second party member, which is the one the switch reaches for. The client crashed on
+          // exactly this: the field state had already described the whole party, so a switch that
+          // described one of them a second time was a duplicate the client could not take.
+          fx.store.addPokemon(charId, bulbasaur(charId, 50, 999).copy(containerSlot = 1))
+
+          session.startBattle(fx.service)
+          session.sent.clear()
+          session.act(fx.service, BattleAction.SWITCH, 1)
+
+          val switchIn = session.sent.filterIsInstance<BattleSwitchInPacket>()
+          switchIn.shouldNotBeEmpty()
+          switchIn.forEach { it.fullBlock shouldBe false }
+        }
+      }
+
+      test("a raid boss is the very same monster in every raider's battle") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (ash, ashId) = fx.playerWithParty()
+          val (gary, garyId) = fx.playerWithParty()
+
+          // One raider meets the boss the ordinary way, and the second is given that same monster.
+          ash.startBattle(fx.service)
+          val boss = fx.registry.byChar(ashId)!!.opponentMon()
+          fx.service.startSharedBossBattle(gary, boss)
+
+          val garyBattle = fx.registry.byChar(garyId)!!
+          // Not a copy. Damage dealt in one raider's battle has to show in the other's, which is
+          // the whole of what makes a raid shared rather than two people fighting lookalikes.
+          (garyBattle.opponentMon() === boss) shouldBe true
+          boss.currentHp = boss.currentHp - 5
+          garyBattle.opponentMon().currentHp shouldBe boss.currentHp
+        }
+      }
+
       test("the start sequence arrives in the proven order") {
         runTest {
           val fx = Fixture(backgroundScope)
@@ -149,6 +204,9 @@ class BattleServiceTest :
                   BattleFieldStatePacket::class,
                   BattleTileMapPacket::class,
                   BattleQueuedEventPacket::class,
+                  // The dex registration of the monster just met follows the sequence rather than
+                  // interrupting it.
+                  PokedexSpeciesUnlockPacket::class,
               )
           // Bulbasaur base hp 45 at level 50 with empty IVs and EVs.
           val field = session.sent.filterIsInstance<BattleFieldStatePacket>().single()

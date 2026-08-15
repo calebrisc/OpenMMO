@@ -241,6 +241,39 @@ constructor(
     )
   }
 
+  /**
+   * Takes a monster off a character, wherever it lives, and returns it as it was. Null when the
+   * character does not hold it or the write did not stick, in which case nothing was removed.
+   *
+   * The returned monster is what a trade hands to the other side, so a caller that cannot complete
+   * has everything it needs to put this one back.
+   */
+  suspend fun removePokemon(characterId: Long, monsterId: Long): Pokemon? {
+    val existing =
+        characters[characterId]?.let { stored ->
+          stored.pokemon.firstOrNull { it.id == monsterId }
+              ?: stored.pcStorage.firstOrNull { it.id == monsterId }
+        } ?: return null
+    val removed =
+        mutateDurably(
+            characterId,
+            apply = {
+              it.copy(
+                  pokemon = it.pokemon.filter { m -> m.id != monsterId }.toMutableList(),
+                  pcStorage = it.pcStorage.filter { m -> m.id != monsterId }.toMutableList(),
+              )
+            },
+            rollback = {
+              if (existing.container == PokemonContainer.PC) {
+                it.copy(pcStorage = (it.pcStorage + existing).toMutableList())
+              } else {
+                it.copy(pokemon = (it.pokemon + existing).toMutableList())
+              }
+            },
+        )
+    return if (removed) existing else null
+  }
+
   /** Replace one monster by id wherever it lives, for example after a battle changed hp or xp. */
   fun updatePokemon(characterId: Long, updated: Pokemon) {
     mutate(characterId) { stored ->

@@ -18,6 +18,8 @@ import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MovementTuning
+import de.fiereu.openmmo.server.game.services.PlayerStateTuning
+import de.fiereu.openmmo.server.game.services.WorldStateService
 import de.fiereu.openmmo.server.game.services.PresenceService
 import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
@@ -55,6 +57,7 @@ constructor(
     private val sessions: SessionRegistry,
     private val characterStore: CharacterStore,
     private val links: LinkService,
+    private val worldState: WorldStateService,
 ) : ChatCommand {
   override val name = "probe"
   override val usage =
@@ -227,6 +230,26 @@ constructor(
           .getByCharacterId(target.info.id)
           ?.send(notice("You have been given developer access."))
       ctx.reply("${target.info.name} now has developer access.")
+      return
+    }
+    if (what == "flags") {
+      val value = ctx.args.getOrNull(1)?.toIntOrNull()
+      if (value == null) {
+        ctx.reply(
+            "Player state flags: ${PlayerStateTuning.flags}. Set with /probe flags <n>, " +
+                "then try the bike. 0 is what the server has always sent.")
+        return
+      }
+      PlayerStateTuning.flags = value.toByte()
+      val stored = characterStore.getCharacter(ctx.characterId)
+      if (stored == null) {
+        ctx.reply("You are not in world.")
+        return
+      }
+      // A resync rather than a reconnect, so the value takes effect without logging out.
+      worldState.send(ctx.session, stored, fullVars = true)
+      log.info { "Player state flags set to $value for char=${ctx.characterId}" }
+      ctx.reply("Flags set to $value and your state resent. Try the bike now.")
       return
     }
     if (what == "mm") {

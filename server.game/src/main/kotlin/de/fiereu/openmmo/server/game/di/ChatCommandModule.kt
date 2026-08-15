@@ -7,6 +7,10 @@ import de.fiereu.openmmo.server.game.services.command.CatchCommand
 import de.fiereu.openmmo.server.game.services.command.ChatCommand
 import de.fiereu.openmmo.server.game.services.command.GiveCommand
 import de.fiereu.openmmo.server.game.services.command.HelpCommand
+import de.fiereu.openmmo.server.game.services.command.DuelCommand
+import de.fiereu.openmmo.server.game.services.command.RaidCommand
+import de.fiereu.openmmo.server.game.services.command.TourneyCommand
+import de.fiereu.openmmo.server.game.services.command.TradeCommand
 import de.fiereu.openmmo.server.game.services.command.LinkCommand
 import de.fiereu.openmmo.server.game.services.command.PmCommand
 import de.fiereu.openmmo.server.game.services.command.PosCommand
@@ -33,6 +37,14 @@ interface ChatCommandModule {
   @Binds @IntoSet fun giveCommand(command: GiveCommand): ChatCommand
 
   @Binds @IntoSet fun storyCommand(command: StoryCommand): ChatCommand
+
+  @Binds @IntoSet fun duelCommand(command: DuelCommand): ChatCommand
+
+  @Binds @IntoSet fun tradeCommand(command: TradeCommand): ChatCommand
+
+  @Binds @IntoSet fun raidCommand(command: RaidCommand): ChatCommand
+
+  @Binds @IntoSet fun tourneyCommand(command: TourneyCommand): ChatCommand
 
   @Binds @IntoSet fun whoCommand(command: WhoCommand): ChatCommand
 

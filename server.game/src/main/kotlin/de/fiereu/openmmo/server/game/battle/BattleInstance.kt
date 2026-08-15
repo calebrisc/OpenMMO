@@ -22,6 +22,12 @@ data class BattleRules(
 )
 
 /**
+ * The human on the far side of a duel, who owns [BattleInstance.opponent] the way the host owns its
+ * party. Null in every battle fought against the computer.
+ */
+class DuelSide(val charId: Long, val session: SessionContext, val name: String)
+
+/**
  * One running battle. A wild encounter is the case where [opponent] holds a single monster.
  *
  * [participants] is the human side. Everything with one player goes through [host] and the
@@ -77,6 +83,19 @@ class BattleInstance(
 
   /** Kept so a spectator joining part way through can be sent the same field state. */
   var playerName: String = ""
+
+  /**
+   * Set when [opponent] belongs to another player rather than to the computer. The two sides stay
+   * exactly as they are for a wild battle, so everything that reads [opponent] is unchanged: the
+   * only difference is who chooses its move and that the far side is owed its own view.
+   */
+  var duel: DuelSide? = null
+
+  val isDuel: Boolean
+    get() = duel != null
+
+  /** Every session that should see this battle's events, which in a duel is both players. */
+  fun sessions(): List<SessionContext> = participants.map { it.session } + listOfNotNull(duel?.session)
 
   /** The player who started the battle, and the only one in an ordinary battle. */
   val host: BattleParticipant

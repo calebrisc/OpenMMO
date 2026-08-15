@@ -18,3 +18,15 @@ object MovementTuning {
   /** Confirmed live, including over water. */
   @Volatile var run: Int = 0
 }
+
+/**
+ * The flags byte on the local player state, which the server has always sent as zero.
+ *
+ * Seven days of play produced no movement packet carrying a bit beyond direction and running, so
+ * the client never enters a bike state at all rather than the server dropping one. Whatever refuses
+ * is on the client's side, and this byte is the only thing the login state offers that could carry
+ * a permission it is waiting for.
+ */
+object PlayerStateTuning {
+  @Volatile var flags: Byte = 0
+}

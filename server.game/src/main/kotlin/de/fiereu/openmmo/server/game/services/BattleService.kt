@@ -81,11 +81,28 @@ constructor(
     private val moveRegistry: MoveRegistry,
     private val trainers: TrainerRegistry,
     private val items: ItemRegistry,
+    private val pokedex: PokedexService,
+    private val duels: DuelService,
 ) {
 
   private val pokeBallItemId: Short by lazy { items.idOf(Items.POKE_BALL).toShort() }
 
   private val pendingLearns = ConcurrentHashMap<Long, PendingMoveLearn>()
+
+  /**
+   * Told which character just finished a turn. A raid listens on this to show every raider what the
+   * shared boss has left, since the damage they do to it lands in somebody else's battle.
+   */
+  private val turnListeners = mutableListOf<(Long) -> Unit>()
+
+  fun onTurnResolved(listener: (charId: Long) -> Unit) {
+    synchronized(turnListeners) { turnListeners += listener }
+  }
+
+  private fun fireTurnResolved(charId: Long) {
+    val listeners = synchronized(turnListeners) { turnListeners.toList() }
+    listeners.forEach { runCatching { it(charId) }.onFailure { e -> log.warn(e) { "turn listener" } } }
+  }
 
   fun onBattlePacket(event: PacketEvent<*>) {
     log.info { "Battle packet ${event.packet::class.simpleName} received: ${event.packet}" }
@@ -97,6 +114,8 @@ constructor(
     if (battle.pendingResult != null) return
     val action = event.packet
     log.info { "Battle action char=$charId: $action" }
+    // A duel resolves only once both players have chosen, so it owns the whole turn.
+    if (duels.onAction(battle, charId, action)) return
     // While the active mon is fainted the player owes a replacement and may only switch.
     if (battle.activeMon().fainted && action.action != BattleAction.SWITCH) return
     when (action.action) {
@@ -222,6 +241,17 @@ constructor(
     createWildBattle(session, dexId, level, catchable = true, escapable = true)
   }
 
+  /**
+   * A battle against a boss that other raiders are fighting at the same time. Every raider gets
+   * their own battle holding the very same monster, so each of them sees an ordinary fight while
+   * the damage all lands on one pool of health.
+   */
+  fun startSharedBossBattle(
+      session: SessionContext,
+      boss: BattleMonState,
+  ): BattleInstance? =
+      createBattle(session, emptyList(), catchable = false, escapable = true, shared = listOf(boss))
+
   /** Runs a story battle and waits for its scene. */
   suspend fun startScriptedBattle(
       session: SessionContext,
@@ -294,6 +324,11 @@ constructor(
       catchable: Boolean,
       escapable: Boolean,
       trainer: TrainerDef? = null,
+      /**
+       * An opponent that has already been built. A raid passes the one boss to every raider's
+       * battle, so the same monster takes all of their damage and its health is one shared pool.
+       */
+      shared: List<BattleMonState>? = null,
   ): BattleInstance? {
     val charId = session.attributes[PLAYER_STATE]?.characterId ?: return null
     if (battles.byChar(charId) != null) {
@@ -320,7 +355,8 @@ constructor(
     }
     val rng = BattleRng()
     val enemies = mutableListOf<BattleMonState>()
-    for (spec in opponents) {
+    if (shared != null) enemies += shared
+    for (spec in if (shared != null) emptyList() else opponents) {
       var rolled = wildMons.create(spec.dexId, spec.level, rng)
       if (rolled == null) {
         session.send(notice("Unknown species ${spec.dexId}."))
@@ -366,6 +402,9 @@ constructor(
     battle.seenActive.add(firstAlive)
     interestManager.join(session, battle.key)
     emitter.sendStart(battle, stored.info.name)
+    // After the opening sequence, which is capture proven and holds nothing else between its
+    // packets. Meeting one in a battle is what registers it as seen, the trainer's own included.
+    enemies.forEach { pokedex.recordSeen(charId, session, it.species.id) }
     return battle
   }
 
@@ -376,6 +415,7 @@ constructor(
   }
 
   private suspend fun afterTurn(battle: BattleInstance) {
+    fireTurnResolved(battle.charId)
     when {
       battle.opponent.all { it.fainted } -> endVictory(battle)
       battle.party.all { it.fainted } -> endDefeat(battle)
@@ -480,13 +520,16 @@ constructor(
 
   private fun performSwitch(battle: BattleInstance, target: Int) {
     val oldSlot = battle.activeSlot
-    val fullBlock = target !in battle.seenActive
-    // Leaving the field resets the toxic damage ramp, so a switch out and back in starts over.
+    // Never a full block. The field state already described the whole party, so a second full
+    // description of a monster the client has registered crashed it on the first switch to a slot
+    // that had not been out yet. The opposing side is the opposite case and still sends one: its
+    // unseen monsters open as unrevealed placeholders, so a switch in is their first real
+    // description. Both captures of a player's own switch carry the active detail alone.
     battle.party.getOrNull(oldSlot)?.resetToxicRamp()
     battle.activeSlot = target
     battle.seenActive.add(target)
-    log.info { "Switch char=${battle.charId} slot $oldSlot -> $target (fullBlock=$fullBlock)" }
-    emitter.sendSwitchIn(battle, oldSlot, fullBlock)
+    log.info { "Switch char=${battle.charId} slot $oldSlot -> $target" }
+    emitter.sendSwitchIn(battle, oldSlot, fullBlock = false)
     emitter.sendCarriedStatus(battle, battle.activeMon())
   }
 
@@ -531,6 +574,7 @@ constructor(
                 caughtAt = LocalDateTime.now(),
             )
     log.info { "Caught wild ${battle.opponentMon().species.name} for char=${battle.charId}" }
+    pokedex.recordCaught(battle.charId, battle.session, battle.opponentMon().species.id)
     // The caught monster is sent as a full 148-byte record on opcode 0x14 before the ball-throw
     // event, so the client can resolve the monster when the throw lands.
     battle.session.send(SocialListEntryAddPacket(caught))

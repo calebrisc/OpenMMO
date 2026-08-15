@@ -74,6 +74,7 @@ constructor(
     private val sessionRegistry: SessionRegistry,
     private val characterStore: CharacterStore,
     private val guildStore: GuildStore,
+    private val trades: TradeService,
 ) {
   // Keyed by the invited character.
   private val pending = ConcurrentHashMap<Long, PendingInvite>()
@@ -193,7 +194,10 @@ constructor(
     targetSession.send(
         DuelInvitePacket(flags = 0, requestType = TRADE_REQUEST_TYPE, name = requester.info.name))
     val targetName = characterStore.getCharacter(targetId)?.info?.name
-    session.send(notice("Trade request sent to $targetName."))
+    // The window opening is only half of it. The exchange itself is tracked and committed by
+    // TradeService, because the window reports every button press as the same value.
+    if (targetName != null) session.send(notice(trades.invite(charId, targetName)))
+    else session.send(notice("Trade request sent."))
   }
 
   fun onSendChatCommand(event: PacketEvent<SendChatCommandPacket>) {

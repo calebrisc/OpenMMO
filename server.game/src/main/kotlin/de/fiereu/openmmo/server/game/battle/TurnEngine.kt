@@ -81,13 +81,24 @@ constructor(
     private val typeChart: TypeChart,
 ) {
 
-  fun resolveTurn(battle: BattleInstance, playerMoveId: Short): List<BattleEvent> {
+  /**
+   * [enemyMoveId] is the move the opposing side chose. A duel supplies the other player's pick and
+   * everything past this point is identical, since the two sides were always resolved the same way
+   * and only differed in who decided.
+   */
+  fun resolveTurn(
+      battle: BattleInstance,
+      playerMoveId: Short,
+      enemyMoveId: Short? = null,
+  ): List<BattleEvent> {
     val events = mutableListOf<BattleEvent>()
     val player = battle.activeMon()
     val enemy = battle.opponentMon()
 
     val playerAction = TurnAction(player, enemy, moves.get(playerMoveId.toInt()))
-    val enemyAction = TurnAction(enemy, player, pickEnemyMove(battle, enemy))
+    val enemyMove =
+        if (enemyMoveId != null) moves.get(enemyMoveId.toInt()) else pickEnemyMove(battle, enemy)
+    val enemyAction = TurnAction(enemy, player, enemyMove)
 
     for (action in order(battle, playerAction, enemyAction)) {
       if (action.attacker.fainted) continue
@@ -95,6 +106,24 @@ constructor(
       if (player.fainted || enemy.fainted) break
     }
     endOfTurn(listOf(player, enemy), events)
+    return events
+  }
+
+  /**
+   * One side attacks and the other does not, which is the turn where a duellist switched or reached
+   * for a bag item while their opponent struck.
+   */
+  fun resolveOneSided(
+      battle: BattleInstance,
+      attackerIsHost: Boolean,
+      moveId: Short,
+  ): List<BattleEvent> {
+    val events = mutableListOf<BattleEvent>()
+    val attacker = if (attackerIsHost) battle.activeMon() else battle.opponentMon()
+    val defender = if (attackerIsHost) battle.opponentMon() else battle.activeMon()
+    if (attacker.fainted) return events
+    execute(battle, TurnAction(attacker, defender, moves.get(moveId.toInt())), events)
+    endOfTurn(listOf(battle.activeMon(), battle.opponentMon()), events)
     return events
   }
 

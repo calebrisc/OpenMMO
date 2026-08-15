@@ -14,6 +14,10 @@ import de.fiereu.openmmo.net.game.packets.CreateCharacterPacket
 import de.fiereu.openmmo.net.game.packets.DeleteCharacterPacket
 import de.fiereu.openmmo.net.game.packets.DialogChoicePacket
 import de.fiereu.openmmo.net.game.packets.DialogOptionPacket
+import de.fiereu.openmmo.net.game.packets.PcBoxRenamePacket
+import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
+import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
+import de.fiereu.openmmo.net.game.packets.PartyMemberSelectPacket
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.ExchangeItemRequestPacket
 import de.fiereu.openmmo.net.game.packets.FaceDirectionPacket
@@ -36,6 +40,7 @@ import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
 import de.fiereu.openmmo.net.game.packets.StringCommandPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
 import de.fiereu.openmmo.net.game.packets.TradeActionPacket
+import de.fiereu.openmmo.net.game.packets.TradeSelectMonPacket
 import de.fiereu.openmmo.net.game.packets.UnblockPlayerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
@@ -78,6 +83,11 @@ import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.LoginService
+import de.fiereu.openmmo.server.game.services.DuelService
+import de.fiereu.openmmo.server.game.services.PcBoxService
+import de.fiereu.openmmo.server.game.services.RaidService
+import de.fiereu.openmmo.server.game.services.TradeService
+import de.fiereu.openmmo.server.game.services.PartyService
 import de.fiereu.openmmo.server.game.services.MovementService
 import de.fiereu.openmmo.server.game.services.MultiplayerService
 import de.fiereu.openmmo.server.game.services.PresenceService
@@ -108,6 +118,11 @@ constructor(
     private val battleService: BattleService,
     private val chatService: ChatService,
     private val fieldItemService: FieldItemService,
+    private val partyService: PartyService,
+    private val duelService: DuelService,
+    private val tradeService: TradeService,
+    private val pcBoxService: PcBoxService,
+    private val raidService: RaidService,
     private val linkService: LinkService,
     private val shopService: ShopService,
     private val scriptRunner: ScriptRunner,
@@ -132,6 +147,11 @@ constructor(
     onSuspend<DialogActionResponsePacket> { event -> dialogService.onInteractive(event) }
     onSuspend<DialogChoicePacket> { event -> dialogService.onDialogChoice(event) }
     onSuspend<DialogOptionPacket> { event -> fieldItemService.onUseItem(event) }
+    on<PartyMemberSelectPacket> { event -> partyService.onMemberSelect(event) }
+    onSuspend<TradeSelectMonPacket> { event -> tradeService.onSelectMon(event) }
+    onSuspend<PcBoxStorePacket> { event -> pcBoxService.onStore(event) }
+    on<StorageBoxClosePacket> { event -> pcBoxService.onClose(event) }
+    on<PcBoxRenamePacket> { event -> pcBoxService.onRename(event) }
     onSuspend<ExchangeItemRequestPacket> { event -> shopService.onBuy(event) }
     onSuspend<ShopSellRequestPacket> { event -> shopService.onSell(event) }
 
@@ -204,7 +224,13 @@ constructor(
     if (charId != null) {
       // The battle flush must land before the unload evicts the character from the cache, and
       // before the rollback, which would otherwise be overwritten by the party it persists.
+      // Before the battle cleanup, which would otherwise persist the party a duel damaged. A duel
+      // writes nothing back, so it has to be torn down while it can still be recognised as one.
+      duelService.onDisconnect(charId)
+      tradeService.onDisconnect(charId)
+      raidService.onDisconnect(charId)
       battleService.onDisconnect(session)
+      partyService.onDisconnect(charId)
       // Undo the interrupted script here rather than leaving it to the coroutine's own cleanup,
       // which runs on another thread and would race the flush below.
       scriptRunner.rollBack(session, state, entityId = -1)

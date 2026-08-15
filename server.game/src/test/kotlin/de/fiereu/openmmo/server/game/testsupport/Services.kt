@@ -13,6 +13,9 @@ import de.fiereu.openmmo.server.game.battle.TurnEngine
 import de.fiereu.openmmo.server.game.battle.WildMonFactory
 import de.fiereu.openmmo.server.game.script.ScriptRegistry
 import de.fiereu.openmmo.server.game.script.ScriptRunner
+import de.fiereu.openmmo.server.game.session.SessionRegistry
+import de.fiereu.openmmo.server.game.services.DuelService
+import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.EncounterService
@@ -97,12 +100,15 @@ fun scriptRunner(
 private fun battleService(store: CharacterStore, interest: InterestManager): BattleService {
   val species = SpeciesRegistry()
   val moves = MoveRegistry()
+  val registry = BattleRegistry()
+  val engine = TurnEngine(moves, TypeChart())
+  val emitter = BattlePacketEmitter(interest)
   return BattleService(
       characterStore = store,
-      battles = BattleRegistry(),
-      engine = TurnEngine(moves, TypeChart()),
+      battles = registry,
+      engine = engine,
       wildMons = WildMonFactory(species, moves, LearnsetRegistry(), EntityIdService()),
-      emitter = BattlePacketEmitter(interest),
+      emitter = emitter,
       rewards = BattleRewards(),
       moveLearner = MoveLearner(LearnsetRegistry(), moves),
       interestManager = interest,
@@ -110,5 +116,17 @@ private fun battleService(store: CharacterStore, interest: InterestManager): Bat
       moveRegistry = moves,
       trainers = TrainerRegistry(),
       items = ItemRegistry(),
+      pokedex = PokedexService(store),
+      duels =
+          DuelService(
+              store,
+              registry,
+              engine,
+              emitter,
+              species,
+              interest,
+              SessionRegistry(),
+              ItemRegistry(),
+          ),
   )
 }

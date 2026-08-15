@@ -17,6 +17,9 @@ import de.fiereu.openmmo.server.game.battle.BattleRng
 import de.fiereu.openmmo.server.game.battle.MoveLearner
 import de.fiereu.openmmo.server.game.battle.TurnEngine
 import de.fiereu.openmmo.server.game.battle.WildMonFactory
+import de.fiereu.openmmo.server.game.session.SessionRegistry
+import de.fiereu.openmmo.server.game.services.DuelService
+import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.PresenceService
@@ -84,6 +87,18 @@ class StoryResetTest :
                     moveRegistry = moves,
                     trainers = TrainerRegistry(),
                     items = items,
+                    pokedex = PokedexService(store),
+                    duels =
+                        DuelService(
+                            store,
+                            BattleRegistry(),
+                            TurnEngine(moves, TypeChart()),
+                            BattlePacketEmitter(interest),
+                            species,
+                            interest,
+                            SessionRegistry(),
+                            items,
+                        ),
                 ),
             items = items,
         )
