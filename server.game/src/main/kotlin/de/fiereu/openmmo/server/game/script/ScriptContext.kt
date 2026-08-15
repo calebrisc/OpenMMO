@@ -15,6 +15,7 @@ import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.MapEntryScripts
 import de.fiereu.openmmo.server.game.services.ScriptMovementService
 import de.fiereu.openmmo.server.game.services.ScriptWarpService
+import de.fiereu.openmmo.server.game.services.PcBoxService
 import de.fiereu.openmmo.server.game.services.ShopService
 import de.fiereu.openmmo.server.game.services.StoryClientState
 import de.fiereu.openmmo.server.game.services.StoryPlayerService
@@ -42,6 +43,7 @@ internal constructor(
     private val maps: MapManager? = null,
     private val entryScripts: MapEntryScripts? = null,
     private val shops: ShopService? = null,
+    private val pcBoxes: PcBoxService? = null,
 ) {
   private val characterId: Long?
     get() = state.characterId
@@ -138,6 +140,15 @@ internal constructor(
   suspend fun givePokemon(dexId: Int, level: Int, vararg moveIds: Int) =
       checkNotNull(player) { STORY_PLAYER_UNAVAILABLE }
           .givePokemon(session, state, dexId, level, moveIds.toList())
+
+  /**
+   * Shows the storage box. Interacting with one did nothing at all before: the box's script was a
+   * stub, and nothing on this server had ever sent the packet that draws it.
+   */
+  fun openPc() {
+    val id = characterId ?: return
+    pcBoxes?.open(session, id)
+  }
 
   fun healParty() = checkNotNull(player) { STORY_PLAYER_UNAVAILABLE }.healParty(session, state)
 

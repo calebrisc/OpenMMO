@@ -14,6 +14,7 @@ import de.fiereu.openmmo.server.game.battle.WildMonFactory
 import de.fiereu.openmmo.server.game.script.ScriptRegistry
 import de.fiereu.openmmo.server.game.script.ScriptRunner
 import de.fiereu.openmmo.server.game.session.SessionRegistry
+import de.fiereu.openmmo.server.game.services.PcBoxService
 import de.fiereu.openmmo.server.game.services.DuelService
 import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.openmmo.server.game.services.BattleService
@@ -94,6 +95,7 @@ fun scriptRunner(
       mapManager,
       MapEntryScripts(ScriptRegistry(emptyMap()), story),
       ShopService(store, items),
+      PcBoxService(store),
   )
 }
 

@@ -7,6 +7,8 @@ class ScriptRegistry(private val byLabel: Map<String, Script>) {
   fun forLabel(scriptLabel: String): Script? = byLabel[scriptLabel]
 
   companion object {
-    fun generated(): ScriptRegistry = ScriptRegistry(GeneratedScripts.byLabel)
+    // Shared scripts win, so a per-map stub that was never ported does not shadow the real one.
+    fun generated(): ScriptRegistry =
+        ScriptRegistry(GeneratedScripts.byLabel + SharedScripts.byLabel)
   }
 }
