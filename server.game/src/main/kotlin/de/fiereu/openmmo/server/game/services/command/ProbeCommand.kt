@@ -15,6 +15,7 @@ import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.net.game.packets.StoryFlagUpdatePacket
 import de.fiereu.openmmo.net.game.packets.WorldFlagSetPacket
+import de.fiereu.openmmo.net.game.packets.WorldSessionStatePacket
 import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.BoxSyncTuning
@@ -240,6 +241,26 @@ constructor(
       ctx.reply("${target.info.name} now has developer access.")
       return
     }
+    if (what == "state") {
+      val value = ctx.args.getOrNull(1)?.toIntOrNull()
+      if (value == null || value !in 0..255) {
+        ctx.reply(
+            "/probe state <n> sends the world session state the server has never sent. The client " +
+                "names its own state every time it refuses a flag, so one flag goes out after it " +
+                "and the client's log says whether the state moved.")
+        return
+      }
+      // State 11 is the only value whose body carries anything, and what it carries is undecoded,
+      // so it is sent with no blocks rather than guessed at.
+      ctx.session.send(WorldSessionStatePacket(value, if (value == 11) emptyList() else null))
+      // The client refuses every story flag and logs the state it was in when it did. That refusal
+      // is the read-out: send one and the log names the state we just put it in.
+      ctx.session.send(StoryFlagUpdatePacket(ctx.character.info.positionRegionId, 1, false))
+      log.info { "Sent world session state $value to ${ctx.character.info.name}" }
+      ctx.reply("Sent world state $value. Check the client log for the state name it now reports.")
+      return
+    }
+
     if (what == "evo") {
       // The two captured payloads read as group 2/1, index 32, value -1 under the flag codec, but
       // 32 is Nidoran, a species, so the flag reading is probably wrong and this is the prompt the
