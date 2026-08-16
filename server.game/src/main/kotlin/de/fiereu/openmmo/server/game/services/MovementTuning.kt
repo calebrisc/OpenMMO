@@ -12,6 +12,20 @@ package de.fiereu.openmmo.server.game.services
  * tunable with /probe mm, only because what it really means is still unknown.
  */
 object MovementTuning {
+  /**
+   * Whether a step is checked against the level the player is standing on.
+   *
+   * OFF until the elevations are understood. The rule itself is the games' own, but walking it over
+   * our data cuts 45 of 424 Kanto maps off from themselves -- Vermilion City falls from 1004
+   * reachable tiles to 105 -- so something about what we read as an elevation does not mean what
+   * the rule assumes. Those maps mix elevation 1 and 3 across ground that is plainly one surface to
+   * walk on, while a cave floor is uniformly 3.
+   *
+   * Turn it on with /probe elev to try it somewhere known flat, and expect to be fenced in anywhere
+   * with a harbour or a slope.
+   */
+  @Volatile var elevationRules: Boolean = false
+
   /** Confirmed live. */
   @Volatile var walk: Int = 0
 

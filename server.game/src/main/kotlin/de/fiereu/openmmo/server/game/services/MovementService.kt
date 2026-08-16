@@ -30,6 +30,37 @@ private const val RELOAD_COOLDOWN_MS = 15_000L
 /** Puts the client on the tile without animating a step there. */
 private const val SNAP_MOVEMENT_MODE = 2
 
+/** The elevation the games treat as "any": it neither blocks a step nor changes what you are on. */
+internal const val ELEVATION_ANY = 15
+
+/**
+ * Whether a player standing on [playerElevation] may step onto a tile of [tileElevation].
+ *
+ * The decomp's IsElevationMismatchAt. Elevation 0 is the transition value that joins one level to
+ * another -- the foot of a slope, the mouth of a stairway -- so a player standing on one may go
+ * anywhere, and a tile that is one may be entered from anywhere. Everything else has to match.
+ *
+ * Without this a cave is a single flat sheet: every tile whose collision bits are clear is
+ * walkable, so a player crosses between levels wherever the geometry happens to touch, and the
+ * client, which does enforce the rule, stops agreeing about where they are.
+ */
+internal fun elevationAllows(playerElevation: Int, tileElevation: Int): Boolean =
+    playerElevation == 0 ||
+        tileElevation == 0 ||
+        tileElevation == ELEVATION_ANY ||
+        tileElevation == playerElevation
+
+/**
+ * The elevation a player is on after stepping from [fromElevation] onto [toElevation].
+ *
+ * The decomp's ObjectEventUpdateElevation. Either end being [ELEVATION_ANY] leaves the player on
+ * whatever they were already on -- that is what lets a bridge pass over a level without joining it
+ * -- and otherwise they take the tile's, zero included, which is how a stairway hands them from one
+ * level to the next.
+ */
+internal fun elevationAfterStep(current: Int, fromElevation: Int, toElevation: Int): Int =
+    if (toElevation == ELEVATION_ANY || fromElevation == ELEVATION_ANY) current else toElevation
+
 /** Resolve a cardinal Gen-3 ledge hop to its tile two spaces away. */
 internal fun ledgeLanding(
     map: MapDef,
@@ -221,9 +252,23 @@ constructor(
       return
     }
 
+    val toElevation = currentMap.tileAt(toX, toY)?.elevation ?: 0
+    if (MovementTuning.elevationRules && !elevationAllows(state.elevation, toElevation)) {
+      log.info {
+        "ELEVATION: char=$charId on ${state.elevation} refused ($toX, $toY) at $toElevation"
+      }
+      sendPositionReset(ctx, charId, currentMap, fromX, fromY, msg.direction)
+      return
+    }
+
     characterStore.updatePosition(charId, toX.toShort(), toY.toShort(), facing = msg.direction)
     state.x = toX.toShort()
     state.y = toY.toShort()
+    // Which level the player is on only ever changed on a warp before this, so a player who walked
+    // up a slope kept the elevation they arrived in the map with.
+    state.elevation =
+        elevationAfterStep(
+            state.elevation, currentMap.tileAt(fromX, fromY)?.elevation ?: 0, toElevation)
 
     // The client already walked itself there, so only the observers need telling.
     presenceService.broadcastToObservers(

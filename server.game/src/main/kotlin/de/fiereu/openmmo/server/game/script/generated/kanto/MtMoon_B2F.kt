@@ -1,9 +1,44 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.MtMoon_B2F
+import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val TRAINER_SUPER_NERD_MIGUEL = 170
+
+/**
+ * Taking one of the pair, which is the same scene either way round.
+ *
+ * The two fossils are one choice: Miguel helps himself to whichever is left, so both of them leave
+ * the cave on the first yes. The flags land before the dialog that follows, since a player who
+ * drops between them would otherwise be holding a fossil with the other still sitting there.
+ *
+ * The one taken goes immediately. The one Miguel takes only goes on the next login, because a hide
+ * flag set mid session does not reach the client yet.
+ */
+private suspend fun takeFossil(
+    ctx: ScriptContext,
+    ask: MtMoon_B2F,
+    obtained: MtMoon_B2F,
+    fossil: ItemDef,
+    gotFlag: String,
+    ownHideFlag: String,
+    otherHideFlag: String,
+) {
+  if (ctx.isFlagSet(KantoFlags.FLAG_GOT_FOSSIL_FROM_MT_MOON)) return
+  if (!ctx.askYesNo(ask)) return
+  if (!ctx.giveItem(fossil)) return
+  ctx.setFlag(gotFlag)
+  ctx.setFlag(KantoFlags.FLAG_GOT_FOSSIL_FROM_MT_MOON)
+  ctx.setFlag(ownHideFlag)
+  ctx.setFlag(otherHideFlag)
+  ctx.say(obtained)
+  ctx.despawnInteracted()
+  ctx.say(MtMoon_B2F.ThenThisFossilIsMine)
+}
 
 private const val TRAINER_TEAM_ROCKET_GRUNT = 351
 private const val TRAINER_TEAM_ROCKET_GRUNT_2 = 352
@@ -38,7 +73,16 @@ private const val TRAINER_TEAM_ROCKET_GRUNT_4 = 354
  * ```
  */
 internal object MtMoon_B2F_EventScript_DomeFossil : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_DomeFossil")
+  override suspend fun run(ctx: ScriptContext) =
+      takeFossil(
+          ctx,
+          MtMoon_B2F.YouWantDomeFossil,
+          MtMoon_B2F.ObtainedDomeFossil,
+          Items.DOME_FOSSIL,
+          KantoFlags.FLAG_GOT_DOME_FOSSIL,
+          KantoFlags.FLAG_HIDE_DOME_FOSSIL,
+          KantoFlags.FLAG_HIDE_HELIX_FOSSIL,
+      )
 }
 
 /**
@@ -69,7 +113,16 @@ internal object MtMoon_B2F_EventScript_DomeFossil : Script {
  * ```
  */
 internal object MtMoon_B2F_EventScript_HelixFossil : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_HelixFossil")
+  override suspend fun run(ctx: ScriptContext) =
+      takeFossil(
+          ctx,
+          MtMoon_B2F.YouWantHelixFossil,
+          MtMoon_B2F.ObtainedHelixFossil,
+          Items.HELIX_FOSSIL,
+          KantoFlags.FLAG_GOT_HELIX_FOSSIL,
+          KantoFlags.FLAG_HIDE_HELIX_FOSSIL,
+          KantoFlags.FLAG_HIDE_DOME_FOSSIL,
+      )
 }
 
 /**
@@ -85,7 +138,20 @@ internal object MtMoon_B2F_EventScript_HelixFossil : Script {
  * ```
  */
 internal object MtMoon_B2F_EventScript_Miguel : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_B2F_EventScript_Miguel")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_FOSSIL_FROM_MT_MOON)) {
+      ctx.say(MtMoon_B2F.LabOnCinnabarRegeneratesFossils)
+      return
+    }
+    if (ctx.isTrainerDefeated(TRAINER_SUPER_NERD_MIGUEL)) {
+      ctx.say(MtMoon_B2F.WellEachTakeAFossil)
+      return
+    }
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SUPER_NERD_MIGUEL, MtMoon_B2F.MiguelIntro, MtMoon_B2F.MiguelDefeat))
+        return
+    ctx.say(MtMoon_B2F.WellEachTakeAFossil)
+  }
 }
 
 internal object MtMoon_B2F_EventScript_Grunt4 : Script {

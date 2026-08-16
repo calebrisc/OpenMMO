@@ -242,6 +242,20 @@ constructor(
       ctx.reply("${target.info.name} now has developer access.")
       return
     }
+    if (what == "elev") {
+      val on = ctx.args.getOrNull(1)?.lowercase()
+      if (on != "on" && on != "off") {
+        ctx.reply(
+            "Elevation rules are ${if (MovementTuning.elevationRules) "on" else "off"}. " +
+                "/probe elev on|off -- turn them off if a map fences you in.")
+        return
+      }
+      MovementTuning.elevationRules = on == "on"
+      log.info { "Elevation rules set to ${MovementTuning.elevationRules}" }
+      ctx.reply("Elevation rules ${if (MovementTuning.elevationRules) "on" else "off"}.")
+      return
+    }
+
     if (what == "flagtable") {
       val mode = ctx.args.getOrNull(1)?.lowercase()
       if (mode != "real" && mode != "captured") {
