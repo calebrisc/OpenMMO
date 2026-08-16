@@ -15,6 +15,8 @@ import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
+import de.fiereu.openmmo.server.game.services.BoxSyncTuning
+import de.fiereu.openmmo.server.game.services.GtlTuning
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MovementTuning
@@ -62,7 +64,8 @@ constructor(
   override val name = "probe"
   override val usage =
       "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
-          "/probe requesttype <n> | /probe prompt on|off | /probe sweep <name>"
+          "/probe requesttype <n> | /probe prompt on|off | /probe sweep <name> | " +
+          "/probe box <0|1|2> | /probe gtl on|off"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
@@ -252,6 +255,37 @@ constructor(
       ctx.reply("Flags set to $value and your state resent. Try the bike now.")
       return
     }
+    if (what == "gtl") {
+      val on = ctx.args.getOrNull(1)?.lowercase()
+      if (on != "on" && on != "off") {
+        ctx.reply(
+            "The trade board is ${if (GtlTuning.answerBoards) "answered" else "silent"}. " +
+                "Turn it on with /probe gtl on, then open the Global Trade Link.")
+        return
+      }
+      GtlTuning.answerBoards = on == "on"
+      log.info { "Trade board answering set to ${GtlTuning.answerBoards}" }
+      ctx.reply(
+          if (GtlTuning.answerBoards) "The board will answer now. Open it and say what it draws."
+          else "The board is silent again.")
+      return
+    }
+
+    if (what == "box") {
+      val mode = ctx.args.getOrNull(1)?.toIntOrNull()
+      if (mode == null || mode !in 0..2) {
+        ctx.reply(
+            "Box resend mode is ${BoxSyncTuning.mode}. 0 sends each container once, " +
+                "1 empties it first, 2 sends every container the login sends. " +
+                "Set with /probe box <0|1|2>, then move a monster and look at the box.")
+        return
+      }
+      BoxSyncTuning.mode = mode
+      log.info { "Box resend mode set to $mode" }
+      ctx.reply("Box resend mode $mode. Move a monster now and say what the box does.")
+      return
+    }
+
     if (what == "mm") {
       val walk = ctx.args.getOrNull(1)?.toIntOrNull()
       val run = ctx.args.getOrNull(2)?.toIntOrNull()

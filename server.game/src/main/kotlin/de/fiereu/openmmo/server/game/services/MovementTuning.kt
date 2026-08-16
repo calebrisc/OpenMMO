@@ -30,3 +30,35 @@ object MovementTuning {
 object PlayerStateTuning {
   @Volatile var flags: Byte = 0
 }
+
+/**
+ * How a container is sent again after its contents moved.
+ *
+ * The box draws correctly at login and wrongly after a move, which is the whole evidence for this
+ * being about the resend rather than the record: the same monsters, through the same codec, land
+ * right the first time. So what differs is how the client is told, and the login is the only shape
+ * known to work. Whether a container packet replaces what the client holds or adds to it is
+ * undecoded, and the difference only shows once there is something to replace.
+ *
+ * Tunable with /probe box so the three can be told apart in one sitting instead of one deploy each.
+ */
+object BoxSyncTuning {
+  /**
+   * 0 sends each container once, as the server always has. 1 empties the container first and then
+   * fills it, for a client that adds rather than replaces. 2 sends every container the login sends,
+   * in the login's order, which is the shape known to draw correctly.
+   */
+  @Volatile var mode: Int = 1
+}
+
+/**
+ * Whether the trade board is answered at all.
+ *
+ * A page packet is a shape this client has never been sent by us, and the last time an undecoded
+ * s2c was tried on a live client three of its five values killed the client outright. So the board
+ * stays silent until somebody deliberately turns it on with /probe gtl, and the first look at it is
+ * a decision rather than an accident.
+ */
+object GtlTuning {
+  @Volatile var answerBoards: Boolean = false
+}

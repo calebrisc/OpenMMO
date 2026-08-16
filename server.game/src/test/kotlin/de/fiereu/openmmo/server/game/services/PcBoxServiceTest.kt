@@ -60,8 +60,31 @@ class PcBoxServiceTest :
           val toggles = session.sent.filterIsInstance<PcTogglePacket>()
           toggles.last().shown shouldBe true
           // Drawn from what the player actually holds, not whatever the client had cached.
-          session.sent.filterIsInstance<PokemonContainerPacket>().size shouldBe 2
-          id shouldBe id
+          val containers = session.sent.filterIsInstance<PokemonContainerPacket>()
+          containers.filter { !it.delete }.map { it.container } shouldBe
+              listOf(PokemonContainer.PARTY, PokemonContainer.PC)
+        }
+      }
+
+      test("each container is emptied before it is filled, so a stale entry cannot survive") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(2)
+
+          fx.boxes.open(session, id)
+
+          // The box draws correctly at login and wrongly after a move, so what the client does
+          // with a container it already holds is the open question. Emptying it first is the
+          // current answer, and /probe box is what settles it against a real client.
+          BoxSyncTuning.mode shouldBe 1
+          val containers = session.sent.filterIsInstance<PokemonContainerPacket>()
+          containers.map { it.container to it.delete } shouldBe
+              listOf(
+                  PokemonContainer.PARTY to true,
+                  PokemonContainer.PARTY to false,
+                  PokemonContainer.PC to true,
+                  PokemonContainer.PC to false,
+              )
         }
       }
 

@@ -283,6 +283,53 @@ constructor(
     }
   }
 
+  /** Where a monster sits: which container, and which slot of it. */
+  data class Placement(val container: PokemonContainer, val slot: Short)
+
+  /**
+   * Puts monsters in new places, all of them in one durable write.
+   *
+   * A move out of the party used to be a removal followed by an addition: two writes with a moment
+   * between them where the monster belonged to nobody. The removal persisted first, so when the
+   * addition failed -- a slot the client believed was free but was not, say -- the monster was gone
+   * from the database for good. Here either every monster lands or none of them moves, which also
+   * means a swap is expressible: both ends change in the same write.
+   *
+   * False when the character does not hold one of them, or when the write did not stick.
+   */
+  suspend fun repositionPokemon(characterId: Long, moves: Map<Long, Placement>): Boolean {
+    if (moves.isEmpty()) return true
+    val held = characters[characterId] ?: return false
+    val undo =
+        (held.pokemon + held.pcStorage)
+            .filter { it.id in moves.keys }
+            .associate { it.id to Placement(it.container, it.containerSlot) }
+    if (undo.size != moves.size) return false
+    return mutateDurably(
+        characterId,
+        apply = { it.placing(moves) },
+        rollback = { it.placing(undo) },
+    )
+  }
+
+  /**
+   * The party is what is in the party container and everything else is storage, which is how a
+   * character is read back out of the database. Anything the player cannot reach from the box -- a
+   * monster on the market, say -- therefore stays in the aggregate rather than being dropped from
+   * it, and dropping it would delete its row.
+   */
+  private fun StoredCharacter.placing(moves: Map<Long, Placement>): StoredCharacter {
+    val moved =
+        (pokemon + pcStorage).map { monster ->
+          moves[monster.id]?.let { monster.copy(container = it.container, containerSlot = it.slot) }
+              ?: monster
+        }
+    return copy(
+        pokemon = moved.filter { it.container == PokemonContainer.PARTY }.toMutableList(),
+        pcStorage = moved.filter { it.container != PokemonContainer.PARTY }.toMutableList(),
+    )
+  }
+
   /** False when the change could not be written, in which case the balance is left as it was. */
   suspend fun addMoney(characterId: Long, amount: Int): Boolean =
       mutateDurably(

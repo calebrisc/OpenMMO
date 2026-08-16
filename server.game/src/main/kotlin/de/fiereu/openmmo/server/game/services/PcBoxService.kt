@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.services
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.MAX_PARTY_SIZE
+import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.net.game.packets.PcBoxRenamePacket
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
@@ -67,38 +68,41 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
       return
     }
 
-    // Within the same container this is only a reorder, which the slot alone carries.
-    if (inParty != null && destination == PokemonContainer.PARTY) {
-      characterStore.updatePokemon(charId, monster.copy(containerSlot = packet.slotIndex.toShort()))
-      characterStore.flushCharacterAsync(charId)
-      resend(ctx, charId)
-      return
-    }
-    if (inPc != null && destination == PokemonContainer.PC) {
-      characterStore.updatePokemon(charId, monster.copy(containerSlot = packet.slotIndex.toShort()))
-      characterStore.flushCharacterAsync(charId)
-      resend(ctx, charId)
-      return
-    }
-
-    val taken = characterStore.removePokemon(charId, monster.id)
-    if (taken == null) {
-      ctx.send(notice("That could not be moved."))
-      resend(ctx, charId)
-      return
-    }
     val slot = packet.slotIndex.toShort().takeIf { it >= 0 } ?: freeSlot(charId, destination)
-    val moved = taken.copy(container = destination, containerSlot = slot)
-    if (!characterStore.addPokemon(charId, moved)) {
-      // Put it back exactly where it was rather than leaving it in neither list.
-      characterStore.addPokemon(charId, taken)
+    if (!move(charId, monster, destination, slot)) {
       ctx.send(notice("That could not be moved."))
       resend(ctx, charId)
       return
     }
-    characterStore.flushCharacterAsync(charId)
-    log.info { "char=$charId moved ${moved.id} to $destination slot $slot" }
+    log.info { "char=$charId stored ${monster.id} in $destination slot $slot" }
     resend(ctx, charId)
+  }
+
+  /**
+   * Puts [monster] in [slot] of [destination], and whatever was already there where it came from.
+   *
+   * Both ends go in one write. Nothing is taken off the character before its new place is known to
+   * be writable, so a slot that turns out to be taken costs the player a refused move rather than
+   * the monster.
+   */
+  private suspend fun move(
+      charId: Long,
+      monster: Pokemon,
+      destination: PokemonContainer,
+      slot: Short,
+  ): Boolean {
+    val stored = characterStore.getCharacter(charId) ?: return false
+    val occupying =
+        (if (destination == PokemonContainer.PC) stored.pcStorage else stored.pokemon).firstOrNull {
+          it.containerSlot == slot && it.id != monster.id
+        }
+    val moves = buildMap {
+      put(monster.id, CharacterStore.Placement(destination, slot))
+      occupying?.let {
+        put(it.id, CharacterStore.Placement(monster.container, monster.containerSlot))
+      }
+    }
+    return characterStore.repositionPokemon(charId, moves)
   }
 
   /**
@@ -141,23 +145,51 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
     return (generateSequence(0) { it + 1 }.first { it.toShort() !in used }).toShort()
   }
 
-  /** Both containers, so the client's two panes agree with the server after any move. */
+  /**
+   * Both containers, so the client's two panes agree with the server after any move.
+   *
+   * The shape of the resend is [BoxSyncTuning]'s to decide: the box draws correctly at login and
+   * wrongly afterwards, so what the client does with a container it already holds is the open
+   * question, not what is in it.
+   */
   private fun resend(ctx: SessionContext, charId: Long) {
     val stored = characterStore.getCharacter(charId) ?: return
-    ctx.send(
-        PokemonContainerPacket(
-            container = PokemonContainer.PARTY,
-            hasChange = true,
-            delete = false,
-            pokemon = stored.pokemon.sortedBy { it.containerSlot },
-        ))
-    ctx.send(
-        PokemonContainerPacket(
-            container = PokemonContainer.PC,
-            hasChange = true,
-            delete = false,
-            pokemon = stored.pcStorage.sortedBy { it.containerSlot },
-        ))
+    val party = stored.pokemon.sortedBy { it.containerSlot }
+    val pc = stored.pcStorage.sortedBy { it.containerSlot }
+    val contents =
+        if (BoxSyncTuning.mode == 2) {
+          // The login's own list, in the login's order, which is the one shape known to draw.
+          listOf(
+              PokemonContainer.PARTY to party,
+              PokemonContainer.PC to pc,
+              PokemonContainer.BATTLE_BOX_1 to emptyList(),
+              PokemonContainer.BATTLE_BOX_2 to emptyList(),
+              PokemonContainer.DAYCARE to emptyList(),
+              PokemonContainer.UNKNOWN_13 to emptyList(),
+              PokemonContainer.UNKNOWN_14 to emptyList(),
+          )
+        } else {
+          listOf(PokemonContainer.PARTY to party, PokemonContainer.PC to pc)
+        }
+
+    for ((container, pokemon) in contents) {
+      if (BoxSyncTuning.mode == 1) {
+        ctx.send(
+            PokemonContainerPacket(
+                container = container,
+                hasChange = true,
+                delete = true,
+                pokemon = emptyList(),
+            ))
+      }
+      ctx.send(
+          PokemonContainerPacket(
+              container = container,
+              hasChange = true,
+              delete = false,
+              pokemon = pokemon,
+          ))
+    }
   }
 
   /**
@@ -204,31 +236,21 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
       return
     }
 
-    // Within one container this is only a renumbering, so nothing has to leave a list.
-    if (from == to) {
-      characterStore.updatePokemon(charId, moving.copy(containerSlot = p.toSlot.toShort()))
-      occupying?.let {
-        characterStore.updatePokemon(charId, it.copy(containerSlot = p.fromSlot.toShort()))
-      }
-      characterStore.flushCharacterAsync(charId)
+    // One write for both ends, so a renumbering, a move and a swap are all the same operation and
+    // none of them can half happen.
+    val moves = buildMap {
+      put(moving.id, CharacterStore.Placement(to, p.toSlot.toShort()))
+      occupying?.let { put(it.id, CharacterStore.Placement(from, p.fromSlot.toShort())) }
+    }
+    if (!characterStore.repositionPokemon(charId, moves)) {
+      ctx.send(notice("That could not be moved."))
       resend(ctx, charId)
       return
     }
-
-    val taken = characterStore.removePokemon(charId, moving.id)
-    if (taken == null) {
-      resend(ctx, charId)
-      return
+    log.info {
+      "char=$charId moved ${moving.id} from $from ${p.fromSlot} to $to ${p.toSlot}" +
+          (occupying?.let { ", swapping with ${it.id}" } ?: "")
     }
-    val displaced = occupying?.let { characterStore.removePokemon(charId, it.id) }
-    characterStore.addPokemon(
-        charId, taken.copy(container = to, containerSlot = p.toSlot.toShort()))
-    displaced?.let {
-      characterStore.addPokemon(
-          charId, it.copy(container = from, containerSlot = p.fromSlot.toShort()))
-    }
-    characterStore.flushCharacterAsync(charId)
-    log.info { "char=$charId moved ${taken.id} from $from ${p.fromSlot} to $to ${p.toSlot}" }
     resend(ctx, charId)
   }
 }

@@ -8,6 +8,7 @@ import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
@@ -155,6 +156,73 @@ class CharacterStoreDurabilityTest :
 
           repo.saveCount.get() shouldBe writes
           store.getCharacter(id).shouldNotBeNull().items[17] shouldBe 1
+        }
+      }
+
+      // A move used to be a removal and an addition. The removal persisted first, so a failed
+      // addition left the monster in neither list and gone from the database.
+      test("a move that cannot be written leaves the monster where it was") {
+        runTest {
+          val repo = FakeCharacterRepository()
+          val store = CharacterStore(repo, EntityIdService(), backgroundScope)
+          val id = store.createCharacter(1, "Ash", CharacterGender.MALE, Region.HOENN).info.id
+          val monster = caughtMonster(id)
+          store.addPokemon(id, monster)
+
+          repo.failNextSave = true
+          store.repositionPokemon(
+              id,
+              mapOf(monster.id to CharacterStore.Placement(PokemonContainer.PC, 3)),
+          ) shouldBe false
+
+          store.getCharacter(id).shouldNotBeNull().pokemon.single().id shouldBe monster.id
+          repo.saved[id]!!.pokemon.single().id shouldBe monster.id
+          repo.saved[id]!!.pcStorage.shouldBeEmpty()
+        }
+      }
+
+      test("two monsters change places in one write") {
+        runTest {
+          val repo = FakeCharacterRepository()
+          val store = CharacterStore(repo, EntityIdService(), backgroundScope)
+          val id = store.createCharacter(1, "Ash", CharacterGender.MALE, Region.HOENN).info.id
+          val inParty = caughtMonster(id)
+          val boxed = caughtMonster(id).copy(container = PokemonContainer.PC, containerSlot = 0)
+          store.addPokemon(id, inParty)
+          store.addPokemon(id, boxed)
+
+          store.repositionPokemon(
+              id,
+              mapOf(
+                  inParty.id to CharacterStore.Placement(PokemonContainer.PC, 0),
+                  boxed.id to CharacterStore.Placement(PokemonContainer.PARTY, 0),
+              ),
+          ) shouldBe true
+
+          repo.saved[id]!!.pokemon.single().id shouldBe boxed.id
+          repo.saved[id]!!.pcStorage.single().id shouldBe inParty.id
+        }
+      }
+
+      test("a monster the character does not hold moves nothing") {
+        runTest {
+          val repo = FakeCharacterRepository()
+          val store = CharacterStore(repo, EntityIdService(), backgroundScope)
+          val id = store.createCharacter(1, "Ash", CharacterGender.MALE, Region.HOENN).info.id
+          val monster = caughtMonster(id)
+          store.addPokemon(id, monster)
+          val writes = repo.saveCount.get()
+
+          store.repositionPokemon(
+              id,
+              mapOf(
+                  monster.id to CharacterStore.Placement(PokemonContainer.PC, 0),
+                  9999L to CharacterStore.Placement(PokemonContainer.PC, 1),
+              ),
+          ) shouldBe false
+
+          repo.saveCount.get() shouldBe writes
+          store.getCharacter(id).shouldNotBeNull().pokemon.single().id shouldBe monster.id
         }
       }
     })
