@@ -5,6 +5,7 @@ import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.enums.TileBehavior
 import de.fiereu.openmmo.maps.MapManager
+import de.fiereu.openmmo.net.game.packets.EntityFaceTurnPacket
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
 import de.fiereu.openmmo.server.game.script.Script
@@ -54,6 +55,7 @@ constructor(
       if (npcService.getNpcEntityId(regionId, bankId, mapId, npc.entityIdx) == npcEntityId) {
         val script = scriptRegistry.forLabel(npc.script)
         if (script != null) {
+          faceThePlayer(session, npcEntityId)
           runScript(session, state, script, npcEntityId)
         } else {
           log.info { "NPC entityIdx=${npc.entityIdx} script=${npc.script} has no wired dialog" }
@@ -131,10 +133,26 @@ constructor(
           (eventDir == "BG_EVENT_PLAYER_FACING_WEST" && facing == Direction.LEFT) ||
           (eventDir == "BG_EVENT_PLAYER_FACING_EAST" && facing == Direction.RIGHT)
 
+  /**
+   * Turns the npc towards whoever just spoke to it, which is the decomp's `faceplayer` and the
+   * first thing almost every one of these scripts does.
+   *
+   * A live server answers an interact with exactly this, once, before the first dialog box: `0x07
+   * <entityId> FF`. The facing byte is not one of the four directions — it is 0xFF, sent verbatim
+   * here because that is what was captured. Nothing on this server had ever turned an npc, so they
+   * all held whatever way they were standing while they talked to you.
+   */
+  private fun faceThePlayer(session: SessionContext, npcEntityId: Long) =
+      session.send(EntityFaceTurnPacket(entityId = npcEntityId, facing = FACE_THE_INTERACTOR))
+
   private fun runScript(
       session: SessionContext,
       state: PlayerState,
       script: Script,
       entityId: Long,
   ) = scriptRunner.run(session, state, script, entityId)
+
+  private companion object {
+    const val FACE_THE_INTERACTOR: Byte = -1
+  }
 }

@@ -17,11 +17,16 @@ data class TextPokemonSpeciesArg(
     val speciesId: Short,
 ) : DialogMessageArg()
 
+/**
+ * Read off a live server, where it is five bytes and not seven: `03 00 01 99 13` and `03 00 01 9A
+ * 13` on two boxes of one NPC's dialogue, whose values 5017 and 5018 are consecutive item ids. This
+ * carried a second short that no capture has ever had, so reading a real one overran the buffer and
+ * the whole packet was dropped.
+ */
 data class TextCreatureArg(
     val slot: Byte,
     val statusId: Byte,
-    val value1: Short,
-    val value2: Short,
+    val value: Short,
 ) : DialogMessageArg()
 
 private val DialogMessageArgCodec: Codec<DialogMessageArg> =
@@ -45,7 +50,7 @@ private val DialogMessageArgCodec: Codec<DialogMessageArg> =
               TextPokemonSpeciesArg(buf.readByte(), buf.readByte(), S16LE.read(buf))
             }
 
-            3 -> TextCreatureArg(buf.readByte(), buf.readByte(), S16LE.read(buf), S16LE.read(buf))
+            3 -> TextCreatureArg(buf.readByte(), buf.readByte(), S16LE.read(buf))
             else -> throw MalformedPacketException("unknown dialog message arg tag $tag")
           }
 
@@ -77,8 +82,7 @@ private val DialogMessageArgCodec: Codec<DialogMessageArg> =
             buf.writeByte(3)
             buf.writeByte(value.slot)
             buf.writeByte(value.statusId)
-            S16LE.write(buf, value.value1)
-            S16LE.write(buf, value.value2)
+            S16LE.write(buf, value.value)
           }
         }
       }

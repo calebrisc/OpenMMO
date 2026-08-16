@@ -29,10 +29,17 @@ internal val CLOSE_DIALOG_ACTION =
         detail = ByteArray(0),
     )
 
+/**
+ * The optional tail of a dialog box.
+ *
+ * [detail] defaults to nothing because that is what a live server sends: every one of the 369 plain
+ * boxes in the archive is exactly 19 bytes, the header and an empty argument list, and not one
+ * is 20. This server used to append a zero byte to all of them.
+ */
 data class DialogPresentation(
     val messageArgs: List<DialogMessageArg> = emptyList(),
     val contextValue: Int = 0,
-    val detail: ByteArray = byteArrayOf(0),
+    val detail: ByteArray = ByteArray(0),
 )
 
 @Singleton
