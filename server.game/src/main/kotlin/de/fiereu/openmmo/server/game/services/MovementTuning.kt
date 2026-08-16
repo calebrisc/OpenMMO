@@ -46,7 +46,15 @@ object BoxSyncTuning {
   /**
    * 0 sends each container once, as the server always has. 1 empties the container first and then
    * fills it, for a client that adds rather than replaces. 2 sends every container the login sends,
-   * in the login's order, which is the shape known to draw correctly.
+   * in the login's order, which is the shape known to draw correctly. None of those three changed
+   * anything on a live client, which is the evidence that the box is not drawn from a container
+   * packet at all.
+   *
+   * 3 adds `StorageContextWindowPacket`, which the server has never sent. Its row is a slot, four
+   * unnamed shorts, a quantity, a ball and a location -- a ball and a catch location are things a
+   * monster has, and a compact row per cell is what a thirty cell grid would be painted from,
+   * rather than the full record we send for each. The four shorts are a guess and the point of
+   * sending it is to find out whether the grid moves at all.
    */
   @Volatile var mode: Int = 1
 }

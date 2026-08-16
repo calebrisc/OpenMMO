@@ -342,11 +342,12 @@ constructor(
 
     if (what == "box") {
       val mode = ctx.args.getOrNull(1)?.toIntOrNull()
-      if (mode == null || mode !in 0..2) {
+      if (mode == null || mode !in 0..3) {
         ctx.reply(
             "Box resend mode is ${BoxSyncTuning.mode}. 0 sends each container once, " +
-                "1 empties it first, 2 sends every container the login sends. " +
-                "Set with /probe box <0|1|2>, then move a monster and look at the box.")
+                "1 empties it first, 2 sends every container the login sends, " +
+                "3 adds the storage window the server has never sent. " +
+                "Set with /probe box <0|1|2|3>, then move a monster and look at the box.")
         return
       }
       BoxSyncTuning.mode = mode

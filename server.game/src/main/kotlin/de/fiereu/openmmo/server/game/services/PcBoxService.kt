@@ -10,6 +10,8 @@ import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
 import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
+import de.fiereu.openmmo.net.game.packets.StorageBoxItem
+import de.fiereu.openmmo.net.game.packets.StorageContextWindowPacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -171,6 +173,25 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
         } else {
           listOf(PokemonContainer.PARTY to party, PokemonContainer.PC to pc)
         }
+
+    if (BoxSyncTuning.mode == 3) {
+      ctx.send(
+          StorageContextWindowPacket(
+              kind = PokemonContainer.PC.ordinal.toByte(),
+              items =
+                  pc.map {
+                    StorageBoxItem(
+                        slot = it.containerSlot.toByte(),
+                        valueA = it.dexId.toShort(),
+                        valueB = it.level.toShort(),
+                        valueC = 0,
+                        valueD = 0,
+                        quantity = 1,
+                        ball = 0,
+                        location = 0,
+                    )
+                  }))
+    }
 
     for ((container, pokemon) in contents) {
       if (BoxSyncTuning.mode == 1) {
