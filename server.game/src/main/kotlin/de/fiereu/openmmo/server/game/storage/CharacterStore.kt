@@ -199,6 +199,39 @@ constructor(
     mutate(info.id) { it.copy(info = info) }
   }
 
+  /**
+   * How many steps a repel has left, and which one is burning down.
+   *
+   * The column and the wire field both existed from the start and nothing ever wrote them, so every
+   * repel in the game was an item that said it did nothing.
+   */
+  fun setRepel(characterId: Long, steps: Int, itemId: Int) {
+    mutate(characterId) { stored ->
+      stored.copy(
+          info =
+              stored.info.copy(
+                  repelLeft = steps.toShort(),
+                  repelItemId = itemId.toShort(),
+              ))
+    }
+  }
+
+  /** Spends one step of a running repel and reports what is left. */
+  fun spendRepelStep(characterId: Long): Int {
+    val left = getCharacter(characterId)?.info?.repelLeft?.toInt() ?: 0
+    if (left <= 0) return 0
+    val now = left - 1
+    mutate(characterId) { stored ->
+      stored.copy(
+          info =
+              stored.info.copy(
+                  repelLeft = now.toShort(),
+                  repelItemId = if (now == 0) 0 else stored.info.repelItemId,
+              ))
+    }
+    return now
+  }
+
   fun updatePosition(
       characterId: Long,
       x: Short,

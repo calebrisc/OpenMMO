@@ -295,6 +295,10 @@ constructor(
 
     // Story coordinate events take precedence over random encounters on the same step.
     if (!mapScriptService.onStep(ctx, state, currentMap, toX, toY)) {
+      // A repel counts steps taken, wherever they are taken, and says so as it runs out.
+      if (characterStore.spendRepelStep(charId) == 0 && stored.info.repelLeft > 0) {
+        ctx.send(notice("The repel wore off."))
+      }
       encounterService.onStep(ctx, charId, currentMap, toX, toY)
     }
   }

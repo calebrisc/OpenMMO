@@ -91,7 +91,7 @@ class BattleRewards @Inject constructor() {
   }
 }
 
-private fun EVs.value(stat: PokemonStat): Int =
+internal fun EVs.value(stat: PokemonStat): Int =
     when (stat) {
       PokemonStat.HP -> hp
       PokemonStat.ATTACK -> atk
@@ -101,7 +101,7 @@ private fun EVs.value(stat: PokemonStat): Int =
       PokemonStat.SPEED -> spd
     }
 
-private fun EVs.assign(stat: PokemonStat, value: Int) {
+internal fun EVs.assign(stat: PokemonStat, value: Int) {
   when (stat) {
     PokemonStat.HP -> hp = value
     PokemonStat.ATTACK -> atk = value

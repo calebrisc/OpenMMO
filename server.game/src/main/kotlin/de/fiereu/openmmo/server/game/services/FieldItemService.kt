@@ -2,10 +2,13 @@ package de.fiereu.openmmo.server.game.services
 
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
+import de.fiereu.openmmo.common.PokemonMove
 import de.fiereu.openmmo.common.enums.PokemonContainer
+import de.fiereu.openmmo.common.enums.PokemonStat
 import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.items.ItemRegistry
+import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.DialogOptionPacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.pokemon.EvolutionTable
@@ -14,6 +17,8 @@ import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.ExpCurves
 import de.fiereu.openmmo.server.game.battle.MoveLearner
 import de.fiereu.openmmo.server.game.battle.StatCalculator
+import de.fiereu.openmmo.server.game.battle.assign
+import de.fiereu.openmmo.server.game.battle.value
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.StoredCharacter
@@ -40,6 +45,7 @@ constructor(
     private val battles: BattleService,
     private val moveLearner: MoveLearner,
     private val teaching: MoveTeachingService,
+    private val moves: MoveRegistry,
 ) {
 
   suspend fun onUseItem(event: PacketEvent<DialogOptionPacket>) {
@@ -86,6 +92,33 @@ constructor(
     val machineMove = MachineMoves.moveFor(item.name)
     if (machineMove != null) {
       teaching.offer(ctx, charId, machineMove, item.name)
+      return
+    }
+
+    // A repel keeps wild monsters off for a number of steps. The character already carried the
+    // step counter and the client already reads it; nothing had ever set it.
+    val repelSteps = BattleItems.REPELS[item]
+    if (repelSteps != null) {
+      characterStore.setRepel(charId, repelSteps, packet.optionId)
+      characterStore.addItem(charId, packet.optionId, -1)
+      characterStore.flushCharacterAsync(charId)
+      sendBag(ctx, charId, packet.optionId)
+      ctx.send(notice("${item.name} will keep weak monsters away for $repelSteps steps."))
+      return
+    }
+
+    BattleItems.VITAMINS[item]?.let { stat ->
+      vitamin(ctx, charId, packet.entityId, packet.optionId, item, stat, count)
+      return
+    }
+
+    BattleItems.PP_RESTORES[item]?.let { (amount, everyMove) ->
+      restorePp(ctx, charId, packet.entityId, packet.optionId, item, amount, everyMove)
+      return
+    }
+
+    BattleItems.REVIVES[item]?.let { fraction ->
+      revive(ctx, charId, packet.entityId, packet.optionId, item, fraction)
       return
     }
 
@@ -315,7 +348,123 @@ constructor(
         charId, evolved.copy(hp = evolved.hp.toInt().coerceAtMost(room).toShort()))
     log.info { "char=$charId evolved $was into ${definition.name}" }
   }
+
+  /**
+   * Ten effort points in one stat, up to the hundred a vitamin can reach.
+   *
+   * The effort cap a vitamin obeys is lower than the one training obeys, so a monster raised to a
+   * hundred in a stat by fighting cannot be pushed any further by drinking.
+   */
+  private suspend fun vitamin(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      itemId: Int,
+      item: ItemDef,
+      stat: PokemonStat,
+      count: Int,
+  ) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val monster = target(stored, entityId) ?: return
+    val definition = species.get(monster.dexId) ?: return
+    var spent = 0
+    val evs = monster.eVs
+    repeat(count) {
+      val now = evs.value(stat)
+      val room = minOf(VITAMIN_CAP - now, EV_TOTAL_CAP - evs.total)
+      if (room <= 0) return@repeat
+      evs.assign(stat, now + minOf(VITAMIN_STEP, room))
+      spent++
+    }
+    if (spent == 0) {
+      ctx.send(notice("It will have no effect on ${definition.name}."))
+      return
+    }
+    characterStore.updatePokemon(charId, monster.copy(eVs = evs))
+    characterStore.addItem(charId, itemId, -spent)
+    characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId, itemId)
+    log.info {
+      "char=$charId used $spent x ${item.name} on $entityId: ${stat.name}=${evs.value(stat)}"
+    }
+    ctx.send(notice("${definition.name} is better at ${stat.name.lowercase().replace('_', ' ')}!"))
+    sendParty(ctx, charId)
+  }
+
+  /** Power points back into one move, or into all of them. */
+  private suspend fun restorePp(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      itemId: Int,
+      item: ItemDef,
+      amount: Int,
+      everyMove: Boolean,
+  ) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val monster = target(stored, entityId) ?: return
+    var restored = 0
+    val known =
+        monster.moves.map { move ->
+          val full = moves.get(move.id.toInt())?.pp ?: 0
+          val room = full - move.pp
+          // A single move item takes the first move that is actually short of pp, since nothing
+          // asks the player which one.
+          val giving = if (move.id.toInt() == 0 || room <= 0) 0 else minOf(amount, room)
+          if (giving > 0 && (everyMove || restored == 0)) {
+            restored += giving
+            PokemonMove(move.id, (move.pp + giving).toByte())
+          } else {
+            move
+          }
+        }
+    if (restored == 0) {
+      ctx.send(notice("Its moves are already full of power points."))
+      return
+    }
+    characterStore.updatePokemon(charId, monster.copy(moves = known))
+    characterStore.addItem(charId, itemId, -1)
+    characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId, itemId)
+    log.info { "char=$charId used ${item.name} on $entityId: restored $restored pp" }
+    ctx.send(notice("Power points were restored."))
+    sendParty(ctx, charId)
+  }
+
+  /**
+   * Brings a fainted monster back. Anything still standing is left alone, as the games leave it.
+   */
+  private suspend fun revive(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      itemId: Int,
+      item: ItemDef,
+      fraction: Int,
+  ) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val monster = target(stored, entityId) ?: return
+    val definition = species.get(monster.dexId) ?: return
+    if (monster.hp > 0) {
+      ctx.send(notice("${definition.name} has not fainted."))
+      return
+    }
+    val back = (StatCalculator.computeAll(definition, monster).hp / fraction).coerceAtLeast(1)
+    characterStore.updatePokemon(
+        charId, monster.copy(hp = back.toShort(), status = StatusCondition.NONE))
+    characterStore.addItem(charId, itemId, -1)
+    characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId, itemId)
+    log.info { "char=$charId used ${item.name} on $entityId: revived to $back" }
+    ctx.send(notice("${definition.name} is back on its feet!"))
+    sendParty(ctx, charId)
+  }
 }
+
+/** A vitamin stops at a hundred, well short of the two hundred and fifty two training reaches. */
+private const val VITAMIN_CAP = 100
+private const val VITAMIN_STEP = 10
+private const val EV_TOTAL_CAP = 510
 
 /** What the registry calls the candy, allowing for the way the name is punctuated. */
 private val RARE_CANDY_NAMES = setOf("Rare Candy", "RareCandy", "RARE_CANDY")

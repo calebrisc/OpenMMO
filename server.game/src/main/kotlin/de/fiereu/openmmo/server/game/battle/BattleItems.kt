@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.battle
 
+import de.fiereu.openmmo.common.enums.PokemonStat
 import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.items.generated.Items
@@ -56,6 +57,51 @@ object BattleItems {
           Items.ICE_HEAL to BattleItemEffect(cures = setOf(StatusCondition.FREEZE)),
           Items.AWAKENING to BattleItemEffect(cures = setOf(StatusCondition.SLEEP)),
           Items.FULL_HEAL to BattleItemEffect(cures = ALL_STATUS),
+          // Paralysis had no cure at all: the marts sell this and it did nothing.
+          Items.PARLYZ_HEAL to BattleItemEffect(cures = setOf(StatusCondition.PARALYSIS)),
+          Items.ENERGYPOWDER to BattleItemEffect(heal = 50),
+          Items.ENERGY_ROOT to BattleItemEffect(heal = 200),
+          Items.HEAL_POWDER to BattleItemEffect(cures = ALL_STATUS),
+          Items.LAVA_COOKIE to BattleItemEffect(cures = ALL_STATUS),
+          Items.OLD_GATEAU to BattleItemEffect(cures = ALL_STATUS),
+          Items.BERRY_JUICE to BattleItemEffect(heal = 20),
+      )
+
+  /** What a revive brings a fainted monster back with, as a fraction of its maximum. */
+  val REVIVES: Map<ItemDef, Int> =
+      mapOf(
+          Items.REVIVE to 2,
+          Items.REVIVAL_HERB to 2,
+          Items.MAX_REVIVE to 1,
+          Items.SACRED_ASH to 1,
+      )
+
+  /** Ten effort points in one stat, which is what a vitamin is. */
+  val VITAMINS: Map<ItemDef, PokemonStat> =
+      mapOf(
+          Items.HP_UP to PokemonStat.HP,
+          Items.PROTEIN to PokemonStat.ATTACK,
+          Items.IRON to PokemonStat.DEFENSE,
+          Items.CARBOS to PokemonStat.SPEED,
+          Items.CALCIUM to PokemonStat.SP_ATTACK,
+          Items.ZINC to PokemonStat.SP_DEFENSE,
+      )
+
+  /** How much pp a restorative gives back, and whether it reaches every move. */
+  val PP_RESTORES: Map<ItemDef, Pair<Int, Boolean>> =
+      mapOf(
+          Items.ETHER to (10 to false),
+          Items.MAX_ETHER to (FULL_HEAL_AMOUNT to false),
+          Items.ELIXIR to (10 to true),
+          Items.MAX_ELIXIR to (FULL_HEAL_AMOUNT to true),
+      )
+
+  /** How many steps a repel keeps wild monsters away for. */
+  val REPELS: Map<ItemDef, Int> =
+      mapOf(
+          Items.REPEL to 100,
+          Items.SUPER_REPEL to 200,
+          Items.MAX_REPEL to 250,
       )
 
   fun effectOf(item: ItemDef): BattleItemEffect? = EFFECTS[item]

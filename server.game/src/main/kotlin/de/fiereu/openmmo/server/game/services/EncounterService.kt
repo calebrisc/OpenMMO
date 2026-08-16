@@ -44,6 +44,7 @@ constructor(
     if (!rollsEncounter(table)) return
     val slot = pickSlot(table) ?: return
     val level = random.nextInt(slot.minLevel, slot.maxLevel + 1)
+    if (repelTurnsAway(charId, level)) return
     log.info {
       "Wild encounter for char=$charId at ($x, $y): species ${slot.speciesId} level $level"
     }
@@ -61,6 +62,19 @@ constructor(
       behavior == TileBehavior.TALL_GRASS ||
           behavior == TileBehavior.LONG_GRASS ||
           (map.mapType == MapType.UNDERGROUND && behavior == TileBehavior.NORMAL)
+
+  /**
+   * Whether a running repel sends this monster away before it appears.
+   *
+   * The lead monster's level is the bar: anything weaker than what is walking in front stays away,
+   * which is why a repel stops mattering as a party outgrows a route.
+   */
+  private fun repelTurnsAway(charId: Long, wildLevel: Int): Boolean {
+    val stored = characterStore.getCharacter(charId) ?: return false
+    if (stored.info.repelLeft <= 0) return false
+    val lead = stored.pokemon.firstOrNull { it.hp > 0 }?.level?.toInt() ?: return false
+    return wildLevel < lead
+  }
 
   private fun hasUsablePartyMon(charId: Long): Boolean =
       characterStore.getCharacter(charId)?.pokemon?.any { it.hp > 0 } ?: false
