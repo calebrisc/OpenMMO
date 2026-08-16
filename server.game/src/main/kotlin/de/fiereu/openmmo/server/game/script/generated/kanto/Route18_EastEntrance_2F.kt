@@ -1,33 +1,23 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route18_EastEntrance_2F
+import de.fiereu.openmmo.dialog.generated.kanto.Trade
+import de.fiereu.openmmo.server.game.script.InGameTrades
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8008, INGAME_TRADE_LICKITUNG
- * call EventScript_GetInGameTradeSpeciesInfo
- * goto_if_set FLAG_DID_MARC_TRADE, Route18_EastEntrance_2F_EventScript_AlreadyTraded
- * msgbox Trade_Text_LookingForMonWannaTradeForMon, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, Route18_EastEntrance_2F_EventScript_DeclineTrade
- * call EventScript_ChooseMonForInGameTrade
- * goto_if_ge VAR_0x8004, PARTY_SIZE, Route18_EastEntrance_2F_EventScript_DeclineTrade
- * call EventScript_GetInGameTradeSpecies
- * goto_if_ne VAR_RESULT, VAR_0x8009, Route18_EastEntrance_2F_EventScript_NotRequestedMon
- * call EventScript_DoInGameTrade
- * msgbox Trade_Text_HeyThanks
- * setflag FLAG_DID_MARC_TRADE
- * release
- * end
- * ```
- */
 internal object Route18_EastEntrance_2F_EventScript_Haden : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route18_EastEntrance_2F_EventScript_Haden")
+      ctx.inGameTrade(
+          trade = InGameTrades.LICKITUNG,
+          flag = KantoFlags.FLAG_DID_MARC_TRADE,
+          offer = Trade.LookingForMonWannaTradeForMon,
+          decline = Trade.AwwOhWell,
+          wrongMon = Trade.WhatThatsNoMon,
+          thanks = Trade.HeyThanks,
+          afterwards = Trade.IsntMyOldMonGreat,
+      )
 }
 
 internal object Route18_EastEntrance_2F_EventScript_LeftBinoculars : Script {

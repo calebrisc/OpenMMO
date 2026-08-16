@@ -177,15 +177,8 @@ internal object Route114_EventScript_Angelina : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_ENERGY_POWDER
- * end
- * ```
- */
 internal object Route114_EventScript_ItemEnergyPowder : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route114_EventScript_ItemEnergyPowder")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ENERGYPOWDER)
 }
 
 internal object Route114_EventScript_Kai : Script {

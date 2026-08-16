@@ -101,6 +101,61 @@ internal constructor(
   /** Opens the Emerald starter picker. */
   suspend fun chooseHoennStarter(): Int = dialog.chooseHoennStarter(session, state)
 
+  /**
+   * The whole of one townsfolk trade, from the offer to the monster changing hands.
+   *
+   * Thirteen NPCs across Kanto and Hoenn run the identical decomp script with different text and a
+   * different row of the trade table, so they all call this and differ only in their arguments.
+   *
+   * **One departure from the decomp, deliberately.** The games call `ChoosePartyMon` here and let
+   * the player pick which monster to hand over; this server has no party picker (the only choice
+   * window it can build is the starter one, which is shaped for exactly three species). Rather than
+   * leave thirteen NPCs silent for however long that takes, the trade takes the first party monster
+   * of the species asked for. The player is still asked first and can still say no, and a trade
+   * they agree to can still fail for want of the right monster — the only thing they lose is the
+   * choice between two Abras, and the trade is level for level either way. Replace this with the
+   * real picker when the party-select protocol is known.
+   *
+   * @param flag set once the trade is done, and read on the way in to give [afterwards] instead.
+   */
+  internal suspend fun inGameTrade(
+      trade: InGameTrade,
+      flag: String,
+      offer: DialogLine,
+      decline: DialogLine,
+      wrongMon: DialogLine,
+      thanks: DialogLine,
+      afterwards: DialogLine,
+  ) {
+    // Both names are wanted on every line: STR_VAR_1 is what they are asking for, STR_VAR_2 what
+    // they are giving up.
+    val names =
+        listOf(
+            TextPokemonSpeciesArg(
+                partySlot = 1, stringVariable = 1, speciesId = trade.requested.toShort()),
+            TextPokemonSpeciesArg(
+                partySlot = 1, stringVariable = 2, speciesId = trade.offered.toShort()),
+        )
+
+    if (isFlagSet(flag)) {
+      dialog.showAndWait(
+          session, state, afterwards.textId, NPC, entityId, DialogPresentation(names))
+      return
+    }
+    if (!dialog.askYesNo(session, state, offer.textId, entityId, names)) {
+      dialog.showAndWait(session, state, decline.textId, NPC, entityId, DialogPresentation(names))
+      return
+    }
+    val received = player?.tradePokemon(session, state, trade)
+    if (received == null) {
+      dialog.showAndWait(session, state, wrongMon.textId, NPC, entityId, DialogPresentation(names))
+      return
+    }
+    // The flag lands with the monster, before the dialog that can be dropped part way through.
+    setFlag(flag)
+    dialog.showAndWait(session, state, thanks.textId, NPC, entityId, DialogPresentation(names))
+  }
+
   /** Ask a ROM-backed yes/no question from the interacted entity. */
   suspend fun askYesNo(line: DialogLine): Boolean =
       dialog.askYesNo(session, state, line.textId, entityId)

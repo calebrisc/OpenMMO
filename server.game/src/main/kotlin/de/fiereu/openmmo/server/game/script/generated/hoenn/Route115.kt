@@ -83,15 +83,8 @@ internal object Route115_EventScript_ItemSuperPotion : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.SUPER_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_FOCUS_PUNCH
- * end
- * ```
- */
 internal object Route115_EventScript_ItemTMFocusPunch : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route115_EventScript_ItemTMFocusPunch")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM01)
 }
 
 internal object Route115_EventScript_ItemIron : Script {

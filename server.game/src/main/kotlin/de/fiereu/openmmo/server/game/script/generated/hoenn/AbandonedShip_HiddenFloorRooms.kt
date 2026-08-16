@@ -21,16 +21,8 @@ internal object AbandonedShip_HiddenFloorRooms_EventScript_ItemScanner : Script 
       TODO("port AbandonedShip_HiddenFloorRooms_EventScript_ItemScanner")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_RAIN_DANCE
- * end
- * ```
- */
 internal object AbandonedShip_HiddenFloorRooms_EventScript_ItemTMRainDance : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port AbandonedShip_HiddenFloorRooms_EventScript_ItemTMRainDance")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM18)
 }
 
 internal object AbandonedShip_HiddenFloorRooms_EventScript_ItemWaterStone : Script {

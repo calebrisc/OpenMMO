@@ -12,32 +12,16 @@ internal object NewMauville_Inside_EventScript_ItemEscapeRope : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ESCAPE_ROPE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_THUNDER_STONE
- * end
- * ```
- */
 internal object NewMauville_Inside_EventScript_ItemThunderStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port NewMauville_Inside_EventScript_ItemThunderStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.THUNDERSTONE)
 }
 
 internal object NewMauville_Inside_EventScript_ItemFullHeal : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.FULL_HEAL)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PARALYZE_HEAL
- * end
- * ```
- */
 internal object NewMauville_Inside_EventScript_ItemParalyzeHeal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port NewMauville_Inside_EventScript_ItemParalyzeHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PARLYZ_HEAL)
 }
 
 /**

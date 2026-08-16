@@ -4,15 +4,8 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_TOXIC
- * end
- * ```
- */
 internal object FieryPath_EventScript_ItemTMToxic : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FieryPath_EventScript_ItemTMToxic")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM06)
 }
 
 /**

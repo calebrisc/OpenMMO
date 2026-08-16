@@ -1,32 +1,22 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Trade
+import de.fiereu.openmmo.server.game.script.InGameTrades
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setvar VAR_0x8008, INGAME_TRADE_SEEL
- * call EventScript_GetInGameTradeSpeciesInfo
- * goto_if_set FLAG_DID_SEELOR_TRADE, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_AlreadyTraded
- * msgbox Trade_Text_LookingForMonWannaTradeForMon, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_DeclineTrade
- * call EventScript_ChooseMonForInGameTrade
- * goto_if_ge VAR_0x8004, PARTY_SIZE, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_DeclineTrade
- * call EventScript_GetInGameTradeSpecies
- * goto_if_ne VAR_RESULT, VAR_0x8009, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NotRequestedMon
- * call EventScript_DoInGameTrade
- * msgbox Trade_Text_HeyThanks
- * setflag FLAG_DID_SEELOR_TRADE
- * release
- * end
- * ```
- */
 internal object CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_Garett : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_Garett")
+      ctx.inGameTrade(
+          trade = InGameTrades.SEEL,
+          flag = KantoFlags.FLAG_DID_SEELOR_TRADE,
+          offer = Trade.LookingForMonWannaTradeForMon,
+          decline = Trade.AwwOhWell,
+          wrongMon = Trade.WhatThatsNoMon,
+          thanks = Trade.HeyThanks,
+          afterwards = Trade.IsntMyOldMonGreat,
+      )
 }
 
 /**

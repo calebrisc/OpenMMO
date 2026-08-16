@@ -8,16 +8,8 @@ internal object MtPyre_Exterior_EventScript_ItemMaxPotion : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_SKILL_SWAP
- * end
- * ```
- */
 internal object MtPyre_Exterior_EventScript_ItemTMSkillSwap : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port MtPyre_Exterior_EventScript_ItemTMSkillSwap")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM48)
 }
 
 internal val MtPyre_ExteriorScripts: Map<String, Script> =

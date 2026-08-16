@@ -85,7 +85,7 @@ internal object StoryClientState {
   fun flagUpdate(regionId: Byte, key: String, enabled: Boolean): Any? {
     val id = flagId(regionId, key) ?: return null
     if (id >= SYSTEM_FLAG_START) return StoryFlagUpdatePacket(regionId, id, enabled)
-    return WorldFlagSetPacket(regionId, id.toShort(), if (enabled) 1 else 0)
+    return WorldFlagSetPacket.of(regionId, id.toShort(), enabled)
   }
 
   fun variables(regionId: Byte, vars: Map<String, Int>): List<PlayerVariableEntry> =

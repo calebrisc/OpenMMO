@@ -120,16 +120,8 @@ internal object PetalburgWoods_EventScript_Boy2 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PetalburgWoods.HiddenItemsExplanation)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_PARALYZE_HEAL
- * end
- * ```
- */
 internal object PetalburgWoods_EventScript_ItemParalyzeHeal : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PetalburgWoods_EventScript_ItemParalyzeHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PARLYZ_HEAL)
 }
 
 /**

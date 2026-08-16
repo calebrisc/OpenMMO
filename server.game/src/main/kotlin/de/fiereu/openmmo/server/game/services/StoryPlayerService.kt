@@ -4,6 +4,7 @@ import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.MAX_PARTY_SIZE
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
+import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.items.ItemDef
@@ -20,6 +21,7 @@ import de.fiereu.openmmo.server.game.battle.BattleRng
 import de.fiereu.openmmo.server.game.battle.StatCalculator
 import de.fiereu.openmmo.server.game.battle.WildMonFactory
 import de.fiereu.openmmo.server.game.battle.acquiredMonsterDelta
+import de.fiereu.openmmo.server.game.script.InGameTrade
 import de.fiereu.openmmo.server.game.session.PlayerState
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import javax.inject.Inject
@@ -96,6 +98,69 @@ constructor(
             delete = false,
             pokemon = healed,
         ))
+  }
+
+  /**
+   * The townsfolk trade: takes the monster [trade] asked for out of the party and leaves its own
+   * monster standing in the same slot.
+   *
+   * The decomp replaces the party entry rather than removing and adding, and so does this, for a
+   * blunter reason: a remove followed by an add is two durable writes with a moment in between
+   * where the player owns neither, and a failure there used to lose the monster for good. One write
+   * cannot half-happen.
+   *
+   * Level, and only level, comes from what the player handed over —
+   * `CreateInGameTradePokemonInternal` reads `MON_DATA_LEVEL` off their monster before it builds
+   * the trade's. Everything the trade fixes (IVs, nickname, original trainer, personality) is taken
+   * from the table, so two players who do the same trade get the same monster.
+   *
+   * Returns null when the party holds nothing of the requested species, which is the script's cue
+   * to say so rather than an error.
+   */
+  internal suspend fun tradePokemon(
+      session: SessionContext,
+      state: PlayerState,
+      trade: InGameTrade,
+  ): Pokemon? {
+    val characterId = state.characterId ?: return null
+    val stored = characters.getCharacter(characterId) ?: return null
+    // An egg has no species to the trader, exactly as GetTradeSpecies reports it.
+    val given =
+        stored.pokemon.firstOrNull {
+          it.container == PokemonContainer.PARTY && it.dexId == trade.requested && !it.isEgg
+        } ?: return null
+    val definition = species.get(trade.offered) ?: return null
+    val rolled =
+        pokemonFactory.create(trade.offered, given.level.toInt(), BattleRng()) ?: return null
+    val received =
+        rolled.copy(
+            id = given.id,
+            ownerId = characterId,
+            container = given.container,
+            containerSlot = given.containerSlot,
+            seed = trade.personality,
+            ot = trade.otName,
+            nickname = trade.nickname,
+            level = given.level,
+            iVs = trade.ivs(),
+            eVs = EVs(),
+            isShiny = false,
+            status = StatusCondition.NONE,
+        )
+    val healthy = received.copy(hp = StatCalculator.computeAll(definition, received).hp.toShort())
+    characters.updatePokemon(characterId, healthy)
+    // Durable before the thank-you dialog: anything after an awaited box is lost on a drop.
+    characters.flushCharacterAsync(characterId)
+    session.send(SocialListEntryAddPacket(healthy))
+    session.send(acquiredMonsterDelta(healthy, definition))
+    session.send(
+        PokemonContainerPacket(
+            container = PokemonContainer.PARTY,
+            hasChange = true,
+            delete = false,
+            pokemon = characters.getCharacter(characterId)?.pokemon ?: listOf(healthy),
+        ))
+    return healthy
   }
 
   suspend fun giveItem(

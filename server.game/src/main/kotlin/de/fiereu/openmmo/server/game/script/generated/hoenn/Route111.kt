@@ -131,15 +131,8 @@ internal object Route111_EventScript_Girl : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port Route111_EventScript_Girl")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_SANDSTORM
- * end
- * ```
- */
 internal object Route111_EventScript_ItemTMSandstorm : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route111_EventScript_ItemTMSandstorm")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM37)
 }
 
 /**

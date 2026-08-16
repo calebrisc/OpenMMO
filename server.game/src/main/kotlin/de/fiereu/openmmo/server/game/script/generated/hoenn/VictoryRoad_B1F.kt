@@ -38,16 +38,8 @@ internal object VictoryRoad_B1F_EventScript_Michelle : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * finditem ITEM_TM_PSYCHIC
- * end
- * ```
- */
 internal object VictoryRoad_B1F_EventScript_ItemTMPsychic : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_B1F_EventScript_ItemTMPsychic")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM29)
 }
 
 internal object VictoryRoad_B1F_EventScript_ItemFullRestore : Script {

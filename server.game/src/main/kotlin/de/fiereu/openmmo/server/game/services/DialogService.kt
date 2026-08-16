@@ -48,17 +48,19 @@ class DialogService @Inject constructor() {
                   textId = HOENN_STARTER_PICK_TEXT,
                   actionType = STARTER_PICK,
                   entityId = NO_ENTITY,
-                  contextValue = STARTER_CONTEXT,
-                  detail =
-                      byteArrayOf(
-                          3,
-                          (TREECKO and 0xFF).toByte(),
-                          (TREECKO shr 8).toByte(),
-                          (TORCHIC and 0xFF).toByte(),
-                          (TORCHIC shr 8).toByte(),
-                          (MUDKIP and 0xFF).toByte(),
-                          (MUDKIP shr 8).toByte(),
-                      ),
+                  presentation =
+                      DialogPresentation(
+                          contextValue = STARTER_CONTEXT,
+                          detail =
+                              byteArrayOf(
+                                  3,
+                                  (TREECKO and 0xFF).toByte(),
+                                  (TREECKO shr 8).toByte(),
+                                  (TORCHIC and 0xFF).toByte(),
+                                  (TORCHIC shr 8).toByte(),
+                                  (MUDKIP and 0xFF).toByte(),
+                                  (MUDKIP shr 8).toByte(),
+                              )),
               )
               .unk
       if (choice !in 1..3) continue
@@ -70,21 +72,36 @@ class DialogService @Inject constructor() {
                   textId = HOENN_STARTER_CONFIRM_TEXT,
                   actionType = YES_NO,
                   entityId = NO_ENTITY,
-                  contextValue = STARTER_CONTEXT,
+                  presentation = DialogPresentation(contextValue = STARTER_CONTEXT),
               )
               .unk != 0
       if (accepted) return listOf(TREECKO, TORCHIC, MUDKIP)[choice - 1]
     }
   }
 
-  /** Show a ROM-backed yes/no box and return true for YES. */
+  /**
+   * Show a ROM-backed yes/no box and return true for YES.
+   *
+   * [messageArgs] fills the string variables the question is written around. The trade questions
+   * name two species — "Do you have a {STR_VAR_1}? Want to trade it for my {STR_VAR_2}?" — and
+   * without them the box asks about nothing at all.
+   */
   suspend fun askYesNo(
       session: SessionContext,
       state: PlayerState,
       textId: Int,
       entityId: Long,
+      messageArgs: List<DialogMessageArg> = emptyList(),
   ): Boolean =
-      showChoiceAndWait(session, state, textId, YES_NO, entityId, contextValue = 0).unk != 0
+      showChoiceAndWait(
+              session,
+              state,
+              textId,
+              YES_NO,
+              entityId,
+              DialogPresentation(messageArgs = messageArgs),
+          )
+          .unk != 0
 
   /**
    * Shows a dialog box and waits for the player to advance or close it. [actionType] is 3 for a
@@ -151,8 +168,7 @@ class DialogService @Inject constructor() {
               textId = 0,
               actionType = STARTER_PICK,
               entityId = NO_ENTITY,
-              contextValue = 0,
-              detail = detail,
+              presentation = DialogPresentation(detail = detail),
           )
           .unk
 
@@ -212,8 +228,7 @@ class DialogService @Inject constructor() {
       textId: Int,
       actionType: Int,
       entityId: Long,
-      contextValue: Int,
-      detail: ByteArray = byteArrayOf(0),
+      presentation: DialogPresentation = DialogPresentation(),
   ): DialogActionResponsePacket {
     val response = CompletableDeferred<DialogActionResponsePacket>()
     session.attributes[PENDING_DIALOG_RESPONSE] = response
@@ -227,9 +242,9 @@ class DialogService @Inject constructor() {
             actionType = actionType.toByte(),
             textId = textId,
             entityId = entityId,
-            contextValue = contextValue,
-            messageArgs = emptyList(),
-            detail = detail,
+            contextValue = presentation.contextValue,
+            messageArgs = presentation.messageArgs,
+            detail = presentation.detail,
         ))
     return response.await()
   }
