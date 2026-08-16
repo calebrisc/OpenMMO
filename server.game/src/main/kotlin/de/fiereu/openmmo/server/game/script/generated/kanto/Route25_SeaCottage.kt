@@ -44,7 +44,14 @@ internal object Route25_SeaCottage_EventScript_Bill : Script {
  */
 internal object Route25_SeaCottage_EventScript_Computer : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route25_SeaCottage_EventScript_Computer")
+      // The decomp branches on whether Bill is still inside the teleporter and whether the ticket
+      // has been collected, but helping him is one conversation here, so the machine only ever has
+      // the two states either side of it: his monster list once he is out, the display before.
+      if (ctx.isFlagSet(KantoFlags.FLAG_GOT_SS_TICKET)) {
+        ctx.sign(Route25_SeaCottage.BillsFavoriteMonList)
+      } else {
+        ctx.sign(Route25_SeaCottage.TeleporterIsDisplayed)
+      }
 }
 
 internal val Route25_SeaCottageScripts: Map<String, Script> =

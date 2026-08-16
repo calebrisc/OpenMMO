@@ -20,6 +20,7 @@ import de.fiereu.openmmo.server.game.services.EncounterService
 import de.fiereu.openmmo.server.game.services.MapEntryScripts
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MapScriptService
+import de.fiereu.openmmo.server.game.services.MoveTeachingService
 import de.fiereu.openmmo.server.game.services.MovementService
 import de.fiereu.openmmo.server.game.services.NpcService
 import de.fiereu.openmmo.server.game.services.PcBoxService
@@ -96,6 +97,7 @@ fun scriptRunner(
       MapEntryScripts(ScriptRegistry(emptyMap()), story),
       ShopService(store, items),
       PcBoxService(store),
+      MoveTeachingService(store, moves, MoveLearner(LearnsetRegistry(), moves)),
   )
 }
 

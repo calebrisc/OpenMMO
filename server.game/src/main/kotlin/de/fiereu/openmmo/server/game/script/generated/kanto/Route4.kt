@@ -1,9 +1,14 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.Route4
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val MOVE_MEGA_PUNCH = 5
+private const val MOVE_MEGA_KICK = 25
 
 private const val TRAINER_LASS_CRISSY = 119
 
@@ -47,7 +52,20 @@ internal object Route4_EventScript_Boy : Script {
  * ```
  */
 internal object Route4_EventScript_MegaPunchTutor : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route4_EventScript_MegaPunchTutor")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_TUTOR_MEGA_PUNCH)) {
+      ctx.say(Misc.Text_MegaPunchTaught)
+      return
+    }
+    if (!ctx.askYesNo(Misc.Text_MegaPunchTeach)) {
+      ctx.say(Misc.Text_MegaPunchDeclined)
+      return
+    }
+    ctx.say(Misc.Text_MegaPunchWhichMon)
+    // The pick happens afterwards, at the player's own party screen, and the flag is spent by
+    // something actually learning the move rather than by the offer being made.
+    ctx.offerMove(MOVE_MEGA_PUNCH, "the tutor on Route 4", KantoFlags.FLAG_TUTOR_MEGA_PUNCH)
+  }
 }
 
 /**
@@ -70,7 +88,20 @@ internal object Route4_EventScript_MegaPunchTutor : Script {
  * ```
  */
 internal object Route4_EventScript_MegaKickTutor : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route4_EventScript_MegaKickTutor")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_TUTOR_MEGA_KICK)) {
+      ctx.say(Misc.Text_MegaKickTaught)
+      return
+    }
+    if (!ctx.askYesNo(Misc.Text_MegaKickTeach)) {
+      ctx.say(Misc.Text_MegaKickDeclined)
+      return
+    }
+    ctx.say(Misc.Text_MegaKickWhichMon)
+    // The pick happens afterwards, at the player's own party screen, and the flag is spent by
+    // something actually learning the move rather than by the offer being made.
+    ctx.offerMove(MOVE_MEGA_KICK, "the tutor on Route 4", KantoFlags.FLAG_TUTOR_MEGA_KICK)
+  }
 }
 
 internal object Route4_EventScript_MtMoonSign : Script {

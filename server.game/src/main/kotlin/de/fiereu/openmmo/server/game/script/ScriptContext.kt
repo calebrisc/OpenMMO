@@ -13,6 +13,7 @@ import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.DialogPresentation
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.MapEntryScripts
+import de.fiereu.openmmo.server.game.services.MoveTeachingService
 import de.fiereu.openmmo.server.game.services.PcBoxService
 import de.fiereu.openmmo.server.game.services.ScriptMovementService
 import de.fiereu.openmmo.server.game.services.ScriptWarpService
@@ -44,6 +45,7 @@ internal constructor(
     private val entryScripts: MapEntryScripts? = null,
     private val shops: ShopService? = null,
     private val pcBoxes: PcBoxService? = null,
+    private val teaching: MoveTeachingService? = null,
 ) {
   private val characterId: Long?
     get() = state.characterId
@@ -111,6 +113,17 @@ internal constructor(
           line.textId,
           movement.npcEntityId(state, localId) ?: -1,
       )
+
+  /**
+   * Offers a move to whichever party monster the player picks next.
+   *
+   * The choice is theirs to make afterwards, from their own party screen, so this returns as soon
+   * as the offer is made rather than waiting for it. [spendFlag] is set only once something has
+   * actually learned the move, which is what stops a tutor being used up by a player who changes
+   * their mind at the party screen.
+   */
+  fun offerMove(moveId: Int, from: String, spendFlag: String? = null): Boolean =
+      characterId?.let { teaching?.offer(session, it, moveId, from, spendFlag) } ?: false
 
   /** True if the story [flag] is set. Keys come from the content layer, for example HoennFlags. */
   fun isFlagSet(flag: String): Boolean = characterId?.let { story.isFlagSet(it, flag) } ?: false

@@ -95,6 +95,7 @@ import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.LoginService
+import de.fiereu.openmmo.server.game.services.MoveTeachingService
 import de.fiereu.openmmo.server.game.services.MovementService
 import de.fiereu.openmmo.server.game.services.MultiplayerService
 import de.fiereu.openmmo.server.game.services.PartyService
@@ -133,6 +134,7 @@ constructor(
     private val duelService: DuelService,
     private val tradeService: TradeService,
     private val pcBoxService: PcBoxService,
+    private val moveTeachingService: MoveTeachingService,
     private val raidService: RaidService,
     private val linkService: LinkService,
     private val shopService: ShopService,
@@ -159,7 +161,11 @@ constructor(
     onSuspend<DialogActionResponsePacket> { event -> dialogService.onInteractive(event) }
     onSuspend<DialogChoicePacket> { event -> dialogService.onDialogChoice(event) }
     onSuspend<DialogOptionPacket> { event -> fieldItemService.onUseItem(event) }
-    on<PartyMemberSelectPacket> { event -> partyService.onMemberSelect(event) }
+    // A teach gets first refusal on the pick, since the same packet carries both a swap and the
+    // answer to "which one should learn it".
+    onSuspend<PartyMemberSelectPacket> { event ->
+      if (!moveTeachingService.onPartySelect(event)) partyService.onMemberSelect(event)
+    }
     onSuspend<TradeSelectMonPacket> { event -> tradeService.onSelectMon(event) }
     onSuspend<PcBoxStorePacket> { event -> pcBoxService.onStore(event) }
     onSuspend<PcMovePacket> { event -> pcBoxService.onMove(event) }
@@ -206,7 +212,9 @@ constructor(
       guildService.onActivityLogPageRequest(event)
     }
 
-    onSuspend<MoveLearnReplyPacket> { event -> battleService.onMoveLearnReply(event) }
+    onSuspend<MoveLearnReplyPacket> { event ->
+      if (!moveTeachingService.onMoveLearnReply(event)) battleService.onMoveLearnReply(event)
+    }
     on<BattlePartySwitchPacket> { event -> battleService.onBattlePacket(event) }
     on<BattleActionPacket> { event -> battleService.onBattlePacket(event) }
     onSuspend<BattleActionSelectPacket> { event -> battleService.onBattleAction(event) }
