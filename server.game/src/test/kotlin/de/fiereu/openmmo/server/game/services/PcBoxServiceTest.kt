@@ -9,6 +9,7 @@ import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
+import de.fiereu.openmmo.net.game.packets.PcMove
 import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
@@ -96,7 +97,7 @@ class PcBoxServiceTest :
           val third = fx.party(id).first { it.containerSlot.toInt() == 2 }
 
           // party 0 -> party 2, which the client sends as container 1 at both ends.
-          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 0, 1, 2), session))
+          fx.boxes.onMove(PacketEvent(PcMovePacket(listOf(PcMove(1, 0, 1, 2))), session))
 
           fx.party(id).first { it.id == first.id }.containerSlot shouldBe 2.toShort()
           fx.party(id).first { it.id == third.id }.containerSlot shouldBe 0.toShort()
@@ -109,7 +110,7 @@ class PcBoxServiceTest :
           val (session, id) = fx.player(2)
           val moving = fx.party(id).first { it.containerSlot.toInt() == 1 }
 
-          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 1, 0, 27), session))
+          fx.boxes.onMove(PacketEvent(PcMovePacket(listOf(PcMove(1, 1, 0, 27))), session))
 
           fx.party(id).any { it.id == moving.id } shouldBe false
           val inBox = fx.pc(id).first { it.id == moving.id }
@@ -118,12 +119,52 @@ class PcBoxServiceTest :
         }
       }
 
+      // The shape that was being dropped on the wire: one packet, four monsters.
+      test("a drag of several monsters at once moves every one of them") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(6)
+          val moving =
+              (2..5).map { slot -> fx.party(id).first { it.containerSlot.toInt() == slot } }
+
+          fx.boxes.onMove(
+              PacketEvent(
+                  PcMovePacket(
+                      listOf(
+                          PcMove(1, 2, 0, 24),
+                          PcMove(1, 3, 0, 25),
+                          PcMove(1, 4, 0, 26),
+                          PcMove(1, 5, 0, 27),
+                      )),
+                  session))
+
+          fx.party(id).size shouldBe 2
+          moving.forEachIndexed { i, monster ->
+            fx.pc(id).first { it.id == monster.id }.containerSlot shouldBe (24 + i).toShort()
+          }
+        }
+      }
+
+      test("one bad move in a drag does not stop the rest") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(3)
+          val moving = fx.party(id).first { it.containerSlot.toInt() == 2 }
+
+          fx.boxes.onMove(
+              PacketEvent(PcMovePacket(listOf(PcMove(1, 99, 0, 24), PcMove(1, 2, 0, 25))), session))
+
+          fx.pc(id).first { it.id == moving.id }.containerSlot shouldBe 25.toShort()
+          fx.party(id).size shouldBe 2
+        }
+      }
+
       test("a drag that would empty the party is refused") {
         runTest {
           val fx = Fixture(backgroundScope)
           val (session, id) = fx.player(1)
 
-          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 0, 0, 0), session))
+          fx.boxes.onMove(PacketEvent(PcMovePacket(listOf(PcMove(1, 0, 0, 0))), session))
 
           fx.party(id).size shouldBe 1
           fx.pc(id).size shouldBe 0

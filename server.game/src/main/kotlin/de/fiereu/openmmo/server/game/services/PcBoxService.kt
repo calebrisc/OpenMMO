@@ -193,63 +193,79 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
   }
 
   /**
-   * Moves a monster from one storage slot to another, swapping with whatever is already there.
+   * Moves monsters between storage slots, swapping with whatever is already there.
    *
-   * The client names both ends by container and slot rather than by monster, so the move is worked
-   * out from where things are rather than from an id. A party that would be emptied is refused, and
-   * so is one that would overflow.
+   * The client names both ends by container and slot rather than by monster, so a move is worked
+   * out from where things are rather than from an id, and every move in the packet is resolved
+   * against the state before any of them: the player dragged them at once, so they happen at once.
+   * A party that would be emptied is refused, and so is one that would overflow.
    */
   suspend fun onMove(event: PacketEvent<PcMovePacket>) {
     val ctx = event.session
     val charId = ctx.attributes[PLAYER_STATE]?.characterId ?: return
-    val p = event.packet
-    val from = PokemonContainer.entries.getOrNull(p.fromContainer.toInt())
-    val to = PokemonContainer.entries.getOrNull(p.toContainer.toInt())
-    if (from == null || to == null || from !in movable || to !in movable) {
-      log.info { "char=$charId moved between containers ${p.fromContainer} and ${p.toContainer}" }
-      return
-    }
     val stored = characterStore.getCharacter(charId) ?: return
-    fun listOf(container: PokemonContainer) =
+    fun contents(container: PokemonContainer) =
         if (container == PokemonContainer.PC) stored.pcStorage else stored.pokemon
 
-    val moving = listOf(from).firstOrNull { it.containerSlot.toInt() == p.fromSlot }
-    if (moving == null) {
-      log.info { "char=$charId moved from $from slot ${p.fromSlot}, which is empty" }
+    val placements = mutableMapOf<Long, CharacterStore.Placement>()
+    // Where every monster ends up, so the party can be counted before anything is written.
+    val destination =
+        (stored.pokemon + stored.pcStorage).associate { it.id to it.container }.toMutableMap()
+
+    for (move in event.packet.moves) {
+      val from = PokemonContainer.entries.getOrNull(move.fromContainer.toInt())
+      val to = PokemonContainer.entries.getOrNull(move.toContainer.toInt())
+      if (from == null || to == null || from !in movable || to !in movable) {
+        log.info {
+          "char=$charId moved between containers ${move.fromContainer} and ${move.toContainer}"
+        }
+        continue
+      }
+      val moving = contents(from).firstOrNull { it.containerSlot.toInt() == move.fromSlot }
+      if (moving == null) {
+        log.info { "char=$charId moved from $from slot ${move.fromSlot}, which is empty" }
+        continue
+      }
+      val occupying =
+          contents(to).firstOrNull { it.containerSlot.toInt() == move.toSlot && it.id != moving.id }
+
+      placements[moving.id] = CharacterStore.Placement(to, move.toSlot.toShort())
+      destination[moving.id] = to
+      // Whatever was in the way goes where this one came from, unless the drag moves it too, in
+      // which case its own move is the one that counts.
+      if (occupying != null && occupying.id !in placements) {
+        placements[occupying.id] = CharacterStore.Placement(from, move.fromSlot.toShort())
+        destination[occupying.id] = from
+      }
+    }
+
+    if (placements.isEmpty()) {
       resend(ctx, charId)
       return
     }
-    val occupying = listOf(to).firstOrNull { it.containerSlot.toInt() == p.toSlot }
-
-    val leavingParty = from == PokemonContainer.PARTY && to != PokemonContainer.PARTY
-    if (leavingParty && occupying == null && stored.pokemon.size <= 1) {
+    val party = destination.count { it.value == PokemonContainer.PARTY }
+    if (party == 0) {
       ctx.send(notice("You cannot put your last monster away."))
       resend(ctx, charId)
       return
     }
-    if (to == PokemonContainer.PARTY &&
-        from != PokemonContainer.PARTY &&
-        occupying == null &&
-        stored.pokemon.size >= MAX_PARTY_SIZE) {
+    if (party > MAX_PARTY_SIZE) {
       ctx.send(notice("Your party is full."))
       resend(ctx, charId)
       return
     }
 
-    // One write for both ends, so a renumbering, a move and a swap are all the same operation and
-    // none of them can half happen.
-    val moves = buildMap {
-      put(moving.id, CharacterStore.Placement(to, p.toSlot.toShort()))
-      occupying?.let { put(it.id, CharacterStore.Placement(from, p.fromSlot.toShort())) }
-    }
-    if (!characterStore.repositionPokemon(charId, moves)) {
+    // One write for every end of every move, so a drag of four cannot half happen.
+    if (!characterStore.repositionPokemon(charId, placements)) {
       ctx.send(notice("That could not be moved."))
       resend(ctx, charId)
       return
     }
     log.info {
-      "char=$charId moved ${moving.id} from $from ${p.fromSlot} to $to ${p.toSlot}" +
-          (occupying?.let { ", swapping with ${it.id}" } ?: "")
+      "char=$charId moved ${placements.size} monster(s): " +
+          event.packet.moves.joinToString(", ") {
+            "${it.fromContainer}:${it.fromSlot}->${it.toContainer}:${it.toSlot}"
+          }
     }
     resend(ctx, charId)
   }
