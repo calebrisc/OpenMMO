@@ -1,41 +1,17 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
+import de.fiereu.openmmo.dialog.generated.kanto.ViridianCity_School
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox ViridianCity_School_Text_ReadBlackboardCarefully
- * closemessage
- * applymovement LOCALID_SCHOOL_WOMAN, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object ViridianCity_School_EventScript_Woman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_School_EventScript_Woman")
+  override suspend fun run(ctx: ScriptContext) =
+      ctx.say(ViridianCity_School.ReadBlackboardCarefully)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox ViridianCity_School_Text_TryingToMemorizeNotes
- * closemessage
- * applymovement LOCALID_SCHOOL_LASS, Common_Movement_WalkInPlaceFasterUp
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object ViridianCity_School_EventScript_Lass : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_School_EventScript_Lass")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(ViridianCity_School.TryingToMemorizeNotes)
 }
 
 /**

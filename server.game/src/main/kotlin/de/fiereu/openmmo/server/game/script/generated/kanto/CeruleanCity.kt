@@ -5,21 +5,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.CeruleanCity_BikeShop
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox CeruleanCity_Text_PeopleHereWereRobbed
- * closemessage
- * applymovement LOCALID_CERULEAN_POLICEMAN, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_Policeman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_Policeman")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.PeopleHereWereRobbed)
 }
 
 /**
@@ -109,21 +96,8 @@ internal object CeruleanCity_EventScript_Youngster : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.TrainerLifeIsToughIsntIt)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox CeruleanCity_Text_WantBrightRedBicycle
- * closemessage
- * applymovement LOCALID_CERULEAN_WOMAN, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_Woman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_Woman")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.WantBrightRedBicycle)
 }
 
 internal object CeruleanCity_EventScript_CeruleanCaveGuard : Script {

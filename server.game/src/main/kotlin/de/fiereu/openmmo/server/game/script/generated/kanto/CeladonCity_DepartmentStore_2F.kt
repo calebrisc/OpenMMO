@@ -11,23 +11,21 @@ internal object CeladonCity_DepartmentStore_2F_EventScript_Lass : Script {
       ctx.say(CeladonCity_DepartmentStore_2F.BuyReviveForLongOutings)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto_if_questlog EventScript_ReleaseEnd
- * lock
- * faceplayer
- * message Text_MayIHelpYou
- * waitmessage
- * pokemart CeladonCity_DepartmentStore_2F_Items
- * msgbox Text_PleaseComeAgain
- * release
- * end
- * ```
- */
 internal object CeladonCity_DepartmentStore_2F_EventScript_ClerkItems : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_DepartmentStore_2F_EventScript_ClerkItems")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(Misc.Text_MayIHelpYou)
+    ctx.pokemart(
+        Items.GREAT_BALL,
+        Items.SUPER_POTION,
+        Items.REVIVE,
+        Items.ANTIDOTE,
+        Items.PARLYZ_HEAL,
+        Items.AWAKENING,
+        Items.BURN_HEAL,
+        Items.ICE_HEAL,
+        Items.SUPER_REPEL)
+    ctx.say(Misc.Text_LeavingDoComeAgain)
+  }
 }
 
 internal object CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs : Script {

@@ -13,23 +13,11 @@ private const val TRAINER_RUIN_MANIAC_LARRY = 583
 
 private const val TRAINER_HIKER_DARYL = 584
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * msgbox SixIsland_RuinValley_Text_CantFigureOutHowToGetInside
- * applymovement LOCALID_RUIN_VALLEY_SCIENTIST, Common_Movement_FacePlayer
- * waitmovement 0
- * msgbox SixIsland_RuinValley_Text_IFoundThisPlace
- * applymovement LOCALID_RUIN_VALLEY_SCIENTIST, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object SixIsland_RuinValley_EventScript_Scientist : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SixIsland_RuinValley_EventScript_Scientist")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(SixIsland_RuinValley.CantFigureOutHowToGetInside)
+    ctx.say(SixIsland_RuinValley.IFoundThisPlace)
+  }
 }
 
 internal object SixIsland_RuinValley_EventScript_Stanly : Script {

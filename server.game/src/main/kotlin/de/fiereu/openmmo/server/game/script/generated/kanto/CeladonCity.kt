@@ -9,21 +9,8 @@ internal object CeladonCity_EventScript_RocketGrunt1 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.KeepOutOfTeamRocketsWay)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox CeladonCity_Text_MyTrustedPalPoliwrath
- * closemessage
- * applymovement LOCALID_CELADON_FAT_MAN, Common_Movement_FaceOriginalDirection
- * waitmovement 0
- * release
- * end
- * ```
- */
 internal object CeladonCity_EventScript_FatMan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeladonCity_EventScript_FatMan")
+  override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.MyTrustedPalPoliwrath)
 }
 
 /**
