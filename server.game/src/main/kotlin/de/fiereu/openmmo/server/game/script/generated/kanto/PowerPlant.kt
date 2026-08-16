@@ -1,8 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.VictoryRoad_2F
 import de.fiereu.openmmo.items.generated.Items
+import de.fiereu.openmmo.server.game.battle.BattleResult
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val ZAPDOS_DEX = 145
 
 internal object PowerPlant_EventScript_ItemMaxPotion : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.MAX_POTION)
@@ -31,37 +36,17 @@ internal object PowerPlant_EventScript_ItemElixir : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.ELIXIR)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto_if_questlog EventScript_ReleaseEnd
- * special QuestLog_CutRecording
- * lock
- * faceplayer
- * setwildbattle SPECIES_ZAPDOS, 50
- * waitse
- * playmoncry SPECIES_ZAPDOS, CRY_MODE_ENCOUNTER
- * message Text_Gyaoo
- * waitmessage
- * waitmoncry
- * delay 10
- * playbgm MUS_ENCOUNTER_GYM_LEADER, 0
- * waitbuttonpress
- * setflag FLAG_SYS_SPECIAL_WILD_BATTLE
- * special StartLegendaryBattle
- * waitstate
- * clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
- * specialvar VAR_RESULT, GetBattleOutcome
- * goto_if_eq VAR_RESULT, B_OUTCOME_WON, PowerPlant_EventScript_DefeatedZapdos
- * goto_if_eq VAR_RESULT, B_OUTCOME_RAN, PowerPlant_EventScript_RanFromZapdos
- * goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, PowerPlant_EventScript_RanFromZapdos
- * setflag FLAG_FOUGHT_ZAPDOS
- * release
- * end
- * ```
- */
 internal object PowerPlant_EventScript_Zapdos : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PowerPlant_EventScript_Zapdos")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(VictoryRoad_2F.Gyaoo)
+    val result = ctx.wildBattle(ZAPDOS_DEX, 50)
+    // Met either way: the decomp sets this on every outcome, so it is remembered even
+    // by a player who ran.
+    ctx.setFlag(KantoFlags.FLAG_FOUGHT_ZAPDOS)
+    if (result != BattleResult.VICTORY && result != BattleResult.CAUGHT) return
+    ctx.setFlag(KantoFlags.FLAG_HIDE_ZAPDOS)
+    ctx.despawnInteracted()
+  }
 }
 
 /**

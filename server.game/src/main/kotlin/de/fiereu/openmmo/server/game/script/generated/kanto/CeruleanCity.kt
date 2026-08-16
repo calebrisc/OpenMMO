@@ -2,31 +2,32 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeruleanCity
 import de.fiereu.openmmo.dialog.generated.kanto.CeruleanCity_BikeShop
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
+
+private const val TRAINER_TEAM_ROCKET_GRUNT_5 = 355
 
 internal object CeruleanCity_EventScript_Policeman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.PeopleHereWereRobbed)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_defeated TRAINER_TEAM_ROCKET_GRUNT_5, CeruleanCity_EventScript_GruntDefeated
- * message CeruleanCity_Text_GruntIntro
- * waitmessage
- * playbgm MUS_ENCOUNTER_ROCKET, 0
- * waitbuttonpress
- * trainerbattle_no_intro TRAINER_TEAM_ROCKET_GRUNT_5, CeruleanCity_Text_GruntDefeat
- * setvar VAR_MAP_SCENE_CERULEAN_CITY_ROCKET, 1
- * goto CeruleanCity_EventScript_GruntDefeated
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_Grunt : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_Grunt")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_GRUNT_5, CeruleanCity.GruntIntro, CeruleanCity.GruntDefeat))
+        return
+    ctx.setVar(KantoVars.VAR_MAP_SCENE_CERULEAN_CITY_ROCKET, 1)
+    ctx.say(CeruleanCity.OkayIllReturnStolenTM)
+    // He leaves whether or not the bag has room, as the decomp has it: the TM he stole is the
+    // apology, but the apology is not what makes him go.
+    if (ctx.giveItem(Items.TM28)) ctx.say(CeruleanCity.RecoveredTM28FromGrunt)
+    ctx.say(CeruleanCity.BetterGetMovingBye)
+    ctx.setFlag(KantoFlags.FLAG_HIDE_CERULEAN_ROCKET)
+    ctx.despawnInteracted()
+  }
 }
 
 /**
