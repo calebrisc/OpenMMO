@@ -113,7 +113,9 @@ constructor(
       }
       !atServerTile -> {
         state.consecutiveDesyncs += 1
-        log.debug {
+        // Info, not debug, until the stutter is understood: the two coordinates and the gap
+        // between them are the whole diagnosis, and a stutter is not reproducible on demand.
+        log.info {
           "DESYNC: char=$charId claims (${msg.x}, ${msg.y}), server has ($fromX, $fromY), " +
               "count=${state.consecutiveDesyncs}"
         }
@@ -214,7 +216,7 @@ constructor(
     }
 
     if (!isWalkable(currentMap, toX, toY)) {
-      log.debug { "WALL: char=$charId blocked at ($toX, $toY)" }
+      log.info { "WALL: char=$charId blocked at ($toX, $toY) from ($fromX, $fromY)" }
       sendPositionReset(ctx, charId, currentMap, fromX, fromY, msg.direction)
       return
     }
