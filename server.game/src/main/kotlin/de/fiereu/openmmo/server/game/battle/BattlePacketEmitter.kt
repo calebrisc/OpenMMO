@@ -265,10 +265,12 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
           // The move's outcome rides inside the move event so the client animates it. A hit carries
           // the target's resulting hp, a stat change carries the affected stat and its signed stage
           // delta. A capped change reports no delta, so it stays unanimated.
+          var critical = false
           val targets =
               when (val next = events.getOrNull(i + 1)) {
                 is BattleEvent.DamageDealt -> {
                   i++
+                  critical = next.crit
                   // The client faints the target on hp reaching 0, as the real server does, so no
                   // faint sub-event is sent here.
                   val subEvents =
@@ -315,6 +317,11 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
           broadcast(
               battle,
               BattleEntityMoveEventPacket(event.attackerId, event.moveId, MOVE_EVENT_KIND, targets))
+          // A critical hit doubled the damage and nothing ever said so, which is why one landing
+          // read as an ordinary hit that happened to be enormous. Effectiveness already rides in
+          // the outcome bits above; the crit has no bit of its own that any capture shows, so it
+          // is said in words on the notice channel rather than guessed at on the wire.
+          if (critical) sendNotice(battle, "A critical hit!")
         }
         is BattleEvent.StatusInflicted ->
             sendStatus(battle, event.targetId, event.status, event.sleepTurns)

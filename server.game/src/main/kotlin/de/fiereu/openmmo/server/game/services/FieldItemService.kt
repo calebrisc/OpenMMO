@@ -91,7 +91,13 @@ constructor(
     // with one copy of each is a worse game for making them single use.
     val machineMove = MachineMoves.moveFor(item.name)
     if (machineMove != null) {
-      teaching.offer(ctx, charId, machineMove, item.name)
+      // The monster is named in this very packet, so teach it rather than asking which one. Asking
+      // is what every machine used to do, and the answer never came: the client has already had the
+      // player pick one and does not send a party selection afterwards, so the offer hung there and
+      // the TM appeared to do nothing.
+      if (!teaching.teachDirectly(ctx, charId, packet.entityId, machineMove, item.name)) {
+        teaching.offer(ctx, charId, machineMove, item.name)
+      }
       return
     }
 

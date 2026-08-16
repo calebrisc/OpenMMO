@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.services
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.MAX_MOVE_SLOTS
+import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.PartyMemberSelectPacket
@@ -96,6 +97,33 @@ constructor(
    * Anything the player cannot be taught ends the offer rather than leaving it hanging over the
    * next thing they do with their party.
    */
+  /**
+   * Teaches [moveId] to a named monster, without asking which one first.
+   *
+   * A machine used from the bag names the monster in the very same packet, so there is nothing left
+   * to ask: the client has already had the player pick one and is not going to send a party
+   * selection afterwards. Waiting for one is why every TM and HM did nothing at all -- the offer
+   * was made and then sat there for ever.
+   *
+   * False when [monsterId] is not one of theirs, which is the caller's cue to ask the long way
+   * round instead.
+   */
+  suspend fun teachDirectly(
+      session: SessionContext,
+      charId: Long,
+      monsterId: Long,
+      moveId: Int,
+      from: String,
+      spendFlag: String? = null,
+  ): Boolean {
+    val def = moves.get(moveId) ?: return false
+    val monster =
+        characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == monsterId }
+            ?: return false
+    pendingTeach.remove(charId)
+    return teach(session, charId, monster, PendingTeach(moveId, def.name, from, spendFlag))
+  }
+
   suspend fun onPartySelect(event: PacketEvent<PartyMemberSelectPacket>): Boolean {
     val session = event.session
     val charId = session.attributes[PLAYER_STATE]?.characterId ?: return false
@@ -107,7 +135,15 @@ constructor(
       return false
     }
     pendingTeach.remove(charId)
+    return teach(session, charId, monster, offer)
+  }
 
+  private suspend fun teach(
+      session: SessionContext,
+      charId: Long,
+      monster: Pokemon,
+      offer: PendingTeach,
+  ): Boolean {
     val known = monster.moves.toMutableList()
     if (known.any { it.id.toInt() == offer.moveId }) {
       session.send(notice("It already knows ${offer.moveName}."))
