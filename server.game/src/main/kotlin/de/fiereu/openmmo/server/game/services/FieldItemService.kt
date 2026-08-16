@@ -89,8 +89,18 @@ constructor(
     // until now, including the ones gym leaders hand over, because nothing read them at all. They
     // are kept rather than consumed: the later games stopped spending them and a private server
     // with one copy of each is a worse game for making them single use.
-    val machineMove = MachineMoves.moveFor(item.name)
-    if (machineMove != null) {
+    val machineName = MachineMoves.moveNameFor(item.name)
+    if (machineName != null) {
+      val machineMove = MachineMoves.moveIdFor(item.name, moves)
+      if (machineMove == null) {
+        // Better to say so than to teach whatever move happens to sit at that number in another
+        // generation, over the top of one the monster already knew.
+        log.info {
+          "char=$charId used ${item.name}, whose move $machineName is not in the registry"
+        }
+        ctx.send(notice("$machineName is not in this game yet, so ${item.name} teaches nothing."))
+        return
+      }
       // The monster is named in this very packet, so teach it rather than asking which one. Asking
       // is what every machine used to do, and the answer never came: the client has already had the
       // player pick one and does not send a party selection afterwards, so the offer hung there and

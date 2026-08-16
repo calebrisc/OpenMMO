@@ -1,82 +1,146 @@
 package de.fiereu.openmmo.server.game.services
 
+import de.fiereu.openmmo.moves.MoveRegistry
+
 /**
- * Which move each machine teaches, in the order the games keep them.
+ * Which move each machine teaches.
  *
- * Taken from the decomp's sTMHMMoves table and keyed by the machine's own name, because the
- * generated item data carries a name and a price and nothing else -- an item cannot say what it
- * does, so this is where a machine's move has to live.
+ * **This is the Gen 5 list, not the GBA one, because the client is the one that has to agree.** It
+ * was the GBA table first, taken from the decomp that every map here comes from, and that was
+ * wrong: the item table carries TM01 to TM95 and HM01 to HM06, which is the Gen 5 set exactly, and
+ * the client labels TM09 Venoshock. The GBA table calls TM09 Bullet Seed, so using one taught a
+ * move that had nothing to do with the name on the box, over the top of a move the monster already
+ * knew.
  *
- * HM07 and HM08 are here for completeness. Neither exists as an item in this game's table, which
- * carries HM01 to HM06 only, so nothing can hand one over yet.
+ * Moves are named rather than numbered so the mapping can be read against the client's own labels,
+ * and are resolved through [MoveRegistry] at the point of use. The registry is a GBA one holding
+ * about 355 moves, so every machine whose move arrived after Gen 3 -- Venoshock among them --
+ * resolves to nothing. That is reported to the player as the machine not being in the game yet,
+ * which is the honest answer and, more to the point, is not the answer "here is a different move".
  */
 internal object MachineMoves {
 
-  private val byMachine: Map<String, Int> =
+  private val machines: Map<String, String> =
       mapOf(
-          "TM01" to 264, // Focus Punch
-          "TM02" to 337, // Dragon Claw
-          "TM03" to 352, // Water Pulse
-          "TM04" to 347, // Calm Mind
-          "TM05" to 46, // Roar
-          "TM06" to 92, // Toxic
-          "TM07" to 258, // Hail
-          "TM08" to 339, // Bulk Up
-          "TM09" to 331, // Bullet Seed
-          "TM10" to 237, // Hidden Power
-          "TM11" to 241, // Sunny Day
-          "TM12" to 269, // Taunt
-          "TM13" to 58, // Ice Beam
-          "TM14" to 59, // Blizzard
-          "TM15" to 63, // Hyper Beam
-          "TM16" to 113, // Light Screen
-          "TM17" to 182, // Protect
-          "TM18" to 240, // Rain Dance
-          "TM19" to 202, // Giga Drain
-          "TM20" to 219, // Safeguard
-          "TM21" to 218, // Frustration
-          "TM22" to 76, // Solar Beam
-          "TM23" to 231, // Iron Tail
-          "TM24" to 85, // Thunderbolt
-          "TM25" to 87, // Thunder
-          "TM26" to 89, // Earthquake
-          "TM27" to 216, // Return
-          "TM28" to 91, // Dig
-          "TM29" to 94, // Psychic
-          "TM30" to 247, // Shadow Ball
-          "TM31" to 280, // Brick Break
-          "TM32" to 104, // Double Team
-          "TM33" to 115, // Reflect
-          "TM34" to 351, // Shock Wave
-          "TM35" to 53, // Flamethrower
-          "TM36" to 188, // Sludge Bomb
-          "TM37" to 201, // Sandstorm
-          "TM38" to 126, // Fire Blast
-          "TM39" to 317, // Rock Tomb
-          "TM40" to 332, // Aerial Ace
-          "TM41" to 259, // Torment
-          "TM42" to 263, // Facade
-          "TM43" to 290, // Secret Power
-          "TM44" to 156, // Rest
-          "TM45" to 213, // Attract
-          "TM46" to 168, // Thief
-          "TM47" to 211, // Steel Wing
-          "TM48" to 285, // Skill Swap
-          "TM49" to 289, // Snatch
-          "TM50" to 315, // Overheat
-          "HM01" to 15, // Cut
-          "HM02" to 19, // Fly
-          "HM03" to 57, // Surf
-          "HM04" to 70, // Strength
-          "HM05" to 148, // Flash
-          "HM06" to 249, // Rock Smash
-          "HM07" to 127, // Waterfall
-          "HM08" to 291, // Dive
+          "TM01" to "Hone Claws",
+          "TM02" to "Dragon Claw",
+          "TM03" to "Psyshock",
+          "TM04" to "Calm Mind",
+          "TM05" to "Roar",
+          "TM06" to "Toxic",
+          "TM07" to "Hail",
+          "TM08" to "Bulk Up",
+          "TM09" to "Venoshock",
+          "TM10" to "Hidden Power",
+          "TM11" to "Sunny Day",
+          "TM12" to "Taunt",
+          "TM13" to "Ice Beam",
+          "TM14" to "Blizzard",
+          "TM15" to "Hyper Beam",
+          "TM16" to "Light Screen",
+          "TM17" to "Protect",
+          "TM18" to "Rain Dance",
+          "TM19" to "Telekinesis",
+          "TM20" to "Safeguard",
+          "TM21" to "Frustration",
+          "TM22" to "SolarBeam",
+          "TM23" to "Smack Down",
+          "TM24" to "Thunderbolt",
+          "TM25" to "Thunder",
+          "TM26" to "Earthquake",
+          "TM27" to "Return",
+          "TM28" to "Dig",
+          "TM29" to "Psychic",
+          "TM30" to "Shadow Ball",
+          "TM31" to "Brick Break",
+          "TM32" to "Double Team",
+          "TM33" to "Reflect",
+          "TM34" to "Sludge Wave",
+          "TM35" to "Flamethrower",
+          "TM36" to "Sludge Bomb",
+          "TM37" to "Sandstorm",
+          "TM38" to "Fire Blast",
+          "TM39" to "Rock Tomb",
+          "TM40" to "Aerial Ace",
+          "TM41" to "Torment",
+          "TM42" to "Facade",
+          "TM43" to "Flame Charge",
+          "TM44" to "Rest",
+          "TM45" to "Attract",
+          "TM46" to "Thief",
+          "TM47" to "Low Sweep",
+          "TM48" to "Round",
+          "TM49" to "Echoed Voice",
+          "TM50" to "Overheat",
+          "TM51" to "Ally Switch",
+          "TM52" to "Focus Blast",
+          "TM53" to "Energy Ball",
+          "TM54" to "False Swipe",
+          "TM55" to "Scald",
+          "TM56" to "Fling",
+          "TM57" to "Charge Beam",
+          "TM58" to "Sky Drop",
+          "TM59" to "Incinerate",
+          "TM60" to "Quash",
+          "TM61" to "Will-O-Wisp",
+          "TM62" to "Acrobatics",
+          "TM63" to "Embargo",
+          "TM64" to "Explosion",
+          "TM65" to "Shadow Claw",
+          "TM66" to "Payback",
+          "TM67" to "Retaliate",
+          "TM68" to "Giga Impact",
+          "TM69" to "Rock Polish",
+          "TM70" to "Flash",
+          "TM71" to "Stone Edge",
+          "TM72" to "Volt Switch",
+          "TM73" to "Thunder Wave",
+          "TM74" to "Gyro Ball",
+          "TM75" to "Swords Dance",
+          "TM76" to "Struggle Bug",
+          "TM77" to "Psych Up",
+          "TM78" to "Bulldoze",
+          "TM79" to "Frost Breath",
+          "TM80" to "Rock Slide",
+          "TM81" to "X-Scissor",
+          "TM82" to "Dragon Tail",
+          "TM83" to "Work Up",
+          "TM84" to "Poison Jab",
+          "TM85" to "Dream Eater",
+          "TM86" to "Grass Knot",
+          "TM87" to "Swagger",
+          "TM88" to "Pluck",
+          "TM89" to "U-turn",
+          "TM90" to "Substitute",
+          "TM91" to "Flash Cannon",
+          "TM92" to "Trick Room",
+          "TM93" to "Wild Charge",
+          "TM94" to "Rock Smash",
+          "TM95" to "Snarl",
+          "HM01" to "Cut",
+          "HM02" to "Fly",
+          "HM03" to "Surf",
+          "HM04" to "Strength",
+          "HM05" to "Waterfall",
+          "HM06" to "Dive",
       )
 
-  /** The move [machine] teaches, by its item name, or null when the name is not a machine. */
-  fun moveFor(machine: String): Int? = byMachine[machine.uppercase()]
+  @Volatile private var byName: Map<String, Int>? = null
 
-  /** True when this item name is a machine at all, which is how a bag item is recognised. */
-  fun isMachine(machine: String): Boolean = machine.uppercase() in byMachine
+  /** The move this machine is labelled with, whether or not this game has it. */
+  fun moveNameFor(machine: String): String? = machines[machine.uppercase()]
+
+  /**
+   * The move id this machine teaches, or null when the move is not one this server knows.
+   *
+   * Names are compared with the punctuation and spacing taken out, because a registry built from
+   * one generation writes SolarBeam, Will-o-wisp and X-Scissor however that generation wrote them.
+   */
+  fun moveIdFor(machine: String, moves: MoveRegistry): Int? {
+    val name = moveNameFor(machine) ?: return null
+    val index = byName ?: moves.all().associate { normalise(it.name) to it.id }.also { byName = it }
+    return index[normalise(name)]
+  }
+
+  private fun normalise(name: String) = name.lowercase().filter { it.isLetterOrDigit() }
 }
