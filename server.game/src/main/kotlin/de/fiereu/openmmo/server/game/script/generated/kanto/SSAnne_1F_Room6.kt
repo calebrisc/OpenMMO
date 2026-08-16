@@ -1,24 +1,24 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.SSAnne_1F_Room6
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox SSAnne_1F_Room6_Text_TakeAShortRest, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, SSAnne_1F_Room6_EventScript_DeclineHeal
- * closemessage
- * call EventScript_OutOfCenterPartyHeal
- * msgbox SSAnne_1F_Room6_Text_GladEveryoneIsRefreshed
- * release
- * end
- * ```
- */
 internal object SSAnne_1F_Room6_EventScript_Woman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SSAnne_1F_Room6_EventScript_Woman")
+  override suspend fun run(ctx: ScriptContext) {
+    val said1 = ctx.askYesNo(SSAnne_1F_Room6.TakeAShortRest)
+    if (!said1) {
+      val gender2 = if (ctx.isFemale) 1 else 0
+      if (gender2 == 0) {
+        ctx.say(SSAnne_1F_Room6.SorryYouLookLikeMyBrother)
+        return
+      }
+      ctx.say(SSAnne_1F_Room6.SorryYouLookLikeMySister)
+      return
+    }
+    ctx.healParty()
+    ctx.say(SSAnne_1F_Room6.GladEveryoneIsRefreshed)
+  }
 }
 
 internal val SSAnne_1F_Room6Scripts: Map<String, Script> =

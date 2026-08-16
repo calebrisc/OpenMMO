@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_9F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_ED = 344
 private const val TRAINER_TEAM_ROCKET_GRUNT_37 = 387
@@ -25,22 +26,16 @@ internal object SilphCo_9F_EventScript_Grunt2 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_9F_EventScript_HealWomanRocketsGone
- * msgbox SilphCo_9F_Text_YouShouldTakeQuickNap
- * closemessage
- * call EventScript_OutOfCenterPartyHeal
- * msgbox SilphCo_9F_Text_DontGiveUp
- * release
- * end
- * ```
- */
 internal object SilphCo_9F_EventScript_HealWoman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_9F_EventScript_HealWoman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_9F.ThankYouSoMuch)
+      return
+    }
+    ctx.say(SilphCo_9F.YouShouldTakeQuickNap)
+    ctx.healParty()
+    ctx.say(SilphCo_9F.DontGiveUp)
+  }
 }
 
 internal object SilphCo_9F_EventScript_Grunt1 : Script {
