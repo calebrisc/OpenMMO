@@ -88,11 +88,11 @@ object GtlTuning {
 /**
  * Whether the flag table is built from the player or copied from the capture.
  *
- * Building it is the correct thing and the fallback exists because getting it wrong is not a
- * cosmetic failure: the client reads the table while it builds the party, so a table it cannot make
- * sense of takes the client down on login, and a player cannot type a command to undo that. So it
- * is proven on one connection with /probe flagtable before it becomes what everybody gets.
+ * Proven on a live client: the table built from a character logs in without complaint, hides the
+ * item balls that character already collected and removes the gym guide beating Brock was supposed
+ * to remove. The captured table stays reachable through /probe flagtable as the way back, because a
+ * table the client cannot read takes it down on login, where no command can undo it.
  */
 object FlagTuning {
-  @Volatile var tableFromCharacter: Boolean = false
+  @Volatile var tableFromCharacter: Boolean = true
 }
