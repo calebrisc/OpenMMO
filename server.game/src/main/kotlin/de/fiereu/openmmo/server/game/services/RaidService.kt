@@ -29,6 +29,8 @@ private const val MAX_RAIDERS = 4
 /** How many waiting players it takes to form a raid without anybody arranging it. */
 private const val QUEUE_TARGET = 2
 
+private const val SOMEBODY = "A raider"
+
 /** A boss and everybody currently fighting it. */
 private class Raid(val boss: BattleMonState, val bossName: String) {
   val raiders = mutableSetOf<Long>()
@@ -69,6 +71,27 @@ constructor(
     // The boss takes damage in whichever raider's battle landed it, so without this the others
     // would have no way of seeing the pool they are all working on go down.
     battles.onTurnResolved { charId -> reportProgress(charId) }
+    battles.onWildCaught { charId -> onBossCaught(charId) }
+  }
+
+  /**
+   * One raider got the ball to hold, which finishes the raid for all of them.
+   *
+   * The boss is a single monster every raider's battle points at, so once it is in somebody's party
+   * there is nothing left for the others to hit. Its health is put to nothing, which is what their
+   * own battles will read on their next turn and end as a win, and the raid is cleared so a new one
+   * can be started.
+   */
+  private fun onBossCaught(charId: Long) {
+    val raid = raids[charId] ?: return
+    val catcher = characterStore.getCharacter(charId)?.info?.name ?: SOMEBODY
+    raid.boss.currentHp = 0
+    log.info { "Raid boss ${raid.bossName} was caught by $catcher" }
+    val word = notice("$catcher caught ${raid.bossName}. The raid is over.")
+    raid.raiders
+        .filter { it != charId }
+        .forEach { sessionRegistry.getByCharacterId(it)?.send(word) }
+    raid.raiders.toList().forEach { raids.remove(it) }
   }
 
   /** Tells the other raiders what the boss has left after one of them hit it. */
@@ -76,7 +99,7 @@ constructor(
     val raid = raids[charId] ?: return
     val boss = raid.boss
     if (boss.currentHp <= 0) return
-    val hitter = characterStore.getCharacter(charId)?.info?.name ?: "A raider"
+    val hitter = characterStore.getCharacter(charId)?.info?.name ?: SOMEBODY
     val percent = (boss.currentHp * 100) / boss.stats.hp.coerceAtLeast(1)
     val update = notice("$hitter attacked ${raid.bossName}: $percent% left.")
     raid.raiders
@@ -236,7 +259,7 @@ constructor(
     val raid = raids.remove(charId) ?: return
     raid.raiders.remove(charId)
     if (raid.raiders.isEmpty()) return
-    val name = characterStore.getCharacter(charId)?.info?.name ?: "A raider"
+    val name = characterStore.getCharacter(charId)?.info?.name ?: SOMEBODY
     raid.raiders.forEach {
       sessionRegistry.getByCharacterId(it)?.send(notice("$name left the raid."))
     }

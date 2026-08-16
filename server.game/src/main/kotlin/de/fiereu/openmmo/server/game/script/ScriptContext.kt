@@ -128,15 +128,16 @@ internal constructor(
       thanks: DialogLine,
       afterwards: DialogLine,
   ) {
-    // Both names are wanted on every line: STR_VAR_1 is what they are asking for, STR_VAR_2 what
-    // they are giving up.
+    // One name only, and it is the species they are asking for, because a box carrying two of these
+    // is refused: the client answers it with "Buffer underflow ... 0x21" and draws nothing, which
+    // leaves the script waiting for an answer that cannot come and the player unable to move.
+    // Every box that works anywhere on this server carries exactly one, which is also all any
+    // capture of a real one has ever carried. So the trade lines ask after {STR_VAR_1} properly and
+    // leave {STR_VAR_2}, the monster on offer, to whatever the client puts there.
     val names =
         listOf(
             TextPokemonSpeciesArg(
-                partySlot = 1, stringVariable = 1, speciesId = trade.requested.toShort()),
-            TextPokemonSpeciesArg(
-                partySlot = 1, stringVariable = 2, speciesId = trade.offered.toShort()),
-        )
+                partySlot = 1, stringVariable = 1, speciesId = trade.requested.toShort()))
 
     if (isFlagSet(flag)) {
       dialog.showAndWait(

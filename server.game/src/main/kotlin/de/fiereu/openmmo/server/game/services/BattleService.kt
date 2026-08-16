@@ -99,8 +99,22 @@ constructor(
    */
   private val turnListeners = mutableListOf<(Long) -> Unit>()
 
+  private val caughtListeners = mutableListOf<(Long) -> Unit>()
+
   fun onTurnResolved(listener: (charId: Long) -> Unit) {
     synchronized(turnListeners) { turnListeners += listener }
+  }
+
+  /** Told when a player catches whatever they were fighting. A raid listens for its boss. */
+  fun onWildCaught(listener: (charId: Long) -> Unit) {
+    synchronized(caughtListeners) { caughtListeners += listener }
+  }
+
+  private fun fireWildCaught(charId: Long) {
+    val listeners = synchronized(caughtListeners) { caughtListeners.toList() }
+    listeners.forEach {
+      runCatching { it(charId) }.onFailure { e -> log.warn(e) { "caught listener" } }
+    }
   }
 
   private fun fireTurnResolved(charId: Long) {
@@ -256,7 +270,10 @@ constructor(
       session: SessionContext,
       boss: BattleMonState,
   ): BattleInstance? =
-      createBattle(session, emptyList(), catchable = false, escapable = true, shared = listOf(boss))
+      // A boss can be caught, which is the point of cornering one. The shared pool of health makes
+      // that hard on its own: the odds read the health left, so a fresh boss is a waste of a ball
+      // and a worn down one is worth a throw. Catching it ends the raid for everybody.
+      createBattle(session, emptyList(), catchable = true, escapable = true, shared = listOf(boss))
 
   /** Runs a story battle and waits for its scene. */
   suspend fun startScriptedBattle(
@@ -636,6 +653,7 @@ constructor(
       emitter.sendNotice(battle, "Your party is full, so it was sent to your PC.")
     }
     endBattle(battle, BattleResult.CAUGHT)
+    fireWildCaught(battle.charId)
   }
 
   /**
