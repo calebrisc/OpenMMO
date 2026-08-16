@@ -284,6 +284,42 @@ class CharacterRepositoryIT :
         repository.loadById(entityIds.newCharacterId()).shouldBeNull()
       }
 
+      test("two monsters in one container trade slots in a single save") {
+        val stored = aggregate(userId = 95)
+        val first = stored.pokemon.single()
+        val second = monster(stored.info.id, PokemonContainer.PARTY, 1)
+        stored.pokemon.add(second)
+        repository.insertAggregate(stored)
+
+        val current =
+            stored.copy(
+                pokemon =
+                    mutableListOf(first.copy(containerSlot = 1), second.copy(containerSlot = 0)))
+        repository.saveChanges(stored, current)
+
+        val loaded = repository.loadById(stored.info.id).shouldNotBeNull()
+        loaded.pokemon.map { it.id } shouldBe listOf(second.id, first.id)
+        loaded.pokemon.map { it.containerSlot } shouldBe listOf(0.toShort(), 1.toShort())
+      }
+
+      test("a party monster and a boxed one swap places in a single save") {
+        val stored = aggregate(userId = 96)
+        val party = stored.pokemon.single()
+        val boxed = stored.pcStorage.single()
+        repository.insertAggregate(stored)
+
+        val current =
+            stored.copy(
+                pokemon = mutableListOf(boxed.copy(container = PokemonContainer.PARTY)),
+                pcStorage = mutableListOf(party.copy(container = PokemonContainer.PC)),
+            )
+        repository.saveChanges(stored, current)
+
+        val loaded = repository.loadById(stored.info.id).shouldNotBeNull()
+        loaded.pokemon.map { it.id } shouldBe listOf(boxed.id)
+        loaded.pcStorage.map { it.id } shouldBe listOf(party.id)
+      }
+
       test("a duplicate container slot is rejected") {
         val stored = aggregate(userId = 92)
         stored.pokemon.add(monster(stored.info.id, PokemonContainer.PARTY, 0))

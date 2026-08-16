@@ -1,7 +1,12 @@
 package de.fiereu.openmmo.server.game.storage
 
+import de.fiereu.openmmo.db.game.tables.references.POKEMON
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import org.jooq.SQLDialect
+import org.jooq.impl.DSL
 
 class RowDeltaTest :
     FunSpec({
@@ -34,5 +39,18 @@ class RowDeltaTest :
 
       test("an unchanged key only table produces an empty delta") {
         rowDelta(setOf("a"), setOf("a")).isEmpty shouldBe true
+      }
+
+      // Arbitrating on the slot as well would let one monster of a swapped pair overwrite the
+      // other, since each of them matches where the other still sits.
+      test("an upsert arbitrates on the primary key and not on the slot a monster sits in") {
+        val dsl = DSL.using(SQLDialect.POSTGRES)
+        val sql =
+            dsl.upsertOnPrimaryKey(POKEMON, dsl.newRecord(POKEMON).apply { touched(true) }).getSQL()
+
+        val target = sql.substringAfter("on conflict").substringBefore("do update")
+        target shouldContain "id"
+        target shouldNotContain "container_slot"
+        target shouldNotContain "owner_id"
       }
     })

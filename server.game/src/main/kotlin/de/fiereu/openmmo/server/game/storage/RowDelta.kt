@@ -33,5 +33,23 @@ fun <K, V, R : UpdatableRecord<R>> DSLContext.writeDelta(
   val records = delta.changed.map { (key, row) -> record(key, row).apply { touched(true) } }
   // A table that is only a primary key has nothing to set on a conflict.
   val keyOnly = table.primaryKey?.fields?.size == table.fields().size
-  if (keyOnly) batchInsert(records).execute() else batchMerge(records).execute()
+  if (keyOnly) batchInsert(records).execute()
+  else batch(records.map { upsertOnPrimaryKey(table, it) }).execute()
 }
+
+/**
+ * An upsert that arbitrates on the primary key and nothing else.
+ *
+ * `batchMerge` would arbitrate on every unique key the table has, which for monsters includes
+ * (owner, container, slot). Two monsters trading slots would then each match the *other's* row and
+ * overwrite it, so one of them was lost. Slot collisions are the deferred unique constraint's job
+ * (see V4), which lets a save pass through a state where two rows share a slot and only checks at
+ * commit.
+ */
+internal fun <R : UpdatableRecord<R>> DSLContext.upsertOnPrimaryKey(table: Table<R>, record: R) =
+    insertInto(table)
+        .set(record)
+        .onConflict(
+            checkNotNull(table.primaryKey) { "$table has no primary key to upsert on" }.fields)
+        .doUpdate()
+        .set(record)
