@@ -4,20 +4,15 @@ import de.fiereu.openmmo.dialog.generated.kanto.LavenderTown
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox LavenderTown_Text_DoYouBelieveInGhosts, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, YES, LavenderTown_EventScript_LittleGirlBelieve
- * msgbox LavenderTown_Text_JustImaginingWhiteHand
- * release
- * end
- * ```
- */
 internal object LavenderTown_EventScript_LittleGirl : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port LavenderTown_EventScript_LittleGirl")
+  override suspend fun run(ctx: ScriptContext) {
+    val said1 = ctx.askYesNo(LavenderTown.DoYouBelieveInGhosts)
+    if (said1) {
+      ctx.say(LavenderTown.SoThereAreBelievers)
+      return
+    }
+    ctx.say(LavenderTown.JustImaginingWhiteHand)
+  }
 }
 
 internal object LavenderTown_EventScript_WorkerM : Script {

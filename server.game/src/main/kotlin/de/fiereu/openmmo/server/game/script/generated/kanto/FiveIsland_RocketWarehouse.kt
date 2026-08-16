@@ -4,6 +4,9 @@ import de.fiereu.openmmo.dialog.generated.kanto.FiveIsland_RocketWarehouse
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val TRAINER_SCIENTIST_GIDEON = 545
 
 private const val TRAINER_TEAM_ROCKET_ADMIN_2 = 544
 
@@ -68,18 +71,19 @@ internal object FiveIsland_RocketWarehouse_EventScript_Grunt1 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SCIENTIST_GIDEON, FiveIsland_RocketWarehouse_Text_GideonIntro, FiveIsland_RocketWarehouse_Text_GideonDefeat, FiveIsland_RocketWarehouse_EventScript_DefeatedGideon
- * goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, FiveIsland_RocketWarehouse_EventScript_MentionGiovannisKid
- * msgbox FiveIsland_RocketWarehouse_Text_GetLostLeaveMeBe, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_RocketWarehouse_EventScript_Gideon : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_RocketWarehouse_EventScript_Gideon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SCIENTIST_GIDEON,
+        FiveIsland_RocketWarehouse.GideonIntro,
+        FiveIsland_RocketWarehouse.GideonDefeat))
+        return
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_CAN_LINK_WITH_RS)) {
+      ctx.say(FiveIsland_RocketWarehouse.GiovannisKidHasRedHair)
+      return
+    }
+    ctx.say(FiveIsland_RocketWarehouse.GetLostLeaveMeBe)
+  }
 }
 
 internal object FiveIsland_RocketWarehouse_EventScript_ItemBigPearl : Script {
@@ -98,19 +102,14 @@ internal object FiveIsland_RocketWarehouse_EventScript_ItemUpGrade : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.UP_GRADE)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_set FLAG_DEFEATED_ROCKETS_IN_WAREHOUSE, FiveIsland_RocketWarehouse_EventScript_CageUnlocked
- * msgbox FiveIsland_RocketWarehouse_Text_ManyMonsLockedInPen
- * releaseall
- * end
- * ```
- */
 internal object FiveIsland_RocketWarehouse_EventScript_Cage : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_RocketWarehouse_EventScript_Cage")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_DEFEATED_ROCKETS_IN_WAREHOUSE)) {
+      ctx.say(FiveIsland_RocketWarehouse.PenUnlockedMonsFled)
+      return
+    }
+    ctx.say(FiveIsland_RocketWarehouse.ManyMonsLockedInPen)
+  }
 }
 
 internal object FiveIsland_RocketWarehouse_EventScript_Computer : Script {

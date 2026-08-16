@@ -1,27 +1,26 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route16_House
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_HM02, Route16_House_EventScript_AlreadyGotHM02
- * msgbox Route16_House_Text_FoundMySecretRetreat
- * checkitemspace ITEM_HM02
- * goto_if_eq VAR_RESULT, FALSE, Route16_House_EventScript_NoRoomForHM02
- * giveitem_msg Route16_House_Text_ReceivedHM02FromGirl, ITEM_HM02
- * msgbox Route16_House_Text_ExplainHM02
- * setflag FLAG_GOT_HM02
- * release
- * end
- * ```
- */
 internal object Route16_House_EventScript_Woman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route16_House_EventScript_Woman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_HM02)) {
+      ctx.say(Route16_House.ExplainHM02)
+      return
+    }
+    ctx.say(Route16_House.FoundMySecretRetreat)
+    if (!ctx.giveItem(Items.HM02)) {
+      ctx.say(Route16_House.DontHaveAnyRoomForThis)
+      return
+    }
+    ctx.say(Route16_House.ReceivedHM02FromGirl)
+    ctx.say(Route16_House.ExplainHM02)
+    ctx.setFlag(KantoFlags.FLAG_GOT_HM02)
+  }
 }
 
 internal object Route16_House_EventScript_Fearow : Script {

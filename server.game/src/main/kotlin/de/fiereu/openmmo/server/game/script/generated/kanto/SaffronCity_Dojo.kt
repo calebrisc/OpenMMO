@@ -3,6 +3,9 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_Dojo
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+
+private const val TRAINER_BLACK_BELT_KOICHI = 317
 
 private const val TRAINER_BLACK_BELT_AARON = 320
 private const val TRAINER_BLACK_BELT_HIDEKI = 319
@@ -45,18 +48,19 @@ internal object SaffronCity_Dojo_EventScript_Mike : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BLACK_BELT_KOICHI, SaffronCity_Dojo_Text_MasterKoichiIntro, SaffronCity_Dojo_Text_MasterKoichiDefeat, SaffronCity_Dojo_EventScript_DefeatedMasterKoichi
- * goto_if_set FLAG_GOT_HITMON_FROM_DOJO, SaffronCity_Dojo_EventScript_MasterKoichiAlreadyGotHitmon
- * msgbox SaffronCity_Dojo_Text_ChoosePrizedFightingMon, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object SaffronCity_Dojo_EventScript_MasterKoichi : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SaffronCity_Dojo_EventScript_MasterKoichi")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BLACK_BELT_KOICHI,
+        SaffronCity_Dojo.MasterKoichiIntro,
+        SaffronCity_Dojo.MasterKoichiDefeat))
+        return
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_HITMON_FROM_DOJO)) {
+      ctx.say(SaffronCity_Dojo.StayAndTrainWithUs)
+      return
+    }
+    ctx.say(SaffronCity_Dojo.ChoosePrizedFightingMon)
+  }
 }
 
 /**

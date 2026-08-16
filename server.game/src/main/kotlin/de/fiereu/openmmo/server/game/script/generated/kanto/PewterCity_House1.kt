@@ -8,19 +8,11 @@ internal object PewterCity_House1_EventScript_BaldingMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PewterCity_House1.TradeMonsAreFinicky)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * msgbox PewterCity_House1_Text_NidoranSit
- * call PewterCity_House1_EventScript_DoNidoranCry
- * release
- * end
- * ```
- */
 internal object PewterCity_House1_EventScript_LittleBoy : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_House1_EventScript_LittleBoy")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(PewterCity_House1.NidoranSit)
+    ctx.say(PewterCity_House1.Nidoran)
+  }
 }
 
 /**

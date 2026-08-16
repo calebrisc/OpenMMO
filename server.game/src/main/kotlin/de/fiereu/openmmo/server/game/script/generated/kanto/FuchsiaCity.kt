@@ -3,6 +3,8 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.FuchsiaCity
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 internal object FuchsiaCity_EventScript_Erik : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FuchsiaCity.WheresSara)
@@ -64,107 +66,51 @@ internal object FuchsiaCity_EventScript_WardensHomeSign : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.sign(FuchsiaCity.WardensHomeSign)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_VOLTORB
- * special SetSeenMon
- * showmonpic SPECIES_VOLTORB, 10, 3
- * msgbox FuchsiaCity_Text_VoltorbSign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_VoltorbSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_VoltorbSign")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 100)
+    ctx.say(FuchsiaCity.VoltorbSign)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_SLOWPOKE
- * special SetSeenMon
- * showmonpic SPECIES_SLOWPOKE, 10, 3
- * msgbox FuchsiaCity_Text_SlowpokeSign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_SlowpokeSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_SlowpokeSign")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 79)
+    ctx.say(FuchsiaCity.SlowpokeSign)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_CHANSEY
- * special SetSeenMon
- * showmonpic SPECIES_CHANSEY, 10, 3
- * msgbox FuchsiaCity_Text_ChanseySign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_ChanseySign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_ChanseySign")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 113)
+    ctx.say(FuchsiaCity.ChanseySign)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_KANGASKHAN
- * special SetSeenMon
- * showmonpic SPECIES_KANGASKHAN, 10, 3
- * msgbox FuchsiaCity_Text_KangaskhanSign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_KangaskhanSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_KangaskhanSign")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 115)
+    ctx.say(FuchsiaCity.KangaskhanSign)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_set FLAG_GOT_DOME_FOSSIL, FuchsiaCity_EventScript_OmanyteSign
- * setvar VAR_0x8004, SPECIES_KABUTO
- * special SetSeenMon
- * showmonpic SPECIES_KABUTO, 10, 3
- * msgbox FuchsiaCity_Text_KabutoSign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_FossilMonSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_FossilMonSign")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_DOME_FOSSIL)) {
+      ctx.setVar(KantoVars.VAR_0x8004, 138)
+      ctx.say(FuchsiaCity.OmanyteSign)
+      return
+    }
+    ctx.setVar(KantoVars.VAR_0x8004, 140)
+    ctx.say(FuchsiaCity.KabutoSign)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_LAPRAS
- * special SetSeenMon
- * showmonpic SPECIES_LAPRAS, 10, 3
- * msgbox FuchsiaCity_Text_LaprasSign
- * hidemonpic
- * releaseall
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_LaprasSign : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_EventScript_LaprasSign")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 131)
+    ctx.say(FuchsiaCity.LaprasSign)
+  }
 }
 
 internal object FuchsiaCity_EventScript_SafariGameSign : Script {

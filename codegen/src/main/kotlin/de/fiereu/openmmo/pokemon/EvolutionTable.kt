@@ -189,8 +189,18 @@ object EvolutionTable {
       )
 
   /** What [dexId] becomes if [itemName] is used on it, or null if that stone does nothing to it. */
-  fun byStone(dexId: Int, itemName: String): Int? =
-      byStone.firstOrNull { it.from == dexId && it.item == itemName }?.into
+  /**
+   * The stone rows are named the way the decomp names items and the item registry is named the way
+   * a player reads them, so MOON_STONE was compared against "Moon Stone" and never once matched.
+   * Every stone evolution in the game was unreachable. Letters and digits alone decide it, which
+   * also settles THUNDER_STONE against the registry's "Thunderstone".
+   */
+  private fun key(name: String): String = name.filter { it.isLetterOrDigit() }.uppercase()
+
+  fun byStone(dexId: Int, itemName: String): Int? {
+    val wanted = key(itemName)
+    return byStone.firstOrNull { it.from == dexId && key(it.item) == wanted }?.into
+  }
 
   val stoneCount: Int
     get() = byStone.size

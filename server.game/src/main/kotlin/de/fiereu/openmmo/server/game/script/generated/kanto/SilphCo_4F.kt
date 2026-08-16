@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_4F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_RODNEY = 339
 private const val TRAINER_TEAM_ROCKET_GRUNT_26 = 376
@@ -36,19 +37,14 @@ internal object SilphCo_4F_EventScript_Rodney : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_4F_EventScript_WorkerMRocketsGone
- * msgbox SilphCo_4F_Text_CantYouSeeImHiding
- * release
- * end
- * ```
- */
 internal object SilphCo_4F_EventScript_WorkerM : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_4F_EventScript_WorkerM")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_4F.TeamRocketIsGone)
+      return
+    }
+    ctx.say(SilphCo_4F.CantYouSeeImHiding)
+  }
 }
 
 internal object SilphCo_4F_EventScript_ItemMaxRevive : Script {

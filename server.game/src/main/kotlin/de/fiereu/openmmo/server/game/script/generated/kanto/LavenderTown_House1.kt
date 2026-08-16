@@ -3,21 +3,16 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.LavenderTown_House1
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_RESCUED_MR_FUJI, LavenderTown_House1_EventScript_CooltrainerFGhostGone
- * msgbox LavenderTown_House1_Text_RocketsKilledCubonesMother
- * release
- * end
- * ```
- */
 internal object LavenderTown_House1_EventScript_CooltrainerF : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_House1_EventScript_CooltrainerF")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_RESCUED_MR_FUJI)) {
+      ctx.say(LavenderTown_House1.GhostOfPokemonTowerIsGone)
+      return
+    }
+    ctx.say(LavenderTown_House1.RocketsKilledCubonesMother)
+  }
 }
 
 internal object LavenderTown_House1_EventScript_Cubone : Script {

@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 /**
  * Not ported yet. Decomp body:
@@ -39,16 +40,10 @@ internal object TrainerTower_EventScript_KnockoutTrainer : Script {
       TODO("port TrainerTower_EventScript_KnockoutTrainer")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * call TrainerTower_EventScript_SpeakToDoublesTrainer2
- * end
- * ```
- */
 internal object TrainerTower_EventScript_DoublesTrainer2 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port TrainerTower_EventScript_DoublesTrainer2")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8006, 1)
+  }
 }
 
 internal val TrainerTower_1FScripts: Map<String, Script> =

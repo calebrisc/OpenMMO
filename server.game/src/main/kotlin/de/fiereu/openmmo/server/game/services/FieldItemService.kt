@@ -11,6 +11,8 @@ import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.pokemon.EvolutionTable
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleItems
+import de.fiereu.openmmo.server.game.battle.ExpCurves
+import de.fiereu.openmmo.server.game.battle.MoveLearner
 import de.fiereu.openmmo.server.game.battle.StatCalculator
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -36,6 +38,7 @@ constructor(
     private val items: ItemRegistry,
     private val species: SpeciesRegistry,
     private val battles: BattleService,
+    private val moveLearner: MoveLearner,
 ) {
 
   suspend fun onUseItem(event: PacketEvent<DialogOptionPacket>) {
@@ -63,6 +66,11 @@ constructor(
         EvolutionTable.byStone(target(stored, packet.entityId)?.dexId ?: -1, item.name)
     if (evolvesInto != null) {
       evolveWithStone(ctx, charId, packet.entityId, packet.optionId, item, evolvesInto)
+      return
+    }
+
+    if (RARE_CANDY_NAMES.contains(item.name)) {
+      rareCandy(ctx, charId, packet.entityId, packet.optionId, item)
       return
     }
 
@@ -153,4 +161,103 @@ constructor(
             pokemon = party,
         ))
   }
+
+  /**
+   * A level in a wrapper.
+   *
+   * The candy was one of the items that landed on "does not do anything yet": it is worth a level
+   * and this server had no way to grant one outside a battle. It is granted the way a won fight
+   * grants one, so the moves of the new level, the recomputed stats and an evolution all follow
+   * from it rather than only the number going up.
+   */
+  private suspend fun rareCandy(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      itemId: Int,
+      item: ItemDef,
+  ) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val monster = target(stored, entityId) ?: return
+    val definition = species.get(monster.dexId)
+    if (definition == null) {
+      ctx.send(notice("That monster is not covered by the battle data yet."))
+      return
+    }
+    val was = monster.level.toInt()
+    if (was >= ExpCurves.MAX_LEVEL) {
+      ctx.send(notice("${definition.name} cannot grow any further."))
+      return
+    }
+    val now = was + 1
+    val known = monster.moves.toMutableList()
+    val outcome = moveLearner.learn(known, monster.dexId, was, now)
+    // Growing changes what the monster is made of, so the stats are recomputed from the new level
+    // and the hp it was missing stays missing.
+    val grown =
+        monster.copy(
+            level = now.toByte(),
+            xp = ExpCurves.totalXpFor(definition.growthRate, now),
+            moves = known,
+        )
+    val before = StatCalculator.computeAll(definition, monster)
+    val after = StatCalculator.computeAll(definition, grown)
+    val healed = (grown.hp + maxOf(0, after.hp - before.hp)).coerceAtMost(after.hp)
+    characterStore.updatePokemon(charId, grown.copy(hp = healed.toShort()))
+    characterStore.addItem(charId, itemId, -1)
+    characterStore.flushCharacterAsync(charId)
+    log.info { "char=$charId used ${item.name} on ${monster.id}: level $was -> $now" }
+    ctx.send(notice("${definition.name} grew to level $now!"))
+    for (learned in outcome.learned) ctx.send(notice("It learned ${learned.name}!"))
+    // A move it has no room for needs the prompt a battle uses, which nothing outside a battle
+    // drives yet, so say so rather than dropping it in silence.
+    for (missed in outcome.offered) {
+      ctx.send(notice("It is ready to learn ${missed.name}, but its moves are full."))
+    }
+    val evolution = EvolutionTable.at(grown.dexId, now)
+    if (evolution != null) {
+      evolveTo(ctx, charId, monster.id, evolution.into, definition.name)
+      return
+    }
+    sendParty(ctx, charId)
+  }
+
+  /** Sends the party back so the client redraws whatever just changed about it. */
+  private fun sendParty(ctx: SessionContext, charId: Long) {
+    val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
+    ctx.send(
+        PokemonContainerPacket(
+            container = PokemonContainer.PARTY,
+            hasChange = true,
+            delete = false,
+            pokemon = party,
+        ))
+  }
+
+  private fun evolveTo(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      into: Int,
+      was: String,
+  ) {
+    val definition = species.get(into)
+    if (definition == null) {
+      sendParty(ctx, charId)
+      return
+    }
+    val monster = characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == entityId }
+    if (monster == null) {
+      sendParty(ctx, charId)
+      return
+    }
+    characterStore.updatePokemon(charId, monster.copy(dexId = into))
+    characterStore.flushCharacterAsync(charId)
+    log.info { "char=$charId evolved $was into ${definition.name}" }
+    ctx.send(notice("$was evolved into ${definition.name}!"))
+    sendParty(ctx, charId)
+  }
 }
+
+/** What the registry calls the candy, allowing for the way the name is punctuated. */
+private val RARE_CANDY_NAMES = setOf("Rare Candy", "RareCandy", "RARE_CANDY")

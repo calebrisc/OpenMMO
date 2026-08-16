@@ -45,20 +45,15 @@ internal object PewterCity_EventScript_FatMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PewterCity.BrockOnlySeriousTrainerHere)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * msgbox PewterCity_Text_DoYouKnowWhatImDoing, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, YES, PewterCity_EventScript_KnowWhatTheyreDoing
- * msgbox PewterCity_Text_SprayingRepelToKeepWildMonsOut
- * release
- * end
- * ```
- */
 internal object PewterCity_EventScript_BugCatcher : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_EventScript_BugCatcher")
+  override suspend fun run(ctx: ScriptContext) {
+    val said1 = ctx.askYesNo(PewterCity.DoYouKnowWhatImDoing)
+    if (said1) {
+      ctx.say(PewterCity.ThatsRightItsHardWork)
+      return
+    }
+    ctx.say(PewterCity.SprayingRepelToKeepWildMonsOut)
+  }
 }
 
 /**

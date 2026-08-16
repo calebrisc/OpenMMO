@@ -7,6 +7,7 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 import de.fiereu.openmmo.story.generated.kanto.KantoVars
+import kotlin.random.Random
 
 private const val TRAINER_TEAM_ROCKET_GRUNT_5 = 355
 
@@ -30,41 +31,36 @@ internal object CeruleanCity_EventScript_Grunt : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_SS_TICKET, CeruleanCity_EventScript_LittleBoySlowbroMoved
- * msgbox CeruleanCity_Text_IfSlowbroWasntThereCouldCutTree
- * release
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_LittleBoy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_LittleBoy")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_SS_TICKET)) {
+      ctx.say(CeruleanCity.YouCanCutDownSmallTrees)
+      return
+    }
+    ctx.say(CeruleanCity.IfSlowbroWasntThereCouldCutTree)
+  }
 }
 
 internal object CeruleanCity_EventScript_BaldingMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeruleanCity.PokemonEncyclopediaAmusing)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * random 4
- * copyvar VAR_0x8008, VAR_RESULT
- * call_if_eq VAR_0x8008, 0, CeruleanCity_EventScript_SlowbroText1
- * call_if_eq VAR_0x8008, 1, CeruleanCity_EventScript_SlowbroText2
- * call_if_eq VAR_0x8008, 2, CeruleanCity_EventScript_SlowbroText3
- * call_if_eq VAR_0x8008, 3, CeruleanCity_EventScript_SlowbroText4
- * release
- * end
- * ```
- */
 internal object CeruleanCity_EventScript_Slowbro : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_EventScript_Slowbro")
+  override suspend fun run(ctx: ScriptContext) {
+    val roll1 = Random.nextInt(4)
+    if (roll1 == 0) {
+      ctx.say(CeruleanCity.SlowbroTookSnooze)
+    }
+    if (roll1 == 1) {
+      ctx.say(CeruleanCity.SlowbroLoafingAround)
+    }
+    if (roll1 == 2) {
+      ctx.say(CeruleanCity.SlowbroTurnedAway)
+    }
+    if (roll1 == 3) {
+      ctx.say(CeruleanCity.SlowbroIgnoredOrders)
+    }
+  }
 }
 
 /**

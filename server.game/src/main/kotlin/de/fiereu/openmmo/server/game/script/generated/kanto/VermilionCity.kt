@@ -3,46 +3,32 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.VermilionCity
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 internal object VermilionCity_EventScript_Woman : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity.GrimerMultipliesInSludge)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_eq VAR_MAP_SCENE_VERMILION_CITY, 3, VermilionCity_EventScript_OldMan1SSAnneLeft
- * msgbox VermilionCity_Text_DidYouSeeSSAnneInHarbor
- * release
- * end
- * ```
- */
 internal object VermilionCity_EventScript_OldMan1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_EventScript_OldMan1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_VERMILION_CITY) == 3) {
+      ctx.say(VermilionCity.SSAnneHasDepartedForYear)
+      return
+    }
+    ctx.say(VermilionCity.DidYouSeeSSAnneInHarbor)
+  }
 }
 
 internal object VermilionCity_EventScript_OldMan2 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(VermilionCity.BuildingOnThisLand)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * waitse
- * playmoncry SPECIES_MACHOP, CRY_MODE_NORMAL
- * msgbox VermilionCity_Text_Machop
- * waitmoncry
- * msgbox VermilionCity_Text_MachopStompingLandFlat
- * release
- * end
- * ```
- */
 internal object VermilionCity_EventScript_Machop : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_EventScript_Machop")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(VermilionCity.Machop)
+    ctx.say(VermilionCity.MachopStompingLandFlat)
+  }
 }
 
 internal object VermilionCity_EventScript_Sailor : Script {
@@ -64,19 +50,11 @@ internal object VermilionCity_EventScript_FerrySailor : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_EventScript_FerrySailor")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * setflag FLAG_TALKED_TO_OAKS_AIDE_IN_VERMILION
- * msgbox VermilionCity_Text_Route2AideHasPackageForYou
- * release
- * end
- * ```
- */
 internal object VermilionCity_EventScript_OaksAide : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_EventScript_OaksAide")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setFlag(KantoFlags.FLAG_TALKED_TO_OAKS_AIDE_IN_VERMILION)
+    ctx.say(VermilionCity.Route2AideHasPackageForYou)
+  }
 }
 
 internal object VermilionCity_EventScript_CitySign : Script {

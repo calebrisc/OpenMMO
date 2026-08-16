@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.VermilionCity_PokemonFanClub
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 /**
  * Not ported yet. Decomp body:
@@ -22,20 +23,14 @@ internal object VermilionCity_PokemonFanClub_EventScript_Chairman : Script {
       TODO("port VermilionCity_PokemonFanClub_EventScript_Chairman")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_SYS_GAME_CLEAR, VermilionCity_PokemonFanClub_EventScript_WorkerFGameClear
- * msgbox VermilionCity_PokemonFanClub_Text_ChairmanVeryVocalAboutPokemon
- * release
- * end
- * ```
- */
 internal object VermilionCity_PokemonFanClub_EventScript_WorkerF : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonFanClub_EventScript_WorkerF")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_GAME_CLEAR)) {
+      ctx.say(VermilionCity_PokemonFanClub.ChairmanReallyAdoresHisMons)
+      return
+    }
+    ctx.say(VermilionCity_PokemonFanClub.ChairmanVeryVocalAboutPokemon)
+  }
 }
 
 internal object VermilionCity_PokemonFanClub_EventScript_Pikachu : Script {

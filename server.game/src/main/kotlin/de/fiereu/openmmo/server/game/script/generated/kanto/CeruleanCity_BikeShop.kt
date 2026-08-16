@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.CeruleanCity_BikeShop
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 /**
  * Not ported yet. Decomp body:
@@ -27,20 +28,14 @@ internal object CeruleanCity_BikeShop_EventScript_Clerk : Script {
       TODO("port CeruleanCity_BikeShop_EventScript_Clerk")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_BICYCLE, CeruleanCity_BikeShop_EventScript_YoungsterHaveBike
- * msgbox CeruleanCity_BikeShop_Text_BikesCoolButExpensive
- * release
- * end
- * ```
- */
 internal object CeruleanCity_BikeShop_EventScript_Youngster : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeruleanCity_BikeShop_EventScript_Youngster")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_BICYCLE)) {
+      ctx.say(CeruleanCity_BikeShop.WowYourBikeIsCool)
+      return
+    }
+    ctx.say(CeruleanCity_BikeShop.BikesCoolButExpensive)
+  }
 }
 
 internal object CeruleanCity_BikeShop_EventScript_Woman : Script {

@@ -32,20 +32,14 @@ internal object LavenderTown_VolunteerPokemonHouse_EventScript_LittleBoy : Scrip
       ctx.say(LavenderTown_VolunteerPokemonHouse.MonsNiceToHug)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_RESCUED_MR_FUJI, LavenderTown_VolunteerPokemonHouse_EventScript_YoungsterFujiBack
- * msgbox LavenderTown_VolunteerPokemonHouse_Text_WhereDidMrFujiGo
- * release
- * end
- * ```
- */
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_Youngster : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port LavenderTown_VolunteerPokemonHouse_EventScript_Youngster")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_RESCUED_MR_FUJI)) {
+      ctx.say(LavenderTown_VolunteerPokemonHouse.MrFujiWasPrayingForCubonesMother)
+      return
+    }
+    ctx.say(LavenderTown_VolunteerPokemonHouse.WhereDidMrFujiGo)
+  }
 }
 
 internal object LavenderTown_VolunteerPokemonHouse_EventScript_LittleGirl : Script {

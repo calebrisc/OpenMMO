@@ -3,22 +3,21 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.FourIsland_LoreleisHouse
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TALKED_TO_LORELEI_AFTER_WAREHOUSE, FourIsland_LoreleisHouse_EventScript_Lorelei3
- * goto_if_set FLAG_DEFEATED_ROCKETS_IN_WAREHOUSE, FourIsland_LoreleisHouse_EventScript_Lorelei2
- * msgbox FourIsland_LoreleisHouse_Text_IfAnythingWereToHappenToIsland
- * release
- * end
- * ```
- */
 internal object FourIsland_LoreleisHouse_EventScript_Lorelei : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FourIsland_LoreleisHouse_EventScript_Lorelei")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_TALKED_TO_LORELEI_AFTER_WAREHOUSE)) {
+      ctx.say(FourIsland_LoreleisHouse.WillDoWhatICanHereAndNow)
+      return
+    }
+    if (ctx.isFlagSet(KantoFlags.FLAG_DEFEATED_ROCKETS_IN_WAREHOUSE)) {
+      ctx.setFlag(KantoFlags.FLAG_TALKED_TO_LORELEI_AFTER_WAREHOUSE)
+      ctx.say(FourIsland_LoreleisHouse.IllReturnToLeagueInShortWhile)
+      return
+    }
+    ctx.say(FourIsland_LoreleisHouse.IfAnythingWereToHappenToIsland)
+  }
 }
 
 internal object FourIsland_LoreleisHouse_EventScript_Doll : Script {

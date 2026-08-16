@@ -16,20 +16,15 @@ internal object PokemonTower_1F_EventScript_Woman1 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PokemonTower_1F.GrowlitheWhyDidYouDie)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * checkplayergender
- * goto_if_eq VAR_RESULT, MALE, PokemonTower_1F_EventScript_Woman2MalePlayer
- * msgbox PokemonTower_1F_Text_ComeToPayRespectsGirl
- * release
- * end
- * ```
- */
 internal object PokemonTower_1F_EventScript_Woman2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PokemonTower_1F_EventScript_Woman2")
+  override suspend fun run(ctx: ScriptContext) {
+    val gender1 = if (ctx.isFemale) 1 else 0
+    if (gender1 == 0) {
+      ctx.say(PokemonTower_1F.ComeToPayRespectsSon)
+      return
+    }
+    ctx.say(PokemonTower_1F.ComeToPayRespectsGirl)
+  }
 }
 
 internal object PokemonTower_1F_EventScript_BaldingMan : Script {

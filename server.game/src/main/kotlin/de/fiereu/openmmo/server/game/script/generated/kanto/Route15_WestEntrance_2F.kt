@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.Route15_WestEntrance_2F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 /**
  * Not ported yet. Decomp body:
@@ -33,24 +34,11 @@ internal object Route15_WestEntrance_2F_EventScript_Aide : Script {
       TODO("port Route15_WestEntrance_2F_EventScript_Aide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * msgbox Route15_WestEntrance_2F_Text_LargeShiningBird
- * showmonpic SPECIES_ARTICUNO, 10, 3
- * delay 20
- * waitbuttonpress
- * hidemonpic
- * setvar VAR_0x8004, SPECIES_ARTICUNO
- * special SetSeenMon
- * releaseall
- * end
- * ```
- */
 internal object Route15_WestEntrance_2F_EventScript_LeftBinoculars : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route15_WestEntrance_2F_EventScript_LeftBinoculars")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.say(Route15_WestEntrance_2F.LargeShiningBird)
+    ctx.setVar(KantoVars.VAR_0x8004, 144)
+  }
 }
 
 internal object Route15_WestEntrance_2F_EventScript_RightBinoculars : Script {

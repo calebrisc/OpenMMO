@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_6F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_TAYLOR = 341
 private const val TRAINER_TEAM_ROCKET_GRUNT_30 = 380
@@ -18,79 +19,54 @@ internal object SilphCo_6F_EventScript_Grunt1 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_6F_EventScript_WorkerM1RocketsGone
- * msgbox SilphCo_6F_Text_HelpMePlease
- * release
- * end
- * ```
- */
 internal object SilphCo_6F_EventScript_WorkerM1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_6F_EventScript_WorkerM1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_6F.WeGotEngaged)
+      return
+    }
+    ctx.say(SilphCo_6F.HelpMePlease)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_6F_EventScript_WorkerF1RocketsGone
- * msgbox SilphCo_6F_Text_ThatManIsSuchACoward
- * release
- * end
- * ```
- */
 internal object SilphCo_6F_EventScript_WorkerF1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_6F_EventScript_WorkerF1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_6F.NeedsMeToLookAfterHim)
+      return
+    }
+    ctx.say(SilphCo_6F.ThatManIsSuchACoward)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_6F_EventScript_WorkerM2RocketsGone
- * msgbox SilphCo_6F_Text_TargetedSilphForOurMonProducts
- * release
- * end
- * ```
- */
 internal object SilphCo_6F_EventScript_WorkerM2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_6F_EventScript_WorkerM2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_6F.ComeWorkForSilphWhenYoureOlder)
+      return
+    }
+    ctx.say(SilphCo_6F.TargetedSilphForOurMonProducts)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_6F_EventScript_WorkerM3RocketsGone
- * msgbox SilphCo_6F_Text_RocketsTookOverBuilding
- * release
- * end
- * ```
- */
 internal object SilphCo_6F_EventScript_WorkerM3 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_6F_EventScript_WorkerM3")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_6F.BetterGetBackToWork)
+      return
+    }
+    ctx.say(SilphCo_6F.RocketsTookOverBuilding)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_6F_EventScript_WorkerF2RocketsGone
- * msgbox SilphCo_6F_Text_RocketsTryingToConquerWorld
- * release
- * end
- * ```
- */
 internal object SilphCo_6F_EventScript_WorkerF2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_6F_EventScript_WorkerF2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_6F.RocketsRanAwayBecauseOfYou)
+      return
+    }
+    ctx.say(SilphCo_6F.RocketsTryingToConquerWorld)
+  }
 }
 
 internal object SilphCo_6F_EventScript_Taylor : Script {

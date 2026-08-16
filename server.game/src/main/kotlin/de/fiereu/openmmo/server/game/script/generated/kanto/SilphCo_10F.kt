@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_10F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_TRAVIS = 345
 private const val TRAINER_TEAM_ROCKET_GRUNT_39 = 389
@@ -17,19 +18,14 @@ internal object SilphCo_10F_EventScript_Travis : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_10F_EventScript_WorkerFRocketsGone
- * msgbox SilphCo_10F_Text_WaaaImScared
- * release
- * end
- * ```
- */
 internal object SilphCo_10F_EventScript_WorkerF : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_10F_EventScript_WorkerF")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_10F.KeepMeCryingASecret)
+      return
+    }
+    ctx.say(SilphCo_10F.WaaaImScared)
+  }
 }
 
 internal object SilphCo_10F_EventScript_Grunt : Script {

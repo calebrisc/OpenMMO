@@ -4,30 +4,32 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_11F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_TEAM_ROCKET_GRUNT_40 = 390
 private const val TRAINER_TEAM_ROCKET_GRUNT_41 = 391
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_MASTER_BALL_FROM_SILPH, SilphCo_11F_EventScript_AlreadyGotMasterBall
- * checkplayergender
- * call_if_eq VAR_RESULT, MALE, SilphCo_11F_EventScript_PresidentThanksMale
- * call_if_eq VAR_RESULT, FEMALE, SilphCo_11F_EventScript_PresidentThanksFemale
- * checkitemspace ITEM_MASTER_BALL
- * goto_if_eq VAR_RESULT, FALSE, SilphCo_11F_EventScript_NoRoomForMasterBall
- * giveitem_msg SilphCo_11F_Text_ObtainedMasterBallFromPresident, ITEM_MASTER_BALL, 1, MUS_OBTAIN_KEY_ITEM
- * msgbox SilphCo_11F_Text_ThatsOurSecretPrototype
- * setflag FLAG_GOT_MASTER_BALL_FROM_SILPH
- * release
- * end
- * ```
- */
 internal object SilphCo_11F_EventScript_President : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_11F_EventScript_President")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_MASTER_BALL_FROM_SILPH)) {
+      ctx.say(SilphCo_11F.ThatsOurSecretPrototype)
+      return
+    }
+    val gender1 = if (ctx.isFemale) 1 else 0
+    if (gender1 == 0) {
+      ctx.say(SilphCo_11F.ThanksForSavingMeDearBoy)
+    }
+    if (gender1 == 1) {
+      ctx.say(SilphCo_11F.ThanksForSavingMeDearGirl)
+    }
+    if (!ctx.giveItem(Items.MASTER_BALL)) {
+      ctx.say(SilphCo_11F.YouHaveNoRoomForThis)
+      return
+    }
+    ctx.say(SilphCo_11F.ObtainedMasterBallFromPresident)
+    ctx.say(SilphCo_11F.ThatsOurSecretPrototype)
+    ctx.setFlag(KantoFlags.FLAG_GOT_MASTER_BALL_FROM_SILPH)
+  }
 }
 
 internal object SilphCo_11F_EventScript_Secretary : Script {

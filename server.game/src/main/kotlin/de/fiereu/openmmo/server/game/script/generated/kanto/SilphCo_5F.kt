@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_5F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_JUGGLER_DALTON = 286
 private const val TRAINER_SCIENTIST_BEAU = 340
@@ -28,19 +29,14 @@ internal object SilphCo_5F_EventScript_Dalton : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_5F_EventScript_WorkerMRocketsGone
- * msgbox SilphCo_5F_Text_RocketsInUproarAboutIntruder
- * release
- * end
- * ```
- */
 internal object SilphCo_5F_EventScript_WorkerM : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_5F_EventScript_WorkerM")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_5F.YoureOurHeroThankYou)
+      return
+    }
+    ctx.say(SilphCo_5F.RocketsInUproarAboutIntruder)
+  }
 }
 
 internal object SilphCo_5F_EventScript_Beau : Script {

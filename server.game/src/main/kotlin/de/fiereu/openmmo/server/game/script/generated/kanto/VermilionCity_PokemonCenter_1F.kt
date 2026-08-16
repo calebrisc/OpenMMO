@@ -3,8 +3,11 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.dialog.generated.kanto.VermilionCity_PokemonCenter_1F
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 internal object VermilionCity_PokemonCenter_1F_EventScript_Nurse : Script {
   override suspend fun run(ctx: ScriptContext) {
@@ -28,15 +31,21 @@ internal object VermilionCity_PokemonCenter_1F_EventScript_Youngster : Script {
       ctx.say(VermilionCity_PokemonCenter_1F.AllMonWeakToSpecificTypes)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * script body not found
- * ```
- */
 internal object VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_VS_SEEKER)) {
+      ctx.say(VermilionCity_PokemonCenter_1F.ExplainVSSeeker)
+      return
+    }
+    ctx.say(VermilionCity_PokemonCenter_1F.UrgeToBattleSomeoneAgain)
+    ctx.setFlag(KantoFlags.FLAG_GOT_VS_SEEKER)
+    ctx.giveItem(Items.VS_SEEKER)
+    if (ctx.getVar(KantoVars.VAR_RESULT) == 0) {
+      ctx.say(Misc.Text_TooBadBagFull)
+      return
+    }
+    ctx.say(VermilionCity_PokemonCenter_1F.UseDeviceForRematches)
+  }
 }
 
 internal object VermilionCity_PokemonCenter_1F_EventScript_PokemonJournalLtSurge : Script {

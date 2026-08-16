@@ -1,8 +1,10 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.OneIsland_KindleRoad_EmberSpa
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 internal object OneIsland_KindleRoad_EmberSpa_EventScript_OldMan : Script {
   override suspend fun run(ctx: ScriptContext) =
@@ -24,23 +26,17 @@ internal object OneIsland_KindleRoad_EmberSpa_EventScript_OldWoman : Script {
       ctx.say(OneIsland_KindleRoad_EmberSpa.SeeHowSmoothMySkinIs)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_HM06, OneIsland_KindleRoad_EmberSpa_EventScript_AlreadyGotHM06
- * msgbox OneIsland_KindleRoad_EmberSpa_Text_UsedThisToMakeEmberSpa
- * giveitem ITEM_HM06
- * setflag FLAG_GOT_HM06
- * msgbox OneIsland_KindleRoad_EmberSpa_Text_ExplainHM06
- * release
- * end
- * ```
- */
 internal object OneIsland_KindleRoad_EmberSpa_EventScript_RockSmashMan : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port OneIsland_KindleRoad_EmberSpa_EventScript_RockSmashMan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_HM06)) {
+      ctx.say(OneIsland_KindleRoad_EmberSpa.ExplainHM06)
+      return
+    }
+    ctx.say(OneIsland_KindleRoad_EmberSpa.UsedThisToMakeEmberSpa)
+    ctx.giveItem(Items.HM06)
+    ctx.setFlag(KantoFlags.FLAG_GOT_HM06)
+    ctx.say(OneIsland_KindleRoad_EmberSpa.ExplainHM06)
+  }
 }
 
 internal object OneIsland_KindleRoad_EmberSpa_EventScript_BaldingMan2 : Script {

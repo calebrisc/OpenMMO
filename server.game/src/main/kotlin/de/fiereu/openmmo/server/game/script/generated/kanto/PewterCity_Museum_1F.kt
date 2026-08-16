@@ -2,8 +2,11 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.PewterCity_Museum_1F
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 /**
  * Not ported yet. Decomp body:
@@ -28,25 +31,21 @@ internal object PewterCity_Museum_1F_EventScript_OldMan : Script {
       ctx.say(PewterCity_Museum_1F.ShouldBeGratefulForLongLife)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_OLD_AMBER, PewterCity_Museum_1F_EventScript_AlreadyGotOldAmber
- * msgbox PewterCity_Museum_1F_Text_WantYouToGetAmberExamined
- * checkitemspace ITEM_OLD_AMBER
- * goto_if_eq VAR_RESULT, FALSE, PewterCity_Museum_1F_EventScript_NoRoomForOldAmber
- * setflag FLAG_GOT_OLD_AMBER
- * removeobject LOCALID_OLD_AMBER
- * giveitem_msg PewterCity_Museum_1F_Text_ReceivedOldAmberFromMan, ITEM_OLD_AMBER, 1, MUS_OBTAIN_KEY_ITEM
- * release
- * end
- * ```
- */
 internal object PewterCity_Museum_1F_EventScript_OldAmberScientist : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_Museum_1F_EventScript_OldAmberScientist")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_OLD_AMBER)) {
+      ctx.say(PewterCity_Museum_1F.GetOldAmberChecked)
+      return
+    }
+    ctx.say(PewterCity_Museum_1F.WantYouToGetAmberExamined)
+    if (!ctx.giveItem(Items.OLD_AMBER)) {
+      ctx.say(PewterCity_Museum_1F.DontHaveSpaceForThis)
+      return
+    }
+    ctx.setFlag(KantoFlags.FLAG_GOT_OLD_AMBER)
+    ctx.despawnInteracted()
+    ctx.say(PewterCity_Museum_1F.ReceivedOldAmberFromMan)
+  }
 }
 
 internal object PewterCity_Museum_1F_EventScript_OldAmber : Script {
@@ -82,42 +81,22 @@ internal object PewterCity_Museum_1F_EventScript_SeismicTossTutor : Script {
       TODO("port PewterCity_Museum_1F_EventScript_SeismicTossTutor")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_AERODACTYL
- * setvar VAR_0x8005, 10
- * setvar VAR_0x8006, 3
- * special OpenMuseumFossilPic
- * msgbox PewterCity_Museum_1F_Text_AerodactylFossil
- * special CloseMuseumFossilPic
- * releaseall
- * end
- * ```
- */
 internal object PewterCity_Museum_1F_EventScript_AerodactylFossil : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_Museum_1F_EventScript_AerodactylFossil")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 142)
+    ctx.setVar(KantoVars.VAR_0x8005, 10)
+    ctx.setVar(KantoVars.VAR_0x8006, 3)
+    ctx.say(PewterCity_Museum_1F.AerodactylFossil)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * setvar VAR_0x8004, SPECIES_KABUTOPS
- * setvar VAR_0x8005, 10
- * setvar VAR_0x8006, 3
- * special OpenMuseumFossilPic
- * msgbox PewterCity_Museum_1F_Text_KabutopsFossil
- * special CloseMuseumFossilPic
- * releaseall
- * end
- * ```
- */
 internal object PewterCity_Museum_1F_EventScript_KabutopsFossil : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_Museum_1F_EventScript_KabutopsFossil")
+  override suspend fun run(ctx: ScriptContext) {
+    ctx.setVar(KantoVars.VAR_0x8004, 141)
+    ctx.setVar(KantoVars.VAR_0x8005, 10)
+    ctx.setVar(KantoVars.VAR_0x8006, 3)
+    ctx.say(PewterCity_Museum_1F.KabutopsFossil)
+  }
 }
 
 internal object PewterCity_Museum_1F_EventScript_PokemonJournalBrock : Script {

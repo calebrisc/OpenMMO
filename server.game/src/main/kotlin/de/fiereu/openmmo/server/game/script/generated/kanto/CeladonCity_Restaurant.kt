@@ -1,8 +1,10 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_Restaurant
+import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 internal object CeladonCity_Restaurant_EventScript_Chef : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Restaurant.TakingBreakRightNow)
@@ -16,24 +18,20 @@ internal object CeladonCity_Restaurant_EventScript_FatMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity_Restaurant.ManLostItAllAtSlots)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_COIN_CASE, CeladonCity_Restaurant_EventScript_AlreadyGotCoinCase
- * msgbox CeladonCity_Restaurant_Text_TakeThisImBusted
- * checkitemspace ITEM_COIN_CASE
- * goto_if_eq VAR_RESULT, FALSE, CeladonCity_Restaurant_EventScript_NoRoomForCoinCase
- * giveitem_msg CeladonCity_Restaurant_Text_ReceivedCoinCaseFromMan, ITEM_COIN_CASE
- * setflag FLAG_GOT_COIN_CASE
- * release
- * end
- * ```
- */
 internal object CeladonCity_Restaurant_EventScript_CoinCaseMan : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_Restaurant_EventScript_CoinCaseMan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_COIN_CASE)) {
+      ctx.say(CeladonCity_Restaurant.ThoughtIdWinItBack)
+      return
+    }
+    ctx.say(CeladonCity_Restaurant.TakeThisImBusted)
+    if (!ctx.giveItem(Items.COIN_CASE)) {
+      ctx.say(CeladonCity_Restaurant.MakeRoomForThis)
+      return
+    }
+    ctx.say(CeladonCity_Restaurant.ReceivedCoinCaseFromMan)
+    ctx.setFlag(KantoFlags.FLAG_GOT_COIN_CASE)
+  }
 }
 
 internal object CeladonCity_Restaurant_EventScript_WorkerM : Script {

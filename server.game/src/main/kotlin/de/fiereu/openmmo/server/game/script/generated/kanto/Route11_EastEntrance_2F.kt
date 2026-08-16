@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.Route11_EastEntrance_2F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 /**
  * Not ported yet. Decomp body:
@@ -59,19 +60,14 @@ internal object Route11_EastEntrance_2F_EventScript_Aide : Script {
       TODO("port Route11_EastEntrance_2F_EventScript_Aide")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_set FLAG_WOKE_UP_ROUTE_12_SNORLAX, Route11_EastEntrance_2F_EventScript_LeftBinocularsSnorlaxGone
- * msgbox Route11_EastEntrance_2F_Text_BigMonAsleepOnRoad
- * releaseall
- * end
- * ```
- */
 internal object Route11_EastEntrance_2F_EventScript_LeftBinoculars : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route11_EastEntrance_2F_EventScript_LeftBinoculars")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_WOKE_UP_ROUTE_12_SNORLAX)) {
+      ctx.say(Route11_EastEntrance_2F.WhatABreathtakingView)
+      return
+    }
+    ctx.say(Route11_EastEntrance_2F.BigMonAsleepOnRoad)
+  }
 }
 
 internal object Route11_EastEntrance_2F_EventScript_RightBinoculars : Script {

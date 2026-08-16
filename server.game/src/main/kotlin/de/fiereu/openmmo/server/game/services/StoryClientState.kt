@@ -4,6 +4,7 @@ import de.fiereu.openmmo.net.game.packets.PlayerVariableEntry
 import de.fiereu.openmmo.net.game.packets.StoryFlagUpdatePacket
 import de.fiereu.openmmo.net.game.packets.SystemFlagBatchPacket
 import de.fiereu.openmmo.net.game.packets.SystemFlagEntry
+import de.fiereu.openmmo.net.game.packets.WorldFlagSetPacket
 import de.fiereu.openmmo.story.generated.hoenn.HoennFlags
 import de.fiereu.openmmo.story.generated.hoenn.HoennVars
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
@@ -68,11 +69,23 @@ internal object StoryClientState {
   }
 
   fun flags(regionId: Byte, flags: Collection<String>): List<StoryFlagUpdatePacket> =
-      flags.mapNotNull { flagUpdate(regionId, it, enabled = true) }.sortedBy { it.flagId }
+      flags
+          .mapNotNull { flagUpdate(regionId, it, enabled = true) as? StoryFlagUpdatePacket }
+          .sortedBy { it.flagId }
 
-  fun flagUpdate(regionId: Byte, key: String, enabled: Boolean): StoryFlagUpdatePacket? {
+  /**
+   * One flag changing mid-session, on whichever packet that flag lives on.
+   *
+   * Every flag was being offered on the system flag packet, and the client answers a low id there
+   * with "Attempt to set non-client aware flag" and throws, once per flag set, all session. Low
+   * flags belong to the table instead, and the table's own update carries the same group and bit
+   * the login bitmap is packed with, so a door opened or an item picked up now reaches the client
+   * where it can be received rather than where it is refused.
+   */
+  fun flagUpdate(regionId: Byte, key: String, enabled: Boolean): Any? {
     val id = flagId(regionId, key) ?: return null
-    return StoryFlagUpdatePacket(regionId, id, enabled)
+    if (id >= SYSTEM_FLAG_START) return StoryFlagUpdatePacket(regionId, id, enabled)
+    return WorldFlagSetPacket(regionId, id.toShort(), if (enabled) 1 else 0)
   }
 
   fun variables(regionId: Byte, vars: Map<String, Int>): List<PlayerVariableEntry> =

@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_8F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_PARKER = 343
 private const val TRAINER_TEAM_ROCKET_GRUNT_32 = 382
@@ -36,19 +37,14 @@ internal object SilphCo_8F_EventScript_Parker : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_8F_EventScript_WorkerMRocketsGone
- * msgbox SilphCo_8F_Text_WonderIfSilphIsFinished
- * release
- * end
- * ```
- */
 internal object SilphCo_8F_EventScript_WorkerM : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_8F_EventScript_WorkerM")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_8F.ThanksForSavingUs)
+      return
+    }
+    ctx.say(SilphCo_8F.WonderIfSilphIsFinished)
+  }
 }
 
 internal object SilphCo_8F_EventScript_ItemIron : Script {

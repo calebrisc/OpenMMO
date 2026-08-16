@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.OneIsland_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 internal object OneIsland_PokemonCenter_1F_EventScript_Nurse : Script {
   override suspend fun run(ctx: ScriptContext) {
@@ -64,36 +65,28 @@ internal object OneIsland_PokemonCenter_1F_EventScript_Hiker : Script {
       ctx.say(OneIsland_PokemonCenter_1F.EnormousVolcanoOnIsland)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, OneIsland_PokemonCenter_1F_EventScript_CrushGirlHoennLinked
- * msgbox OneIsland_PokemonCenter_1F_Text_WishICouldTradeWithBoyfriend
- * release
- * end
- * ```
- */
 internal object OneIsland_PokemonCenter_1F_EventScript_CrushGirl : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port OneIsland_PokemonCenter_1F_EventScript_CrushGirl")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_CAN_LINK_WITH_RS)) {
+      ctx.say(OneIsland_PokemonCenter_1F.TradedWithFarAwayBoyfriend)
+      return
+    }
+    ctx.say(OneIsland_PokemonCenter_1F.WishICouldTradeWithBoyfriend)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lockall
- * goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, OneIsland_PokemonCenter_1F_EventScript_NetworkMachineLinkedWithHoenn
- * goto_if_set FLAG_SEVII_DETOUR_FINISHED, OneIsland_PokemonCenter_1F_EventScript_NetworkMachineLinkedWithKanto
- * msgbox OneIsland_PokemonCenter_1F_Text_MachineUnderAdjustment
- * releaseall
- * end
- * ```
- */
 internal object OneIsland_PokemonCenter_1F_EventScript_NetworkMachine : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port OneIsland_PokemonCenter_1F_EventScript_NetworkMachine")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_CAN_LINK_WITH_RS)) {
+      ctx.say(OneIsland_PokemonCenter_1F.MachineLinkedWithKantoAndHoenn)
+      return
+    }
+    if (ctx.isFlagSet(KantoFlags.FLAG_SEVII_DETOUR_FINISHED)) {
+      ctx.say(OneIsland_PokemonCenter_1F.MachineLinkedWithKanto)
+      return
+    }
+    ctx.say(OneIsland_PokemonCenter_1F.MachineUnderAdjustment)
+  }
 }
 
 internal val OneIsland_PokemonCenter_1FScripts: Map<String, Script> =

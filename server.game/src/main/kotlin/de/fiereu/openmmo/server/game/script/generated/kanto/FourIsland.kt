@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.FourIsland
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 /**
  * Not ported yet. Decomp body:
@@ -26,19 +27,14 @@ internal object FourIsland_EventScript_DaycareMan : Script {
   override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_DaycareMan")
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, FourIsland_EventScript_OldWomanLoreleiLeft
- * msgbox FourIsland_Text_LoreleiHasReturned
- * release
- * end
- * ```
- */
 internal object FourIsland_EventScript_OldWoman : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FourIsland_EventScript_OldWoman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_CAN_LINK_WITH_RS)) {
+      ctx.say(FourIsland.LoreleiMetLaprasAsChild)
+      return
+    }
+    ctx.say(FourIsland.LoreleiHasReturned)
+  }
 }
 
 internal object FourIsland_EventScript_ItemStarPiece : Script {

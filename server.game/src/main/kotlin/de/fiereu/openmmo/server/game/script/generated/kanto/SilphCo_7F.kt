@@ -4,6 +4,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_7F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 private const val TRAINER_SCIENTIST_JOSHUA = 342
 private const val TRAINER_TEAM_ROCKET_GRUNT_33 = 383
@@ -57,49 +58,34 @@ internal object SilphCo_7F_EventScript_Grunt3 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_7F_EventScript_WorkerFRocketsGone
- * msgbox SilphCo_7F_Text_ReallyDangerousHere
- * release
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_WorkerF : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_WorkerF")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_7F.ThankYouSoMuch)
+      return
+    }
+    ctx.say(SilphCo_7F.ReallyDangerousHere)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_7F_EventScript_WorkerM1RocketsGone
- * msgbox SilphCo_7F_Text_RocketsAfterMasterBall
- * release
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_WorkerM1 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_WorkerM1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_7F.CanceledMasterBallProject)
+      return
+    }
+    ctx.say(SilphCo_7F.RocketsAfterMasterBall)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_ge VAR_MAP_SCENE_SILPH_CO_11F, 1, SilphCo_7F_EventScript_WorkerM2RocketsGone
- * msgbox SilphCo_7F_Text_BadIfTeamRocketTookOver
- * release
- * end
- * ```
- */
 internal object SilphCo_7F_EventScript_WorkerM2 : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SilphCo_7F_EventScript_WorkerM2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) >= 1) {
+      ctx.say(SilphCo_7F.WowYouChasedOffTeamRocket)
+      return
+    }
+    ctx.say(SilphCo_7F.BadIfTeamRocketTookOver)
+  }
 }
 
 internal object SilphCo_7F_EventScript_Joshua : Script {

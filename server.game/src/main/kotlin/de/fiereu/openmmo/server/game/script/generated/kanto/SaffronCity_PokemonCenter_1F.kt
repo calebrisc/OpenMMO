@@ -5,6 +5,7 @@ import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.dialog.generated.kanto.SaffronCity_PokemonCenter_1F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 internal object SaffronCity_PokemonCenter_1F_EventScript_Nurse : Script {
   override suspend fun run(ctx: ScriptContext) {
@@ -23,20 +24,14 @@ internal object SaffronCity_PokemonCenter_1F_EventScript_Woman : Script {
       ctx.say(SaffronCity_PokemonCenter_1F.GrowthRatesDifferBySpecies)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_eq VAR_MAP_SCENE_SILPH_CO_11F, 1, SaffronCity_PokemonCenter_1F_EventScript_YoungsterRocketsGone
- * msgbox SaffronCity_PokemonCenter_1F_Text_GreatIfEliteFourCameBeatRockets
- * release
- * end
- * ```
- */
 internal object SaffronCity_PokemonCenter_1F_EventScript_Youngster : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SaffronCity_PokemonCenter_1F_EventScript_Youngster")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_SILPH_CO_11F) == 1) {
+      ctx.say(SaffronCity_PokemonCenter_1F.TeamRocketTookOff)
+      return
+    }
+    ctx.say(SaffronCity_PokemonCenter_1F.GreatIfEliteFourCameBeatRockets)
+  }
 }
 
 internal object SaffronCity_PokemonCenter_1F_EventScript_PokemonJournalSabrina : Script {

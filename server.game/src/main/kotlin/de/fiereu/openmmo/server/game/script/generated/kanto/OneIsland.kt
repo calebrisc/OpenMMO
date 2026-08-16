@@ -3,21 +3,20 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.OneIsland
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, OneIsland_EventScript_OldManLinkHoenn
- * goto_if_set FLAG_SEVII_DETOUR_FINISHED, OneIsland_EventScript_OldManLinkKanto
- * msgbox OneIsland_Text_LuckyToHaveCelioHere
- * release
- * end
- * ```
- */
 internal object OneIsland_EventScript_OldMan : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port OneIsland_EventScript_OldMan")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_SYS_CAN_LINK_WITH_RS)) {
+      ctx.say(OneIsland.HavePCLinkageWithHoenn)
+      return
+    }
+    if (ctx.isFlagSet(KantoFlags.FLAG_SEVII_DETOUR_FINISHED)) {
+      ctx.say(OneIsland.HavePCLinkageWithKanto)
+      return
+    }
+    ctx.say(OneIsland.LuckyToHaveCelioHere)
+  }
 }
 
 internal object OneIsland_EventScript_BaldingMan : Script {
