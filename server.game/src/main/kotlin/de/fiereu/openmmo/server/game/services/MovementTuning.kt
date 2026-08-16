@@ -23,6 +23,20 @@ object MovementTuning {
    *
    * Turn it on with /probe elev to try it somewhere known flat, and expect to be fenced in anywhere
    * with a harbour or a slope.
+   *
+   * Measured across all 423 Kanto maps, which narrows where the misunderstanding is:
+   * - the only elevations present are 0, 1, 3, 4 and 5. **15 never appears**, so [ELEVATION_ANY]
+   *   never fires here and bridges are not what joins anything.
+   * - elevation 0 is overwhelmingly wall: 128,191 tiles carry it and only 6,337 of those are
+   *   walkable, about fifteen per map, which is the right order for doorways and stair mouths.
+   * - the walkable ground is split 22,213 tiles at elevation 1 against 77,461 at elevation 3, and
+   *   coastal maps mix them heavily (map 3:35 has 1,170 against 2,122).
+   *
+   * So the rule is not over-blocking because of bridges or because elevation 0 is rare. Either the
+   * 1-against-3 split is a real level change the client also enforces -- in which case our
+   * reachability measurement starts the player on the wrong level -- or one of those two values
+   * does not mean what the decomp's elevation means. Settling it wants a live client: walk a
+   * Vermilion harbour seam with the rule on and see whether the client refuses the same steps.
    */
   @Volatile var elevationRules: Boolean = false
 
