@@ -13,6 +13,7 @@ import de.fiereu.openmmo.net.game.packets.GroupListFrameSet
 import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
+import de.fiereu.openmmo.net.game.packets.StoryFlagUpdatePacket
 import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.BoxSyncTuning
@@ -45,6 +46,9 @@ private val log = KotlinLogging.logger {}
 private const val SAFE_REGION: Byte = 0
 private const val SAFE_BANK: Byte = 3
 private const val SAFE_MAP: Byte = 0
+/** One sweep at a time, so a mistyped range cannot bury the client in packets. */
+private const val MAX_FLAG_SWEEP = 256
+
 private const val SAFE_X: Short = 11
 private const val SAFE_Y: Short = 10
 
@@ -65,7 +69,7 @@ constructor(
   override val usage =
       "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
           "/probe requesttype <n> | /probe prompt on|off | /probe sweep <name> | " +
-          "/probe box <0|1|2> | /probe gtl on|off"
+          "/probe box <0|1|2> | /probe gtl on|off | /probe flags <from> <to> [region]"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
@@ -255,6 +259,35 @@ constructor(
       ctx.reply("Flags set to $value and your state resent. Try the bike now.")
       return
     }
+    if (what == "flags") {
+      val from = ctx.args.getOrNull(1)?.toIntOrNull()
+      val to = ctx.args.getOrNull(2)?.toIntOrNull()
+      if (from == null || to == null || to < from) {
+        ctx.reply(
+            "/probe flags <from> <to> [region] sends one flag update per id so the client's log " +
+                "says which it will take. At most $MAX_FLAG_SWEEP at a time.")
+        return
+      }
+      if (to - from >= MAX_FLAG_SWEEP) {
+        ctx.reply("That is more than $MAX_FLAG_SWEEP ids. Sweep it in pieces.")
+        return
+      }
+      val region =
+          ctx.args.getOrNull(3)?.toIntOrNull()?.toByte() ?: ctx.character.info.positionRegionId
+      // Cleared rather than set: most story flags hide something, so clearing them shows things
+      // that are already there instead of making scenery vanish. Either way it is the client's own
+      // copy and a relog restores it.
+      for (id in from..to) {
+        ctx.session.send(StoryFlagUpdatePacket(region, id, enabled = false))
+      }
+      log.info { "Swept flags $from..$to on region $region at ${ctx.character.info.name}" }
+      ctx.reply(
+          "Sent ${to - from + 1} flag updates for region $region. Every one the client refuses is " +
+              "in its log as \"0x2A\"; the ids missing from that list are the ones it accepts. " +
+              "Relog when the sweep is done.")
+      return
+    }
+
     if (what == "gtl") {
       val on = ctx.args.getOrNull(1)?.lowercase()
       if (on != "on" && on != "off") {
