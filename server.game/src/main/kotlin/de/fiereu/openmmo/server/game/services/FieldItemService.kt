@@ -129,7 +129,7 @@ constructor(
     characterStore.updatePokemon(charId, updated)
     characterStore.addItem(charId, packet.optionId, -1)
     characterStore.flushCharacterAsync(charId)
-    sendBag(ctx, charId)
+    sendBag(ctx, charId, packet.optionId)
     log.info { "char=$charId used ${item.name} on ${target.id}: healed=$healed cured=$cured" }
 
     val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
@@ -151,9 +151,12 @@ constructor(
    * while the player could plainly see it was not: a Rare Candy worked once and then never again,
    * and a Moon Stone evolved a monster without ever leaving the bag.
    */
-  private fun sendBag(ctx: SessionContext, charId: Long) {
+  private fun sendBag(ctx: SessionContext, charId: Long, itemId: Int) {
     val bag: Map<Int, Int> = characterStore.getCharacter(charId)?.items ?: return
     ctx.send(storyItemStacksPacket(bag))
+    // A window that is already open ignores a whole new bag and only listens for its own stack, so
+    // the count on screen kept the number it had while the quantity picker beside it knew better.
+    ctx.send(itemStackUpdatePacket(itemId, bag[itemId] ?: 0))
   }
 
   private fun target(stored: StoredCharacter, entityId: Long) =
@@ -188,7 +191,7 @@ constructor(
         charId, evolved.copy(hp = evolved.hp.toInt().coerceAtMost(room).toShort()))
     characterStore.addItem(charId, itemId, -1)
     characterStore.flushCharacterAsync(charId)
-    sendBag(ctx, charId)
+    sendBag(ctx, charId, itemId)
     log.info { "char=$charId used ${item.name} to evolve $was into ${definition.name}" }
     ctx.send(notice("$was evolved into ${definition.name}!"))
     val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
@@ -276,7 +279,7 @@ constructor(
       return
     }
     characterStore.flushCharacterAsync(charId)
-    sendBag(ctx, charId)
+    sendBag(ctx, charId, itemId)
     log.info { "char=$charId used $spent x ${item.name} on $entityId: level $from -> $reached" }
     val became = characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == entityId }
     val ended = became?.dexId?.let { species.get(it)?.name } ?: name

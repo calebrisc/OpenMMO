@@ -154,8 +154,21 @@ object EvolutionTable {
           375 to LevelEvolution(45, 376),
       )
 
+  /**
+   * The level a monster that only ever evolved by being traded reaches it at instead.
+   *
+   * A trade needs two players who both want the trade, which on a server with a handful of friends
+   * means Alakazam, Machamp, Golem and Gengar are not obtainable at all rather than merely awkward.
+   * Trading still works and still evolves them; this is a second way in, not a replacement.
+   */
+  private const val TRADE_EVOLUTION_LEVEL = 37
+
   /** The evolution this species reaches at [level], or null if it does not evolve then. */
-  fun at(dexId: Int, level: Int): LevelEvolution? = byDexId[dexId]?.takeIf { level >= it.level }
+  fun at(dexId: Int, level: Int): LevelEvolution? =
+      byDexId[dexId]?.takeIf { level >= it.level }
+          ?: byTrade[dexId]
+              ?.let { LevelEvolution(TRADE_EVOLUTION_LEVEL, it) }
+              ?.takeIf { level >= it.level }
 
   fun has(dexId: Int): Boolean = byDexId.containsKey(dexId)
 
