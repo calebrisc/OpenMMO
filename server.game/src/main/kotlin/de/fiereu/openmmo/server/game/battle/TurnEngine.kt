@@ -251,6 +251,12 @@ constructor(
           0
         }
     target.applyStatus(status, sleepTurns)
+    // Temporary, alongside the tick log: which monster caught what, so a status that is reported
+    // in the battle text but never ticks can be told from one that was never inflicted.
+    log.info {
+      "STATUS ON: entity=${target.entityId} ${target.species.name} caught $status " +
+          "sleep=$sleepTurns max=${target.stats.hp} hp=${target.currentHp}"
+    }
     events += BattleEvent.StatusInflicted(target.entityId, status, sleepTurns)
     return true
   }
