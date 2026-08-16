@@ -109,6 +109,7 @@ constructor(
     characterStore.updatePokemon(charId, updated)
     characterStore.addItem(charId, packet.optionId, -1)
     characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId)
     log.info { "char=$charId used ${item.name} on ${target.id}: healed=$healed cured=$cured" }
 
     val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
@@ -119,6 +120,20 @@ constructor(
             delete = false,
             pokemon = party,
         ))
+  }
+
+  /**
+   * The bag as it now stands.
+   *
+   * Spending an item in the field took it out of the bag and never told the client, while the
+   * script path had sent this all along. So the client went on showing an item the server had
+   * already spent, and refused every later use of it, because the server knew the bag was empty
+   * while the player could plainly see it was not: a Rare Candy worked once and then never again,
+   * and a Moon Stone evolved a monster without ever leaving the bag.
+   */
+  private fun sendBag(ctx: SessionContext, charId: Long) {
+    val bag: Map<Int, Int> = characterStore.getCharacter(charId)?.items ?: return
+    ctx.send(storyItemStacksPacket(bag))
   }
 
   private fun target(stored: StoredCharacter, entityId: Long) =
@@ -150,6 +165,7 @@ constructor(
     characterStore.updatePokemon(charId, monster.copy(dexId = into))
     characterStore.addItem(charId, itemId, -1)
     characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId)
     log.info { "char=$charId used ${item.name} to evolve $was into ${definition.name}" }
     ctx.send(notice("$was evolved into ${definition.name}!"))
     val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
@@ -206,6 +222,7 @@ constructor(
     characterStore.updatePokemon(charId, grown.copy(hp = healed.toShort()))
     characterStore.addItem(charId, itemId, -1)
     characterStore.flushCharacterAsync(charId)
+    sendBag(ctx, charId)
     log.info { "char=$charId used ${item.name} on ${monster.id}: level $was -> $now" }
     ctx.send(notice("${definition.name} grew to level $now!"))
     for (learned in outcome.learned) ctx.send(notice("It learned ${learned.name}!"))
