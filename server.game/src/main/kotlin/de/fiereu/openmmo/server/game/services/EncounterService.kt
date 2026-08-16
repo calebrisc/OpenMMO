@@ -2,6 +2,7 @@ package de.fiereu.openmmo.server.game.services
 
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.EncounterMethod
+import de.fiereu.openmmo.common.enums.MapType
 import de.fiereu.openmmo.common.enums.TileBehavior
 import de.fiereu.openmmo.maps.MapDef
 import de.fiereu.openmmo.maps.WildEncounterSlot
@@ -33,7 +34,7 @@ constructor(
   fun onStep(session: SessionContext, charId: Long, map: MapDef, x: Int, y: Int) {
     if (battleService.inBattle(charId)) return
     val tile = map.tileAt(x, y) ?: return
-    if (!isLandEncounterTile(tile.behavior)) return
+    if (!isLandEncounterTile(map, tile.behavior)) return
     // TODO: Add water and fishing wild encounters
     //  Water encounters should fire while surfing over water tiles and fishing when a rod is used.
     //  Both need the surf and rod features to exist first. Once they do, branch here on the tile
@@ -49,8 +50,17 @@ constructor(
     battleService.startWildBattle(session, slot.speciesId, level)
   }
 
-  private fun isLandEncounterTile(behavior: TileBehavior): Boolean =
-      behavior == TileBehavior.TALL_GRASS || behavior == TileBehavior.LONG_GRASS
+  /**
+   * Grass anywhere, and the whole floor of a cave.
+   *
+   * A cave has no grass to step into: underground, every walkable tile is the encounter surface,
+   * which is why crossing Mt Moon is a different experience from crossing a route. The decomp's
+   * cave floors normalize to [TileBehavior.NORMAL] here, so the map has to say what it is.
+   */
+  private fun isLandEncounterTile(map: MapDef, behavior: TileBehavior): Boolean =
+      behavior == TileBehavior.TALL_GRASS ||
+          behavior == TileBehavior.LONG_GRASS ||
+          (map.mapType == MapType.UNDERGROUND && behavior == TileBehavior.NORMAL)
 
   private fun hasUsablePartyMon(charId: Long): Boolean =
       characterStore.getCharacter(charId)?.pokemon?.any { it.hp > 0 } ?: false
