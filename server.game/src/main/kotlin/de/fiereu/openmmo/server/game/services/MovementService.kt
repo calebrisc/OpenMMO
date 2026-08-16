@@ -131,6 +131,23 @@ constructor(
       state.acceptNextMoveSource = false
     }
 
+    // A client one walkable tile away from where the server has it is a client that took a step
+    // the server did not record, not a client cheating: it cannot reach anywhere it could not have
+    // walked to anyway. Rejecting it instead left the two arguing forever, the player frozen while
+    // the log filled with the same tile, because a position reset the client does not act on
+    // changes nothing and the next step disagrees exactly as much as the last one did.
+    if (msg.x != fromX || msg.y != fromY) {
+      val drift = kotlin.math.abs(msg.x - fromX) + kotlin.math.abs(msg.y - fromY)
+      if (drift == 1 && isWalkable(currentMap, msg.x, msg.y)) {
+        log.info { "DRIFT: char=$charId adopted (${msg.x}, ${msg.y}) over ($fromX, $fromY)" }
+        fromX = msg.x
+        fromY = msg.y
+        characterStore.updatePosition(charId, fromX.toShort(), fromY.toShort())
+        state.x = fromX.toShort()
+        state.y = fromY.toShort()
+      }
+    }
+
     val atServerTile = msg.x == fromX && msg.y == fromY
 
     when {
