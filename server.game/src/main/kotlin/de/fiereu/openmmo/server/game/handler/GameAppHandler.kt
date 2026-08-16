@@ -34,6 +34,7 @@ import de.fiereu.openmmo.net.game.packets.RequestCharactersPacket
 import de.fiereu.openmmo.net.game.packets.RequestPlayerPacket
 import de.fiereu.openmmo.net.game.packets.RequestSocialProfilePacket
 import de.fiereu.openmmo.net.game.packets.SelectCharacterPacket
+import de.fiereu.openmmo.net.game.packets.SelectSinglePokemonPacket
 import de.fiereu.openmmo.net.game.packets.SendChatCommandPacket
 import de.fiereu.openmmo.net.game.packets.ShopSellRequestPacket
 import de.fiereu.openmmo.net.game.packets.SpectateRequestPacket
@@ -166,6 +167,9 @@ constructor(
     onSuspend<PartyMemberSelectPacket> { event ->
       if (!moveTeachingService.onPartySelect(event)) partyService.onMemberSelect(event)
     }
+    // The other way a party screen answers. Nothing handled it, so a tutor's offer was never taken
+    // up: the player picked a monster and the offer went on waiting.
+    onSuspend<SelectSinglePokemonPacket> { event -> moveTeachingService.onSingleSelect(event) }
     onSuspend<TradeSelectMonPacket> { event -> tradeService.onSelectMon(event) }
     onSuspend<PcBoxStorePacket> { event -> pcBoxService.onStore(event) }
     onSuspend<PcMovePacket> { event -> pcBoxService.onMove(event) }

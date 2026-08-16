@@ -6,21 +6,28 @@ import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 /**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_GOT_BIKE_VOUCHER, VermilionCity_PokemonFanClub_EventScript_AlreadyHeardStory
- * msgbox VermilionCity_PokemonFanClub_Text_DidYouComeToHearAboutMyMons, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, YES, VermilionCity_PokemonFanClub_EventScript_ChairmanStory
- * msgbox VermilionCity_PokemonFanClub_Text_ComeBackToHearStory
- * release
- * end
- * ```
+ * The chairman's story, which is what the bike voucher is really for.
+ *
+ * There is no voucher item in this game's table -- it is a Gen 5 table and the voucher is not in it
+ * -- so the flag alone carries it, and the bike shop reads that flag. Both ends of this were stubs,
+ * so the bicycle could not be got at all.
  */
 internal object VermilionCity_PokemonFanClub_EventScript_Chairman : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_PokemonFanClub_EventScript_Chairman")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.isFlagSet(KantoFlags.FLAG_GOT_BIKE_VOUCHER)) {
+      ctx.say(VermilionCity_PokemonFanClub.DidntComeToSeeAboutMonsAgain)
+      return
+    }
+    if (!ctx.askYesNo(VermilionCity_PokemonFanClub.DidYouComeToHearAboutMyMons)) {
+      ctx.say(VermilionCity_PokemonFanClub.ComeBackToHearStory)
+      return
+    }
+    ctx.say(VermilionCity_PokemonFanClub.ChairmansStory)
+    // The flag is the voucher here, so it lands before the two lines that follow it.
+    ctx.setFlag(KantoFlags.FLAG_GOT_BIKE_VOUCHER)
+    ctx.say(VermilionCity_PokemonFanClub.ReceivedBikeVoucherFromChairman)
+    ctx.say(VermilionCity_PokemonFanClub.ExplainBikeVoucher)
+  }
 }
 
 internal object VermilionCity_PokemonFanClub_EventScript_WorkerF : Script {

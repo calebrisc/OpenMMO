@@ -7,6 +7,7 @@ import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.PartyMemberSelectPacket
+import de.fiereu.openmmo.net.game.packets.SelectSinglePokemonPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnPromptPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnReplyPacket
 import de.fiereu.openmmo.server.game.battle.MoveLearner
@@ -124,16 +125,33 @@ constructor(
     return teach(session, charId, monster, PendingTeach(moveId, def.name, from, spendFlag))
   }
 
-  suspend fun onPartySelect(event: PacketEvent<PartyMemberSelectPacket>): Boolean {
-    val session = event.session
+  suspend fun onPartySelect(event: PacketEvent<PartyMemberSelectPacket>): Boolean =
+      onMonsterPicked(event.session, event.packet.entityId, "0x11 party member")
+
+  /**
+   * The other packet a party screen answers with, carrying one monster and nothing else.
+   *
+   * A tutor's offer was only ever listening for 0x11, and the player picking a monster did nothing
+   * at all: the offer hung there exactly the way a machine's used to. Both are handled now, and
+   * both say which arrived, so the log settles which one this client actually sends.
+   */
+  suspend fun onSingleSelect(event: PacketEvent<SelectSinglePokemonPacket>): Boolean =
+      onMonsterPicked(event.session, event.packet.entityId, "0x9D single monster")
+
+  private suspend fun onMonsterPicked(
+      session: SessionContext,
+      entityId: Long,
+      via: String,
+  ): Boolean {
     val charId = session.attributes[PLAYER_STATE]?.characterId ?: return false
     val offer = pendingTeach[charId] ?: return false
     val stored = characterStore.getCharacter(charId) ?: return false
-    val monster = stored.pokemon.firstOrNull { it.id == event.packet.entityId }
+    val monster = stored.pokemon.firstOrNull { it.id == entityId }
     if (monster == null) {
-      log.info { "char=$charId picked ${event.packet.entityId}, which is not in their party" }
+      log.info { "char=$charId picked $entityId on $via, which is not in their party" }
       return false
     }
+    log.info { "char=$charId answered the ${offer.moveName} offer on $via" }
     pendingTeach.remove(charId)
     return teach(session, charId, monster, offer)
   }
