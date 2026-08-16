@@ -20,7 +20,6 @@ import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 import kotlinx.coroutines.CoroutineScope
@@ -162,8 +161,10 @@ class PcBoxServiceTest :
         }
       }
 
-      // What a live server answers a drag with: one delta per monster that moved, and no
-      // container resend at all.
+      // A live server answers a party reorder with deltas alone, but this client draws its two
+      // panes from different things: the box only moves for a delta, and a party slot only fills
+      // in from the containers. A monster dragged into the party sat in a slot that drew as empty
+      // until the screen was shut, so both go out.
       test("a drag is answered by where each moved monster now is") {
         runTest {
           val fx = Fixture(backgroundScope)
@@ -179,7 +180,14 @@ class PcBoxServiceTest :
               StoragePlacement(PokemonContainer.PARTY.ordinal.toByte(), 2)
           deltas.first { it.entityId == third.id }.placement shouldBe
               StoragePlacement(PokemonContainer.PARTY.ordinal.toByte(), 0)
-          session.sent.filterIsInstance<PokemonContainerPacket>().shouldBeEmpty()
+          // Both panes: the deltas above move the box, these fill the party slots.
+          session.sent.filterIsInstance<PokemonContainerPacket>().map { it.container } shouldBe
+              listOf(
+                  PokemonContainer.PARTY,
+                  PokemonContainer.PARTY,
+                  PokemonContainer.PC,
+                  PokemonContainer.PC,
+              )
         }
       }
 

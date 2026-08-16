@@ -160,6 +160,10 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
    */
   private fun sendPlacements(ctx: SessionContext, charId: Long, moved: Set<Long>) {
     val stored = characterStore.getCharacter(charId) ?: return
+    // Both, because each pane is drawn by a different thing: the box only redraws for the deltas
+    // below, and the party slots only fill in from the containers. Sending deltas alone left a
+    // monster moved into the party occupying a slot that drew as empty until the screen was shut.
+    resend(ctx, charId)
     for (monster in stored.pokemon + stored.pcStorage) {
       if (monster.id !in moved) continue
       ctx.send(
