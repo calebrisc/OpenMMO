@@ -36,4 +36,21 @@ class EvolutionTableTest :
         EvolutionTable.at(252, 16) shouldBe LevelEvolution(16, 253)
         EvolutionTable.size shouldBeGreaterThan 130
       }
-    })
+    
+      test("stones carry the evolutions levelling never could") {
+        EvolutionTable.stoneCount shouldBe 21
+        // Pikachu is the one everybody notices: it never evolves by level, only by stone.
+        EvolutionTable.byStone(25, "THUNDER_STONE") shouldBe 26
+        EvolutionTable.at(25, 100).shouldBeNull()
+      }
+
+      test("the wrong stone does nothing") {
+        EvolutionTable.byStone(25, "FIRE_STONE").shouldBeNull()
+        EvolutionTable.byStone(1, "LEAF_STONE").shouldBeNull()
+      }
+
+      test("a stone reaches every generation it should") {
+        EvolutionTable.byStone(133, "WATER_STONE") shouldBe 134 // Eevee into Vaporeon
+        EvolutionTable.byStone(44, "LEAF_STONE") shouldBe 45 // Gloom into Vileplume
+      }
+})

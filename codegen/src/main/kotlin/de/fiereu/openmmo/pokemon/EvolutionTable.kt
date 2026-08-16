@@ -1,5 +1,8 @@
 package de.fiereu.openmmo.pokemon
 
+/** What a species becomes when a stone is used on it. [item] is the generated item's name. */
+data class StoneEvolution(val from: Int, val item: String, val into: Int)
+
 /** What a species becomes, and the level it needs. */
 data class LevelEvolution(val level: Int, val into: Int)
 
@@ -155,6 +158,42 @@ object EvolutionTable {
       byDexId[dexId]?.takeIf { level >= it.level }
 
   fun has(dexId: Int): Boolean = byDexId.containsKey(dexId)
+
+  /**
+   * Evolutions a stone brings on. Keyed by the item's generated name rather than its id, since the
+   * ids come from a build step and the names are what the decomp and this table agree on.
+   */
+  private val byStone: List<StoneEvolution> =
+      listOf(
+        StoneEvolution(37, "FIRE_STONE", 38),
+        StoneEvolution(58, "FIRE_STONE", 59),
+        StoneEvolution(133, "FIRE_STONE", 136),
+        StoneEvolution(44, "LEAF_STONE", 45),
+        StoneEvolution(70, "LEAF_STONE", 71),
+        StoneEvolution(102, "LEAF_STONE", 103),
+        StoneEvolution(274, "LEAF_STONE", 275),
+        StoneEvolution(30, "MOON_STONE", 31),
+        StoneEvolution(33, "MOON_STONE", 34),
+        StoneEvolution(35, "MOON_STONE", 36),
+        StoneEvolution(39, "MOON_STONE", 40),
+        StoneEvolution(300, "MOON_STONE", 301),
+        StoneEvolution(44, "SUN_STONE", 182),
+        StoneEvolution(191, "SUN_STONE", 192),
+        StoneEvolution(25, "THUNDER_STONE", 26),
+        StoneEvolution(133, "THUNDER_STONE", 135),
+        StoneEvolution(61, "WATER_STONE", 62),
+        StoneEvolution(90, "WATER_STONE", 91),
+        StoneEvolution(120, "WATER_STONE", 121),
+        StoneEvolution(133, "WATER_STONE", 134),
+        StoneEvolution(271, "WATER_STONE", 272),
+      )
+
+  /** What [dexId] becomes if [itemName] is used on it, or null if that stone does nothing to it. */
+  fun byStone(dexId: Int, itemName: String): Int? =
+      byStone.firstOrNull { it.from == dexId && it.item == itemName }?.into
+
+  val stoneCount: Int
+    get() = byStone.size
 
   val size: Int
     get() = byDexId.size

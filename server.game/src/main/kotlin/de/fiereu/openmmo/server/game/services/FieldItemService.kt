@@ -6,6 +6,10 @@ import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.net.game.packets.DialogOptionPacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
+import de.fiereu.openmmo.pokemon.EvolutionTable
+import de.fiereu.openmmo.items.ItemDef
+import de.fiereu.openmmo.server.game.storage.StoredCharacter
+import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.StatCalculator
@@ -54,6 +58,13 @@ constructor(
       return
     }
 
+    // A stone is neither a heal nor a cure, so it is answered before the healing items are.
+    val evolvesInto = EvolutionTable.byStone(target(stored, packet.entityId)?.dexId ?: -1, item.name)
+    if (evolvesInto != null) {
+      evolveWithStone(ctx, charId, packet.entityId, packet.optionId, item, evolvesInto)
+      return
+    }
+
     val effect = BattleItems.effectOf(item)
     if (effect == null) {
       // The bike lands here: it is a real item with a real effect in the games and no model on this
@@ -63,8 +74,7 @@ constructor(
       return
     }
 
-    val target =
-        stored.pokemon.firstOrNull { it.id == packet.entityId } ?: stored.pokemon.firstOrNull()
+    val target = target(stored, packet.entityId)
     if (target == null) {
       ctx.send(notice("You have nothing to use that on."))
       return
@@ -92,6 +102,47 @@ constructor(
     characterStore.flushCharacterAsync(charId)
     log.info { "char=$charId used ${item.name} on ${target.id}: healed=$healed cured=$cured" }
 
+    val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
+    ctx.send(
+        PokemonContainerPacket(
+            container = PokemonContainer.PARTY,
+            hasChange = true,
+            delete = false,
+            pokemon = party,
+        ))
+  }
+
+  private fun target(stored: StoredCharacter, entityId: Long) =
+      stored.pokemon.firstOrNull { it.id == entityId } ?: stored.pokemon.firstOrNull()
+
+  /**
+   * Turns a monster into what the stone makes of it.
+   *
+   * Twenty-one species evolve this way and none of them could before, since the only trigger this
+   * server knew was levelling. The stone is spent whether or not the player is watching, as it is
+   * in the games.
+   */
+  private suspend fun evolveWithStone(
+      ctx: SessionContext,
+      charId: Long,
+      entityId: Long,
+      itemId: Int,
+      item: ItemDef,
+      into: Int,
+  ) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val monster = target(stored, entityId) ?: return
+    val definition = species.get(into)
+    if (definition == null) {
+      ctx.send(notice("That is not covered by the battle data yet."))
+      return
+    }
+    val was = species.get(monster.dexId)?.name ?: "It"
+    characterStore.updatePokemon(charId, monster.copy(dexId = into))
+    characterStore.addItem(charId, itemId, -1)
+    characterStore.flushCharacterAsync(charId)
+    log.info { "char=$charId used ${item.name} to evolve $was into ${definition.name}" }
+    ctx.send(notice("$was evolved into ${definition.name}!"))
     val party = characterStore.getCharacter(charId)?.pokemon?.toList() ?: return
     ctx.send(
         PokemonContainerPacket(
