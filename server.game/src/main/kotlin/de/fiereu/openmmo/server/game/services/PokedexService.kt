@@ -59,6 +59,24 @@ object Pokedex {
 @Singleton
 class PokedexService @Inject constructor(private val characterStore: CharacterStore) {
 
+  /**
+   * Unlocks everything this character already knows, which a login has to do for itself.
+   *
+   * The unlock packet was only ever sent at the moment a species was first met, so a dex filled
+   * itself in over a session and read zero again on the next login: nothing replayed what was
+   * already known. The flags were right the whole time -- 57 seen and 28 caught sat in the database
+   * while the screen showed nothing.
+   *
+   * The packet carries a species and no more, so it cannot say seen from caught on its own; the
+   * split is meant to come from the login state's two lists.
+   */
+  fun sendKnown(charId: Long, ctx: SessionContext) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    val known = Pokedex.seenOf(stored)
+    known.forEach { ctx.send(PokedexSpeciesUnlockPacket(it)) }
+    log.info { "char=$charId dex replayed ${known.size} known species on login" }
+  }
+
   /** Met in a battle. */
   fun recordSeen(charId: Long, ctx: SessionContext, speciesId: Int) =
       record(charId, ctx, speciesId, Pokedex.seenKey(speciesId), "seen")

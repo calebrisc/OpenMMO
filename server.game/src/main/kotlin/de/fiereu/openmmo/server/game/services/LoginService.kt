@@ -60,6 +60,7 @@ constructor(
     private val mapScriptService: MapScriptService,
     private val tokenVerifier: SessionTokenVerifier,
     private val worldStateService: WorldStateService,
+    private val pokedexService: PokedexService,
 ) {
 
   fun onJoinGame(event: PacketEvent<JoinPacket>) {
@@ -207,6 +208,8 @@ constructor(
     log.info { "Player selected character '${stored.info.name}' (id=$charId)" }
 
     worldStateService.send(ctx, stored)
+    // The dex is not carried by the login state alone: every species has to be unlocked again.
+    pokedexService.sendKnown(charId, ctx)
 
     val info = stored.info
     val now = LocalDateTime.now()
