@@ -3,6 +3,7 @@ package de.fiereu.openmmo.server.game.services
 import de.fiereu.network.PacketEvent
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.Direction
+import de.fiereu.openmmo.common.enums.TileBehavior
 import de.fiereu.openmmo.maps.MapManager
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.TileInteractPacket
@@ -28,6 +29,7 @@ constructor(
     private val characterStore: CharacterStore,
     private val scriptRegistry: ScriptRegistry,
     private val scriptRunner: ScriptRunner,
+    private val pcBoxes: PcBoxService,
 ) {
 
   /** The player pressed the action button on a specific entity, that is an npc. */
@@ -93,7 +95,20 @@ constructor(
           it.x == facingX && it.y == facingY && facingDirOk(it.facingDir, state.facingDirection)
         }
     if (bgEvent == null) {
-      log.debug { "Tile interaction at ($facingX, $facingY) has no bg event" }
+      // A storage box is neither an object nor a background event in the decomp: the tile itself
+      // carries the behaviour and the engine acts on it, which is why interacting with one reached
+      // here and fell out silently.
+      if (currentMap.tileAt(facingX, facingY)?.behavior == TileBehavior.PC) {
+        val charId = state.characterId
+        if (charId != null) {
+          log.info { "char=$charId interacted with a pc at ($facingX, $facingY)" }
+          pcBoxes.open(session, charId)
+        }
+        return
+      }
+      // Info rather than debug: a miss here is how a whole feature looks broken with no trace of
+      // why, which cost a session to work out.
+      log.info { "Tile interaction at ($facingX, $facingY) matched no bg event and no behaviour" }
       return
     }
     val script = scriptRegistry.forLabel(bgEvent.script)

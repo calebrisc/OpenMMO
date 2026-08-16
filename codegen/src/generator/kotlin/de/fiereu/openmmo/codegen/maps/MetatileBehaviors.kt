@@ -87,6 +87,7 @@ private constructor(
     // the same tile different names, so this matches on names and not on numbers.
     private fun classify(name: String): TileBehavior? =
         when (name) {
+          "MB_PC" -> TileBehavior.PC
           "MB_TALL_GRASS" -> TileBehavior.TALL_GRASS
           "MB_LONG_GRASS" -> TileBehavior.LONG_GRASS
           "MB_JUMP_EAST" -> TileBehavior.JUMP_EAST

@@ -23,7 +23,12 @@ enum class TileBehavior {
   NORTH_ARROW_WARP,
   SOUTH_ARROW_WARP,
   EAST_ARROW_WARP,
-  WEST_ARROW_WARP;
+  WEST_ARROW_WARP,
+  /**
+   * A storage box. Last on purpose: the ordinal is what the generated map data stores, so inserting
+   * anywhere earlier would silently re-label every tile of every map already generated.
+   */
+  PC;
 
   /** The direction the player must walk while standing here to be warped. */
   val warpsWhenWalking: Direction?
