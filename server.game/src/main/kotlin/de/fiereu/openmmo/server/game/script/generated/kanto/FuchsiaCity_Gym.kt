@@ -105,7 +105,12 @@ internal object FuchsiaCity_Gym_EventScript_Koga : Script {
  * ```
  */
 internal object FuchsiaCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(
+          ctx,
+          KantoFlags.FLAG_DEFEATED_KOGA,
+          FuchsiaCity_Gym.GymGuyAdvice,
+          FuchsiaCity_Gym.GymGuyPostVictory)
 }
 
 /**
@@ -119,7 +124,12 @@ internal object FuchsiaCity_Gym_EventScript_GymGuy : Script {
  * ```
  */
 internal object FuchsiaCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port FuchsiaCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE05_GET,
+          FuchsiaCity_Gym.GymStatue,
+          FuchsiaCity_Gym.GymStatuePlayerWon)
 }
 
 internal val FuchsiaCity_GymScripts: Map<String, Script> =

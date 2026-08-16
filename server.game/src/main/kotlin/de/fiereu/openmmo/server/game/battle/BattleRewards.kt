@@ -56,9 +56,10 @@ class BattleRewards @Inject constructor() {
     val leveled = newLevel > winner.level
     val newEvs = addYields(winner.source.eVs, defeated)
     val grown = winner.source.copy(level = newLevel.toByte(), eVs = newEvs)
-    // Stats only move on a level up. New EVs are banked until then, as Gen 3 does, and the client
-    // is only told about stats when it is told about the level, so moving them apart desyncs it.
-    val newStats = if (leveled) StatCalculator.computeAll(winner.species, grown) else winner.stats
+    // Recomputed every win, effort values included, because that is what the client does. Gen 3
+    // banks effort until a level up recalculates the stats, and following it left this server one
+    // point below a client that had already counted them: an Ivysaur at 72 of 71.
+    val newStats = StatCalculator.computeAll(winner.species, grown)
     // A level up raises the maximum, the missing hp stays missing.
     val newCurrentHp =
         (winner.currentHp + maxOf(0, newStats.hp - winner.stats.hp)).coerceAtMost(newStats.hp)

@@ -101,7 +101,12 @@ internal object VermilionCity_Gym_EventScript_Dwayne : Script {
  * ```
  */
 internal object VermilionCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(
+          ctx,
+          KantoFlags.FLAG_DEFEATED_LT_SURGE,
+          VermilionCity_Gym.GymGuyAdvice,
+          VermilionCity_Gym.GymGuyPostVictory)
 }
 
 /**
@@ -129,7 +134,11 @@ internal object VermilionCity_Gym_EventScript_Tucker : Script {
  */
 internal object VermilionCity_Gym_EventScript_GymStatue : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port VermilionCity_Gym_EventScript_GymStatue")
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE03_GET,
+          VermilionCity_Gym.GymStatue,
+          VermilionCity_Gym.GymStatuePlayerWon)
 }
 
 internal object VermilionCity_Gym_EventScript_TrashCan1 : Script {

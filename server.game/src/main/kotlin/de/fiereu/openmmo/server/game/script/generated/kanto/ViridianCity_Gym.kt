@@ -126,7 +126,12 @@ internal object ViridianCity_Gym_EventScript_Warren : Script {
  * ```
  */
 internal object ViridianCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(
+          ctx,
+          KantoFlags.FLAG_DEFEATED_LEADER_GIOVANNI,
+          ViridianCity_Gym.GymGuyAdvice,
+          ViridianCity_Gym.GymGuyPostVictory)
 }
 
 /**
@@ -140,7 +145,12 @@ internal object ViridianCity_Gym_EventScript_GymGuy : Script {
  * ```
  */
 internal object ViridianCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port ViridianCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE08_GET,
+          ViridianCity_Gym.GymStatue,
+          ViridianCity_Gym.GymStatuePlayerWon)
 }
 
 internal val ViridianCity_GymScripts: Map<String, Script> =

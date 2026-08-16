@@ -113,7 +113,12 @@ internal object CeladonCity_Gym_EventScript_Mary : Script {
  * ```
  */
 internal object CeladonCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeladonCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE04_GET,
+          CeladonCity_Gym.GymStatue,
+          CeladonCity_Gym.GymStatuePlayerWon)
 }
 
 internal val CeladonCity_GymScripts: Map<String, Script> =

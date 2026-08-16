@@ -58,7 +58,8 @@ internal object PewterCity_Gym_EventScript_Liam : Script {
  * ```
  */
 internal object PewterCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(ctx, KantoFlags.FLAG_DEFEATED_BROCK, PewterCity_Gym.LetMeTakeYouToTheTop, null)
 }
 
 /**
@@ -72,7 +73,12 @@ internal object PewterCity_Gym_EventScript_GymGuy : Script {
  * ```
  */
 internal object PewterCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port PewterCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE01_GET,
+          PewterCity_Gym.GymStatue,
+          PewterCity_Gym.GymStatuePlayerWon)
 }
 
 internal val PewterCity_GymScripts: Map<String, Script> =

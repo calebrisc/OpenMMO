@@ -64,7 +64,8 @@ internal object CeruleanCity_Gym_EventScript_Misty : Script {
  * ```
  */
 internal object CeruleanCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(ctx, KantoFlags.FLAG_DEFEATED_MISTY, CeruleanCity_Gym.GymGuyAdvice, null)
 }
 
 /**
@@ -78,7 +79,12 @@ internal object CeruleanCity_Gym_EventScript_GymGuy : Script {
  * ```
  */
 internal object CeruleanCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CeruleanCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE02_GET,
+          CeruleanCity_Gym.GymStatue,
+          CeruleanCity_Gym.GymStatuePlayerWon)
 }
 
 internal val CeruleanCity_GymScripts: Map<String, Script> =

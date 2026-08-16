@@ -115,7 +115,12 @@ internal object SaffronCity_Gym_EventScript_Tyron : Script {
  * ```
  */
 internal object SaffronCity_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(
+          ctx,
+          KantoFlags.FLAG_DEFEATED_SABRINA,
+          SaffronCity_Gym.GymGuyAdvice,
+          SaffronCity_Gym.GymGuyPostVictory)
 }
 
 /**
@@ -129,7 +134,12 @@ internal object SaffronCity_Gym_EventScript_GymGuy : Script {
  * ```
  */
 internal object SaffronCity_Gym_EventScript_GymStatue : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port SaffronCity_Gym_EventScript_GymStatue")
+  override suspend fun run(ctx: ScriptContext) =
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE06_GET,
+          SaffronCity_Gym.GymStatue,
+          SaffronCity_Gym.GymStatuePlayerWon)
 }
 
 internal val SaffronCity_GymScripts: Map<String, Script> =

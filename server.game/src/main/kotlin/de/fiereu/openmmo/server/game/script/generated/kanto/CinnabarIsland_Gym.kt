@@ -129,7 +129,12 @@ internal object CinnabarIsland_Gym_EventScript_Blaine : Script {
  * ```
  */
 internal object CinnabarIsland_Gym_EventScript_GymGuy : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_GymGuy")
+  override suspend fun run(ctx: ScriptContext) =
+      gymGuide(
+          ctx,
+          KantoFlags.FLAG_DEFEATED_BLAINE,
+          CinnabarIsland_Gym.GymGuyAdvice,
+          CinnabarIsland_Gym.GymGuyPostVictory)
 }
 
 /**
@@ -144,7 +149,11 @@ internal object CinnabarIsland_Gym_EventScript_GymGuy : Script {
  */
 internal object CinnabarIsland_Gym_EventScript_GymStatue : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CinnabarIsland_Gym_EventScript_GymStatue")
+      gymPlaque(
+          ctx,
+          KantoFlags.FLAG_BADGE07_GET,
+          CinnabarIsland_Gym.GymStatue,
+          CinnabarIsland_Gym.GymStatuePlayerWon)
 }
 
 /**

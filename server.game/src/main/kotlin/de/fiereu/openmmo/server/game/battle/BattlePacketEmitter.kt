@@ -427,15 +427,8 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     // out max hp for itself from the values it holds. Sending these only on a level up left it
     // computing from stale ones, which is how an Ivysaur came to sit at 60 out of 59.
     //
-    // The stats do NOT ride along unless the monster levelled. Off a level up they are the numbers
-    // the monster started the battle with, and sending those overwrote a correct maximum with an
-    // older one -- an Ivysaur whose maximum fell from 70 to 68.
-    if (!reward.leveled) {
-      broadcast(
-          battle,
-          BattleEntityDeltaPacket(entityId = entityId, evValues = reward.newEvs.asWireList()))
-      return
-    }
+    // Stats ride along on every win now that they are recomputed on every win rather than carried
+    // over from the start of the battle, which is what made them wrong to send off a level up.
     broadcast(
         battle,
         BattleEntityDeltaPacket(
