@@ -6,8 +6,12 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
+/** The man, as against the Clefairy the teleporter left him as. */
+private const val BILL_HUMAN = 0
+
 internal object Route25_SeaCottage_EventScript_Bill : Script {
   override suspend fun run(ctx: ScriptContext) {
+    var becameHuman = false
     if (ctx.isFlagSet(KantoFlags.FLAG_GOT_SS_TICKET)) {
       return ctx.say(Route25_SeaCottage.SSAnnePartyYouGoInstead)
     }
@@ -18,6 +22,11 @@ internal object Route25_SeaCottage_EventScript_Bill : Script {
           else Route25_SeaCottage.ImBillHelpMeOutPal)
       ctx.say(Route25_SeaCottage.RunCellSeparationOnPC)
       ctx.setFlag(KantoFlags.FLAG_HELPED_BILL_IN_SEA_COTTAGE)
+      // He comes out of the teleporter as himself. The map carries two Bills, a Clefairy and a
+      // man, and the hide flags choose between them, so helping him swaps which one is there.
+      ctx.setFlag(KantoFlags.FLAG_HIDE_BILL_CLEFAIRY)
+      ctx.clearFlag(KantoFlags.FLAG_HIDE_BILL_HUMAN_SEA_COTTAGE)
+      becameHuman = true
     }
     ctx.say(
         if (ctx.isFemale) Route25_SeaCottage.ThanksLadyTakeThis
@@ -28,6 +37,12 @@ internal object Route25_SeaCottage_EventScript_Bill : Script {
     ctx.setFlag(KantoFlags.FLAG_GOT_SS_TICKET)
     ctx.sign(Route25_SeaCottage.ReceivedSSTicketFromBill)
     ctx.say(Route25_SeaCottage.SSAnnePartyYouGoInstead)
+    // Left to the end of the scene: the Clefairy is the one being talked to, and taking it away
+    // mid conversation would take the conversation with it.
+    if (becameHuman) {
+      ctx.despawnInteracted()
+      ctx.showNpc(BILL_HUMAN)
+    }
   }
 }
 
