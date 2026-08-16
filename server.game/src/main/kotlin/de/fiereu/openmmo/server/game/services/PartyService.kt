@@ -66,7 +66,9 @@ class PartyService @Inject constructor(private val characterStore: CharacterStor
     characterStore.updatePokemon(charId, picked.copy(containerSlot = other.containerSlot))
     characterStore.updatePokemon(charId, other.copy(containerSlot = picked.containerSlot))
     characterStore.flushCharacterAsync(charId)
-    log.info { "char=$charId swapped party slots ${picked.containerSlot} and ${other.containerSlot}" }
+    log.info {
+      "char=$charId swapped party slots ${picked.containerSlot} and ${other.containerSlot}"
+    }
     sendParty(event, charId)
   }
 

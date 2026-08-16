@@ -22,6 +22,10 @@ import kotlinx.coroutines.sync.withLock
 
 private val log = KotlinLogging.logger {}
 
+private const val NOT_IN_WORLD = "You are not in world."
+private const val NOT_TRADING = "You are not trading."
+private const val TRADE_FAILED = "The trade failed. Nothing changed."
+
 /** One side of a trade in progress. */
 private class TradeSeat(val charId: Long, val session: SessionContext, val name: String) {
   /** The monster this player has put up, by its id. */
@@ -61,8 +65,8 @@ private class TradeSession(val a: TradeSeat, val b: TradeSeat) {
  *
  * Selecting is done in the client's own trade window, which is what its select packet carries, but
  * the exchange itself is committed from chat. The window's action byte arrives as a single value on
- * every press and nothing tells confirm from cancel, and a wrong reading of it would hand somebody's
- * monster away with no way back. A typed word cannot be misread.
+ * every press and nothing tells confirm from cancel, and a wrong reading of it would hand
+ * somebody's monster away with no way back. A typed word cannot be misread.
  */
 @Singleton
 class TradeService
@@ -107,7 +111,7 @@ constructor(
     if (targetId == charId) return "You cannot trade with yourself."
     if (trades.containsKey(targetId)) return "${target.info.name} is already trading."
     sessionRegistry.getByCharacterId(targetId) ?: return "${target.info.name} is not online."
-    val myName = characterStore.getCharacter(charId)?.info?.name ?: return "You are not in world."
+    val myName = characterStore.getCharacter(charId)?.info?.name ?: return NOT_IN_WORLD
 
     invites[targetId] = charId
     sessionRegistry
@@ -118,10 +122,12 @@ constructor(
 
   fun accept(session: SessionContext, charId: Long): String {
     val fromId = invites.remove(charId) ?: return "Nobody has asked to trade."
-    if (trades.containsKey(charId) || trades.containsKey(fromId)) return "That trade is no longer open."
-    val fromSession = sessionRegistry.getByCharacterId(fromId) ?: return "They are no longer online."
+    if (trades.containsKey(charId) || trades.containsKey(fromId))
+        return "That trade is no longer open."
+    val fromSession =
+        sessionRegistry.getByCharacterId(fromId) ?: return "They are no longer online."
     val from = characterStore.getCharacter(fromId) ?: return "They are no longer here."
-    val me = characterStore.getCharacter(charId) ?: return "You are not in world."
+    val me = characterStore.getCharacter(charId) ?: return NOT_IN_WORLD
 
     val trade =
         TradeSession(
@@ -131,7 +137,8 @@ constructor(
     trades[fromId] = trade
     trades[charId] = trade
     val opening =
-        notice("Trade open. /trade offer <party slot 1-6>, then /trade confirm. /trade cancel ends it.")
+        notice(
+            "Trade open. /trade offer <party slot 1-6>, then /trade confirm. /trade cancel ends it.")
     fromSession.send(notice("${me.info.name} accepted. $TRADE_HELP"))
     session.send(notice("Trading with ${from.info.name}. $TRADE_HELP"))
     fromSession.send(opening)
@@ -149,9 +156,9 @@ constructor(
 
   /** Puts the monster in [partySlot], counted from one, on the table. */
   suspend fun offer(charId: Long, partySlot: Int): String {
-    val trade = trades[charId] ?: return "You are not trading."
-    val seat = trade.seat(charId) ?: return "You are not trading."
-    val party = characterStore.getCharacter(charId)?.pokemon ?: return "You are not in world."
+    val trade = trades[charId] ?: return NOT_TRADING
+    val seat = trade.seat(charId) ?: return NOT_TRADING
+    val party: List<Pokemon> = characterStore.getCharacter(charId)?.pokemon ?: return NOT_IN_WORLD
     val mon =
         party.sortedBy { it.containerSlot }.getOrNull(partySlot - 1)
             ?: return "You have nothing in slot $partySlot."
@@ -170,8 +177,8 @@ constructor(
   }
 
   suspend fun confirm(charId: Long): String {
-    val trade = trades[charId] ?: return "You are not trading."
-    val seat = trade.seat(charId) ?: return "You are not trading."
+    val trade = trades[charId] ?: return NOT_TRADING
+    val seat = trade.seat(charId) ?: return NOT_TRADING
     val them = trade.other(charId)
     trade.lock.withLock {
       if (seat.offered == null || them.offered == null) {
@@ -189,7 +196,7 @@ constructor(
   }
 
   fun cancel(charId: Long): String {
-    val trade = trades.remove(charId) ?: return "You are not trading."
+    val trade = trades.remove(charId) ?: return NOT_TRADING
     val them = trade.other(charId)
     trades.remove(them.charId)
     val me = trade.seat(charId)
@@ -219,17 +226,25 @@ constructor(
     val aMon = characterStore.removePokemon(a.charId, aId)
     if (aMon == null) {
       failed(trade, "${a.name}'s monster could not be taken")
-      return "The trade failed. Nothing changed."
+      return TRADE_FAILED
     }
     val bMon = characterStore.removePokemon(b.charId, bId)
     if (bMon == null) {
       characterStore.addPokemon(a.charId, aMon)
       failed(trade, "${b.name}'s monster could not be taken")
-      return "The trade failed. Nothing changed."
+      return TRADE_FAILED
     }
 
-    val toB = aMon.copy(ownerId = b.charId, container = PokemonContainer.PARTY, containerSlot = freeSlot(b.charId))
-    val toA = bMon.copy(ownerId = a.charId, container = PokemonContainer.PARTY, containerSlot = freeSlot(a.charId))
+    val toB =
+        aMon.copy(
+            ownerId = b.charId,
+            container = PokemonContainer.PARTY,
+            containerSlot = freeSlot(b.charId))
+    val toA =
+        bMon.copy(
+            ownerId = a.charId,
+            container = PokemonContainer.PARTY,
+            containerSlot = freeSlot(a.charId))
     val gaveB = characterStore.addPokemon(b.charId, toB)
     val gaveA = characterStore.addPokemon(a.charId, toA)
     if (!gaveB || !gaveA) {
@@ -237,7 +252,7 @@ constructor(
       if (!gaveB) characterStore.addPokemon(a.charId, aMon)
       if (!gaveA) characterStore.addPokemon(b.charId, bMon)
       failed(trade, "the exchange could not be written")
-      return "The trade failed. Nothing changed."
+      return TRADE_FAILED
     }
 
     // Four species become something else the moment they change hands, and this is the first time

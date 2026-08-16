@@ -49,8 +49,8 @@ private const val PRESENCE_OVERWORLD: Byte = 0
 // The active battle side reported to the client so the bag knows which monster an item targets.
 /**
  * Which half of the field a switch in lands on, which is not the same numbering as [PLAYER_SIDE].
- * That one names the local side for [de.fiereu.openmmo.net.game.packets.battle.BattleSidePacket] and
- * happens to share a value with [OPPONENT_SIDE], so picking between those two decides nothing.
+ * That one names the local side for [de.fiereu.openmmo.net.game.packets.battle.BattleSidePacket]
+ * and happens to share a value with [OPPONENT_SIDE], so picking between those two decides nothing.
  */
 private const val SWITCH_IN_NEAR: Byte = 0
 private const val SWITCH_IN_FAR: Byte = 1

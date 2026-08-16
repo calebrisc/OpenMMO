@@ -1,20 +1,20 @@
 package de.fiereu.openmmo.server.game.services
 
 import de.fiereu.network.PacketEvent
+import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.StatusCondition
+import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.net.game.packets.DialogOptionPacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.pokemon.EvolutionTable
-import de.fiereu.openmmo.items.ItemDef
-import de.fiereu.openmmo.server.game.storage.StoredCharacter
-import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.StatCalculator
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
+import de.fiereu.openmmo.server.game.storage.StoredCharacter
 import io.github.oshai.kotlinlogging.KotlinLogging
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -59,7 +59,8 @@ constructor(
     }
 
     // A stone is neither a heal nor a cure, so it is answered before the healing items are.
-    val evolvesInto = EvolutionTable.byStone(target(stored, packet.entityId)?.dexId ?: -1, item.name)
+    val evolvesInto =
+        EvolutionTable.byStone(target(stored, packet.entityId)?.dexId ?: -1, item.name)
     if (evolvesInto != null) {
       evolveWithStone(ctx, charId, packet.entityId, packet.optionId, item, evolvesInto)
       return

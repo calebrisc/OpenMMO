@@ -14,7 +14,9 @@ import java.util.EnumMap
  */
 class BattleMonState(
     val entityId: Long,
-    /** Changes when the monster evolves mid battle, so the rest of it is fought by what it became. */
+    /**
+     * Changes when the monster evolves mid battle, so the rest of it is fought by what it became.
+     */
     var species: SpeciesDef,
     val partyIndex: Int?,
     // Both move on when a reward lands, so a second reward in the same battle builds on the first.

@@ -12,6 +12,8 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
+private const val LISTING_GONE = "That listing is gone."
+
 private const val MAX_PRICE = 9_999_999
 private const val PAGE_SIZE = 10
 
@@ -83,7 +85,7 @@ constructor(
   }
 
   suspend fun buy(charId: Long, listingId: Long): String {
-    val listing = market.byId(listingId) ?: return "That listing is gone."
+    val listing = market.byId(listingId) ?: return LISTING_GONE
     if (listing.sellerId == charId) return "That is your own listing. /market cancel $listingId."
     val stored = characterStore.getCharacter(charId) ?: return "You are not in world."
     if (stored.info.money < listing.price) {
@@ -118,10 +120,10 @@ constructor(
   }
 
   suspend fun cancel(charId: Long, listingId: Long): String {
-    val listing = market.byId(listingId) ?: return "That listing is gone."
+    val listing = market.byId(listingId) ?: return LISTING_GONE
     if (listing.sellerId != charId) return "That is not your listing."
     val slot = freeSlot(charId, toParty = false)
-    if (!market.cancel(listingId, charId, slot)) return "That listing is gone."
+    if (!market.cancel(listingId, charId, slot)) return LISTING_GONE
     log.info { "char=$charId cancelled listing $listingId" }
     reload(charId)
     return "Taken back. It is in your PC."
@@ -129,7 +131,9 @@ constructor(
 
   private fun freeSlot(charId: Long, toParty: Boolean): Short {
     val stored = characterStore.getCharacter(charId) ?: return 0
-    val used = if (toParty) stored.pokemon.map { it.containerSlot } else stored.pcStorage.map { it.containerSlot }
+    val used =
+        if (toParty) stored.pokemon.map { it.containerSlot }
+        else stored.pcStorage.map { it.containerSlot }
     return (generateSequence(0) { it + 1 }.first { it.toShort() !in used }).toShort()
   }
 

@@ -66,9 +66,10 @@ class TournamentServiceTest :
          */
         fun decideRunningMatches() {
           val running =
-              sessions.onlineCharacterIds().mapNotNull { registry.byChar(it) }.distinctBy {
-                it.battleId
-              }
+              sessions
+                  .onlineCharacterIds()
+                  .mapNotNull { registry.byChar(it) }
+                  .distinctBy { it.battleId }
           running.forEach { battle -> duels.onDisconnect(battle.duel!!.charId) }
         }
       }
@@ -149,7 +150,8 @@ private fun monster(ownerId: Long): Pokemon =
         xp = 0,
         eVs = EVs(),
         iVs = IVs(),
-        moves = listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
+        moves =
+            listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
         isShiny = false,
         hasHiddenAbility = false,
         isAlpha = false,

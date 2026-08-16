@@ -72,8 +72,7 @@ class RaidServiceTest :
                         ItemRegistry(),
                     ),
             )
-        val raids =
-            RaidService(store, battles, sessions, species, wildMons, LinkStore(), registry)
+        val raids = RaidService(store, battles, sessions, species, wildMons, LinkStore(), registry)
 
         /** Puts [joiner] into whatever raid [existing] is already in. */
         fun raidsJoin(joiner: Long, existing: Long) {
@@ -119,7 +118,8 @@ class RaidServiceTest :
           fx.raidsJoin(garyId, ashId)
           garySession.sent.clear()
 
-          // Ash lands a hit. The damage happens in his battle, so Gary would otherwise never see it.
+          // Ash lands a hit. The damage happens in his battle, so Gary would otherwise never see
+          // it.
           fx.registry.byChar(ashId)!!.opponentMon().currentHp -= 100
           fx.battles.onBattleAction(
               de.fiereu.network.PacketEvent(
@@ -174,7 +174,8 @@ private fun monster(ownerId: Long): Pokemon =
         xp = 0,
         eVs = EVs(),
         iVs = IVs(),
-        moves = listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
+        moves =
+            listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
         isShiny = false,
         hasHiddenAbility = false,
         isAlpha = false,

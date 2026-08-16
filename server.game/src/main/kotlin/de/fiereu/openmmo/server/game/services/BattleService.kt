@@ -102,7 +102,9 @@ constructor(
 
   private fun fireTurnResolved(charId: Long) {
     val listeners = synchronized(turnListeners) { turnListeners.toList() }
-    listeners.forEach { runCatching { it(charId) }.onFailure { e -> log.warn(e) { "turn listener" } } }
+    listeners.forEach {
+      runCatching { it(charId) }.onFailure { e -> log.warn(e) { "turn listener" } }
+    }
   }
 
   fun onBattlePacket(event: PacketEvent<*>) {

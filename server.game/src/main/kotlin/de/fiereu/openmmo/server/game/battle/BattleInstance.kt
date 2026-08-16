@@ -95,7 +95,8 @@ class BattleInstance(
     get() = duel != null
 
   /** Every session that should see this battle's events, which in a duel is both players. */
-  fun sessions(): List<SessionContext> = participants.map { it.session } + listOfNotNull(duel?.session)
+  fun sessions(): List<SessionContext> =
+      participants.map { it.session } + listOfNotNull(duel?.session)
 
   /** The player who started the battle, and the only one in an ordinary battle. */
   val host: BattleParticipant

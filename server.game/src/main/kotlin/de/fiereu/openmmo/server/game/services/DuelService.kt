@@ -3,15 +3,15 @@ package de.fiereu.openmmo.server.game.services
 import de.fiereu.network.SessionContext
 import de.fiereu.openmmo.common.enums.BattleAction
 import de.fiereu.openmmo.common.enums.PokemonContainer
+import de.fiereu.openmmo.common.enums.StatusCondition
+import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.net.game.packets.EntityPresencePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleBulkStatePacket
-import de.fiereu.openmmo.common.enums.StatusCondition
-import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
-import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.BattleInstance
+import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.BattleMonState
 import de.fiereu.openmmo.server.game.battle.BattlePacketEmitter
 import de.fiereu.openmmo.server.game.battle.BattleParticipant
@@ -102,8 +102,7 @@ constructor(
   }
 
   fun invite(session: SessionContext, charId: Long, targetName: String): String {
-    val target =
-        characterStore.findCachedByName(targetName) ?: return "$targetName is not online."
+    val target = characterStore.findCachedByName(targetName) ?: return "$targetName is not online."
     val targetId = target.info.id
     if (targetId == charId) return "You cannot duel yourself."
     val targetSession =
@@ -411,7 +410,8 @@ constructor(
     val loserId = if (hostWon) duel.charId else battle.charId
     val listeners = synchronized(outcomeListeners) { outcomeListeners.toList() }
     listeners.forEach {
-      runCatching { it(winnerId, loserId) }.onFailure { e -> log.warn(e) { "duel listener failed" } }
+      runCatching { it(winnerId, loserId) }
+          .onFailure { e -> log.warn(e) { "duel listener failed" } }
     }
   }
 

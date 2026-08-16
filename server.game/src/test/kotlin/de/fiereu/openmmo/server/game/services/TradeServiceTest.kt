@@ -214,7 +214,8 @@ private fun monster(ownerId: Long, dexId: Int, slot: Short): Pokemon =
         xp = 0,
         eVs = EVs(),
         iVs = IVs(),
-        moves = listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
+        moves =
+            listOf(PokemonMove(33, 35), PokemonMove(0, 0), PokemonMove(0, 0), PokemonMove(0, 0)),
         isShiny = false,
         hasHiddenAbility = false,
         isAlpha = false,

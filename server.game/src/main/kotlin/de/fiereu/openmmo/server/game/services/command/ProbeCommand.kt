@@ -19,8 +19,8 @@ import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
 import de.fiereu.openmmo.server.game.services.MovementTuning
 import de.fiereu.openmmo.server.game.services.PlayerStateTuning
-import de.fiereu.openmmo.server.game.services.WorldStateService
 import de.fiereu.openmmo.server.game.services.PresenceService
+import de.fiereu.openmmo.server.game.services.WorldStateService
 import de.fiereu.openmmo.server.game.services.notice
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry

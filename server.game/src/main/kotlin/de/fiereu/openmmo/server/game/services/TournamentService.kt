@@ -137,8 +137,7 @@ constructor(
     }
 
     bye?.let { announce(tournament, "${nameOf(it)} has a bye this round.") }
-    val summary =
-        matches.joinToString("; ") { (a, b) -> "${nameOf(a)} vs ${nameOf(b)}" }
+    val summary = matches.joinToString("; ") { (a, b) -> "${nameOf(a)} vs ${nameOf(b)}" }
     announce(tournament, "Round ${tournament.round}: $summary")
 
     for ((a, b) in matches) {

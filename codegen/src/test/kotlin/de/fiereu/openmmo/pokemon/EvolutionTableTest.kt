@@ -1,7 +1,7 @@
 package de.fiereu.openmmo.pokemon
 
-import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 
@@ -32,11 +32,12 @@ class EvolutionTableTest :
       }
 
       test("hoenn species are carried across, not just kanto") {
-        // Treecko is national 252, and its internal decomp id is 277, so a wrong mapping shows here.
+        // Treecko is national 252, and its internal decomp id is 277, so a wrong mapping shows
+        // here.
         EvolutionTable.at(252, 16) shouldBe LevelEvolution(16, 253)
         EvolutionTable.size shouldBeGreaterThan 130
       }
-    
+
       test("stones carry the evolutions levelling never could") {
         EvolutionTable.stoneCount shouldBe 21
         // Pikachu is the one everybody notices: it never evolves by level, only by stone.
@@ -53,4 +54,4 @@ class EvolutionTableTest :
         EvolutionTable.byStone(133, "WATER_STONE") shouldBe 134 // Eevee into Vaporeon
         EvolutionTable.byStone(44, "LEAF_STONE") shouldBe 45 // Gloom into Vileplume
       }
-})
+    })

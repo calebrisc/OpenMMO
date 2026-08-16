@@ -159,7 +159,9 @@ class MarketRepositoryIT :
 
         market.list(mon.id, seller.info.id, "Seller2", price = 200).shouldBeNull()
 
-        dsl.selectFrom(MARKET_LISTING).where(MARKET_LISTING.POKEMON_ID.eq(mon.id)).fetch() shouldHaveSize 1
+        dsl.selectFrom(MARKET_LISTING)
+            .where(MARKET_LISTING.POKEMON_ID.eq(mon.id))
+            .fetch() shouldHaveSize 1
       }
 
       test("a monster the seller does not own cannot be listed") {

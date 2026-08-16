@@ -26,7 +26,9 @@ object Pokedex {
   fun caughtKey(speciesId: Int): String = "$CAUGHT_PREFIX$speciesId"
 
   private fun idsWithPrefix(flags: Collection<String>, prefix: String): List<Int> =
-      flags.mapNotNull { if (it.startsWith(prefix)) it.removePrefix(prefix).toIntOrNull() else null }
+      flags.mapNotNull {
+        if (it.startsWith(prefix)) it.removePrefix(prefix).toIntOrNull() else null
+      }
 
   /**
    * Everything the player owns counts as caught whether or not a flag was ever written, which

@@ -1,8 +1,5 @@
 package de.fiereu.openmmo.server.game.services
 
-import de.fiereu.openmmo.server.game.session.SessionRegistry
-import de.fiereu.openmmo.server.game.services.DuelService
-import de.fiereu.openmmo.server.game.services.PokedexService
 import de.fiereu.network.PacketEvent
 import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.PokemonMove
@@ -16,8 +13,8 @@ import de.fiereu.openmmo.items.ItemRegistry
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.EntityMovePpPacket
 import de.fiereu.openmmo.net.game.packets.EntityPresencePacket
-import de.fiereu.openmmo.net.game.packets.PokedexSpeciesUnlockPacket
 import de.fiereu.openmmo.net.game.packets.MapLoadedAckPacket
+import de.fiereu.openmmo.net.game.packets.PokedexSpeciesUnlockPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleActionSelectPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleBulkStatePacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacket
@@ -35,6 +32,7 @@ import de.fiereu.openmmo.server.game.battle.BattleRewards
 import de.fiereu.openmmo.server.game.battle.MoveLearner
 import de.fiereu.openmmo.server.game.battle.TurnEngine
 import de.fiereu.openmmo.server.game.battle.WildMonFactory
+import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
@@ -46,7 +44,6 @@ import de.fiereu.openmmo.trainer.TrainerRegistry
 import de.fiereu.openmmo.typechart.TypeChart
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeTrue
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldBeNull

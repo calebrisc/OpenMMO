@@ -43,7 +43,9 @@ interface MarketRepository {
    */
   suspend fun sell(listingId: Long, buyerId: Long, slot: Short, toParty: Boolean): Boolean
 
-  /** Takes a listing back, returning the monster to the seller's PC. False if it had already gone. */
+  /**
+   * Takes a listing back, returning the monster to the seller's PC. False if it had already gone.
+   */
   suspend fun cancel(listingId: Long, sellerId: Long, slot: Short): Boolean
 }
 
@@ -140,7 +142,9 @@ constructor(
           val listing =
               tx.selectFrom(MARKET_LISTING)
                   .where(MARKET_LISTING.ID.eq(listingId))
-                  .let { if (sellerOnly != null) it.and(MARKET_LISTING.SELLER_ID.eq(sellerOnly)) else it }
+                  .let {
+                    if (sellerOnly != null) it.and(MARKET_LISTING.SELLER_ID.eq(sellerOnly)) else it
+                  }
                   .forUpdate()
                   .fetchOne() ?: return@transactionResult false
 

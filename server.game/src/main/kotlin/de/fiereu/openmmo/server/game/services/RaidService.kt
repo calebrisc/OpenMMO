@@ -79,9 +79,9 @@ constructor(
     val hitter = characterStore.getCharacter(charId)?.info?.name ?: "A raider"
     val percent = (boss.currentHp * 100) / boss.stats.hp.coerceAtLeast(1)
     val update = notice("$hitter attacked ${raid.bossName}: $percent% left.")
-    raid.raiders.filter { it != charId }.forEach {
-      sessionRegistry.getByCharacterId(it)?.send(update)
-    }
+    raid.raiders
+        .filter { it != charId }
+        .forEach { sessionRegistry.getByCharacterId(it)?.send(update) }
   }
 
   fun describe(charId: Long): String {
@@ -92,7 +92,8 @@ constructor(
               val waiting = synchronized(queue) { queue.size }
               return if (charId in synchronized(queue) { queue.toList() })
                   "Waiting for a raid ($waiting in the queue). /raid queue leave to stop waiting."
-              else "You are not in a raid. /raid queue to wait for one, or /raid start to begin one."
+              else
+                  "You are not in a raid. /raid queue to wait for one, or /raid start to begin one."
             }
     val names = raid.raiders.mapNotNull { characterStore.getCharacter(it)?.info?.name }
     return "Raid against ${raid.bossName}: ${raid.boss.currentHp}/${raid.boss.stats.hp} hp left. " +
@@ -107,8 +108,7 @@ constructor(
     purge(charId)
     if (raids.containsKey(charId)) return "You are already in a raid."
 
-    val squad =
-        linkStore.forChar(charId)?.members?.map { it.charId }?.toSet() ?: setOf(charId)
+    val squad = linkStore.forChar(charId)?.members?.map { it.charId }?.toSet() ?: setOf(charId)
     val party = (squad + charId).take(MAX_RAIDERS)
     party.forEach { purge(it) }
     val busy = party.filter { raids.containsKey(it) }

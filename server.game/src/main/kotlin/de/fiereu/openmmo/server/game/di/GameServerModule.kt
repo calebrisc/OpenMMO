@@ -14,8 +14,8 @@ import de.fiereu.openmmo.server.game.storage.GuildRepository
 import de.fiereu.openmmo.server.game.storage.JooqCharacterRepository
 import de.fiereu.openmmo.server.game.storage.JooqGuildRepository
 import de.fiereu.openmmo.server.game.storage.JooqMarketRepository
-import de.fiereu.openmmo.server.game.storage.MarketRepository
 import de.fiereu.openmmo.server.game.storage.JooqSocialRepository
+import de.fiereu.openmmo.server.game.storage.MarketRepository
 import de.fiereu.openmmo.server.game.storage.SocialRepository
 import de.fiereu.openmmo.server.game.world.interest.InterestPolicy
 import de.fiereu.openmmo.server.game.world.interest.PassThroughInterestPolicy
@@ -72,9 +72,7 @@ object GameServerModule {
 
   @Provides @Singleton fun guildRepository(impl: JooqGuildRepository): GuildRepository = impl
 
-  @Provides
-  @Singleton
-  fun marketRepository(impl: JooqMarketRepository): MarketRepository = impl
+  @Provides @Singleton fun marketRepository(impl: JooqMarketRepository): MarketRepository = impl
 
   @Provides @Singleton fun socialRepository(impl: JooqSocialRepository): SocialRepository = impl
 

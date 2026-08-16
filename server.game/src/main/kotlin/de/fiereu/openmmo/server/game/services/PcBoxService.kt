@@ -18,13 +18,13 @@ import javax.inject.Singleton
 
 private val log = KotlinLogging.logger {}
 
-
 /**
  * Moving monsters between the party and the PC.
  *
  * The client was already sent both containers at login and drew them, but nothing listened for the
- * packet that moves one, so every deposit and withdrawal snapped back. A monster lives in one of two
- * lists rather than carrying a label, so a move is a removal and an addition rather than an edit.
+ * packet that moves one, so every deposit and withdrawal snapped back. A monster lives in one of
+ * two lists rather than carrying a label, so a move is a removal and an addition rather than an
+ * edit.
  */
 @Singleton
 class PcBoxService @Inject constructor(private val characterStore: CharacterStore) {
@@ -38,7 +38,9 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
     val packet = event.packet
     val destination = PokemonContainer.entries.getOrNull(packet.boxId.toInt())
     if (destination == null || destination !in movable) {
-      log.info { "char=$charId tried to store into container ${packet.boxId}, which is not movable" }
+      log.info {
+        "char=$charId tried to store into container ${packet.boxId}, which is not movable"
+      }
       return
     }
 
@@ -113,7 +115,9 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
     log.info { "char=$charId opened the pc" }
   }
 
-  /** Closing the box needs no state change, but it is answered so the client is not left waiting. */
+  /**
+   * Closing the box needs no state change, but it is answered so the client is not left waiting.
+   */
   fun onClose(event: PacketEvent<StorageBoxClosePacket>) {
     val charId = event.session.attributes[PLAYER_STATE]?.characterId ?: return
     resend(event.session, charId)

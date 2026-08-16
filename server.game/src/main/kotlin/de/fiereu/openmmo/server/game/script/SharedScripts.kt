@@ -7,9 +7,7 @@ package de.fiereu.openmmo.server.game.script
  * it once opens every box in the world.
  */
 internal object SharedScripts {
-  private object EventScript_PC : Script {
-    override suspend fun run(ctx: ScriptContext) = ctx.openPc()
-  }
+  private val EventScript_PC = Script { ctx -> ctx.openPc() }
 
   val byLabel: Map<String, Script> =
       mapOf(
