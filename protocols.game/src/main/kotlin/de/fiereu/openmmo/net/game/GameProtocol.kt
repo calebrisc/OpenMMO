@@ -38,7 +38,9 @@ object GameProtocol : Protocol() {
     c2s<ChatMessageSendPacket>(0x08u, ChatMessageSendPacketCodec)
     s2c<EntityLeavePacket>(0x08u, EntityLeavePacketCodec)
 
-    bidi<ChatMessagePacket>(0x09u, ChatMessagePacketCodec)
+    // Chat only ever goes out on this opcode. What comes in on it is a box move.
+    s2c<ChatMessagePacket>(0x09u, ChatMessagePacketCodec)
+    c2s<PcMovePacket>(0x09u, PcMovePacketCodec)
 
     c2s<MoveLearnReplyPacket>(0x0Au, MoveLearnReplyPacketCodec)
     s2c<WorldFlagTableResetPacket>(0x0Au, WorldFlagTableResetPacketCodec)

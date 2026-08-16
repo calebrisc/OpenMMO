@@ -93,7 +93,9 @@ class GameProtocolTest :
       test("bidi packets are registered both directions") {
         val bidi =
             listOf(
-                ChatMessagePacket::class,
+                // ChatMessagePacket is not here. It was registered both ways, but a client only
+                // ever sends chat on 0x08, and what it sends on 0x09 is a storage box move, which
+                // was being decoded as chat and read past its end until a live capture showed it.
                 LoadMapPacket::class,
                 KeepAlivePacket::class,
             )

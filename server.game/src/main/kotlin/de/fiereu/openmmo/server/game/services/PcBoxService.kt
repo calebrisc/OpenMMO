@@ -6,6 +6,7 @@ import de.fiereu.openmmo.common.MAX_PARTY_SIZE
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.net.game.packets.PcBoxRenamePacket
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
+import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
@@ -153,5 +154,77 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
             delete = false,
             pokemon = stored.pcStorage.sortedBy { it.containerSlot },
         ))
+  }
+
+  /**
+   * Moves a monster from one storage slot to another, swapping with whatever is already there.
+   *
+   * The client names both ends by container and slot rather than by monster, so the move is worked
+   * out from where things are rather than from an id. A party that would be emptied is refused, and
+   * so is one that would overflow.
+   */
+  suspend fun onMove(event: PacketEvent<PcMovePacket>) {
+    val ctx = event.session
+    val charId = ctx.attributes[PLAYER_STATE]?.characterId ?: return
+    val p = event.packet
+    val from = PokemonContainer.entries.getOrNull(p.fromContainer.toInt())
+    val to = PokemonContainer.entries.getOrNull(p.toContainer.toInt())
+    if (from == null || to == null || from !in movable || to !in movable) {
+      log.info { "char=$charId moved between containers ${p.fromContainer} and ${p.toContainer}" }
+      return
+    }
+    val stored = characterStore.getCharacter(charId) ?: return
+    fun listOf(container: PokemonContainer) =
+        if (container == PokemonContainer.PC) stored.pcStorage else stored.pokemon
+
+    val moving = listOf(from).firstOrNull { it.containerSlot.toInt() == p.fromSlot }
+    if (moving == null) {
+      log.info { "char=$charId moved from $from slot ${p.fromSlot}, which is empty" }
+      resend(ctx, charId)
+      return
+    }
+    val occupying = listOf(to).firstOrNull { it.containerSlot.toInt() == p.toSlot }
+
+    val leavingParty = from == PokemonContainer.PARTY && to != PokemonContainer.PARTY
+    if (leavingParty && occupying == null && stored.pokemon.size <= 1) {
+      ctx.send(notice("You cannot put your last monster away."))
+      resend(ctx, charId)
+      return
+    }
+    if (to == PokemonContainer.PARTY &&
+        from != PokemonContainer.PARTY &&
+        occupying == null &&
+        stored.pokemon.size >= MAX_PARTY_SIZE) {
+      ctx.send(notice("Your party is full."))
+      resend(ctx, charId)
+      return
+    }
+
+    // Within one container this is only a renumbering, so nothing has to leave a list.
+    if (from == to) {
+      characterStore.updatePokemon(charId, moving.copy(containerSlot = p.toSlot.toShort()))
+      occupying?.let {
+        characterStore.updatePokemon(charId, it.copy(containerSlot = p.fromSlot.toShort()))
+      }
+      characterStore.flushCharacterAsync(charId)
+      resend(ctx, charId)
+      return
+    }
+
+    val taken = characterStore.removePokemon(charId, moving.id)
+    if (taken == null) {
+      resend(ctx, charId)
+      return
+    }
+    val displaced = occupying?.let { characterStore.removePokemon(charId, it.id) }
+    characterStore.addPokemon(
+        charId, taken.copy(container = to, containerSlot = p.toSlot.toShort()))
+    displaced?.let {
+      characterStore.addPokemon(
+          charId, it.copy(container = from, containerSlot = p.fromSlot.toShort()))
+    }
+    characterStore.flushCharacterAsync(charId)
+    log.info { "char=$charId moved ${taken.id} from $from ${p.fromSlot} to $to ${p.toSlot}" }
+    resend(ctx, charId)
   }
 }

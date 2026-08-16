@@ -9,6 +9,7 @@ import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
+import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -61,6 +62,48 @@ class PcBoxServiceTest :
           // Drawn from what the player actually holds, not whatever the client had cached.
           session.sent.filterIsInstance<PokemonContainerPacket>().size shouldBe 2
           id shouldBe id
+        }
+      }
+
+      test("a drag between two party slots swaps them") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(3)
+          val first = fx.party(id).first { it.containerSlot.toInt() == 0 }
+          val third = fx.party(id).first { it.containerSlot.toInt() == 2 }
+
+          // party 0 -> party 2, which the client sends as container 1 at both ends.
+          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 0, 1, 2), session))
+
+          fx.party(id).first { it.id == first.id }.containerSlot shouldBe 2.toShort()
+          fx.party(id).first { it.id == third.id }.containerSlot shouldBe 0.toShort()
+        }
+      }
+
+      test("a drag from the party into an empty box slot moves it across") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(2)
+          val moving = fx.party(id).first { it.containerSlot.toInt() == 1 }
+
+          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 1, 0, 27), session))
+
+          fx.party(id).any { it.id == moving.id } shouldBe false
+          val inBox = fx.pc(id).first { it.id == moving.id }
+          inBox.container shouldBe PokemonContainer.PC
+          inBox.containerSlot shouldBe 27.toShort()
+        }
+      }
+
+      test("a drag that would empty the party is refused") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(1)
+
+          fx.boxes.onMove(PacketEvent(PcMovePacket(1, 1, 0, 0, 0), session))
+
+          fx.party(id).size shouldBe 1
+          fx.pc(id).size shouldBe 0
         }
       }
 

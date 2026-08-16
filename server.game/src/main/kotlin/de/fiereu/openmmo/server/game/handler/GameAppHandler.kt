@@ -18,6 +18,7 @@ import de.fiereu.openmmo.net.game.packets.PcBoxRenamePacket
 import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
 import de.fiereu.openmmo.net.game.packets.PartyMemberSelectPacket
+import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.EntityInteractPacket
 import de.fiereu.openmmo.net.game.packets.ExchangeItemRequestPacket
 import de.fiereu.openmmo.net.game.packets.FaceDirectionPacket
@@ -150,6 +151,7 @@ constructor(
     on<PartyMemberSelectPacket> { event -> partyService.onMemberSelect(event) }
     onSuspend<TradeSelectMonPacket> { event -> tradeService.onSelectMon(event) }
     onSuspend<PcBoxStorePacket> { event -> pcBoxService.onStore(event) }
+    onSuspend<PcMovePacket> { event -> pcBoxService.onMove(event) }
     on<StorageBoxClosePacket> { event -> pcBoxService.onClose(event) }
     on<PcBoxRenamePacket> { event -> pcBoxService.onRename(event) }
     onSuspend<ExchangeItemRequestPacket> { event -> shopService.onBuy(event) }
