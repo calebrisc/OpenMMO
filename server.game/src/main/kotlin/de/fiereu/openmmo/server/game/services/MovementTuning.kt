@@ -3,13 +3,21 @@ package de.fiereu.openmmo.server.game.services
 /**
  * The movement mode stamped on a step relayed to everyone else.
  *
- * Both values were found by trying them against two live clients. At 0 a player walks, runs and
- * moves over water correctly on everyone else's screen; 1, 3 and 4 leave the observer frozen after
- * a single step, and the old run value of 2 broke movement on water. Earlier guesses of 1 for
- * walking and 2 for running are what left players standing still on each other's screens.
+ * **Read off the archive: a live server always sends 2.** Sixteen sampled 0xEA relays across two
+ * capture sessions, two client versions and three different players all carry the same byte, on
+ * open route and inside buildings alike. One of them is a step 80ms after the last, which is a
+ * player running, and it is a 2 as well -- so the byte is not the walk-or-run selector it was taken
+ * for, and never was. Speed reaches the client as the rate the steps arrive at, not as a value.
+ * Everything else in the packet was verified against the same captures and is already right: the
+ * bank and map bytes, x and y, and the direction as our own enum ordinals (0 down, 1 up, 2 left, 3
+ * right, confirmed by watching a player's coordinates change with each one).
  *
- * So the byte is not the walk-or-run selector it was taken for. It is kept as two values, and
- * tunable with /probe mm, only because what it really means is still unknown.
+ * The two values are kept separate only because `/probe mm <walk> <run>` can still set them apart
+ * live. There is a live note against this: 2 was tried once and looked like it broke movement over
+ * water, while 0 looked correct. That observation came from the position-reset path rather than the
+ * relay, and the reset still uses its own snap value, so this changes only what observers are told
+ * about an ordinary step. If players start swimming across dry land, `/probe mm 0 0` puts it back
+ * without a deploy.
  */
 object MovementTuning {
   /**
@@ -40,11 +48,11 @@ object MovementTuning {
    */
   @Volatile var elevationRules: Boolean = false
 
-  /** Confirmed live. */
-  @Volatile var walk: Int = 0
+  /** What every captured relay carries. */
+  @Volatile var walk: Int = 2
 
-  /** Confirmed live, including over water. */
-  @Volatile var run: Int = 0
+  /** The same value: a running step is captured as a 2 too, only sooner. */
+  @Volatile var run: Int = 2
 }
 
 /**

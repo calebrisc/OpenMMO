@@ -32,14 +32,21 @@ internal val CLOSE_DIALOG_ACTION =
 /**
  * The optional tail of a dialog box.
  *
- * [detail] defaults to nothing because that is what a live server sends: every one of the 369 plain
- * boxes in the archive is exactly 19 bytes, the header and an empty argument list, and not one
- * is 20. This server used to append a zero byte to all of them.
+ * [detail] carries a zero byte that a live server does not: every one of the 369 plain boxes in the
+ * archive is exactly 19 bytes and ours are 20. Dropping it to match was tried and **broke every
+ * dialog on the real client**, which answered the 19 byte box with "Buffer underflow ... 0x21" and
+ * drew nothing. A box that never draws is never answered, so the script waits for ever and the
+ * player cannot move until they log in again.
+ *
+ * So the client this server actually serves wants the byte, whatever the captures of a different
+ * one show. Do not take it out again without a live client to try it on. The likelier reading is
+ * that the byte is tolerated rather than required, and that something else about the real boxes --
+ * their contextValue is 700 or 1200 where ours is 0 -- is what lets them be shorter.
  */
 data class DialogPresentation(
     val messageArgs: List<DialogMessageArg> = emptyList(),
     val contextValue: Int = 0,
-    val detail: ByteArray = ByteArray(0),
+    val detail: ByteArray = byteArrayOf(0),
 )
 
 @Singleton

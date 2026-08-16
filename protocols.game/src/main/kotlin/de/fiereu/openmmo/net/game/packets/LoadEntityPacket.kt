@@ -27,6 +27,10 @@ data class LoadEntityPacket(
 object LoadEntityPacketCodec : PacketCodec<LoadEntityPacket>() {
   override fun CodecScope<LoadEntityPacket>.body(): LoadEntityPacket {
     val entityId = field(S64LE, LoadEntityPacket::entityId)
+    // Not padding: five captured spawns carry 0 here three times and 1 twice, on both npcs and
+    // players, so it is a field whose meaning is not known. Everything after it was checked
+    // against those same captures and lines up exactly, follower flag included -- one of them
+    // ends 04 F2 01, a player walking a Tepig. Left at 0 rather than guessed at.
     reserved(byte = 0)
     val skin = field(DefaultSkinSetCodec, LoadEntityPacket::skin)
     val name = field(Utf16LeNullTerminated, LoadEntityPacket::name)
