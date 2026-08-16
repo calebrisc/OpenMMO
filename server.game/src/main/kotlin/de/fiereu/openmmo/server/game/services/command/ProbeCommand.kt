@@ -14,6 +14,7 @@ import de.fiereu.openmmo.net.game.packets.GroupMemberRosterPacket
 import de.fiereu.openmmo.net.game.packets.GroupRosterMember
 import de.fiereu.openmmo.net.game.packets.PartyMemberJoinPacket
 import de.fiereu.openmmo.net.game.packets.StoryFlagUpdatePacket
+import de.fiereu.openmmo.net.game.packets.WorldFlagSetPacket
 import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.BoxSyncTuning
@@ -239,6 +240,20 @@ constructor(
       ctx.reply("${target.info.name} now has developer access.")
       return
     }
+    if (what == "evo") {
+      // The two captured payloads read as group 2/1, index 32, value -1 under the flag codec, but
+      // 32 is Nidoran, a species, so the flag reading is probably wrong and this is the prompt the
+      // client answers with EvolutionPromptResponsePacket. Sending exactly what was captured is the
+      // safe version of the question: it is a byte sequence the real server already sent a client.
+      val a = ctx.args.getOrNull(1)?.toIntOrNull()?.toByte() ?: 2
+      val b = ctx.args.getOrNull(2)?.toIntOrNull()?.toShort() ?: 32
+      val c = ctx.args.getOrNull(3)?.toIntOrNull()?.toByte() ?: -1
+      ctx.session.send(WorldFlagSetPacket(a, b, c))
+      log.info { "Sent 0x0B $a/$b/$c to ${ctx.character.info.name}" }
+      ctx.reply("Sent 0x0B as $a, $b, $c. Say what the screen did.")
+      return
+    }
+
     if (what == "flags") {
       val value = ctx.args.getOrNull(1)?.toIntOrNull()
       if (value == null) {
