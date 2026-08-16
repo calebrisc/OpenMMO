@@ -5,6 +5,7 @@ import de.fiereu.openmmo.common.DynamicWarp
 import de.fiereu.openmmo.common.dialog.DialogLine
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.enums.Region
+import de.fiereu.openmmo.dialog.generated.kanto.Aide
 import de.fiereu.openmmo.items.ItemDef
 import de.fiereu.openmmo.maps.MapManager
 import de.fiereu.openmmo.net.game.packets.dialog.TextPokemonSpeciesArg
@@ -15,6 +16,7 @@ import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.MapEntryScripts
 import de.fiereu.openmmo.server.game.services.MoveTeachingService
 import de.fiereu.openmmo.server.game.services.PcBoxService
+import de.fiereu.openmmo.server.game.services.Pokedex
 import de.fiereu.openmmo.server.game.services.RespawnPoint
 import de.fiereu.openmmo.server.game.services.ScriptMovementService
 import de.fiereu.openmmo.server.game.services.ScriptWarpService
@@ -157,6 +159,47 @@ internal constructor(
     setFlag(flag)
     dialog.showAndWait(session, state, thanks.textId, NPC, entityId, DialogPresentation(names))
   }
+
+  /**
+   * One of Professor Oak's aides: they ask after the dex, and hand something over if it is far
+   * enough along.
+   *
+   * All five run this. The flag is set the moment the item is actually in the bag and before any
+   * dialog that a dropped connection could swallow, so nobody ends up with the item and no flag or
+   * a flag and no item.
+   */
+  internal suspend fun oaksAide(gift: AideGift, lines: AideLines) {
+    if (isFlagSet(gift.flag)) {
+      say(lines.explain)
+      return
+    }
+    if (!askYesNo(lines.offer)) {
+      say(Aide.GetEnoughMonsComeBackForItem)
+      return
+    }
+    val counted = if (gift.countCaught) dexCaught() else dexSeen()
+    if (counted < gift.required) {
+      say(Aide.HaventCaughtEnoughMonsForItem)
+      return
+    }
+    say(lines.greatHereYouGo)
+    if (!giveItem(gift.item)) {
+      say(Aide.DontHaveAnyRoomForItem)
+      return
+    }
+    setFlag(gift.flag)
+    say(lines.received)
+    say(lines.explain)
+  }
+
+  /** How many species the player has seen, which is what the first aide counts. */
+  fun dexSeen(): Int =
+      characterId?.let { id -> characters?.getCharacter(id)?.let { Pokedex.seenOf(it).size } } ?: 0
+
+  /** How many species the player has caught, which is what the other four count. */
+  fun dexCaught(): Int =
+      characterId?.let { id -> characters?.getCharacter(id)?.let { Pokedex.caughtOf(it).size } }
+          ?: 0
 
   /** Ask a ROM-backed yes/no question from the interacted entity. */
   suspend fun askYesNo(line: DialogLine): Boolean =

@@ -2,6 +2,9 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.Route11_EastEntrance_2F
 import de.fiereu.openmmo.dialog.generated.kanto.Trade
+import de.fiereu.openmmo.items.generated.Items
+import de.fiereu.openmmo.server.game.script.AideGift
+import de.fiereu.openmmo.server.game.script.AideLines
 import de.fiereu.openmmo.server.game.script.InGameTrades
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
@@ -20,33 +23,22 @@ internal object Route11_EastEntrance_2F_EventScript_Turner : Script {
       )
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * call Route11_EastEntrance_2F_EventScript_GetAideRequestInfo
- * goto_if_set FLAG_GOT_ITEMFINDER, Route11_EastEntrance_2F_EventScript_AlreadyGotItemfinder
- * msgbox Route11_EastEntrance_2F_Text_GiveItemfinderIfCaught30, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, Aide_EventScript_DeclineCheckMons
- * setvar VAR_0x8004, 0
- * specialvar VAR_RESULT, GetPokedexCount
- * buffernumberstring STR_VAR_3, VAR_0x8006
- * call Route11_EastEntrance_2F_EventScript_GetAideRequestInfo
- * goto_if_lt VAR_0x8006, REQUIRED_CAUGHT_MONS, Aide_EventScript_HaventCaughtEnough
- * msgbox Route11_EastEntrance_2F_Text_GreatHereYouGo
- * checkitemspace ITEM_ITEMFINDER
- * goto_if_eq VAR_RESULT, FALSE, Aide_EventScript_NoRoomForItem
- * giveitem_msg Route11_EastEntrance_2F_Text_ReceivedItemfinderFromAide, ITEM_ITEMFINDER
- * setflag FLAG_GOT_ITEMFINDER
- * msgbox Route11_EastEntrance_2F_Text_ExplainItemfinder
- * release
- * end
- * ```
- */
 internal object Route11_EastEntrance_2F_EventScript_Aide : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port Route11_EastEntrance_2F_EventScript_Aide")
+      ctx.oaksAide(
+          AideGift(
+              item = Items.DOWSING_MCHN,
+              required = 30,
+              countCaught = true,
+              flag = KantoFlags.FLAG_GOT_ITEMFINDER,
+          ),
+          AideLines(
+              offer = Route11_EastEntrance_2F.GiveItemfinderIfCaught30,
+              greatHereYouGo = Route11_EastEntrance_2F.GreatHereYouGo,
+              received = Route11_EastEntrance_2F.ReceivedItemfinderFromAide,
+              explain = Route11_EastEntrance_2F.ExplainItemfinder,
+          ),
+      )
 }
 
 internal object Route11_EastEntrance_2F_EventScript_LeftBinoculars : Script {
