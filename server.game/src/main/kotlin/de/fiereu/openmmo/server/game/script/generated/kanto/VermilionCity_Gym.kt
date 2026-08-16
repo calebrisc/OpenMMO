@@ -7,6 +7,8 @@ import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
+private const val TRAINER_GENTLEMAN_TUCKER = 423
+
 // The doors are metatile changes the protocol cannot make yet, so solving the puzzle walks the
 // player through the doorway instead. First switch is random per character, second is a fresh
 // random can, and a wrong second guess relocks both, like the cartridge.
@@ -109,17 +111,15 @@ internal object VermilionCity_Gym_EventScript_GymGuy : Script {
           VermilionCity_Gym.GymGuyPostVictory)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_GENTLEMAN_TUCKER, VermilionCity_Gym_Text_TuckerIntro, VermilionCity_Gym_Text_TuckerDefeat, VermilionCity_Gym_EventScript_DefeatedTucker
- * famechecker FAMECHECKER_LTSURGE, 3
- * msgbox VermilionCity_Gym_Text_TuckerPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object VermilionCity_Gym_EventScript_Tucker : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port VermilionCity_Gym_EventScript_Tucker")
+  override suspend fun run(ctx: ScriptContext) {
+    // The decomp also ticks a fame checker entry, which is a trainer-card scrapbook this server
+    // has no notion of, so the fight and the line are the whole of it here.
+    if (!ctx.trainerBattleSingle(
+        TRAINER_GENTLEMAN_TUCKER, VermilionCity_Gym.TuckerIntro, VermilionCity_Gym.TuckerDefeat))
+        return
+    ctx.say(VermilionCity_Gym.TuckerPostBattle)
+  }
 }
 
 /**

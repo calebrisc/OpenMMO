@@ -7,20 +7,29 @@ import de.fiereu.openmmo.server.game.script.ScriptContext
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
+private const val TRAINER_SUPER_NERD_ZAC = 180
+
+private const val TRAINER_BURGLAR_DUSTY = 215
+
+private const val TRAINER_SUPER_NERD_DEREK = 179
+
+private const val TRAINER_BURGLAR_RAMON = 214
+
+private const val TRAINER_SUPER_NERD_AVERY = 178
+
+private const val TRAINER_BURGLAR_QUINN = 213
+
 private const val TRAINER_LEADER_BLAINE = 419
 
 private const val TRAINER_SUPER_NERD_ERIK = 177
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_QUINN, CinnabarIsland_Gym_Text_QuinnIntro, CinnabarIsland_Gym_Text_QuinnDefeat, CinnabarIsland_Gym_EventScript_DefeatedQuinn
- * msgbox CinnabarIsland_Gym_Text_QuinnPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Quinn : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Quinn")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_QUINN, CinnabarIsland_Gym.QuinnIntro, CinnabarIsland_Gym.QuinnDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.QuinnPostBattle)
+  }
 }
 
 internal object CinnabarIsland_Gym_EventScript_Erik : Script {
@@ -32,65 +41,49 @@ internal object CinnabarIsland_Gym_EventScript_Erik : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SUPER_NERD_AVERY, CinnabarIsland_Gym_Text_AveryIntro, CinnabarIsland_Gym_Text_AveryDefeat, CinnabarIsland_Gym_EventScript_DefeatedAvery
- * msgbox CinnabarIsland_Gym_Text_AveryPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Avery : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Avery")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SUPER_NERD_AVERY, CinnabarIsland_Gym.AveryIntro, CinnabarIsland_Gym.AveryDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.AveryPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_RAMON, CinnabarIsland_Gym_Text_RamonIntro, CinnabarIsland_Gym_Text_RamonDefeat, CinnabarIsland_Gym_EventScript_DefeatedRamon
- * msgbox CinnabarIsland_Gym_Text_RamonPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Ramon : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Ramon")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_RAMON, CinnabarIsland_Gym.RamonIntro, CinnabarIsland_Gym.RamonDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.RamonPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SUPER_NERD_DEREK, CinnabarIsland_Gym_Text_DerekIntro, CinnabarIsland_Gym_Text_DerekDefeat, CinnabarIsland_Gym_EventScript_DefeatedDerek
- * famechecker FAMECHECKER_BLAINE, 2
- * msgbox CinnabarIsland_Gym_Text_DerekPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Derek : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Derek")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SUPER_NERD_DEREK, CinnabarIsland_Gym.DerekIntro, CinnabarIsland_Gym.DerekDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.DerekPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_BURGLAR_DUSTY, CinnabarIsland_Gym_Text_DustyIntro, CinnabarIsland_Gym_Text_DustyDefeat, CinnabarIsland_Gym_EventScript_DefeatedDusty
- * msgbox CinnabarIsland_Gym_Text_DustyPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Dusty : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Dusty")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_BURGLAR_DUSTY, CinnabarIsland_Gym.DustyIntro, CinnabarIsland_Gym.DustyDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.DustyPostBattle)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_SUPER_NERD_ZAC, CinnabarIsland_Gym_Text_ZacIntro, CinnabarIsland_Gym_Text_ZacDefeat, CinnabarIsland_Gym_EventScript_DefeatedZac
- * msgbox CinnabarIsland_Gym_Text_ZacPostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object CinnabarIsland_Gym_EventScript_Zac : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port CinnabarIsland_Gym_EventScript_Zac")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_SUPER_NERD_ZAC, CinnabarIsland_Gym.ZacIntro, CinnabarIsland_Gym.ZacDefeat))
+        return
+    ctx.say(CinnabarIsland_Gym.ZacPostBattle)
+  }
 }
 
 internal object CinnabarIsland_Gym_EventScript_Blaine : Script {

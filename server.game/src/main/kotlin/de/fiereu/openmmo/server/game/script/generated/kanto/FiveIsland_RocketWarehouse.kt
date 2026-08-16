@@ -5,6 +5,10 @@ import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
 
+private const val TRAINER_TEAM_ROCKET_ADMIN_2 = 544
+
+private const val TRAINER_TEAM_ROCKET_ADMIN = 543
+
 private const val TRAINER_TEAM_ROCKET_GRUNT_42 = 516
 private const val TRAINER_TEAM_ROCKET_GRUNT_47 = 541
 private const val TRAINER_TEAM_ROCKET_GRUNT_48 = 542
@@ -31,30 +35,26 @@ internal object FiveIsland_RocketWarehouse_EventScript_Grunt3 : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_ADMIN, FiveIsland_RocketWarehouse_Text_Admin1Intro, FiveIsland_RocketWarehouse_Text_Admin1Defeat, FiveIsland_RocketWarehouse_EventScript_DefeatedAdmin1
- * msgbox FiveIsland_RocketWarehouse_Text_MadeItSoYouCanComeBackThrough, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_RocketWarehouse_EventScript_Admin1 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_RocketWarehouse_EventScript_Admin1")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_ADMIN,
+        FiveIsland_RocketWarehouse.Admin1Intro,
+        FiveIsland_RocketWarehouse.Admin1Defeat))
+        return
+    ctx.say(FiveIsland_RocketWarehouse.MadeItSoYouCanComeBackThrough)
+  }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * trainerbattle_single TRAINER_TEAM_ROCKET_ADMIN_2, FiveIsland_RocketWarehouse_Text_Admin2Intro, FiveIsland_RocketWarehouse_Text_Admin2Defeat, FiveIsland_RocketWarehouse_EventScript_DefeatedAdmin2
- * msgbox FiveIsland_RocketWarehouse_Text_Admin2PostBattle, MSGBOX_AUTOCLOSE
- * end
- * ```
- */
 internal object FiveIsland_RocketWarehouse_EventScript_Admin2 : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FiveIsland_RocketWarehouse_EventScript_Admin2")
+  override suspend fun run(ctx: ScriptContext) {
+    if (!ctx.trainerBattleSingle(
+        TRAINER_TEAM_ROCKET_ADMIN_2,
+        FiveIsland_RocketWarehouse.Admin2Intro,
+        FiveIsland_RocketWarehouse.Admin2Defeat))
+        return
+    ctx.say(FiveIsland_RocketWarehouse.Admin2PostBattle)
+  }
 }
 
 internal object FiveIsland_RocketWarehouse_EventScript_Grunt1 : Script {
