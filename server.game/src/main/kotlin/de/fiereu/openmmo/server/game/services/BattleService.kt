@@ -496,6 +496,17 @@ constructor(
           "hp=${mon.currentHp}/${mon.stats.hp}"
     }
     emitter.sendItemUsed(battle, mon, cured)
+    // Said in words as well as sent as a delta, because the delta alone arrives before the
+    // opposing side's move and the client's health bar does not redraw until that move lands --
+    // so a heal read as though it happened a turn late, after the hit. Getting it to animate in
+    // its own right wants a capture of an item used in a battle, which the archive has not got.
+    val recovered =
+        when {
+          healed > 0 && cured -> "${mon.species.name} recovered $healed HP and was cured."
+          healed > 0 -> "${mon.species.name} recovered $healed HP."
+          else -> "${mon.species.name} was cured."
+        }
+    emitter.sendNotice(battle, recovered)
     // Using an item spends the turn, so the opposing side gets to act.
     emitter.sendEvents(battle, engine.resolveSwitchTurn(battle))
     afterTurn(battle)
