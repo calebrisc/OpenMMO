@@ -110,8 +110,7 @@ internal object SevenIsland_SevaultCanyon_EventScript_Nya : Script {
  * ```
  */
 internal object SevenIsland_SevaultCanyon_EventScript_ItemKingsRock : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_SevaultCanyon_EventScript_ItemKingsRock")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.KING_S_ROCK)
 }
 
 internal object SevenIsland_SevaultCanyon_EventScript_ItemMaxElixir : Script {

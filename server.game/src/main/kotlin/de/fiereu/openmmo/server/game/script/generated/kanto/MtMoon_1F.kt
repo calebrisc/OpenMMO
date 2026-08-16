@@ -82,7 +82,7 @@ internal object MtMoon_1F_EventScript_Marcos : Script {
  * ```
  */
 internal object MtMoon_1F_EventScript_ItemParalyzeHeal : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port MtMoon_1F_EventScript_ItemParalyzeHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PARLYZ_HEAL)
 }
 
 internal object MtMoon_1F_EventScript_ItemTM09 : Script {

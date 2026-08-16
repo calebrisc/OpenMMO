@@ -16,8 +16,7 @@ internal object FourIsland_IcefallCave_B1F_EventScript_ItemFullRestore : Script 
  * ```
  */
 internal object FourIsland_IcefallCave_B1F_EventScript_ItemNeverMeltIce : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port FourIsland_IcefallCave_B1F_EventScript_ItemNeverMeltIce")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.NEVERMELTICE)
 }
 
 internal val FourIsland_IcefallCave_B1FScripts: Map<String, Script> =

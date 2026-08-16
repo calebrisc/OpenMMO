@@ -17,7 +17,7 @@ internal object Route2_EventScript_ItemEther : Script {
  * ```
  */
 internal object Route2_EventScript_ItemParalyzeHeal : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route2_EventScript_ItemParalyzeHeal")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.PARLYZ_HEAL)
 }
 
 internal object Route2_EventScript_DiglettsCaveSign : Script {

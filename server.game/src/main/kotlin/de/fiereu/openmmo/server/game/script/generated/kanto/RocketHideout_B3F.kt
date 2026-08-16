@@ -46,8 +46,7 @@ internal object RocketHideout_B3F_EventScript_ItemTM21 : Script {
  * ```
  */
 internal object RocketHideout_B3F_EventScript_ItemBlackGlasses : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port RocketHideout_B3F_EventScript_ItemBlackGlasses")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.BLACKGLASSES)
 }
 
 internal val RocketHideout_B3FScripts: Map<String, Script> =

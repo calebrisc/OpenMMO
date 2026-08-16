@@ -24,8 +24,7 @@ internal object PowerPlant_EventScript_ItemTM25 : Script {
  * ```
  */
 internal object PowerPlant_EventScript_ItemThunderStone : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PowerPlant_EventScript_ItemThunderStone")
+  override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.THUNDERSTONE)
 }
 
 internal object PowerPlant_EventScript_ItemElixir : Script {
