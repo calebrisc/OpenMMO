@@ -65,6 +65,15 @@ import de.fiereu.openmmo.net.game.packets.battle.BattleTransitionReadyPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleUseItemPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnReplyPacket
 import de.fiereu.openmmo.net.game.packets.dialog.DialogActionResponsePacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlConfirmPurchasePacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlCreateListingPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlListingActionPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlListingCancelPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlListingsPageRequestPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlOpenSessionPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlPurchaseListingPacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlPurchasePacket
+import de.fiereu.openmmo.net.game.packets.gtl.GtlSearchPageRequestPacket
 import de.fiereu.openmmo.net.game.packets.guild.GuildActivityLogPageRequestPacket
 import de.fiereu.openmmo.net.game.packets.guild.GuildCreatePacket
 import de.fiereu.openmmo.net.game.packets.guild.GuildDisbandPacket
@@ -81,6 +90,7 @@ import de.fiereu.openmmo.server.game.services.ChatService
 import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.DuelService
 import de.fiereu.openmmo.server.game.services.FieldItemService
+import de.fiereu.openmmo.server.game.services.GtlService
 import de.fiereu.openmmo.server.game.services.GuildService
 import de.fiereu.openmmo.server.game.services.InteractionService
 import de.fiereu.openmmo.server.game.services.LinkService
@@ -126,6 +136,7 @@ constructor(
     private val raidService: RaidService,
     private val linkService: LinkService,
     private val shopService: ShopService,
+    private val gtlService: GtlService,
     private val scriptRunner: ScriptRunner,
     private val sessionRegistry: SessionRegistry,
     private val characterStore: CharacterStore,
@@ -156,6 +167,16 @@ constructor(
     on<PcBoxRenamePacket> { event -> pcBoxService.onRename(event) }
     onSuspend<ExchangeItemRequestPacket> { event -> shopService.onBuy(event) }
     onSuspend<ShopSellRequestPacket> { event -> shopService.onSell(event) }
+
+    onSuspend<GtlSearchPageRequestPacket> { event -> gtlService.onSearchPage(event) }
+    onSuspend<GtlConfirmPurchasePacket> { event -> gtlService.onConfirmPurchase(event) }
+    onSuspend<GtlListingCancelPacket> { event -> gtlService.onCancel(event) }
+    on<GtlOpenSessionPacket> { event -> gtlService.onOpenSession(event) }
+    on<GtlListingsPageRequestPacket> { event -> gtlService.onListingsPage(event) }
+    on<GtlCreateListingPacket> { event -> gtlService.onCreateListing(event) }
+    on<GtlPurchasePacket> { event -> gtlService.onPurchase(event) }
+    on<GtlPurchaseListingPacket> { event -> gtlService.onPurchaseListing(event) }
+    on<GtlListingActionPacket> { event -> gtlService.onListingAction(event) }
 
     onSuspend<AddFriendPacket> { event -> socialService.onAddFriend(event) }
     onSuspend<RemoveFriendPacket> { event -> socialService.onRemoveFriend(event) }

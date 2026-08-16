@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.storage
 
+import de.fiereu.openmmo.common.Pokemon
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.db.game.tables.references.MARKET_LISTING
 import de.fiereu.openmmo.db.game.tables.references.POKEMON
@@ -24,6 +25,12 @@ data class MarketListing(
 
 interface MarketRepository {
   suspend fun all(): List<MarketListing>
+
+  /**
+   * The monsters behind [listings], keyed by listing id, for the trade board that draws the whole
+   * record rather than just a species name. A listing whose monster has gone is left out.
+   */
+  suspend fun monsters(listings: List<MarketListing>): Map<Long, Pokemon>
 
   suspend fun byId(id: Long): MarketListing?
 
@@ -60,6 +67,19 @@ constructor(
   override suspend fun all(): List<MarketListing> =
       withContext(dispatcher) {
         dsl.selectFrom(MARKET_LISTING).orderBy(MARKET_LISTING.PRICE.asc()).fetch().map(::toListing)
+      }
+
+  override suspend fun monsters(listings: List<MarketListing>): Map<Long, Pokemon> =
+      withContext(dispatcher) {
+        if (listings.isEmpty()) return@withContext emptyMap()
+        val byMonsterId =
+            dsl.selectFrom(POKEMON)
+                .where(POKEMON.ID.`in`(listings.map { it.pokemonId }))
+                .fetch()
+                .associate { it.id to it.toPokemon() }
+        listings
+            .mapNotNull { listing -> byMonsterId[listing.pokemonId]?.let { listing.id to it } }
+            .toMap()
       }
 
   override suspend fun byId(id: Long): MarketListing? =
