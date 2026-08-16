@@ -10,10 +10,13 @@ import de.fiereu.openmmo.server.game.storage.StoredCharacter
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// The world-flag table the client loads on join. Groups one to three are zlib streams that each
-// decompress to a 67-byte flag block, the fourth is empty. The client reads real flag state while
-// building the follower and party, so empty groups leave a lookup null and crash it.
-private val WORLD_FLAG_GROUPS =
+// The captured table this server sent every player before it could build one: three zlib streams
+// of somebody else's progress and a fourth that is empty. Kept only as the fallback behind
+// FlagTuning, because a table the client cannot read crashes it while building the party.
+/** Regions the client is told about at login. Captures carry one system flag packet per region. */
+private const val FLAG_REGIONS = 2
+
+private val CAPTURED_FLAG_GROUPS =
     listOf(
             "789c637060a00434a8b0320000133900ea",
             "789c637060a00434303032000012c500c2",
@@ -36,9 +39,17 @@ class WorldStateService @Inject constructor() {
   fun send(ctx: SessionContext, stored: StoredCharacter, fullVars: Boolean = false) {
     // The table must land before any monster or follower is built. Without it the table stays null
     // and the client crashes constructing a party monster that reads a flag.
-    ctx.send(WorldFlagTableResetPacket(WORLD_FLAG_GROUPS))
+    ctx.send(
+        WorldFlagTableResetPacket(
+            if (FlagTuning.tableFromCharacter) StoryClientState.flagTable(stored.storyFlags)
+            else CAPTURED_FLAG_GROUPS))
     ctx.send(localPlayerState(stored, fullVars))
-    StoryClientState.flags(stored.info.positionRegionId, stored.storyFlags).forEach { ctx.send(it) }
+    // One per region, as a live server sends them, carrying the system flags and nothing else.
+    // What used to go here was every story flag as its own packet, all of which the client threw
+    // away: a low flag belongs in the table above, not on a packet of its own.
+    for (region in 0 until FLAG_REGIONS) {
+      ctx.send(StoryClientState.systemFlags(region.toByte(), stored.storyFlags))
+    }
 
     val containers =
         mapOf(

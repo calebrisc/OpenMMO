@@ -70,3 +70,15 @@ object BoxSyncTuning {
 object GtlTuning {
   @Volatile var answerBoards: Boolean = false
 }
+
+/**
+ * Whether the flag table is built from the player or copied from the capture.
+ *
+ * Building it is the correct thing and the fallback exists because getting it wrong is not a
+ * cosmetic failure: the client reads the table while it builds the party, so a table it cannot make
+ * sense of takes the client down on login, and a player cannot type a command to undo that. So it
+ * is proven on one connection with /probe flagtable before it becomes what everybody gets.
+ */
+object FlagTuning {
+  @Volatile var tableFromCharacter: Boolean = false
+}

@@ -124,7 +124,7 @@ object GameProtocol : Protocol() {
     s2c<EntityInteractionFlagPacket>(0x28u, EntityInteractionFlagPacketCodec)
 
     c2s<CustomizeCharacterAppearancePacket>(0x29u, CustomizeCharacterAppearancePacketCodec)
-    s2c<ShopPriceTablePacket>(0x29u, ShopPriceTablePacketCodec)
+    s2c<SystemFlagBatchPacket>(0x29u, SystemFlagBatchPacketCodec)
 
     c2s<TeamNameChangePacket>(0x2Au, TeamNameChangePacketCodec)
     s2c<StoryFlagUpdatePacket>(0x2Au, StoryFlagUpdatePacketCodec)

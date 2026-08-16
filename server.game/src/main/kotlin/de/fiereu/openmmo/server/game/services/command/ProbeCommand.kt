@@ -19,6 +19,7 @@ import de.fiereu.openmmo.net.game.packets.WorldSessionStatePacket
 import de.fiereu.openmmo.server.game.battle.BattleFieldTuning
 import de.fiereu.openmmo.server.game.services.BattleService
 import de.fiereu.openmmo.server.game.services.BoxSyncTuning
+import de.fiereu.openmmo.server.game.services.FlagTuning
 import de.fiereu.openmmo.server.game.services.GtlTuning
 import de.fiereu.openmmo.server.game.services.LinkService
 import de.fiereu.openmmo.server.game.services.MapLoadService
@@ -241,6 +242,22 @@ constructor(
       ctx.reply("${target.info.name} now has developer access.")
       return
     }
+    if (what == "flagtable") {
+      val mode = ctx.args.getOrNull(1)?.lowercase()
+      if (mode != "real" && mode != "captured") {
+        ctx.reply(
+            "The flag table is ${if (FlagTuning.tableFromCharacter) "built from the character" else "the captured one"}. " +
+                "/probe flagtable real|captured, then log out and back in.")
+        return
+      }
+      FlagTuning.tableFromCharacter = mode == "real"
+      log.info { "Flag table from character set to ${FlagTuning.tableFromCharacter}" }
+      ctx.reply(
+          "Flag table is now ${if (FlagTuning.tableFromCharacter) "yours" else "the captured one"}. " +
+              "Relog to receive it. If the client dies on login, say so and it goes back.")
+      return
+    }
+
     if (what == "state") {
       val value = ctx.args.getOrNull(1)?.toIntOrNull()
       if (value == null || value !in 0..255) {
