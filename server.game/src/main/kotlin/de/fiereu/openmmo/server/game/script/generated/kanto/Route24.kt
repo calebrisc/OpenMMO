@@ -4,6 +4,10 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route24
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
+
+private const val TRAINER_TEAM_ROCKET_GRUNT_6 = 356
+private const val ROCKET_OFFER_MADE = 1
 
 private const val TRAINER_BUG_CATCHER_CALE = 110
 private const val TRAINER_CAMPER_ETHAN = 144
@@ -27,7 +31,26 @@ private const val TRAINER_YOUNGSTER_TIMMY = 92
  * ```
  */
 internal object Route24_EventScript_Rocket : Script {
-  override suspend fun run(ctx: ScriptContext) = TODO("port Route24_EventScript_Rocket")
+  override suspend fun run(ctx: ScriptContext) {
+    if (ctx.getVar(KantoVars.VAR_MAP_SCENE_ROUTE24) == ROCKET_OFFER_MADE) {
+      ctx.say(Route24.YoudBecomeTopRocketLeader)
+      return
+    }
+    ctx.say(Route24.JustEarnedFabulousPrize)
+    // The nugget is handed over before the offer, as the decomp does, and a full bag stops the
+    // whole scene rather than losing it.
+    if (!ctx.giveItem(Items.NUGGET)) {
+      ctx.say(Route24.YouDontHaveAnyRoom)
+      return
+    }
+    ctx.say(Route24.ReceivedNuggetFromMysteryTrainer)
+    ctx.say(Route24.JoinTeamRocket)
+    if (!ctx.trainerBattleSingle(TRAINER_TEAM_ROCKET_GRUNT_6, defeat = Route24.RocketDefeat)) return
+    // Before the parting line: losing the connection after the fight should not offer the nugget
+    // and the fight all over again.
+    ctx.setVar(KantoVars.VAR_MAP_SCENE_ROUTE24, ROCKET_OFFER_MADE)
+    ctx.say(Route24.YoudBecomeTopRocketLeader)
+  }
 }
 
 internal object Route24_EventScript_Ethan : Script {
