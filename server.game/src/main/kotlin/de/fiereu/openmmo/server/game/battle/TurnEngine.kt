@@ -1,6 +1,7 @@
 package de.fiereu.openmmo.server.game.battle
 
 import de.fiereu.openmmo.common.enums.MoveEffect
+import de.fiereu.openmmo.common.enums.PokemonType
 import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.moves.MoveDef
 import de.fiereu.openmmo.moves.MoveRegistry
@@ -10,6 +11,23 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 private const val CRIT_DENOMINATOR = 16
+
+/** A high critical ratio move, the games' second crit stage. */
+private const val HIGH_CRIT_DENOMINATOR = 4
+
+/** Recoil and drain are both a fraction of what was dealt. */
+private const val RECOIL_DIVISOR = 4
+private const val DRAIN_DIVISOR = 2
+
+/** Dragon Rage always deals this, whatever it hits. */
+private const val DRAGON_RAGE_DAMAGE = 40
+
+/** Leech Seed takes an eighth of the maximum every turn. */
+private const val SEED_DIVISOR = 8
+
+/** Rest always sleeps exactly this long. */
+private const val REST_SLEEP_TURNS = 2
+
 private const val TACKLE_ID = 33
 
 sealed interface BattleEvent {
@@ -53,6 +71,12 @@ sealed interface BattleEvent {
   /** End of turn chip damage from poison, burn or toxic. */
   data class StatusDamage(val targetId: Long, val newHp: Int, val status: StatusCondition) :
       BattleEvent
+
+  /** Hp that moved for a reason other than a hit: drained, drunk back, or paid as recoil. */
+  data class HpChanged(val targetId: Long, val newHp: Int) : BattleEvent
+
+  /** A move that flinched its target, or a turn lost to having been flinched. */
+  data class Flinched(val targetId: Long) : BattleEvent
 
   /** The monster could not move this turn because it is asleep, frozen or fully paralysed. */
   data class StatusBlockedMove(val attackerId: Long, val status: StatusCondition) : BattleEvent
@@ -159,6 +183,24 @@ constructor(
       if (mon.status == StatusCondition.TOXIC) mon.toxicCounter++
       if (mon.fainted) events += BattleEvent.Fainted(mon.entityId)
     }
+    drainSeeds(participants, events)
+    // A flinch only ever costs the turn it was caused on.
+    for (mon in participants) mon.flinched = false
+  }
+
+  /** An eighth of the maximum, off the seeded monster and onto whoever seeded it. */
+  private fun drainSeeds(
+      participants: List<BattleMonState>,
+      events: MutableList<BattleEvent>,
+  ) {
+    for (mon in participants) {
+      if (mon.fainted || mon.seededBy == null) continue
+      val drainer = participants.firstOrNull { it.entityId == mon.seededBy } ?: continue
+      if (drainer.fainted) continue
+      val drained = (mon.stats.hp / SEED_DIVISOR).coerceAtLeast(1)
+      pay(mon, drained, events)
+      heal(drainer, drained, events)
+    }
   }
 
   /** The enemy AI picks a random usable move, falling back to Tackle with no pp left. */
@@ -196,6 +238,16 @@ constructor(
    * thawing clears the status before the move goes through.
    */
   private fun canAct(
+      battle: BattleInstance,
+      attacker: BattleMonState,
+      events: MutableList<BattleEvent>,
+  ): Boolean {
+    // Flinching costs the turn outright, and only reaches a monster that had not moved yet.
+    if (attacker.flinched) return false
+    return statusAllowsAction(battle, attacker, events)
+  }
+
+  private fun statusAllowsAction(
       battle: BattleInstance,
       attacker: BattleMonState,
       events: MutableList<BattleEvent>,
@@ -294,7 +346,11 @@ constructor(
     val stage = stageEffect(move.effect)
     val status = StatusRules.inflicted(move.effect)
     when {
-      move.power > 0 -> damage(battle, action, move, events)
+      fixedDamage(battle, action, move, events) -> Unit
+      move.effect == MoveEffect.LEECH_SEED -> seed(action, events)
+      move.effect == MoveEffect.RESTORE_HP -> restore(action, move, events)
+      move.effect == MoveEffect.REST -> rest(action, events)
+      move.power > 0 -> struck(battle, action, move, events)
       stage != null -> applyStage(action, stage, events)
       // A status move whose condition will not stick reports a plain failure, as the games do.
       status != null ->
@@ -313,23 +369,147 @@ constructor(
     return battle.rng.accuracyRoll() <= threshold
   }
 
-  private fun damage(
+  /**
+   * A hit and everything that follows from having landed one: repeats, recoil, drain, a flinch, and
+   * the user of an explosion going down with it.
+   */
+  private fun struck(
       battle: BattleInstance,
       action: TurnAction,
       move: MoveDef,
       events: MutableList<BattleEvent>,
   ) {
+    var dealt = 0
+    for (hit in 1..hitCount(battle, move)) {
+      if (action.defender.fainted) break
+      val landed = damage(battle, action, move, events) ?: return
+      dealt += landed
+    }
+    if (dealt == 0) return
+    when (move.effect) {
+      MoveEffect.RECOIL,
+      MoveEffect.RECOIL_IF_MISS -> pay(action.attacker, dealt / RECOIL_DIVISOR, events)
+      MoveEffect.ABSORB,
+      MoveEffect.DREAM_EATER -> heal(action.attacker, dealt / DRAIN_DIVISOR, events)
+      MoveEffect.EXPLOSION -> pay(action.attacker, action.attacker.currentHp, events)
+      MoveEffect.FLINCH_HIT,
+      MoveEffect.FLINCH_MINIMIZE_HIT -> {
+        if (!action.defender.fainted) {
+          action.defender.flinched = true
+          events += BattleEvent.Flinched(action.defender.entityId)
+        }
+      }
+      else -> Unit
+    }
+  }
+
+  /** How many times a move lands, which is once unless it is one of the few that repeat. */
+  private fun hitCount(battle: BattleInstance, move: MoveDef): Int =
+      when (move.effect) {
+        MoveEffect.DOUBLE_HIT,
+        MoveEffect.TWINEEDLE -> 2
+        // Two and three hits are twice as likely as four and five, as the games weight it.
+        MoveEffect.MULTI_HIT -> listOf(2, 2, 3, 3, 4, 5)[battle.rng.pick(6)]
+        else -> 1
+      }
+
+  /**
+   * The moves that ignore the damage formula and deal what they say they deal.
+   *
+   * True when this move was one of them and has now been resolved. They carry no power of their
+   * own, so without this they fell through every branch and reported a plain failure.
+   */
+  private fun fixedDamage(
+      battle: BattleInstance,
+      action: TurnAction,
+      move: MoveDef,
+      events: MutableList<BattleEvent>,
+  ): Boolean {
+    val defender = action.defender
+    val amount =
+        when (move.effect) {
+          MoveEffect.LEVEL_DAMAGE -> action.attacker.level
+          MoveEffect.DRAGON_RAGE -> DRAGON_RAGE_DAMAGE
+          // Half of what the target has left, which is never less than one point.
+          MoveEffect.SUPER_FANG -> (defender.currentHp / 2).coerceAtLeast(1)
+          MoveEffect.PSYWAVE -> (action.attacker.level * (battle.rng.pick(11) + 5) / 10)
+          else -> return false
+        }
+    // A move still has to be able to touch the type it is aimed at.
+    if (typeChart.effectiveness(move.type, defender.species.type1, defender.species.type2) == 0) {
+      events += BattleEvent.MoveFailed(action.attacker.entityId, move.id.toShort())
+      return true
+    }
+    defender.currentHp = (defender.currentHp - amount.coerceAtLeast(1)).coerceAtLeast(0)
+    events +=
+        BattleEvent.DamageDealt(defender.entityId, defender.currentHp, false, TypeChart.NEUTRAL)
+    if (defender.fainted) events += BattleEvent.Fainted(defender.entityId)
+    return true
+  }
+
+  /** Plants a seed, which drains at the end of every turn until the target leaves. */
+  private fun seed(action: TurnAction, events: MutableList<BattleEvent>) {
+    val defender = action.defender
+    // Grass types cannot be seeded, and a seed cannot be planted twice.
+    if (defender.species.hasType(PokemonType.GRASS) || defender.seededBy != null) {
+      events += BattleEvent.MoveFailed(action.attacker.entityId, 0)
+      return
+    }
+    defender.seededBy = action.attacker.entityId
+  }
+
+  private fun restore(action: TurnAction, move: MoveDef, events: MutableList<BattleEvent>) {
+    val self = action.attacker
+    if (self.currentHp >= self.stats.hp) {
+      events += BattleEvent.MoveFailed(self.entityId, move.id.toShort())
+      return
+    }
+    heal(self, self.stats.hp / 2, events)
+  }
+
+  /** Sleeps off everything: full hp, and two turns spent asleep. */
+  private fun rest(action: TurnAction, events: MutableList<BattleEvent>) {
+    val self = action.attacker
+    if (self.currentHp >= self.stats.hp) {
+      events += BattleEvent.MoveFailed(self.entityId, 0)
+      return
+    }
+    self.status = StatusCondition.SLEEP
+    self.sleepTurns = REST_SLEEP_TURNS
+    events += BattleEvent.StatusInflicted(self.entityId, StatusCondition.SLEEP, REST_SLEEP_TURNS)
+    heal(self, self.stats.hp, events)
+  }
+
+  private fun heal(mon: BattleMonState, amount: Int, events: MutableList<BattleEvent>) {
+    if (amount <= 0 || mon.fainted) return
+    mon.currentHp = (mon.currentHp + amount).coerceAtMost(mon.stats.hp)
+    events += BattleEvent.HpChanged(mon.entityId, mon.currentHp)
+  }
+
+  private fun pay(mon: BattleMonState, amount: Int, events: MutableList<BattleEvent>) {
+    if (amount <= 0) return
+    mon.currentHp = (mon.currentHp - amount).coerceAtLeast(0)
+    events += BattleEvent.HpChanged(mon.entityId, mon.currentHp)
+    if (mon.fainted) events += BattleEvent.Fainted(mon.entityId)
+  }
+
+  private fun damage(
+      battle: BattleInstance,
+      action: TurnAction,
+      move: MoveDef,
+      events: MutableList<BattleEvent>,
+  ): Int? {
     val attacker = action.attacker
     val defender = action.defender
     val eff = typeChart.effectiveness(move.type, defender.species.type1, defender.species.type2)
     if (eff == 0) {
       events += BattleEvent.MoveFailed(attacker.entityId, move.id.toShort())
-      return
+      return null
     }
     val physical = MoveCategory.isPhysical(move.type)
     val atkStat = if (physical) BattleStat.ATTACK else BattleStat.SP_ATTACK
     val defStat = if (physical) BattleStat.DEFENSE else BattleStat.SP_DEFENSE
-    val crit = battle.rng.critRoll(CRIT_DENOMINATOR)
+    val crit = battle.rng.critRoll(critDenominator(move))
     // A crit ignores the attacker's negative stages and the defender's positive stages.
     var atk =
         if (crit && attacker.stage(atkStat) < 0) attacker.unstaged(atkStat)
@@ -353,7 +533,7 @@ constructor(
     events += BattleEvent.DamageDealt(defender.entityId, defender.currentHp, crit, eff)
     if (defender.fainted) {
       events += BattleEvent.Fainted(defender.entityId)
-      return
+      return dmg
     }
     secondaryEffect(move.effect)?.let { secondary ->
       if (move.secondaryEffectChance > 0 &&
@@ -369,7 +549,12 @@ constructor(
         battle.rng.accuracyRoll() <= move.secondaryEffectChance) {
       inflict(battle, defender, status, events)
     }
+    return dmg
   }
+
+  /** Slash and its kind crit far more often, which is the whole point of them. */
+  private fun critDenominator(move: MoveDef): Int =
+      if (move.effect == MoveEffect.HIGH_CRITICAL) HIGH_CRIT_DENOMINATOR else CRIT_DENOMINATOR
 
   private fun applyStage(
       action: TurnAction,

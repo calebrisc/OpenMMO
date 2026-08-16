@@ -42,6 +42,12 @@ class BattleMonState(
    */
   var toxicCounter: Int = if (source.status == StatusCondition.TOXIC) 1 else 0
 
+  /** Who seeded it, so the drained hp knows where to go. Cleared when it leaves the field. */
+  var seededBy: Long? = null
+
+  /** Set by a move that flinches, and only worth anything to a monster that has yet to act. */
+  var flinched: Boolean = false
+
   private val stages = EnumMap<BattleStat, Int>(BattleStat::class.java)
 
   fun applyStatus(status: StatusCondition, sleepTurns: Int = 0) {

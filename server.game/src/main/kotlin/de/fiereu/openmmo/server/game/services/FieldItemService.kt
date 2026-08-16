@@ -39,6 +39,7 @@ constructor(
     private val species: SpeciesRegistry,
     private val battles: BattleService,
     private val moveLearner: MoveLearner,
+    private val teaching: MoveTeachingService,
 ) {
 
   suspend fun onUseItem(event: PacketEvent<DialogOptionPacket>) {
@@ -66,6 +67,16 @@ constructor(
         EvolutionTable.byStone(target(stored, packet.entityId)?.dexId ?: -1, item.name)
     if (evolvesInto != null) {
       evolveWithStone(ctx, charId, packet.entityId, packet.optionId, item, evolvesInto)
+      return
+    }
+
+    // A machine teaches its move and is not spent doing it. Every TM in the game was a keepsake
+    // until now, including the ones gym leaders hand over, because nothing read them at all. They
+    // are kept rather than consumed: the later games stopped spending them and a private server
+    // with one copy of each is a worse game for making them single use.
+    val machineMove = MachineMoves.moveFor(item.name)
+    if (machineMove != null) {
+      teaching.offer(ctx, charId, machineMove, item.name)
       return
     }
 
@@ -162,7 +173,10 @@ constructor(
       return
     }
     val was = species.get(monster.dexId)?.name ?: "It"
-    characterStore.updatePokemon(charId, monster.copy(dexId = into))
+    val evolved = monster.copy(dexId = into)
+    val room = StatCalculator.computeAll(definition, evolved).hp
+    characterStore.updatePokemon(
+        charId, evolved.copy(hp = evolved.hp.toInt().coerceAtMost(room).toShort()))
     characterStore.addItem(charId, itemId, -1)
     characterStore.flushCharacterAsync(charId)
     sendBag(ctx, charId)
@@ -268,7 +282,13 @@ constructor(
       sendParty(ctx, charId)
       return
     }
-    characterStore.updatePokemon(charId, monster.copy(dexId = into))
+    // What it became is built differently, so the hp it is carrying has to fit inside the new
+    // maximum. Skipping this is how a Venusaur ended up at 97 of 95: the hp was worked out while it
+    // was still an Ivysaur and nothing trimmed it afterwards.
+    val evolved = monster.copy(dexId = into)
+    val room = StatCalculator.computeAll(definition, evolved).hp
+    characterStore.updatePokemon(
+        charId, evolved.copy(hp = evolved.hp.toInt().coerceAtMost(room).toShort()))
     characterStore.flushCharacterAsync(charId)
     log.info { "char=$charId evolved $was into ${definition.name}" }
     ctx.send(notice("$was evolved into ${definition.name}!"))

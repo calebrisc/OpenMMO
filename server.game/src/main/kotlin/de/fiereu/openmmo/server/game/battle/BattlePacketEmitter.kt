@@ -80,6 +80,10 @@ private const val NOT_VERY_EFFECTIVE_BIT = 0x10
 @Singleton
 class BattlePacketEmitter @Inject constructor(private val interestManager: InterestManager) {
 
+  /** A new current hp for one monster, however it came to change. */
+  private fun sendHp(battle: BattleInstance, entityId: Long, hp: Int) =
+      broadcast(battle, BattleEntityDeltaPacket(entityId = entityId, currentHp = hp.toShort()))
+
   fun sendStart(battle: BattleInstance, playerName: String) {
     battle.playerName = playerName
     battle.session.send(EntityPresencePacket(entityId = battle.charId, status = PRESENCE_IN_BATTLE))
@@ -315,11 +319,12 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
         is BattleEvent.StatusInflicted ->
             sendStatus(battle, event.targetId, event.status, event.sleepTurns)
         is BattleEvent.StatusCleared -> sendStatus(battle, event.targetId, StatusCondition.NONE, 0)
-        is BattleEvent.StatusDamage ->
-            broadcast(
-                battle,
-                BattleEntityDeltaPacket(
-                    entityId = event.targetId, currentHp = event.newHp.toShort()))
+        // Chip damage, and hp that moved for any other reason than a hit: drained, drunk back, or
+        // paid as recoil. All of them are the same thing on the wire, a new current hp.
+        is BattleEvent.StatusDamage -> sendHp(battle, event.targetId, event.newHp)
+        is BattleEvent.HpChanged -> sendHp(battle, event.targetId, event.newHp)
+        // Nothing is animated for a flinch: the turn simply does not happen.
+        is BattleEvent.Flinched -> Unit
         // Nothing is animated for a turn lost to sleep, freeze or paralysis: the status icon the
         // client already shows is what explains it. Worth revisiting with a live client.
         is BattleEvent.StatusBlockedMove -> Unit
