@@ -8,6 +8,8 @@ import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.TradeActionPacket
 import de.fiereu.openmmo.net.game.packets.TradeListEntryPacket
 import de.fiereu.openmmo.net.game.packets.TradeSelectMonPacket
+import de.fiereu.openmmo.pokemon.EvolutionTable
+import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
@@ -68,6 +70,7 @@ class TradeService
 constructor(
     private val characterStore: CharacterStore,
     private val sessionRegistry: SessionRegistry,
+    private val species: SpeciesRegistry,
 ) {
 
   /** Pending offers, keyed by the player who owes an answer. */
@@ -237,6 +240,10 @@ constructor(
       return "The trade failed. Nothing changed."
     }
 
+    // Four species become something else the moment they change hands, and this is the first time
+    // this server has had a trade for them to change hands in.
+    val becameA = evolveOnTrade(a.charId, toA)
+    val becameB = evolveOnTrade(b.charId, toB)
     characterStore.flushCharacterAsync(a.charId)
     characterStore.flushCharacterAsync(b.charId)
     log.info {
@@ -250,7 +257,18 @@ constructor(
     sendParty(b)
     a.session.send(notice("Trade complete. You received ${monLabel(toA)}."))
     b.session.send(notice("Trade complete. You received ${monLabel(toB)}."))
+    becameA?.let { a.session.send(notice("It evolved into $it!")) }
+    becameB?.let { b.session.send(notice("It evolved into $it!")) }
     return "Trade complete."
+  }
+
+  /** Evolves a monster that only evolves by being traded. Returns what it became, or null. */
+  private fun evolveOnTrade(ownerId: Long, monster: Pokemon): String? {
+    val into = EvolutionTable.byTrade(monster.dexId) ?: return null
+    val definition = species.get(into) ?: return null
+    characterStore.updatePokemon(ownerId, monster.copy(dexId = into))
+    log.info { "char=$ownerId traded for ${monster.dexId}, which became ${definition.name}" }
+    return definition.name
   }
 
   private fun failed(trade: TradeSession, why: String) {

@@ -195,6 +195,26 @@ object EvolutionTable {
   val stoneCount: Int
     get() = byStone.size
 
+  /**
+   * Species that become something else the moment they change hands.
+   *
+   * Only the plain trade trigger is here. Another eight want a held item as well, and nothing
+   * carries held items yet, so those would evolve on any trade at all rather than the right one.
+   */
+  private val byTrade: Map<Int, Int> =
+      mapOf(
+        64 to 65,
+        67 to 68,
+        75 to 76,
+        93 to 94,
+      )
+
+  /** What [dexId] becomes when traded, or null if trading does nothing to it. */
+  fun byTrade(dexId: Int): Int? = byTrade[dexId]
+
+  val tradeCount: Int
+    get() = byTrade.size
+
   val size: Int
     get() = byDexId.size
 }

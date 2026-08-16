@@ -7,6 +7,7 @@ import de.fiereu.openmmo.common.enums.EVs
 import de.fiereu.openmmo.common.enums.IVs
 import de.fiereu.openmmo.common.enums.PokemonContainer
 import de.fiereu.openmmo.common.enums.Region
+import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.session.SessionRegistry
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.EntityIdService
@@ -26,7 +27,7 @@ class TradeServiceTest :
       class Fixture(scope: CoroutineScope) {
         val store = CharacterStore(FakeCharacterRepository(), EntityIdService(), scope)
         val sessions = SessionRegistry()
-        val trades = TradeService(store, sessions)
+        val trades = TradeService(store, sessions, SpeciesRegistry())
 
         suspend fun player(name: String, dexId: Int): Triple<FakeSession, Long, List<Pokemon>> {
           val created = store.createCharacter(1, name, CharacterGender.MALE, Region.HOENN)
@@ -94,6 +95,26 @@ class TradeServiceTest :
           fx.partyOf(bId).size shouldBe 2
           fx.partyOf(aId).count { it.id == bMons[0].id } shouldBe 1
           fx.partyOf(bId).count { it.id == aMons[0].id } shouldBe 1
+        }
+      }
+
+      test("a monster that only evolves by trading does so when it changes hands") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (_, aId, aMons) = fx.player("Ash", 1)
+          val (bSession, bId, bMons) = fx.player("Gary", 100)
+          // Haunter, which never evolves by level or stone and so could never become Gengar here.
+          fx.store.updatePokemon(aId, aMons[0].copy(dexId = 93))
+
+          fx.trades.invite(aId, "Gary")
+          fx.trades.accept(bSession, bId)
+          fx.trades.offer(aId, 1)
+          fx.trades.offer(bId, 1)
+          fx.trades.confirm(aId)
+          fx.trades.confirm(bId)
+
+          // It evolves for whoever received it, which is how the games do it.
+          fx.partyOf(bId).first { it.id == aMons[0].id }.dexId shouldBe 94
         }
       }
 
