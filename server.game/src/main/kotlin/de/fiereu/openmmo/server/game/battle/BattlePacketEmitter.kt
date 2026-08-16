@@ -423,7 +423,9 @@ class BattlePacketEmitter @Inject constructor(private val interestManager: Inter
     )
     // The delta above moves the bar, the reward text reads its number from here.
     broadcast(battle, experienceReward(entityId, reward.xpGained))
-    if (!reward.leveled) return
+    // Every win pays effort values, not only the ones that level a monster, and the client works
+    // out max hp for itself from the values it holds. Sending these only on a level up left it
+    // computing from stale ones, which is how an Ivysaur came to sit at 60 out of 59.
     broadcast(
         battle,
         BattleEntityDeltaPacket(
