@@ -23,6 +23,8 @@ import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.storage.LinkStore
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
+import de.fiereu.openmmo.server.game.testsupport.scriptWarpFor
+import de.fiereu.openmmo.server.game.testsupport.storyPlayerFor
 import de.fiereu.openmmo.server.game.world.interest.InterestManager
 import de.fiereu.openmmo.trainer.TrainerRegistry
 import de.fiereu.openmmo.typechart.TypeChart
@@ -71,6 +73,8 @@ class RaidServiceTest :
                         sessions,
                         ItemRegistry(),
                     ),
+                storyPlayer = storyPlayerFor(store),
+                scriptWarp = scriptWarpFor(store),
             )
         val raids = RaidService(store, battles, sessions, species, wildMons, LinkStore(), registry)
 

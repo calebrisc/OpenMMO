@@ -84,6 +84,8 @@ constructor(
     private val items: ItemRegistry,
     private val pokedex: PokedexService,
     private val duels: DuelService,
+    private val storyPlayer: StoryPlayerService,
+    private val scriptWarp: ScriptWarpService,
 ) {
 
   private val pokeBallItemId: Short by lazy { items.idOf(Items.POKE_BALL).toShort() }
@@ -695,8 +697,43 @@ constructor(
     emitter.sendNotice(battle, "$was evolved into ${into.name}!")
   }
 
-  private fun endDefeat(battle: BattleInstance) {
+  /**
+   * The whole party is down, so the player is picked up, patched up and put back at the last place
+   * they healed. Losing used to do nothing at all beyond ending the battle: it left the player
+   * standing where they fell with a party of fainted monsters and no way to fight anything on the
+   * walk back.
+   *
+   * The archive's whiteout capture is the shape followed here. A live server sends the map
+   * transition, then the destination map, then one entity delta per monster carrying restored
+   * moves, hp and a cleared faint flag — the same warp and the same heal this does, in that order.
+   *
+   * It does not take any money. The games charge for a whiteout, but nothing in the capture shows
+   * what that is said with, and inventing a punishment is worse than owing one.
+   */
+  private suspend fun endDefeat(battle: BattleInstance) {
     endBattle(battle, BattleResult.DEFEAT)
+    whiteout(battle)
+  }
+
+  private suspend fun whiteout(battle: BattleInstance) {
+    val session = battle.session
+    val state = session.attributes[PLAYER_STATE] ?: return
+    val stored = characterStore.getCharacter(battle.charId) ?: return
+    // Heal first and durably: an interrupted warp must not leave a party that is still knocked out.
+    storyPlayer.healParty(session, state)
+    characterStore.flushCharacterAsync(battle.charId)
+    val destination = RespawnPoint.of(stored.storyVars)
+    if (destination == null) {
+      // Nobody has healed them anywhere yet, so there is nowhere to send them back to. They keep
+      // the heal and stay put rather than being dropped on a map picked out of the air.
+      log.info { "char=${battle.charId} whited out with no healing place recorded" }
+      return
+    }
+    log.info {
+      "char=${battle.charId} whited out, returning to " +
+          "${destination.regionId}:${destination.bankId}:${destination.mapId}"
+    }
+    scriptWarp.warp(session, state, destination)
   }
 
   // Known issue: the caught monster does not show up in the party until the client reopens it.

@@ -132,5 +132,35 @@ private fun battleService(store: CharacterStore, interest: InterestManager): Bat
               SessionRegistry(),
               ItemRegistry(),
           ),
+      storyPlayer = storyPlayerFor(store),
+      scriptWarp = scriptWarpFor(store),
+  )
+}
+
+/**
+ * The two services a [BattleService] gained when losing a battle started sending the player home.
+ * Both are cheap to build and none of the existing tests reach a whiteout, so they are real
+ * instances rather than fakes.
+ */
+internal fun storyPlayerFor(store: CharacterStore): StoryPlayerService {
+  val species = SpeciesRegistry()
+  val moves = MoveRegistry()
+  return StoryPlayerService(
+      store,
+      WildMonFactory(species, moves, LearnsetRegistry(), EntityIdService()),
+      species,
+      moves,
+      ItemRegistry(),
+  )
+}
+
+internal fun scriptWarpFor(store: CharacterStore): ScriptWarpService {
+  val maps = MapManager()
+  val mapLoad = MapLoadService(maps)
+  return ScriptWarpService(
+      maps,
+      mapLoad,
+      store,
+      PresenceService(InterestManager(), PassThroughInterestPolicy(), mapLoad, store),
   )
 }

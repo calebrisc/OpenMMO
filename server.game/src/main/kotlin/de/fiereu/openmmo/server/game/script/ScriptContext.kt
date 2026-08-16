@@ -15,6 +15,7 @@ import de.fiereu.openmmo.server.game.services.DialogService
 import de.fiereu.openmmo.server.game.services.MapEntryScripts
 import de.fiereu.openmmo.server.game.services.MoveTeachingService
 import de.fiereu.openmmo.server.game.services.PcBoxService
+import de.fiereu.openmmo.server.game.services.RespawnPoint
 import de.fiereu.openmmo.server.game.services.ScriptMovementService
 import de.fiereu.openmmo.server.game.services.ScriptWarpService
 import de.fiereu.openmmo.server.game.services.ShopService
@@ -218,7 +219,25 @@ internal constructor(
     pcBoxes?.open(session, id)
   }
 
-  fun healParty() = checkNotNull(player) { STORY_PLAYER_UNAVAILABLE }.healParty(session, state)
+  /**
+   * Heals the party and remembers this spot as where the player wakes up after a whiteout.
+   *
+   * The decomp records the place with its own `setrespawn` when you walk into a Pokemon Center;
+   * recording it on the heal instead reaches the same set of places through the nurses that already
+   * call this, and has the small virtue of only counting a center the player actually used. The
+   * whiteout itself heals through [StoryPlayerService] rather than here, so being knocked out never
+   * moves the spot to wherever it happened.
+   */
+  fun healParty() {
+    val player = checkNotNull(player) { STORY_PLAYER_UNAVAILABLE }
+    player.healParty(session, state)
+    setVar(RespawnPoint.REGION, state.regionId)
+    setVar(RespawnPoint.BANK, state.bankId)
+    setVar(RespawnPoint.MAP, state.mapId)
+    setVar(RespawnPoint.X, state.x.toInt())
+    setVar(RespawnPoint.Y, state.y.toInt())
+    setVar(RespawnPoint.SET, 1)
+  }
 
   suspend fun giveItem(item: ItemDef, quantity: Int = 1): Boolean =
       checkNotNull(player) { STORY_PLAYER_UNAVAILABLE }.giveItem(session, state, item, quantity)

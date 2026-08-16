@@ -37,6 +37,8 @@ import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
+import de.fiereu.openmmo.server.game.testsupport.scriptWarpFor
+import de.fiereu.openmmo.server.game.testsupport.storyPlayerFor
 import de.fiereu.openmmo.server.game.world.interest.InterestManager
 import de.fiereu.openmmo.trainer.TrainerDef
 import de.fiereu.openmmo.trainer.TrainerMon
@@ -120,6 +122,8 @@ private class Fixture(scope: CoroutineScope) {
                   SessionRegistry(),
                   ItemRegistry(),
               ),
+          storyPlayer = storyPlayerFor(store),
+          scriptWarp = scriptWarpFor(store),
       )
 
   suspend fun playerWithParty(level: Byte = 50, hp: Short = 999): Pair<FakeSession, Long> {

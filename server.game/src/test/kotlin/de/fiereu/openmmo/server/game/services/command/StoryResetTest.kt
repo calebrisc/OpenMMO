@@ -31,6 +31,8 @@ import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.storage.NewGameStarts
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
+import de.fiereu.openmmo.server.game.testsupport.scriptWarpFor
+import de.fiereu.openmmo.server.game.testsupport.storyPlayerFor
 import de.fiereu.openmmo.server.game.world.interest.InterestManager
 import de.fiereu.openmmo.server.game.world.interest.PassThroughInterestPolicy
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
@@ -99,6 +101,8 @@ class StoryResetTest :
                             SessionRegistry(),
                             items,
                         ),
+                    storyPlayer = storyPlayerFor(store),
+                    scriptWarp = scriptWarpFor(store),
                 ),
             items = items,
         )

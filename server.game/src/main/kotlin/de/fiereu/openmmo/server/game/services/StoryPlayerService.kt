@@ -13,8 +13,10 @@ import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.SocialListEntryAddPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleAddPokemon
+import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacket
 import de.fiereu.openmmo.net.game.packets.battle.BattleSideAddPokemonPacket
 import de.fiereu.openmmo.net.game.packets.battle.ItemStack
+import de.fiereu.openmmo.net.game.packets.battle.MoveSlots
 import de.fiereu.openmmo.net.game.packets.battle.itemStacksPacket
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
 import de.fiereu.openmmo.server.game.battle.BattleRng
@@ -91,13 +93,31 @@ constructor(
           )
         }
     healed.forEach { characters.updatePokemon(characterId, it) }
-    session.send(
-        PokemonContainerPacket(
-            container = PokemonContainer.PARTY,
-            hasChange = true,
-            delete = false,
-            pokemon = healed,
-        ))
+    healed.forEach { session.send(healedDelta(it)) }
+  }
+
+  /**
+   * How a live server says a monster has been healed: one entity delta per monster, carrying its
+   * moves with their pp back up, its hp, and a cleared faint flag.
+   *
+   * Read off the archive's whiteout capture, where the two deltas that follow the transition are
+   * `1C 00 00 00` masks holding `21 00 23` — move 33 with 35 pp, which is Tackle full — then hp and
+   * a zero faint byte. This used to answer a heal with the whole party container instead, which is
+   * the bulk load a login does; a container resend is inert mid-session, which is the same thing
+   * that made a box drag never redraw.
+   */
+  private fun healedDelta(pokemon: Pokemon): BattleEntityDeltaPacket {
+    val slots =
+        (0 until MAX_MOVES).map {
+          val move = pokemon.moves.getOrNull(it)
+          (move?.id ?: 0) to (move?.pp ?: 0)
+        }
+    return BattleEntityDeltaPacket(
+        entityId = pokemon.id,
+        moves = MoveSlots(slots, ppUps = 0),
+        currentHp = pokemon.hp,
+        faintFlag = 0,
+    )
   }
 
   /**
