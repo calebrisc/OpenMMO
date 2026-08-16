@@ -60,7 +60,21 @@ abstract class ProtocolHandler(
       }
       // Absolute, so the error path can re-read the body without a mark decode might clobber.
       val bodyStart = msg.readerIndex()
-      val packet = decode(registration.codec, msg)
+      val packet =
+          try {
+            decode(registration.codec, msg)
+          } catch (t: Throwable) {
+            // A codec reading past the end is a codec that does not match what the client sent,
+            // and dropping that one packet beats dropping the player: a decode fault used to close
+            // the connection, so a shape we had wrong looked to the player like the feature
+            // disconnecting them. The opcode and body are logged so the real shape can be read off.
+            val body = ByteBufUtil.hexDump(msg, bodyStart, msg.writerIndex() - bodyStart)
+            log.error(t) {
+              "Codec for opcode 0x${opcode.toString(16)} could not read the body, dropping it. " +
+                  "size=${msg.writerIndex() - bodyStart} body=$body"
+            }
+            return
+          }
       val trailing = msg.readableBytes()
       if (trailing > 0) {
         // Dropping one packet we could not fully parse beats dropping the player. The client
