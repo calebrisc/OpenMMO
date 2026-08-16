@@ -3,6 +3,8 @@ package de.fiereu.openmmo.net.game
 import de.fiereu.openmmo.common.test.fixtureBuffer
 import de.fiereu.openmmo.net.game.packets.PcMove
 import de.fiereu.openmmo.net.game.packets.PcMovePacketCodec
+import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacketCodec
+import de.fiereu.openmmo.net.game.packets.battle.StoragePlacement
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
@@ -33,6 +35,26 @@ class PcMovePacketTest :
 
         packet.moves.map { it.toSlot } shouldBe listOf(24, 25, 26, 27)
         packet.moves.map { it.toContainer } shouldBe listOf<Byte>(0, 0, 0, 0)
+        buf.remaining() shouldBe 0
+      }
+    })
+
+/**
+ * The other half of a box drag, captured from a live server: it answers the move with one entity
+ * delta per monster that changed place, carrying only where that monster now is.
+ */
+class StoragePlacementDeltaTest :
+    FunSpec({
+      test("a captured placement delta names the container and slot a monster moved to") {
+        val buf = fixtureBuffer("game/s2c/16/placement_after_box_move.bin")
+        val delta = BattleEntityDeltaPacketCodec.read(buf)
+
+        // Monster entity ids carry the 0xC000 tag in their low bits.
+        (delta.entityId and 0xFFFF) shouldBe 0xC000L
+        delta.placement shouldBe StoragePlacement(container = 1, slot = 4)
+        // Nothing else rides along: a move says where it went and no more.
+        delta.species shouldBe null
+        delta.currentHp shouldBe null
         buf.remaining() shouldBe 0
       }
     })

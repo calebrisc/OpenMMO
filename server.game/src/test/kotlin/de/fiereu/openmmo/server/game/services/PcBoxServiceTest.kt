@@ -12,12 +12,15 @@ import de.fiereu.openmmo.net.game.packets.PcBoxStorePacket
 import de.fiereu.openmmo.net.game.packets.PcMove
 import de.fiereu.openmmo.net.game.packets.PcMovePacket
 import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
+import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
+import de.fiereu.openmmo.net.game.packets.battle.StoragePlacement
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import de.fiereu.openmmo.server.game.storage.EntityIdService
 import de.fiereu.openmmo.server.game.testsupport.FakeCharacterRepository
 import de.fiereu.openmmo.server.game.testsupport.FakeSession
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 import kotlinx.coroutines.CoroutineScope
@@ -156,6 +159,27 @@ class PcBoxServiceTest :
 
           fx.pc(id).first { it.id == moving.id }.containerSlot shouldBe 25.toShort()
           fx.party(id).size shouldBe 2
+        }
+      }
+
+      // What a live server answers a drag with: one delta per monster that moved, and no
+      // container resend at all.
+      test("a drag is answered by where each moved monster now is") {
+        runTest {
+          val fx = Fixture(backgroundScope)
+          val (session, id) = fx.player(3)
+          val first = fx.party(id).first { it.containerSlot.toInt() == 0 }
+          val third = fx.party(id).first { it.containerSlot.toInt() == 2 }
+
+          fx.boxes.onMove(PacketEvent(PcMovePacket(listOf(PcMove(1, 0, 1, 2))), session))
+
+          val deltas = session.sent.filterIsInstance<BattleEntityDeltaPacket>()
+          deltas.map { it.entityId }.toSet() shouldBe setOf(first.id, third.id)
+          deltas.first { it.entityId == first.id }.placement shouldBe
+              StoragePlacement(PokemonContainer.PARTY.ordinal.toByte(), 2)
+          deltas.first { it.entityId == third.id }.placement shouldBe
+              StoragePlacement(PokemonContainer.PARTY.ordinal.toByte(), 0)
+          session.sent.filterIsInstance<PokemonContainerPacket>().shouldBeEmpty()
         }
       }
 

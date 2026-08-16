@@ -65,15 +65,14 @@ class BattleSwitchInPacketTest :
       // A benched monster coming out carries its full block then its active detail. The block
       // matches the captured Patrat bytes now built from structured fields.
       test("round-trips a full-block switch-in") {
-        val packet =
-            BattleSwitchInPacket(mon = patrat(), fullBlock = true)
+        val packet = BattleSwitchInPacket(mon = patrat(), fullBlock = true)
         val bytes = BattleSwitchInPacketCodec.encodeToBytes(packet)
         bytes.size shouldBe 65
         val decoded = BattleSwitchInPacketCodec.decodeBytes(bytes)
         decoded.fullBlock shouldBe true
         decoded.mon shouldBe patrat()
       }
-    
+
       // The shape nobody had: a player's own monster coming out for the first time. Two real
       // captures, both with the flag set and the party position inside the block, which is what
       // three earlier readings of this packet got wrong.
@@ -97,4 +96,4 @@ class BattleSwitchInPacketTest :
               BattleSwitchInPacketCodec.encodeToBytes(decoded).toHex() shouldBe bytes.toHex()
             }
           }
-})
+    })

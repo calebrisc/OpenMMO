@@ -2,7 +2,6 @@ package de.fiereu.openmmo.net.game
 
 import de.fiereu.network.Direction
 import de.fiereu.network.Side
-import de.fiereu.openmmo.net.game.packets.ChatMessagePacket
 import de.fiereu.openmmo.net.game.packets.DeleteCharacterPacket
 import de.fiereu.openmmo.net.game.packets.DeleteCharacterResultPacket
 import de.fiereu.openmmo.net.game.packets.EntityMovePacket

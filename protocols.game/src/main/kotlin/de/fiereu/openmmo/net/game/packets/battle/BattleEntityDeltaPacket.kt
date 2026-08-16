@@ -11,7 +11,7 @@ private const val MOVES = 0x4
 private const val CURRENT_HP = 0x8
 private const val FAINT = 0x10
 private const val SPECIES = 0x20
-private const val LISTING = 0x40
+private const val PLACEMENT = 0x40
 private const val EVS = 0x80
 private const val LEVEL = 0x100
 private const val HAPPINESS = 0x200
@@ -36,7 +36,14 @@ data class MoveSlots(val slots: List<Pair<Short, Byte>>, val ppUps: Byte)
 
 data class Species(val speciesId: Short, val forme: Byte)
 
-data class Listing(val listType: Byte, val sortKey: Short)
+/**
+ * Where a monster is kept: its container and the slot of it.
+ *
+ * Captured from a live server answering a box drag. One of these goes out per monster whose place
+ * changed, and it is the whole answer -- the containers are not sent again. The fields were read as
+ * a facing and a heading before there was a capture to check them against.
+ */
+data class StoragePlacement(val container: Byte, val slot: Short)
 
 data class Position(val x: Int, val y: Int, val flagA: Byte, val flagB: Byte, val flagC: Byte)
 
@@ -60,8 +67,7 @@ data class BattleEntityDeltaPacket(
     val currentHp: Short? = null,
     val faintFlag: Byte? = null,
     val species: Species? = null,
-    // The client reads these as a facing and a heading. No capture either way yet.
-    val listing: Listing? = null,
+    val placement: StoragePlacement? = null,
     val evValues: List<Short>? = null,
     val level: Short? = null,
     val happiness: Short? = null,
@@ -89,7 +95,7 @@ private fun BattleEntityDeltaPacket.mask(): Int {
   if (currentHp != null) m = m or CURRENT_HP
   if (faintFlag != null) m = m or FAINT
   if (species != null) m = m or SPECIES
-  if (listing != null) m = m or LISTING
+  if (placement != null) m = m or PLACEMENT
   if (evValues != null) m = m or EVS
   if (level != null) m = m or LEVEL
   if (happiness != null) m = m or HAPPINESS
@@ -136,9 +142,10 @@ object BattleEntityDeltaPacketCodec : PacketCodec<BattleEntityDeltaPacket>() {
         if (m and SPECIES != 0)
             Species(field(S16LE) { it.species!!.speciesId }, field(S8) { it.species!!.forme })
         else null
-    val listing =
-        if (m and LISTING != 0)
-            Listing(field(S8) { it.listing!!.listType }, field(S16LE) { it.listing!!.sortKey })
+    val placement =
+        if (m and PLACEMENT != 0)
+            StoragePlacement(
+                field(S8) { it.placement!!.container }, field(S16LE) { it.placement!!.slot })
         else null
     val evValues = optionalField(m and EVS != 0, S16LE.repeat(6)) { it.evValues }
     val level = optionalField(m and LEVEL != 0, S16LE) { it.level }
@@ -192,7 +199,7 @@ object BattleEntityDeltaPacketCodec : PacketCodec<BattleEntityDeltaPacket>() {
         currentHp = currentHp,
         faintFlag = faintFlag,
         species = species,
-        listing = listing,
+        placement = placement,
         evValues = evValues,
         level = level,
         happiness = happiness,

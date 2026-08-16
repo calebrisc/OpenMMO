@@ -12,7 +12,8 @@ class LocalPlayerStateDexTest :
       // A real login state from the archive, carrying a dex somebody actually filled in.
       test("the dex lists are national dex numbers, not indexes into anything") {
         val decoded =
-            LocalPlayerStatePacketCodec.decodeBytes(fixture("game/s2c/f3/local_player_state_with_dex.bin"))
+            LocalPlayerStatePacketCodec.decodeBytes(
+                fixture("game/s2c/f3/local_player_state_with_dex.bin"))
 
         decoded.pokedexSeen.size shouldBe 167
         decoded.pokedexCaught.size shouldBe 18

@@ -12,7 +12,9 @@ import de.fiereu.openmmo.net.game.packets.PokemonContainerPacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxClosePacket
 import de.fiereu.openmmo.net.game.packets.StorageBoxItem
 import de.fiereu.openmmo.net.game.packets.StorageContextWindowPacket
+import de.fiereu.openmmo.net.game.packets.battle.BattleEntityDeltaPacket
 import de.fiereu.openmmo.net.game.packets.battle.PcTogglePacket
+import de.fiereu.openmmo.net.game.packets.battle.StoragePlacement
 import de.fiereu.openmmo.server.game.session.PLAYER_STATE
 import de.fiereu.openmmo.server.game.storage.CharacterStore
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -71,13 +73,14 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
     }
 
     val slot = packet.slotIndex.toShort().takeIf { it >= 0 } ?: freeSlot(charId, destination)
-    if (!move(charId, monster, destination, slot)) {
+    val moved = move(charId, monster, destination, slot)
+    if (moved == null) {
       ctx.send(notice("That could not be moved."))
       resend(ctx, charId)
       return
     }
     log.info { "char=$charId stored ${monster.id} in $destination slot $slot" }
-    resend(ctx, charId)
+    sendPlacements(ctx, charId, moved)
   }
 
   /**
@@ -92,8 +95,8 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
       monster: Pokemon,
       destination: PokemonContainer,
       slot: Short,
-  ): Boolean {
-    val stored = characterStore.getCharacter(charId) ?: return false
+  ): Set<Long>? {
+    val stored = characterStore.getCharacter(charId) ?: return null
     val occupying =
         (if (destination == PokemonContainer.PC) stored.pcStorage else stored.pokemon).firstOrNull {
           it.containerSlot == slot && it.id != monster.id
@@ -104,7 +107,7 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
         put(it.id, CharacterStore.Placement(monster.container, monster.containerSlot))
       }
     }
-    return characterStore.repositionPokemon(charId, moves)
+    return if (characterStore.repositionPokemon(charId, moves)) moves.keys else null
   }
 
   /**
@@ -145,6 +148,30 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
         if (container == PokemonContainer.PC) stored.pcStorage.map { it.containerSlot }
         else stored.pokemon.map { it.containerSlot }
     return (generateSequence(0) { it + 1 }.first { it.toShort() !in used }).toShort()
+  }
+
+  /**
+   * Tells the client where monsters are now, which is how a live server answers a drag.
+   *
+   * Captured from one: a box move is answered by one entity delta per monster whose place changed,
+   * carrying its container and slot and nothing else. The containers are not sent again. Sending
+   * them again is what this server did instead, and it is why the box never redrew until a relog
+   * built it from scratch.
+   */
+  private fun sendPlacements(ctx: SessionContext, charId: Long, moved: Set<Long>) {
+    val stored = characterStore.getCharacter(charId) ?: return
+    for (monster in stored.pokemon + stored.pcStorage) {
+      if (monster.id !in moved) continue
+      ctx.send(
+          BattleEntityDeltaPacket(
+              entityId = monster.id,
+              placement =
+                  StoragePlacement(
+                      container = monster.container.ordinal.toByte(),
+                      slot = monster.containerSlot,
+                  ),
+          ))
+    }
   }
 
   /**
@@ -288,6 +315,6 @@ class PcBoxService @Inject constructor(private val characterStore: CharacterStor
             "${it.fromContainer}:${it.fromSlot}->${it.toContainer}:${it.toSlot}"
           }
     }
-    resend(ctx, charId)
+    sendPlacements(ctx, charId, placements.keys)
   }
 }
