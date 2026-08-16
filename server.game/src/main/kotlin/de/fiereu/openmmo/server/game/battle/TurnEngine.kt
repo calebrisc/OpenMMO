@@ -5,6 +5,7 @@ import de.fiereu.openmmo.common.enums.StatusCondition
 import de.fiereu.openmmo.moves.MoveDef
 import de.fiereu.openmmo.moves.MoveRegistry
 import de.fiereu.openmmo.typechart.TypeChart
+import io.github.oshai.kotlinlogging.KotlinLogging
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -73,7 +74,8 @@ private data class StageEffect(val stat: BattleStat, val delta: Int, val onSelf:
  * stages, the damage formula with crit, STAB, and type chart, and stat stage moves. Effects outside
  * that core fail gracefully without touching state.
  */
-@Singleton
+@Singleton private val log = KotlinLogging.logger {}
+
 class TurnEngine
 @Inject
 constructor(
@@ -146,6 +148,12 @@ constructor(
       if (mon.fainted) continue
       val damage = StatusRules.endOfTurnDamage(mon.status, mon.stats.hp, mon.toxicCounter)
       if (damage <= 0) continue
+      // Temporary, while a player reports poison taking one point a turn instead of an eighth of
+      // the maximum: the maximum this read is the whole question.
+      log.info {
+        "STATUS TICK: entity=${mon.entityId} ${mon.status} max=${mon.stats.hp} " +
+            "damage=$damage hp=${mon.currentHp} -> ${(mon.currentHp - damage).coerceAtLeast(0)}"
+      }
       mon.currentHp = (mon.currentHp - damage).coerceAtLeast(0)
       events += BattleEvent.StatusDamage(mon.entityId, mon.currentHp, mon.status)
       if (mon.status == StatusCondition.TOXIC) mon.toxicCounter++
