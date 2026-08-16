@@ -3,6 +3,8 @@ package de.fiereu.openmmo.server.game.script.generated.kanto
 import de.fiereu.openmmo.dialog.generated.kanto.PewterCity
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
+import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
 internal object PewterCity_EventScript_Lass : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(PewterCity.ClefairyCameFromMoon)
@@ -95,8 +97,23 @@ internal object PewterCity_EventScript_GymGuide : Script {
  * ```
  */
 internal object PewterCity_EventScript_RunningShoesAide : Script {
-  override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_EventScript_RunningShoesAide")
+  override suspend fun run(ctx: ScriptContext) {
+    // The shoes land before a word is said. Everything after an awaited dialog is lost if the
+    // player drops out of the scene, and this one ends with the aide walking off for good.
+    ctx.setFlag(KantoFlags.FLAG_SYS_B_DASH)
+    ctx.setVar(KantoVars.VAR_MAP_SCENE_PEWTER_CITY, 2)
+    // The decomp removes the object and leaves the map scene var to keep him away. Our npc carries
+    // a hide flag instead, so that is the thing that has to be set for him to stay gone.
+    ctx.setFlag(KantoFlags.FLAG_HIDE_PEWTER_CITY_RUNNING_SHOES_GUY)
+    ctx.say(PewterCity.OhPlayer)
+    ctx.say(PewterCity.AskedToDeliverThis)
+    ctx.say(PewterCity.ReceivedRunningShoesFromAide)
+    ctx.say(PewterCity.SwitchedShoesWithRunningShoes)
+    ctx.sign(PewterCity.ExplainRunningShoes)
+    ctx.say(PewterCity.MustBeGoingBackToLab)
+    ctx.say(PewterCity.RunningShoesLetterFromMom)
+    ctx.despawnInteracted()
+  }
 }
 
 internal object PewterCity_EventScript_MuseumSign : Script {
