@@ -20,6 +20,7 @@ import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnPromptPacket
 import de.fiereu.openmmo.net.game.packets.battle.moves.MoveLearnReplyPacket
 import de.fiereu.openmmo.pokemon.EvolutionTable
 import de.fiereu.openmmo.pokemon.SpeciesRegistry
+import de.fiereu.openmmo.server.game.battle.BallCatch
 import de.fiereu.openmmo.server.game.battle.BattleInstance
 import de.fiereu.openmmo.server.game.battle.BattleItems
 import de.fiereu.openmmo.server.game.battle.BattleMonState
@@ -163,10 +164,10 @@ constructor(
     event.session.send(emitter.moveSlotsDelta(reply.entityId, moves.map { it.id to it.pp }, 0))
   }
 
-  /** Throws a ball at the monster. False when the character is not in a battle. */
+  /** Throws a Poke Ball at the monster. False when the character is not in a battle. */
   suspend fun catchActiveWild(charId: Long): Boolean {
     val battle = battles.byChar(charId) ?: return false
-    catchWild(battle)
+    catchWild(battle, pokeBallItemId.toInt())
     return true
   }
 
@@ -452,7 +453,7 @@ constructor(
     // Only a recognised healing item diverts. Everything else throws a ball, which is what every
     // item did before, so catching cannot regress on an id we have not accounted for.
     if (item == null || effect == null) {
-      catchWild(battle)
+      catchWild(battle, id)
       return
     }
     val stored = characterStore.getCharacter(battle.charId)
@@ -549,13 +550,56 @@ constructor(
     battle.pendingResult = BattleResult.FLED
   }
 
-  private suspend fun catchWild(battle: BattleInstance) {
+  /**
+   * Throws [ballItemId] at the wild monster.
+   *
+   * The ball is now spent and can miss. Before this, every item thrown was a guaranteed catch of
+   * anything at any health, and nothing came out of the bag for it.
+   */
+  private suspend fun catchWild(battle: BattleInstance, ballItemId: Int) {
     if (!battle.catchable) {
       emitter.sendNotice(battle, "You can't catch this monster.")
       emitter.sendPrompt(battle)
       return
     }
     val stored = characterStore.getCharacter(battle.charId) ?: return
+    val ball = items.get(ballItemId)
+    val ballName = ball?.name ?: "ball"
+    if ((stored.items[ballItemId] ?: 0) <= 0) {
+      emitter.sendNotice(battle, "You have no $ballName left.")
+      emitter.sendPrompt(battle)
+      return
+    }
+    characterStore.addItem(battle.charId, ballItemId, -1)
+    val target = battle.opponentMon()
+    val shakes =
+        BallCatch.shakes(
+            catchRate = target.species.catchRate,
+            ballMultiplier =
+                BallCatch.multiplier(
+                    ball,
+                    target,
+                    battle.turn,
+                    alreadyCaught =
+                        stored.storyFlags.contains(Pokedex.caughtKey(target.species.id)),
+                ),
+            maxHp = target.stats.hp,
+            currentHp = target.currentHp,
+            status = target.status,
+            rng = battle.rng,
+            isMasterBall = ball == Items.MASTER_BALL,
+        )
+    if (shakes < BallCatch.SHAKES_FOR_A_CATCH) {
+      log.info {
+        "char=${battle.charId} threw a $ballName at ${target.species.name} and it shook $shakes times"
+      }
+      battle.session.send(ballThrowEvent(ballItemId.toShort(), shakes))
+      emitter.sendNotice(battle, brokeFree(shakes, target.species.name))
+      // A missed throw spends the turn, so the wild monster gets to act.
+      emitter.sendEvents(battle, engine.resolveSwitchTurn(battle))
+      afterTurn(battle)
+      return
+    }
     // A full party overflows to the PC: CharacterEntry rejects a 7th party monster, so persisting
     // one would make every future login throw while building the character list.
     val destination = if (stored.pokemon.size < 6) PokemonContainer.PARTY else PokemonContainer.PC
@@ -584,15 +628,7 @@ constructor(
     // event, so the client can resolve the monster when the throw lands.
     battle.session.send(SocialListEntryAddPacket(caught))
     battle.session.send(acquiredMonsterDelta(caught, battle.opponentMon().species))
-    // "Player threw a Poke Ball" event.
-    battle.session.send(
-        BattleListEventPacket(
-            kind = 0,
-            value = pokeBallItemId,
-            subKind = 4,
-            detail = BattleListEventDetail(listType = 1, value = 1),
-        ),
-    )
+    battle.session.send(ballThrowEvent(ballItemId.toShort(), BallCatch.SHAKES_FOR_A_CATCH))
     if (!characterStore.addPokemon(battle.charId, caught)) {
       log.error { "Could not persist the monster char=${battle.charId} just caught" }
     }
@@ -601,6 +637,31 @@ constructor(
     }
     endBattle(battle, BattleResult.CAUGHT)
   }
+
+  /**
+   * The ball-throw event.
+   *
+   * `subKind` was hardcoded to 4, which is exactly the games' `BALL_3_SHAKES_SUCCESS`, so it is
+   * read here as the shake count the client should animate. That is an inference from the constant
+   * lining up and not from a capture: there is no catch anywhere in the archive to check it
+   * against. A wrong shake count costs an animation, not a catch, because the outcome is decided
+   * here and told separately.
+   */
+  private fun ballThrowEvent(ballItemId: Short, shakes: Int): BattleListEventPacket =
+      BattleListEventPacket(
+          kind = 0,
+          value = ballItemId,
+          subKind = shakes.toByte(),
+          detail = BattleListEventDetail(listType = 1, value = 1),
+      )
+
+  private fun brokeFree(shakes: Int, name: String): String =
+      when (shakes) {
+        0 -> "Oh no! The ball broke free!"
+        1 -> "Aww! It appeared to be caught!"
+        2 -> "Aargh! Almost had it!"
+        else -> "Gah! It was so close, too! $name broke free!"
+      }
 
   private suspend fun endVictory(battle: BattleInstance) {
     awardXp(battle, battle.opponentMon())

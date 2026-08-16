@@ -46,6 +46,7 @@ import de.fiereu.openmmo.trainer.TrainerRegistry
 import de.fiereu.openmmo.typechart.TypeChart
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.nulls.shouldBeNull
@@ -136,6 +137,10 @@ private class Fixture(scope: CoroutineScope) {
 private fun FakeSession.startBattle(service: BattleService, dexId: Int = 19, level: Int = 2) {
   service.startWildBattle(this, dexId, level)
 }
+
+// The two ball ids these tests throw. Items are numbered from 5001.
+private const val MASTER_BALL = 5001
+private const val POKE_BALL = 5004
 
 private suspend fun FakeSession.act(
     service: BattleService,
@@ -337,9 +342,11 @@ class BattleServiceTest :
             fx.store.addPokemon(
                 charId, bulbasaur(charId, 50, 999).copy(containerSlot = (i + 1).toShort()))
           }
+          // A ball can miss now, so the one throw this test makes is a Master Ball.
+          fx.store.addItem(charId, MASTER_BALL, 2)
 
           session.startBattle(fx.service)
-          session.act(fx.service, BattleAction.ITEM)
+          session.act(fx.service, BattleAction.ITEM, MASTER_BALL.toShort())
           session.finishBattleTransition(fx.service)
 
           val stored = fx.store.getCharacter(charId).shouldNotBeNull()
@@ -349,7 +356,7 @@ class BattleServiceTest :
 
           // The next overflow catch takes the following box slot instead of colliding on zero.
           session.startBattle(fx.service)
-          session.act(fx.service, BattleAction.ITEM)
+          session.act(fx.service, BattleAction.ITEM, MASTER_BALL.toShort())
           session.finishBattleTransition(fx.service)
 
           fx.store.getCharacter(charId)!!.pcStorage.map { it.containerSlot } shouldBe
@@ -417,18 +424,31 @@ class BattleServiceTest :
         }
       }
 
-      test("the ball throw names the Poke Ball by the id the client knows") {
+      test("the ball throw names the ball that was actually thrown") {
+        runTest {
+          val fx = Fixture(this)
+          val (session, charId) = fx.playerWithParty()
+          fx.store.addItem(charId, POKE_BALL, 1)
+          session.startBattle(fx.service)
+
+          session.act(fx.service, BattleAction.ITEM, POKE_BALL.toShort())
+
+          // Caught or not, the event names the ball. subKind is the shake count and varies.
+          val thrown = session.sent.filterIsInstance<BattleListEventPacket>().single()
+          thrown.value shouldBe POKE_BALL.toShort()
+          (thrown.subKind.toInt() in 0..4) shouldBe true
+        }
+      }
+
+      test("a throw with an empty bag is refused rather than catching for free") {
         runTest {
           val fx = Fixture(this)
           val (session, _) = fx.playerWithParty()
           session.startBattle(fx.service)
 
-          session.act(fx.service, BattleAction.ITEM)
+          session.act(fx.service, BattleAction.ITEM, POKE_BALL.toShort())
 
-          session.sent
-              .filterIsInstance<BattleListEventPacket>()
-              .single { it.subKind == 4.toByte() }
-              .value shouldBe 5004.toShort()
+          session.sent.filterIsInstance<BattleListEventPacket>().shouldBeEmpty()
         }
       }
 
