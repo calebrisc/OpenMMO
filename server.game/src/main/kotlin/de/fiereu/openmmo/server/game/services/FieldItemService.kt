@@ -56,7 +56,16 @@ constructor(
       log.info { "char=$charId used unknown item id ${packet.optionId}" }
       return
     }
+    // Temporary, while a player reports picking fifty candies and being charged one: the client
+    // is sending the count somewhere and these are the only two fields left to carry it.
+    log.info {
+      "ITEM USE: char=$charId ${item.name} id=${packet.optionId} entity=${packet.entityId} " +
+          "flag=${packet.flag} trailing=${packet.trailing}"
+    }
     val held = stored.items[packet.optionId] ?: 0
+    // How many the player picked on the item screen, which the server had been ignoring. Never
+    // more than the bag actually holds, whatever the client asks for.
+    val count = packet.flag.coerceIn(1, held.coerceAtLeast(1))
     if (held <= 0) {
       log.info { "char=$charId used ${item.name} without holding it" }
       return
@@ -81,7 +90,7 @@ constructor(
     }
 
     if (RARE_CANDY_NAMES.contains(item.name)) {
-      rareCandy(ctx, charId, packet.entityId, packet.optionId, item)
+      rareCandy(ctx, charId, packet.entityId, packet.optionId, item, count)
       return
     }
 
@@ -200,55 +209,82 @@ constructor(
    * grants one, so the moves of the new level, the recomputed stats and an evolution all follow
    * from it rather than only the number going up.
    */
+  /**
+   * Levels in a wrapper, as many as were asked for.
+   *
+   * The candy was one of the items that landed on "does not do anything yet": it is worth a level
+   * and this server had no way to grant one outside a battle. Each is granted the way a won fight
+   * grants one, so the moves of the new level, the recomputed stats and an evolution all follow
+   * from it rather than only the number going up.
+   *
+   * [count] is what the player picked on the item screen. Only one was ever spent however many were
+   * chosen, so picking fifty charged one and left the other forty nine to be picked again.
+   */
   private suspend fun rareCandy(
       ctx: SessionContext,
       charId: Long,
       entityId: Long,
       itemId: Int,
       item: ItemDef,
+      count: Int,
   ) {
-    val stored = characterStore.getCharacter(charId) ?: return
-    val monster = target(stored, entityId) ?: return
-    val definition = species.get(monster.dexId)
-    if (definition == null) {
-      ctx.send(notice("That monster is not covered by the battle data yet."))
+    val learned = mutableListOf<String>()
+    val missed = mutableListOf<String>()
+    var from = 0
+    var reached = 0
+    var spent = 0
+    var name = ""
+
+    repeat(count) {
+      val stored = characterStore.getCharacter(charId) ?: return@repeat
+      val monster = stored.pokemon.firstOrNull { it.id == entityId } ?: return@repeat
+      val definition = species.get(monster.dexId) ?: return@repeat
+      name = definition.name
+      val was = monster.level.toInt()
+      if (was >= ExpCurves.MAX_LEVEL) return@repeat
+      if (spent == 0) from = was
+      val now = was + 1
+      val known = monster.moves.toMutableList()
+      val outcome = moveLearner.learn(known, monster.dexId, was, now)
+      learned += outcome.learned.map { it.name }
+      // A move it has no room for needs the prompt a battle uses, which nothing outside a battle
+      // drives yet, so say so rather than dropping it in silence.
+      missed += outcome.offered.map { it.name }
+      // Growing changes what the monster is made of, so the stats are recomputed from the new
+      // level and the hp it was missing stays missing.
+      val grown =
+          monster.copy(
+              level = now.toByte(),
+              xp = ExpCurves.totalXpFor(definition.growthRate, now),
+              moves = known,
+          )
+      val before = StatCalculator.computeAll(definition, monster)
+      val after = StatCalculator.computeAll(definition, grown)
+      val healed = (grown.hp + maxOf(0, after.hp - before.hp)).coerceAtMost(after.hp)
+      characterStore.updatePokemon(charId, grown.copy(hp = healed.toShort()))
+      characterStore.addItem(charId, itemId, -1)
+      spent++
+      reached = now
+      // Evolving mid climb matters: the levels after it belong to what it became.
+      EvolutionTable.at(grown.dexId, now)?.let {
+        evolveTo(charId, entityId, it.into, definition.name)
+      }
+    }
+
+    if (spent == 0) {
+      ctx.send(notice("${name.ifEmpty { item.name }} cannot grow any further."))
       return
     }
-    val was = monster.level.toInt()
-    if (was >= ExpCurves.MAX_LEVEL) {
-      ctx.send(notice("${definition.name} cannot grow any further."))
-      return
-    }
-    val now = was + 1
-    val known = monster.moves.toMutableList()
-    val outcome = moveLearner.learn(known, monster.dexId, was, now)
-    // Growing changes what the monster is made of, so the stats are recomputed from the new level
-    // and the hp it was missing stays missing.
-    val grown =
-        monster.copy(
-            level = now.toByte(),
-            xp = ExpCurves.totalXpFor(definition.growthRate, now),
-            moves = known,
-        )
-    val before = StatCalculator.computeAll(definition, monster)
-    val after = StatCalculator.computeAll(definition, grown)
-    val healed = (grown.hp + maxOf(0, after.hp - before.hp)).coerceAtMost(after.hp)
-    characterStore.updatePokemon(charId, grown.copy(hp = healed.toShort()))
-    characterStore.addItem(charId, itemId, -1)
     characterStore.flushCharacterAsync(charId)
     sendBag(ctx, charId)
-    log.info { "char=$charId used ${item.name} on ${monster.id}: level $was -> $now" }
-    ctx.send(notice("${definition.name} grew to level $now!"))
-    for (learned in outcome.learned) ctx.send(notice("It learned ${learned.name}!"))
-    // A move it has no room for needs the prompt a battle uses, which nothing outside a battle
-    // drives yet, so say so rather than dropping it in silence.
-    for (missed in outcome.offered) {
-      ctx.send(notice("It is ready to learn ${missed.name}, but its moves are full."))
-    }
-    val evolution = EvolutionTable.at(grown.dexId, now)
-    if (evolution != null) {
-      evolveTo(ctx, charId, monster.id, evolution.into, definition.name)
-      return
+    log.info { "char=$charId used $spent x ${item.name} on $entityId: level $from -> $reached" }
+    val became = characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == entityId }
+    val ended = became?.dexId?.let { species.get(it)?.name } ?: name
+    ctx.send(notice("$ended grew to level $reached!"))
+    if (ended != name) ctx.send(notice("It evolved into $ended!"))
+    for (move in learned.distinct()) ctx.send(notice("It learned $move!"))
+    for (move in missed.distinct()) {
+      ctx.send(notice("It is ready to learn $move, but its moves are full."))
     }
     sendParty(ctx, charId)
   }
@@ -265,34 +301,16 @@ constructor(
         ))
   }
 
-  private fun evolveTo(
-      ctx: SessionContext,
-      charId: Long,
-      entityId: Long,
-      into: Int,
-      was: String,
-  ) {
-    val definition = species.get(into)
-    if (definition == null) {
-      sendParty(ctx, charId)
-      return
-    }
-    val monster = characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == entityId }
-    if (monster == null) {
-      sendParty(ctx, charId)
-      return
-    }
-    // What it became is built differently, so the hp it is carrying has to fit inside the new
-    // maximum. Skipping this is how a Venusaur ended up at 97 of 95: the hp was worked out while it
-    // was still an Ivysaur and nothing trimmed it afterwards.
+  private fun evolveTo(charId: Long, entityId: Long, into: Int, was: String) {
+    val definition = species.get(into) ?: return
+    val monster =
+        characterStore.getCharacter(charId)?.pokemon?.firstOrNull { it.id == entityId } ?: return
+    // What it became is built differently, so the hp it is carrying has to fit the new maximum.
     val evolved = monster.copy(dexId = into)
     val room = StatCalculator.computeAll(definition, evolved).hp
     characterStore.updatePokemon(
         charId, evolved.copy(hp = evolved.hp.toInt().coerceAtMost(room).toShort()))
-    characterStore.flushCharacterAsync(charId)
     log.info { "char=$charId evolved $was into ${definition.name}" }
-    ctx.send(notice("$was evolved into ${definition.name}!"))
-    sendParty(ctx, charId)
   }
 }
 
