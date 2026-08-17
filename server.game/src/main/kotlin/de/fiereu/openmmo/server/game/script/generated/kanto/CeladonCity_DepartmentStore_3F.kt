@@ -1,19 +1,27 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity_DepartmentStore_3F
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto EventScript_CounterTutor
- * end
- * ```
- */
 internal object CeladonCity_DepartmentStore_3F_EventScript_CounterTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_DepartmentStore_3F_EventScript_CounterTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 68,
+              flag = KantoFlags.FLAG_TUTOR_COUNTER,
+              from = "the tutor in the Celadon department store"),
+          TutorLines(
+              teach = Misc.Text_CounterTeach,
+              declined = Misc.Text_CounterDeclined,
+              whichMon = Misc.Text_CounterWhichMon,
+              taught = Misc.Text_CounterTaught,
+          ),
+      )
 }
 
 internal object CeladonCity_DepartmentStore_3F_EventScript_GBAKid1 : Script {

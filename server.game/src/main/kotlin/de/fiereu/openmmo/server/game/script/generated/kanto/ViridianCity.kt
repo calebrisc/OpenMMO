@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.ViridianCity
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.MovementStep.FACE_LEFT
@@ -8,6 +9,8 @@ import de.fiereu.openmmo.server.game.script.MovementStep.FACE_UP
 import de.fiereu.openmmo.server.game.script.MovementStep.WALK_DOWN
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
@@ -86,16 +89,20 @@ private suspend fun tutorialBattle(ctx: ScriptContext) {
   ctx.sayNpc(LOCALID_TUTORIAL_MAN, ViridianCity.WatchThatToLearnBasics)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto EventScript_DreamEaterTutor
- * end
- * ```
- */
 internal object ViridianCity_EventScript_DreamEaterTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port ViridianCity_EventScript_DreamEaterTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 138,
+              flag = KantoFlags.FLAG_TUTOR_DREAM_EATER,
+              from = "the tutor in Viridian City"),
+          TutorLines(
+              teach = Misc.Text_DreamEaterTeach,
+              declined = Misc.Text_DreamEaterDeclined,
+              whichMon = Misc.Text_DreamEaterWhichMon,
+              taught = Misc.Text_DreamEaterTaught,
+          ),
+      )
 }
 
 internal object ViridianCity_EventScript_OldMan : Script {

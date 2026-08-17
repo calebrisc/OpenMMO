@@ -1,36 +1,30 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.MtEmber_Exterior
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_CRUSH_GIRL_JOCELYN = 592
 private const val TRAINER_PKMN_RANGER_BETH = 597
 private const val TRAINER_PKMN_RANGER_LOGAN = 595
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_EXPLOSION, EventScript_ExplosionTaught
- * msgbox Text_ExplosionTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_ExplosionDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_ExplosionDeclined
- * msgbox Text_ExplosionWhichMon
- * setvar VAR_0x8005, MOVETUTOR_EXPLOSION
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_ExplosionDeclined
- * setflag FLAG_TUTOR_EXPLOSION
- * goto EventScript_ExplosionTaught
- * end
- * ```
- */
 internal object MtEmber_Exterior_EventScript_ExplosionTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port MtEmber_Exterior_EventScript_ExplosionTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 153, flag = KantoFlags.FLAG_TUTOR_EXPLOSION, from = "the tutor on Mt Ember"),
+          TutorLines(
+              teach = Misc.Text_ExplosionTeach,
+              declined = Misc.Text_ExplosionDeclined,
+              whichMon = Misc.Text_ExplosionWhichMon,
+              taught = Misc.Text_ExplosionTaught,
+          ),
+      )
 }
 
 /**

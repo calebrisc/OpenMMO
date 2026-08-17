@@ -192,6 +192,26 @@ internal constructor(
     say(lines.explain)
   }
 
+  /**
+   * A move tutor, from the offer to the party screen.
+   *
+   * The pick happens afterwards at the player's own party screen, so this returns as soon as the
+   * offer is made. The flag is spent by something actually learning the move rather than by the
+   * offer being made, which is what stops a change of mind using the tutor up.
+   */
+  internal suspend fun moveTutor(tutor: TutorMove, lines: TutorLines) {
+    if (isFlagSet(tutor.flag)) {
+      say(lines.taught)
+      return
+    }
+    if (!askYesNo(lines.teach)) {
+      say(lines.declined)
+      return
+    }
+    say(lines.whichMon)
+    offerMove(tutor.move, tutor.from, tutor.flag)
+  }
+
   /** How many species the player has seen, which is what the first aide counts. */
   fun dexSeen(): Int =
       characterId?.let { id -> characters?.getCharacter(id)?.let { Pokedex.seenOf(it).size } } ?: 0

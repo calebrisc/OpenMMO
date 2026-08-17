@@ -1,9 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.CeladonCity
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 internal object CeladonCity_EventScript_RocketGrunt1 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.KeepOutOfTeamRocketsWay)
@@ -45,16 +49,20 @@ internal object CeladonCity_EventScript_OldMan2 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(CeladonCity.BlewItAllAtSlots)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto EventScript_SoftboiledTutor
- * end
- * ```
- */
 internal object CeladonCity_EventScript_SoftboiledTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port CeladonCity_EventScript_SoftboiledTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 135,
+              flag = KantoFlags.FLAG_TUTOR_SOFT_BOILED,
+              from = "the tutor in Celadon City"),
+          TutorLines(
+              teach = Misc.Text_SoftboiledTeach,
+              declined = Misc.Text_SoftboiledDeclined,
+              whichMon = Misc.Text_SoftboiledWhichMon,
+              taught = Misc.Text_SoftboiledTaught,
+          ),
+      )
 }
 
 internal object CeladonCity_EventScript_RocketGrunt2 : Script {

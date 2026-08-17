@@ -1,9 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.RockTunnel_B1F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_HIKER_ALLEN = 190
 private const val TRAINER_HIKER_DUDLEY = 189
@@ -86,28 +90,20 @@ internal object RockTunnel_B1F_EventScript_Winston : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_ROCK_SLIDE, EventScript_RockSlideTaught
- * msgbox Text_RockSlideTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_RockSlideDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_RockSlideDeclined
- * msgbox Text_RockSlideWhichMon
- * setvar VAR_0x8005, MOVETUTOR_ROCK_SLIDE
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_RockSlideDeclined
- * setflag FLAG_TUTOR_ROCK_SLIDE
- * goto EventScript_RockSlideTaught
- * end
- * ```
- */
 internal object RockTunnel_B1F_EventScript_RockSlideTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port RockTunnel_B1F_EventScript_RockSlideTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 157,
+              flag = KantoFlags.FLAG_TUTOR_ROCK_SLIDE,
+              from = "the tutor in Rock Tunnel"),
+          TutorLines(
+              teach = Misc.Text_RockSlideTeach,
+              declined = Misc.Text_RockSlideDeclined,
+              whichMon = Misc.Text_RockSlideWhichMon,
+              taught = Misc.Text_RockSlideTaught,
+          ),
+      )
 }
 
 internal object RockTunnel_B1F_EventScript_ItemRevive : Script {

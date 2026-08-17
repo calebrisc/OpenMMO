@@ -1,10 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.PewterCity_Museum_1F
 import de.fiereu.openmmo.dialog.generated.kanto.PokemonJournal
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
@@ -57,28 +60,20 @@ internal object PewterCity_Museum_1F_EventScript_Scientist2 : Script {
       ctx.say(PewterCity_Museum_1F.WeHaveTwoFossilsOnExhibit)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_SEISMIC_TOSS, EventScript_SeismicTossTaught
- * msgbox Text_SeismicTossTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_SeismicTossDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_SeismicTossDeclined
- * msgbox Text_SeismicTossWhichMon
- * setvar VAR_0x8005, MOVETUTOR_SEISMIC_TOSS
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_SeismicTossDeclined
- * setflag FLAG_TUTOR_SEISMIC_TOSS
- * goto EventScript_SeismicTossTaught
- * end
- * ```
- */
 internal object PewterCity_Museum_1F_EventScript_SeismicTossTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port PewterCity_Museum_1F_EventScript_SeismicTossTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 69,
+              flag = KantoFlags.FLAG_TUTOR_SEISMIC_TOSS,
+              from = "the tutor in the Pewter museum"),
+          TutorLines(
+              teach = Misc.Text_SeismicTossTeach,
+              declined = Misc.Text_SeismicTossDeclined,
+              whichMon = Misc.Text_SeismicTossWhichMon,
+              taught = Misc.Text_SeismicTossTaught,
+          ),
+      )
 }
 
 internal object PewterCity_Museum_1F_EventScript_AerodactylFossil : Script {

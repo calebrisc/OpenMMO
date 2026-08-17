@@ -1,9 +1,13 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.VictoryRoad_2F
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_BLACK_BELT_DAISUKE = 325
 private const val TRAINER_JUGGLER_GREGORY = 290
@@ -72,28 +76,20 @@ internal object VictoryRoad_2F_EventScript_ItemTM37 : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.findItem(Items.TM37)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_DOUBLE_EDGE, EventScript_DoubleEdgeTaught
- * msgbox Text_DoubleEdgeTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_DoubleEdgeDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_DoubleEdgeDeclined
- * msgbox Text_DoubleEdgeWhichMon
- * setvar VAR_0x8005, MOVETUTOR_DOUBLE_EDGE
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_DoubleEdgeDeclined
- * setflag FLAG_TUTOR_DOUBLE_EDGE
- * goto EventScript_DoubleEdgeTaught
- * end
- * ```
- */
 internal object VictoryRoad_2F_EventScript_DoubleEdgeTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port VictoryRoad_2F_EventScript_DoubleEdgeTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 38,
+              flag = KantoFlags.FLAG_TUTOR_DOUBLE_EDGE,
+              from = "the tutor in Victory Road"),
+          TutorLines(
+              teach = Misc.Text_DoubleEdgeTeach,
+              declined = Misc.Text_DoubleEdgeDeclined,
+              whichMon = Misc.Text_DoubleEdgeWhichMon,
+              taught = Misc.Text_DoubleEdgeTaught,
+          ),
+      )
 }
 
 internal val VictoryRoad_2FScripts: Map<String, Script> =

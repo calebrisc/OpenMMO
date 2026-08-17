@@ -1,8 +1,11 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
 import de.fiereu.openmmo.dialog.generated.kanto.FuchsiaCity
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 import de.fiereu.openmmo.story.generated.kanto.KantoVars
 
@@ -22,28 +25,20 @@ internal object FuchsiaCity_EventScript_OldMan : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(FuchsiaCity.SafariZoneZooInFront)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_SUBSTITUTE, EventScript_SubstituteTaught
- * msgbox Text_SubstituteTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_SubstituteDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_SubstituteDeclined
- * msgbox Text_SubstituteWhichMon
- * setvar VAR_0x8005, MOVETUTOR_SUBSTITUTE
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_SubstituteDeclined
- * setflag FLAG_TUTOR_SUBSTITUTE
- * goto EventScript_SubstituteTaught
- * end
- * ```
- */
 internal object FuchsiaCity_EventScript_SubstituteTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port FuchsiaCity_EventScript_SubstituteTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 164,
+              flag = KantoFlags.FLAG_TUTOR_SUBSTITUTE,
+              from = "the tutor in Fuchsia City"),
+          TutorLines(
+              teach = Misc.Text_SubstituteTeach,
+              declined = Misc.Text_SubstituteDeclined,
+              whichMon = Misc.Text_SubstituteWhichMon,
+              taught = Misc.Text_SubstituteTaught,
+          ),
+      )
 }
 
 internal object FuchsiaCity_EventScript_Lass : Script {

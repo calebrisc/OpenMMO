@@ -1,31 +1,27 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.SevenIsland
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_SWORDS_DANCE, EventScript_SwordsDanceTaught
- * msgbox Text_SwordsDanceTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_SwordsDanceDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_SwordsDanceDeclined
- * msgbox Text_SwordsDanceWhichMon
- * setvar VAR_0x8005, MOVETUTOR_SWORDS_DANCE
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_SwordsDanceDeclined
- * setflag FLAG_TUTOR_SWORDS_DANCE
- * goto EventScript_SwordsDanceTaught
- * end
- * ```
- */
 internal object SevenIsland_EventScript_SwordsDanceTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port SevenIsland_EventScript_SwordsDanceTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 14,
+              flag = KantoFlags.FLAG_TUTOR_SWORDS_DANCE,
+              from = "the tutor on Seven Island"),
+          TutorLines(
+              teach = Misc.Text_SwordsDanceTeach,
+              declined = Misc.Text_SwordsDanceDeclined,
+              whichMon = Misc.Text_SwordsDanceWhichMon,
+              taught = Misc.Text_SwordsDanceTaught,
+          ),
+      )
 }
 
 internal object SevenIsland_EventScript_OldWoman : Script {

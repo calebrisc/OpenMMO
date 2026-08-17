@@ -1,8 +1,12 @@
 package de.fiereu.openmmo.server.game.script.generated.kanto
 
+import de.fiereu.openmmo.dialog.generated.kanto.Misc
 import de.fiereu.openmmo.dialog.generated.kanto.SilphCo_2F
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
+import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val TRAINER_SCIENTIST_CONNOR = 336
 private const val TRAINER_SCIENTIST_JERRY = 337
@@ -45,16 +49,18 @@ internal object SilphCo_2F_EventScript_Connor : Script {
   }
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * goto EventScript_ThunderWaveTutor
- * end
- * ```
- */
 internal object SilphCo_2F_EventScript_ThunderWaveTutor : Script {
   override suspend fun run(ctx: ScriptContext) =
-      TODO("port SilphCo_2F_EventScript_ThunderWaveTutor")
+      ctx.moveTutor(
+          TutorMove(
+              move = 86, flag = KantoFlags.FLAG_TUTOR_THUNDER_WAVE, from = "the tutor in Silph Co"),
+          TutorLines(
+              teach = Misc.Text_ThunderWaveTeach,
+              declined = Misc.Text_ThunderWaveDeclined,
+              whichMon = Misc.Text_ThunderWaveWhichMon,
+              taught = Misc.Text_ThunderWaveTaught,
+          ),
+      )
 }
 
 /**

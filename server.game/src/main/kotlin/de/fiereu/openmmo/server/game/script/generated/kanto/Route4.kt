@@ -5,6 +5,8 @@ import de.fiereu.openmmo.dialog.generated.kanto.Route4
 import de.fiereu.openmmo.items.generated.Items
 import de.fiereu.openmmo.server.game.script.Script
 import de.fiereu.openmmo.server.game.script.ScriptContext
+import de.fiereu.openmmo.server.game.script.TutorLines
+import de.fiereu.openmmo.server.game.script.TutorMove
 import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 
 private const val MOVE_MEGA_PUNCH = 5
@@ -32,76 +34,36 @@ internal object Route4_EventScript_Boy : Script {
   override suspend fun run(ctx: ScriptContext) = ctx.say(Route4.PeopleLikeAndRespectBrock)
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_MEGA_PUNCH, EventScript_MegaPunchTaught
- * msgbox Text_MegaPunchTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_MegaPunchDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_MegaPunchDeclined
- * msgbox Text_MegaPunchWhichMon
- * setvar VAR_0x8005, MOVETUTOR_MEGA_PUNCH
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_MegaPunchDeclined
- * setflag FLAG_TUTOR_MEGA_PUNCH
- * goto EventScript_MegaPunchTaught
- * end
- * ```
- */
 internal object Route4_EventScript_MegaPunchTutor : Script {
-  override suspend fun run(ctx: ScriptContext) {
-    if (ctx.isFlagSet(KantoFlags.FLAG_TUTOR_MEGA_PUNCH)) {
-      ctx.say(Misc.Text_MegaPunchTaught)
-      return
-    }
-    if (!ctx.askYesNo(Misc.Text_MegaPunchTeach)) {
-      ctx.say(Misc.Text_MegaPunchDeclined)
-      return
-    }
-    ctx.say(Misc.Text_MegaPunchWhichMon)
-    // The pick happens afterwards, at the player's own party screen, and the flag is spent by
-    // something actually learning the move rather than by the offer being made.
-    ctx.offerMove(MOVE_MEGA_PUNCH, "the tutor on Route 4", KantoFlags.FLAG_TUTOR_MEGA_PUNCH)
-  }
+  override suspend fun run(ctx: ScriptContext) =
+      ctx.moveTutor(
+          TutorMove(
+              move = MOVE_MEGA_PUNCH,
+              flag = KantoFlags.FLAG_TUTOR_MEGA_PUNCH,
+              from = "the tutor on Route 4"),
+          TutorLines(
+              teach = Misc.Text_MegaPunchTeach,
+              declined = Misc.Text_MegaPunchDeclined,
+              whichMon = Misc.Text_MegaPunchWhichMon,
+              taught = Misc.Text_MegaPunchTaught,
+          ),
+      )
 }
 
-/**
- * Not ported yet. Decomp body:
- * ```
- * lock
- * faceplayer
- * goto_if_set FLAG_TUTOR_MEGA_KICK, EventScript_MegaKickTaught
- * msgbox Text_MegaKickTeach, MSGBOX_YESNO
- * goto_if_eq VAR_RESULT, NO, EventScript_MegaKickDeclined
- * call EventScript_CanOnlyBeLearnedOnce
- * goto_if_eq VAR_RESULT, NO, EventScript_MegaKickDeclined
- * msgbox Text_MegaKickWhichMon
- * setvar VAR_0x8005, MOVETUTOR_MEGA_KICK
- * call EventScript_ChooseMoveTutorMon
- * goto_if_eq VAR_RESULT, FALSE, EventScript_MegaKickDeclined
- * setflag FLAG_TUTOR_MEGA_KICK
- * goto EventScript_MegaKickTaught
- * end
- * ```
- */
 internal object Route4_EventScript_MegaKickTutor : Script {
-  override suspend fun run(ctx: ScriptContext) {
-    if (ctx.isFlagSet(KantoFlags.FLAG_TUTOR_MEGA_KICK)) {
-      ctx.say(Misc.Text_MegaKickTaught)
-      return
-    }
-    if (!ctx.askYesNo(Misc.Text_MegaKickTeach)) {
-      ctx.say(Misc.Text_MegaKickDeclined)
-      return
-    }
-    ctx.say(Misc.Text_MegaKickWhichMon)
-    // The pick happens afterwards, at the player's own party screen, and the flag is spent by
-    // something actually learning the move rather than by the offer being made.
-    ctx.offerMove(MOVE_MEGA_KICK, "the tutor on Route 4", KantoFlags.FLAG_TUTOR_MEGA_KICK)
-  }
+  override suspend fun run(ctx: ScriptContext) =
+      ctx.moveTutor(
+          TutorMove(
+              move = MOVE_MEGA_KICK,
+              flag = KantoFlags.FLAG_TUTOR_MEGA_KICK,
+              from = "the tutor on Route 4"),
+          TutorLines(
+              teach = Misc.Text_MegaKickTeach,
+              declined = Misc.Text_MegaKickDeclined,
+              whichMon = Misc.Text_MegaKickWhichMon,
+              taught = Misc.Text_MegaKickTaught,
+          ),
+      )
 }
 
 internal object Route4_EventScript_MtMoonSign : Script {
