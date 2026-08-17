@@ -10,11 +10,37 @@ import de.fiereu.openmmo.story.generated.kanto.KantoFlags
 private const val TRAINER_GENTLEMAN_TUCKER = 423
 
 // The doors are metatile changes the protocol cannot make yet, so solving the puzzle walks the
-// player through the doorway instead. First switch is random per character, second is a fresh
-// random can, and a wrong second guess relocks both, like the cartridge.
+// player through the doorway instead.
 private const val CAN1 = "kanto/VAR_VERMILION_GYM_CAN1"
 private const val CAN2 = "kanto/VAR_VERMILION_GYM_CAN2"
 private const val LOCKS = "kanto/VAR_VERMILION_GYM_LOCKS"
+
+/**
+ * The cans as the room lays them out: five across and three down, numbered from the top left.
+ *
+ * `SetVermilionTrashCans` puts the second switch in a can touching the first, and writes that out
+ * as a switch per starting can rather than as a rule. On this grid it is just the orthogonal
+ * neighbours, which is the same set: can 1 offers 2 and 6, can 5 offers 4 and 10, and a can in the
+ * middle row offers all four.
+ *
+ * This used to pick the second switch at random from all fifteen, which quietly turned a puzzle
+ * with a rule into one without: checking the can next to the first -- the whole point -- was no
+ * likelier than any other, so the room could only be brute forced.
+ */
+private const val CANS_ACROSS = 5
+private const val CANS_DOWN = 3
+
+private fun cansTouching(can: Int): List<Int> {
+  val index = can - 1
+  val row = index / CANS_ACROSS
+  val column = index % CANS_ACROSS
+  return buildList {
+    if (column > 0) add(can - 1)
+    if (column < CANS_ACROSS - 1) add(can + 1)
+    if (row > 0) add(can - CANS_ACROSS)
+    if (row < CANS_DOWN - 1) add(can + CANS_ACROSS)
+  }
+}
 
 private suspend fun trashCan(ctx: ScriptContext, can: Int) {
   if (ctx.getVar(LOCKS) == 2) {
@@ -23,11 +49,11 @@ private suspend fun trashCan(ctx: ScriptContext, can: Int) {
     ctx.repositionSelf(5, 4, Direction.UP)
     return
   }
-  if (ctx.getVar(CAN1) == 0) ctx.setVar(CAN1, (1..15).random())
+  if (ctx.getVar(CAN1) == 0) ctx.setVar(CAN1, (1..(CANS_ACROSS * CANS_DOWN)).random())
   when {
     ctx.getVar(LOCKS) == 0 && can == ctx.getVar(CAN1) -> {
       ctx.setVar(LOCKS, 1)
-      ctx.setVar(CAN2, ((1..15).toList() - can).random())
+      ctx.setVar(CAN2, cansTouching(can).random())
       ctx.sign(VermilionCity_Gym.SwitchUnderTrashFirstLockOpened)
     }
     ctx.getVar(LOCKS) == 1 && can == ctx.getVar(CAN2) -> {
@@ -36,10 +62,12 @@ private suspend fun trashCan(ctx: ScriptContext, can: Int) {
       ctx.repositionSelf(5, 4, Direction.UP)
     }
     ctx.getVar(LOCKS) == 1 -> {
-      // The wrong can slams both locks shut and the first switch moves.
+      // The wrong can slams both locks shut and the switches move, as the cartridge does.
       ctx.setVar(LOCKS, 0)
       ctx.setVar(CAN1, 0)
-      ctx.sign(VermilionCity_Gym.AnotherSwitchInTrash)
+      // Not AnotherSwitchInTrash: the real game never says that line anywhere, which is exactly
+      // why it was left untranslated in the English cartridge -- ours was printing the Japanese.
+      ctx.sign(VermilionCity_Gym.OnlyTrashLocksWereReset)
     }
     else -> ctx.sign(VermilionCity_Gym.NopeOnlyTrashHere)
   }
