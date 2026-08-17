@@ -42,11 +42,24 @@ private fun cansTouching(can: Int): List<Int> {
   }
 }
 
+/**
+ * Where the puzzle drops the player, on each side of the barrier.
+ *
+ * Rows six and seven of this room are solid: the electric door is a metatile the protocol cannot
+ * change yet, so the puzzle walks the player through it instead. That worked in one direction only,
+ * and beating the gym left them shut in with Lt. Surge and no way back -- rows two to five have no
+ * exit of their own and every warp out is at the bottom of the map.
+ */
+private const val INSIDE_X = 5
+private const val INSIDE_Y = 4
+private const val OUTSIDE_X = 5
+private const val OUTSIDE_Y = 8
+
 private suspend fun trashCan(ctx: ScriptContext, can: Int) {
   if (ctx.getVar(LOCKS) == 2) {
     // The door metatile never opens, so a solved puzzle keeps walking the player through.
     ctx.sign(VermilionCity_Gym.NopeOnlyTrashHere)
-    ctx.repositionSelf(5, 4, Direction.UP)
+    ctx.repositionSelf(INSIDE_X, INSIDE_Y, Direction.UP)
     return
   }
   if (ctx.getVar(CAN1) == 0) ctx.setVar(CAN1, (1..(CANS_ACROSS * CANS_DOWN)).random())
@@ -59,7 +72,7 @@ private suspend fun trashCan(ctx: ScriptContext, can: Int) {
     ctx.getVar(LOCKS) == 1 && can == ctx.getVar(CAN2) -> {
       ctx.setVar(LOCKS, 2)
       ctx.sign(VermilionCity_Gym.SecondLockOpened)
-      ctx.repositionSelf(5, 4, Direction.UP)
+      ctx.repositionSelf(INSIDE_X, INSIDE_Y, Direction.UP)
     }
     ctx.getVar(LOCKS) == 1 -> {
       // The wrong can slams both locks shut and the switches move, as the cartridge does.
@@ -95,9 +108,13 @@ internal object VermilionCity_Gym_EventScript_LtSurge : Script {
       ctx.setFlag(KantoFlags.FLAG_GOT_TM34_FROM_SURGE)
       ctx.say(VermilionCity_Gym.ReceivedTM34FromLtSurge)
       ctx.say(VermilionCity_Gym.ExplainTM34)
+      ctx.repositionSelf(OUTSIDE_X, OUTSIDE_Y, Direction.DOWN)
       return
     }
     ctx.say(VermilionCity_Gym.LtSurgePostBattle)
+    // The way out. He is the only one on this side of the barrier, so talking to him is the only
+    // thing a shut-in player can still do.
+    ctx.repositionSelf(OUTSIDE_X, OUTSIDE_Y, Direction.DOWN)
   }
 }
 
