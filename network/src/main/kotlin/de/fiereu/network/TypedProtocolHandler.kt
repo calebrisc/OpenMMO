@@ -45,6 +45,12 @@ abstract class TypedProtocolHandler<P : Protocol>(
   final override fun onPacket(event: PacketEvent<*>) {
     sealed = true
     val handler = handlers[event.packet::class]
+    if (trace) {
+      // Says whether a packet arrived at all and whether anything was listening, which is the one
+      // question three separate dead features have turned on: a box drag, a machine and a tutor
+      // each looked broken while the real answer was that the client's reply went nowhere.
+      log.info { "TRACE $side ${event.packet::class.simpleName} handled=${handler != null}" }
+    }
     if (handler != null) {
       handler(event)
     } else if (!tryHandleAlternate(event)) {
@@ -53,4 +59,14 @@ abstract class TypedProtocolHandler<P : Protocol>(
   }
 
   protected open fun tryHandleAlternate(event: PacketEvent<*>): Boolean = false
+
+  companion object {
+    /**
+     * Logs every packet as it arrives, and whether a handler took it.
+     *
+     * Off by default: it is one line per packet and movement alone is five a second. Turn it on for
+     * the few seconds it takes to reproduce something, with /probe trace on.
+     */
+    @Volatile @JvmStatic var trace: Boolean = false
+  }
 }

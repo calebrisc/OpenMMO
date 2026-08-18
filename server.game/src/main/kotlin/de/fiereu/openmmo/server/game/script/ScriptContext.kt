@@ -209,7 +209,38 @@ internal constructor(
       return
     }
     say(lines.whichMon)
-    offerMove(tutor.move, tutor.from, tutor.flag)
+    // Ask on the scene the client will actually draw. Telling the player to open their party and
+    // then waiting for them to do it never worked: whatever the party screen answers with, it is
+    // not something this server hears, so the offer hung and the tutor repeated itself for ever.
+    val chosen = chooseFromParty()
+    if (chosen == null) {
+      // No scene came back, so fall back to the old standing offer rather than losing the tutor.
+      offerMove(tutor.move, tutor.from, tutor.flag)
+      return
+    }
+    val charId = characterId ?: return
+    teaching?.teachDirectly(session, charId, chosen, tutor.move, tutor.from, tutor.flag)
+  }
+
+  /**
+   * Shows the party as a pickable scene and returns the monster chosen, or null if nothing was.
+   *
+   * This is the same scene the starter picker draws, which is the one choice window this client is
+   * known to render: a count, then a species id each, answered with a one-based index.
+   * [DialogService.showSceneMenuAndWait] has been sitting here unused since it was written.
+   */
+  internal suspend fun chooseFromParty(): Long? {
+    val id = characterId ?: return null
+    val party = characters?.getCharacter(id)?.pokemon.orEmpty()
+    if (party.isEmpty()) return null
+    val detail = ByteArray(1 + party.size * 2)
+    detail[0] = party.size.toByte()
+    party.forEachIndexed { index, mon ->
+      detail[1 + index * 2] = (mon.dexId and 0xFF).toByte()
+      detail[2 + index * 2] = ((mon.dexId shr 8) and 0xFF).toByte()
+    }
+    val picked = dialog.showSceneMenuAndWait(session, state, detail)
+    return party.getOrNull(picked - 1)?.id
   }
 
   /** How many species the player has seen, which is what the first aide counts. */

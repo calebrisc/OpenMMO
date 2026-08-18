@@ -1,5 +1,6 @@
 package de.fiereu.openmmo.server.game.services.command
 
+import de.fiereu.network.TypedProtocolHandler
 import de.fiereu.openmmo.common.CharacterPermissions
 import de.fiereu.openmmo.common.enums.Direction
 import de.fiereu.openmmo.common.hasPermission
@@ -72,7 +73,7 @@ constructor(
   override val usage =
       "/probe invite <name> <requestType> [flags] | /probe outcome <name> <packed> | " +
           "/probe requesttype <n> | /probe prompt on|off | /probe sweep <name> | " +
-          "/probe box <0|1|2> | /probe gtl on|off | /probe flags <from> <to> [region]"
+          "/probe box <0|1|2> | /probe gtl on|off | /probe trace on|off | /probe flags <from> <to> [region]"
   override val description = "sends a raw packet at a player to see what the client does with it"
   override val permission = CharacterPermissions.DEVELOPER
 
@@ -352,6 +353,22 @@ constructor(
           "Sent ${to - from + 1} flag updates for region $region. Every one the client refuses is " +
               "in its log as \"0x2A\"; the ids missing from that list are the ones it accepts. " +
               "Relog when the sweep is done.")
+      return
+    }
+
+    if (what == "trace") {
+      val on = ctx.args.getOrNull(1)?.lowercase()
+      if (on != "on" && on != "off") {
+        ctx.reply(
+            "Packet trace is ${if (TypedProtocolHandler.trace) "on" else "off"}. " +
+                "Turn it on with /probe trace on, do the thing that is broken, then off again.")
+        return
+      }
+      TypedProtocolHandler.trace = on == "on"
+      log.info { "Packet trace set to ${TypedProtocolHandler.trace}" }
+      ctx.reply(
+          if (TypedProtocolHandler.trace) "Tracing every packet. Do it now, then /probe trace off."
+          else "Trace off.")
       return
     }
 
